@@ -5,7 +5,7 @@ export const get = async (request, response) => {
 
   const icon =
     request.query.icon ??
-    'https://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-12/256/running-shoe.png';
+    'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/320/apple/325/chair_1fa91.png';
 
   response.status(200).send({
     label,

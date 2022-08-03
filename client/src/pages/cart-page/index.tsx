@@ -276,7 +276,7 @@ export const SolanaPayProviders = ({ children }: { children: ReactNode }) => {
     decimals,
     minDecimals,
   } = useCurrency();
-  const { cartItems } = useCart();
+  const { cartItemsNumber } = useCart();
 
   const baseURL = `https://${window.location.host}`;
 
@@ -293,8 +293,9 @@ export const SolanaPayProviders = ({ children }: { children: ReactNode }) => {
 
   const recipientParam =
     store?.walletAddress ?? 'CaLiBb3CPagr4Vfaiyr6dsBZ5vxadjN33o6QgaMzj48m';
-  const label = APP_NAME;
-  const message = `${cartItems.length} items`;
+  const label = store?.storeName;
+
+  const message = `${cartItemsNumber} items`;
 
   if (recipientParam && label) {
     try {

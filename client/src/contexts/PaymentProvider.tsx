@@ -105,8 +105,7 @@ export const PaymentProvider: FC<PaymentProviderProps> = ({ children }) => {
         url.searchParams.append('label', label);
       }
 
-      const icon =
-        'https://dev-alt-gate-products.s3.amazonaws.com/products/62d6eac56b495730c25ce3ac-67716cb3-80a3-4a37-9347-d7a2833563a2.shoes.webp';
+      const icon = store?.image;
 
       if (icon) {
         url.searchParams.append('icon', icon);

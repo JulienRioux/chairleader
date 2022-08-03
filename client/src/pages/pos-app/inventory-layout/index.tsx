@@ -104,7 +104,6 @@ const StyledStoreImgIcon = styled(StoreImgIcon)`
 
 export const StoreLogo = () => {
   const { store } = useStore();
-  console.log('store', store?.image);
 
   return (
     <StoreImgAndName to={routes.store.inventory}>
