@@ -8,21 +8,29 @@ import { useState, useCallback, FormEvent } from 'react';
 import styled, { css } from 'styled-components';
 
 const PosStyles = css`
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 
   @media (max-width: 1400px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  @media (max-width: 600px) {
     grid-template-columns: 1fr 1fr;
   }
 `;
 
 const AdminStyles = css`
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 
   @media (max-width: 1200px) {
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
   }
 
   @media (max-width: 800px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  @media (max-width: 600px) {
     grid-template-columns: 1fr 1fr;
   }
 `;
