@@ -10,6 +10,7 @@ import { typeDefs } from './schema';
 
 dotenv.config();
 
+// No user state
 const NO_USER = { user: null };
 
 interface IDecodedToken {
