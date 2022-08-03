@@ -191,6 +191,14 @@ export const AdminLayout = ({ children }: { children: ReactNode }) => {
 
           <SideNavWrapper>
             <SideNavLink
+              to={routes.admin.dashboard}
+              icon="equalizer"
+              isActive={pathname === routes.admin.dashboard}
+            />
+          </SideNavWrapper>
+
+          <SideNavWrapper>
+            <SideNavLink
               to={routes.admin.pos}
               icon="point_of_sale"
               isActive={pathname === routes.admin.pos}

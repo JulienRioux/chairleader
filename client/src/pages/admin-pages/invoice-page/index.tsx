@@ -39,7 +39,7 @@ const Detail = styled.p`
   word-break: break-all;
 `;
 
-const DetailItem = ({
+export const DetailItem = ({
   label,
   children,
 }: {

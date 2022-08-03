@@ -17,6 +17,7 @@ export const routes = {
     search: '/admin/search',
     newProduct: '/admin/new-product',
     newCategory: '/admin/new-category',
+    dashboard: '/admin/dashboard',
   },
 
   store: {

@@ -25,6 +25,7 @@ import { InvoicePage } from 'pages/admin-pages/invoice-page';
 import { StoreNotFoundPage } from 'pages/store-not-found-page';
 import { Loader } from 'components-library';
 import { useStore } from 'hooks/store';
+import { DashboardPage } from 'pages/admin-pages/dashboard-page';
 
 export const AdminAppRouter = () => {
   return (
@@ -49,6 +50,8 @@ export const AdminAppRouter = () => {
         )}
 
         <Route path={'/search'} element={<h1>Search</h1>} />
+
+        <Route path={'/dashboard'} element={<DashboardPage />} />
 
         <Route path="*" element={<ErrorPage />} />
       </Routes>
