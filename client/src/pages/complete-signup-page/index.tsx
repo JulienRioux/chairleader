@@ -303,7 +303,8 @@ export const CompleteSignupPage = () => {
       <h1>Complete Signup</h1>
 
       <Par>
-        Please fill these informations to help us setting up your Alt Gate POS.
+        Please fill these informations to help us setting up your Chairleader
+        POS.
       </Par>
 
       <UpdateUserForm isCompletingSignup />

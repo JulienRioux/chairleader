@@ -108,8 +108,8 @@ export const emailTemplate = ({ link, validationCode }) => {
             <tr>
               <td bgcolor="${BACKGROUND_COLOR}" align="left" valign="top" style="padding: 0px  0px 20px  0px; border-radius: ${BORDER_RADIUS} ${BORDER_RADIUS} 0px 0px; color: #111111; font-family: 'Inconsolata', monospace; font-size: 48px; font-weight: 400; letter-spacing: 0px; line-height: 48px;">
                 <div style="display: flex; align-content: center; margin: 20px 0;">
-                  <img style="height: 40px;" src="https://cdn.sanity.io/images/fc5brcyr/production/ea382e95cec9a0a0b7193f7d96694ab66a7f1d3c-512x512.png" alt="" />
-                  <h1 style="font-size: 40px; margin: 0 0 4px 12px; line-height: 1;">Alt Gate</h1>
+                  <img style="height: 40px;" src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/320/apple/325/chair_1fa91.png" alt="" />
+                  <h1 style="font-size: 40px; margin: 0 0 4px 12px; line-height: 1;">Chairleader</h1>
                 </div>
                 <h3 style="font-size: 24px; font-weight: bold; margin: 0;">${header}</h3>
               </td>

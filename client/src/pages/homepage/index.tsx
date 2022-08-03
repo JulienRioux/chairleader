@@ -25,6 +25,11 @@ const Img = styled.img`
   border-radius: 32px;
   object-position: center;
   object-fit: cover;
+  aspect-ratio: 3 / 4;
+
+  @media (max-width: 800px) {
+    max-height: 400px;
+  }
 `;
 
 const Header = styled.h1`
@@ -297,7 +302,7 @@ export const Homepage = () => {
         <HeroWrapper style={{ margin: '120px auto 60px' }}>
           <Img
             src={
-              'https://images.unsplash.com/photo-1571867424488-4565932edb41?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80'
+              'https://images.unsplash.com/photo-1442512595331-e89e73853f31?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80'
             }
           />
 
