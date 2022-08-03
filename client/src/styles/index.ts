@@ -16,7 +16,7 @@ export const LightTheme = {
   },
   borderWidth: '2px',
   color: {
-    primary: '#6F00FF',
+    primary: '#0000ff',
     white: primitives.white,
     black: primitives.black,
     lightGrey: '#dddddd',
