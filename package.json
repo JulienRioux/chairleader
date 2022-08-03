@@ -4,13 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:remote-api": "cd client && yarn dev",
+    "dev": "cd scripts && yarn start",
+    "dev:remote-store-api": "cd client && yarn dev",
     "dev:local-store-api": "concurrently --kill-others \"cd client && sleep 15 && yarn dev:local-store-api\" \"cd api/store && yarn dev\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Julien Rioux",
   "license": "ISC",
   "devDependencies": {
-    "concurrently": "^7.3.0"
+    "@types/inquirer": "^8.2.1",
+    "concurrently": "^7.3.0",
+    "inquirer": "^9.0.2"
+  },
+  "dependencies": {
+    "shelljs": "^0.8.5"
   }
 }
