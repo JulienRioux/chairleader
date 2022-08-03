@@ -3,6 +3,7 @@ import { Logger, uploadImageToCloud } from '../../../utils';
 
 export enum BUCKET_FOLDER_NAME {
   PRODUCTS = 'products',
+  STORE = 'store',
 }
 
 export const addProduct = async ({

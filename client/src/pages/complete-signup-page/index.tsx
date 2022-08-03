@@ -1,10 +1,18 @@
-import { Button, Icon, Input, message, Select } from 'components-library';
+import {
+  Button,
+  Icon,
+  Input,
+  message,
+  Select,
+  VisuallyHiddenInput,
+} from 'components-library';
+import { Label } from 'components-library/input/input.styles';
 import { useAuth } from 'hooks/auth';
 import { CURRENCY } from 'hooks/currency';
 import { HalfImagePageLayout } from 'pages/auth-page';
-import { ChangeEvent, FormEvent, useCallback, useState } from 'react';
+import { ChangeEvent, FormEvent, useCallback, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Logger, routes, validateSolanaAddress } from 'utils';
 
 const Par = styled.p`
@@ -23,6 +31,36 @@ const PercentIconWrapper = styled.div`
   pointer-events: none;
 `;
 
+const ImageWrapper = styled.div`
+  margin: 8px 0 24px;
+  display: flex;
+  align-items: flex-end;
+
+  button {
+    margin-left: 12px;
+  }
+`;
+
+const ShareStyles = css`
+  height: 120px;
+  width: 120px;
+  border: ${(p) => p.theme.borderWidth} solid ${(p) => p.theme.color.lightGrey};
+  border-radius: ${(p) => p.theme.borderRadius.input};
+`;
+
+const Img = styled.img`
+  ${ShareStyles}
+`;
+
+const NoImageWrapper = styled.div`
+  ${ShareStyles}
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${(p) => p.theme.color.lightText};
+  font-size: 48px;
+`;
+
 const CURRENCY_OPTIONS = [
   {
     value: CURRENCY.SOL,
@@ -39,6 +77,7 @@ const isValidSubdomain = (str: string) => str.match(/^[0-9a-z-]+$/i);
 
 export const UpdateUserForm = ({ isCompletingSignup = false }) => {
   const navigate = useNavigate();
+  const fileInput = useRef<HTMLInputElement | null>(null);
 
   const { updateUser, updateUserIsLoading, user } = useAuth();
 
@@ -49,6 +88,23 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
   const [walletAddressError, setWalletAddressError] = useState('');
   const [currency, setCurrency] = useState(user?.currency ?? CURRENCY.USDC);
   const [saleTax, setSaleTax] = useState(user?.saleTax ?? '0');
+
+  // Image
+  const [imageSrc, setImageSrc] = useState('');
+  const [imageFile, setImageFile] = useState<File | null>(null);
+
+  let currentImageSrc = imageSrc;
+
+  if (imageFile) {
+    currentImageSrc = URL.createObjectURL(imageFile);
+  }
+
+  const handleUploadFileClick = useCallback(() => {
+    // Click on the visually hidden file input
+    if (fileInput?.current) {
+      fileInput.current.click();
+    }
+  }, []);
 
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.name === 'storeName') {
@@ -83,6 +139,10 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
     if (e.target.name === 'saleTax') {
       setSaleTax(e.target.value);
     }
+    if (e.target.name === 'image') {
+      const files = (e.target as HTMLInputElement)?.files as FileList;
+      setImageFile(files[0]);
+    }
   }, []);
 
   const handleSubmit = useCallback(
@@ -103,6 +163,7 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
           subDomain,
           currency,
           saleTax: Number(saleTax),
+          image: imageFile,
         });
 
         message.success('Your informations have been updated.');
@@ -125,6 +186,7 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
       navigate,
       currency,
       saleTax,
+      imageFile,
     ]
   );
 
@@ -187,6 +249,29 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
           <Icon name="percent" />
         </PercentIconWrapper>
       </SaleTaxWrapper>
+
+      <Label>Store image</Label>
+      <ImageWrapper>
+        {currentImageSrc ? (
+          <Img src={currentImageSrc} />
+        ) : (
+          <NoImageWrapper>
+            <Icon name="image" />
+          </NoImageWrapper>
+        )}
+
+        <Button type="button" secondary onClick={handleUploadFileClick}>
+          Add image
+        </Button>
+      </ImageWrapper>
+
+      <VisuallyHiddenInput
+        type="file"
+        onChange={handleChange}
+        name="image"
+        accept="image/png, image/jpg, image/jpeg, image/webp"
+        ref={fileInput}
+      />
 
       <Button isLoading={updateUserIsLoading} type="submit" fullWidth>
         Save and continue
