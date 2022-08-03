@@ -47,6 +47,10 @@ const footerData = [
         title: 'Investors',
       },
       { href: 'mailto:julien.rioux@toptal.com', title: 'Contact' },
+      {
+        href: 'https://chairleader.canny.io/',
+        title: 'Send feedback',
+      },
     ],
     title: 'More',
   },

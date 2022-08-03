@@ -1,4 +1,9 @@
-import { Button, UnstyledLink } from 'components-library';
+import {
+  Button,
+  Icon,
+  UnstyledExternalLink,
+  UnstyledLink,
+} from 'components-library';
 import { USE_CATEGORY } from 'configs';
 import { ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -52,10 +57,12 @@ const SideNav = styled.div`
 
 const ChildrenWrapper = styled.div`
   margin: 20px;
+  /* Taking into account send feedback button */
+  margin-bottom: 60px;
 
   @media (max-width: 800px) {
-    /* Taking into account the bottom navigation */
-    margin-bottom: 80px;
+    /* Taking into account the bottom navigation + send feedback button */
+    margin-bottom: 140px;
   }
 `;
 
@@ -134,6 +141,16 @@ const RightButtonWrapper = styled.div`
 const RightLayoutWrapper = styled.div`
   overflow: scroll;
   width: 100%;
+`;
+
+const SendFeedbackLink = styled(UnstyledExternalLink)`
+  position: fixed;
+  bottom: 8px;
+  right: 8px;
+
+  @media (max-width: 800px) {
+    bottom: 64px;
+  }
 `;
 
 export const StoreImgIcon = ({
@@ -236,6 +253,12 @@ export const AdminLayout = ({ children }: { children: ReactNode }) => {
         </TopNav>
         <ChildrenWrapper>{children}</ChildrenWrapper>
       </RightLayoutWrapper>
+
+      <SendFeedbackLink href="https://chairleader.canny.io/" target="_blank">
+        <Button secondary>
+          Send feedback <Icon style={{ marginLeft: '8px' }} name="launch" />
+        </Button>
+      </SendFeedbackLink>
     </AdminLayoutWrapper>
   );
 };
