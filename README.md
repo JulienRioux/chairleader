@@ -1,6 +1,6 @@
 # 🪑 Chairleader 
 
-Welcome to the 🪑 Chairleader monorepo.
+Welcome to the `Chairleader` monorepo.
 
 ### Commands
 
