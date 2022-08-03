@@ -69,7 +69,7 @@ export const InventoryPage = () => {
 const AddCustomItem = ({ closeModal }: { closeModal: () => void }) => {
   const [title, setTitle] = useState('');
   const [price, setPrice] = useState('');
-  const { currency } = useCurrency();
+  const { currency, decimals } = useCurrency();
 
   const { handleAddCustomItems } = useCart();
 
@@ -103,6 +103,7 @@ const AddCustomItem = ({ closeModal }: { closeModal: () => void }) => {
         required
         type="number"
         min="0"
+        step={1 / 10 ** decimals}
       />
 
       <Button fullWidth type="submit">
