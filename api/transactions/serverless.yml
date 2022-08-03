@@ -1,0 +1,29 @@
+org: solanastore
+app: solana-transactions-api
+service: solana-transactions-api
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+
+functions:
+  api:
+    handler: handler.handler
+    events:
+      - httpApi: '*'
+
+plugins:
+  - serverless-offline
+  - serverless-plugin-typescript
+
+package:
+  patterns:
+    - node_modules/**
+
+custom:
+  serverless-offline:
+    useChildProcesses: true
+    httpPort: 9800
+    websocketPort: 9801
+    lambdaPort: 9802

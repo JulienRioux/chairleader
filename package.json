@@ -1,0 +1,16 @@
+{
+  "name": "monorepo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev:remote-api": "cd client && yarn dev",
+    "dev:local-store-api": "concurrently --kill-others \"cd client && sleep 15 && yarn dev:local-store-api\" \"cd api/store && yarn dev\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Julien Rioux",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^7.3.0"
+  }
+}

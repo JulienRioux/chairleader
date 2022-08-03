@@ -1,0 +1,236 @@
+import { useCurrency } from 'hooks/currency';
+import { useStore } from 'hooks/store';
+import * as React from 'react';
+import { useContext } from 'react';
+import { Logger, StorageKeys } from 'utils';
+import { v4 as uuid } from 'uuid';
+import {
+  createContext,
+  useCallback,
+  useState,
+  ReactNode,
+  FC,
+  useEffect,
+  useMemo,
+} from 'react';
+import { message } from 'components-library';
+
+export interface IInventoryItem {
+  _id: string;
+  qty: number;
+  description: string;
+  image: string;
+  price: number;
+  title: string;
+  totalSupply: number;
+}
+
+interface ICartContext {
+  cartItems: IInventoryItem[];
+  updateQuantity: ({ id, qty }: { id: string; qty: number }) => void;
+  removeItemFromCart: (id: string) => void;
+  totalPrice: number;
+  totalSaleTax: number;
+  totalWithSaleTax: number;
+  resetCart: () => void;
+  getCartSummaryForInvoice: () => any;
+  cartItemsNumber: number;
+  handleAddCustomItems: ({
+    title,
+    price,
+  }: {
+    title: string;
+    price: number;
+  }) => void;
+}
+
+export interface ICartItem {
+  _id: string;
+  qty: number;
+}
+
+export const CartContext = createContext<ICartContext>({} as ICartContext);
+
+/** Get the cart items stored as key in LocalStorage
+ * In the future, we'll need to check if the stored items still available and remove it from the list if not
+ */
+const getLocalStorageCartItems = () => {
+  try {
+    return (
+      JSON.parse(localStorage.getItem(StorageKeys.CART_ITEMS) ?? '[]') ?? []
+    );
+  } catch (err) {
+    Logger.error(err);
+    return [];
+  }
+};
+
+export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
+  const [cartItems, setCartItems] = useState<ICartItem[]>(
+    getLocalStorageCartItems()
+  );
+
+  // Custom items
+  const [customItems, setCustomItems] = useState<IInventoryItem[]>([]);
+
+  const { decimals } = useCurrency();
+
+  const { inventory, store } = useStore();
+
+  const inventoryAndCustomItems = useMemo(
+    () => [...customItems, ...inventory],
+    [customItems, inventory]
+  );
+
+  const SALE_TAX_PERCENT = store?.saleTax / 100 ?? 0;
+
+  const updateQuantity = useCallback(
+    ({ id, qty }: { id: string; qty: number }) => {
+      const itemIsInCart = cartItems.find((item) => item._id === id);
+      if (itemIsInCart) {
+        const updatedCartITems = cartItems.map((item) =>
+          item._id === id ? { ...item, qty } : item
+        );
+        setCartItems(updatedCartITems);
+        return;
+      }
+      setCartItems([{ _id: id, qty }, ...cartItems]);
+    },
+    [cartItems]
+  );
+
+  const handleAddCustomItems = useCallback(
+    ({ title, price }: { title: string; price: number }) => {
+      const customItemId = `CUSTOM_ITEM_${uuid()}`;
+      const newCustomItem = {
+        _id: customItemId,
+        qty: 1,
+        description: '',
+        image: '',
+        price,
+        title,
+        totalSupply: 1,
+      };
+      // Add the custom item to the custom item array
+      setCustomItems([...customItems, newCustomItem]);
+      // Add the item to the cart item
+      setCartItems([{ _id: customItemId, qty: 1 }, ...cartItems]);
+    },
+    [cartItems, customItems]
+  );
+
+  const removeItemFromCart = useCallback(
+    (id: string) => {
+      const updatedCartITems = cartItems.filter((item) => item._id !== id);
+      setCartItems(updatedCartITems);
+    },
+    [cartItems]
+  );
+
+  useEffect(() => {
+    // Update the local stored cart items whenever it is being changed
+    localStorage.setItem(StorageKeys.CART_ITEMS, JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  // Make sure we're on a good quantity state (i.e. if unavailable, remove from cart)
+  useEffect(() => {
+    // TODO: We'll need to make sure we're not changing the qty when someone is making a payment
+    let cartItemsChanged = false;
+    const itemRelativeToTotalSupply = cartItems.reduce(
+      (acc: ICartItem[], currItem: ICartItem) => {
+        const item = inventoryAndCustomItems?.find(
+          (product) => currItem._id === product._id
+        );
+        // If the item did not exists anymore or has a supply of 0, remove it from the cart
+        if (!item?.totalSupply) {
+          message.info('Some of the items are not available anymore.');
+          cartItemsChanged = true;
+          return acc;
+        }
+        if (item?.totalSupply && item?.totalSupply < currItem.qty) {
+          // otherwise, set the qty to the totalSypply
+          currItem.qty = item.totalSupply;
+          message.info('Item quantity changed due to remaining supply.');
+          cartItemsChanged = true;
+        }
+        return [...acc, currItem] as ICartItem[];
+      },
+      []
+    );
+
+    if (cartItemsChanged) {
+      setCartItems(itemRelativeToTotalSupply);
+    }
+  }, [cartItems, inventoryAndCustomItems]);
+
+  const resetCart = useCallback(() => {
+    setCartItems([]);
+    localStorage.setItem(StorageKeys.CART_ITEMS, '[]');
+  }, []);
+
+  const populatedCartItems = cartItems.map((cartItem) => ({
+    ...inventoryAndCustomItems?.find((product) => cartItem._id === product._id),
+    qty: cartItem.qty,
+  })) as IInventoryItem[];
+
+  const totalPrice = Number(
+    populatedCartItems
+      .reduce((acc, curr) => curr.price * curr.qty + acc, 0)
+      .toFixed(decimals)
+  );
+
+  const totalSaleTax = Number(
+    (totalPrice * SALE_TAX_PERCENT).toFixed(decimals)
+  );
+
+  const totalWithSaleTax = Number(
+    (totalPrice + totalSaleTax).toFixed(decimals)
+  );
+
+  const cartItemsNumber = cartItems.reduce((acc, curr) => acc + curr.qty, 0);
+
+  const getCartSummaryForInvoice = useCallback(() => {
+    return {
+      cartItems: JSON.stringify(populatedCartItems),
+      totalPrice,
+      totalSaleTax,
+      totalWithSaleTax,
+    };
+  }, [populatedCartItems, totalPrice, totalSaleTax, totalWithSaleTax]);
+
+  const getCtx = useCallback(() => {
+    return {
+      cartItems: populatedCartItems,
+      updateQuantity,
+      removeItemFromCart,
+      totalPrice,
+      totalSaleTax,
+      totalWithSaleTax,
+      resetCart,
+      getCartSummaryForInvoice,
+      cartItemsNumber,
+      handleAddCustomItems,
+    };
+  }, [
+    populatedCartItems,
+    updateQuantity,
+    removeItemFromCart,
+    totalPrice,
+    totalSaleTax,
+    totalWithSaleTax,
+    resetCart,
+    getCartSummaryForInvoice,
+    cartItemsNumber,
+    handleAddCustomItems,
+  ]);
+
+  return (
+    <CartContext.Provider value={getCtx()}>{children}</CartContext.Provider>
+  );
+};
+
+export default CartContext.Consumer;
+
+export const useCart = () => {
+  return useContext(CartContext);
+};

@@ -1,0 +1,8 @@
+{
+  "header": "Here is your One Time Password",
+  "subHeader": "Click on the button to authenticate to your Alt Gate account.",
+  "ifLinkNotWorking": "If you have any questions, just reply to this email — we're always happy to help out.",
+  "thanks": "All the best,",
+  "teamName": "the Alt Gate Team",
+  "copyAndPasteText": "If that doesn't work, copy the <b>validation code</b> below and paste the validation code input:"
+}
