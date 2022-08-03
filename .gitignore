@@ -8,14 +8,14 @@ node_modules
 # ====================================
 
 # dependencies
-./client/.pnp
-./client/.pnp.js
+client/.pnp
+client/.pnp.js
 
 # testing
-./client/coverage
+client/coverage
 
 # production
-./client/build
+client/build
 
 # misc
 .DS_Store
@@ -24,21 +24,19 @@ node_modules
 .env.test.local
 .env.production.local
 
-./client/npm-debug.log*
-./client/yarn-debug.log*
-./client/yarn-error.log*
+client/npm-debug.log*
+client/yarn-debug.log*
+client/yarn-error.log*
 
-./client/.env
+client/.env
 
 # ====================================
 # APIs
 # ====================================
 # Store
-./api/store/.serverless
-./api/store/.env
-./api/store/.env-example
-./api/store/.build
+api/store/.env
+api/store/.env-example
+api/store/.build
 
 # Transactions
-./api/transactions/.serverless
-./api/transactions/.build
+api/transactions/.build
