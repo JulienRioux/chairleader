@@ -39,15 +39,24 @@ export const AuthProvider: React.FC<IBaseProps> = ({ children }) => {
       subDomain,
       currency,
       saleTax,
+      image,
     }: {
       storeName: string;
       walletAddress: string;
       subDomain: string;
       currency: CURRENCY;
       saleTax: number;
+      image: File;
     }) => {
       await updateUser({
-        variables: { storeName, walletAddress, subDomain, currency, saleTax },
+        variables: {
+          storeName,
+          walletAddress,
+          subDomain,
+          currency,
+          saleTax,
+          image,
+        },
       });
       await refetchMe();
     },

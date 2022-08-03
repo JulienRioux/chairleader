@@ -90,10 +90,9 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
   const [saleTax, setSaleTax] = useState(user?.saleTax ?? '0');
 
   // Image
-  const [imageSrc, setImageSrc] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
 
-  let currentImageSrc = imageSrc;
+  let currentImageSrc = user?.image;
 
   if (imageFile) {
     currentImageSrc = URL.createObjectURL(imageFile);
@@ -141,7 +140,9 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
     }
     if (e.target.name === 'image') {
       const files = (e.target as HTMLInputElement)?.files as FileList;
-      setImageFile(files[0]);
+      if (files[0]) {
+        setImageFile(files[0]);
+      }
     }
   }, []);
 
@@ -261,7 +262,7 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
         )}
 
         <Button type="button" secondary onClick={handleUploadFileClick}>
-          Add image
+          {currentImageSrc ? 'Update image' : 'Add image'}
         </Button>
       </ImageWrapper>
 
