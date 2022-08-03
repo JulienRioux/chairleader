@@ -37,6 +37,8 @@ client/.env
 api/store/.env
 api/store/.env-example
 api/store/.build
+api/store/.serverless
 
 # Transactions
 api/transactions/.build
+api/transactions/.serverless
