@@ -14,6 +14,7 @@ export const GET_ME = gql`
       subDomain
       currency
       saleTax
+      image
     }
   }
 `;
@@ -215,6 +216,7 @@ export const GET_STORE_DATA = gql`
         subDomain
         currency
         saleTax
+        image
       }
       products {
         _id

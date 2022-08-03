@@ -6,6 +6,7 @@ import styled, { css } from 'styled-components';
 import { routes } from 'utils';
 import { ToggleTheme } from 'pages/homepage';
 import { useMediaQuery } from 'hooks/media-query';
+import { useAuth } from 'hooks/auth';
 
 export const AdminLayoutWrapper = styled.div`
   display: grid;
@@ -79,13 +80,27 @@ const SideNavLink = styled(Button)<{ isActive?: boolean }>`
     `}
 `;
 
-const StoreImg = styled.img`
-  background: ${(p) => p.theme.color.lightGrey};
+const SharedStyles = css`
   border-radius: ${(p) => p.theme.borderRadius.default};
   border: 2px solid ${(p) => p.theme.color.lightGrey};
   width: 40px;
   height: 40px;
   transition: 0.2s;
+`;
+
+const StoreImg = styled.img`
+  ${SharedStyles}
+`;
+
+const NoImgStore = styled.div`
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: ${(p) => p.theme.color.text};
+
+  ${SharedStyles};
 `;
 
 const StoreImgLink = styled(UnstyledLink)``;
@@ -119,9 +134,27 @@ const RightLayoutWrapper = styled.div`
   width: 100%;
 `;
 
+export const StoreImgIcon = ({
+  image,
+  storeName,
+  ...props
+}: {
+  image?: string;
+  storeName?: string;
+}) => (
+  <>
+    {image ? (
+      <StoreImg src={image} {...props} />
+    ) : (
+      <NoImgStore {...props}>{storeName ? storeName[0] : ''}</NoImgStore>
+    )}
+  </>
+);
+
 export const AdminLayout = ({ children }: { children: ReactNode }) => {
   const { pathname } = useLocation();
   const isMobileView = useMediaQuery('(max-width: 800px)');
+  const { user } = useAuth();
 
   const pageTitle = pathname
     .replace('/admin/', '')
@@ -134,7 +167,7 @@ export const AdminLayout = ({ children }: { children: ReactNode }) => {
         <InnerSideNav>
           <SideNavWrapper>
             <StoreImgLink to={routes.admin.myStore}>
-              <StoreImg src="http://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-12/256/running-shoe.png" />
+              <StoreImgIcon image={user?.image} storeName={user?.storeName} />
             </StoreImgLink>
           </SideNavWrapper>
 

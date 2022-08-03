@@ -1,3 +1,4 @@
+import { StoreImgIcon } from 'components';
 import { Button, Icon, UnstyledLink } from 'components-library';
 import { Cart } from 'components/cart';
 import { useCart } from 'hooks/cart';
@@ -25,15 +26,6 @@ const PageTitle = styled.div`
   text-transform: capitalize;
   overflow: hidden;
   text-overflow: ellipsis;
-`;
-
-const StoreImg = styled.img`
-  background: ${(p) => p.theme.color.lightGrey};
-  border-radius: ${(p) => p.theme.borderRadius.default};
-  border: 2px solid ${(p) => p.theme.color.lightGrey};
-  width: 40px;
-  height: 40px;
-  margin-right: 12px;
 `;
 
 const ChildrenWrapper = styled.div`
@@ -106,12 +98,18 @@ const QtyBadge = styled.div`
   padding: 0 2px;
 `;
 
+const StyledStoreImgIcon = styled(StoreImgIcon)`
+  margin-right: 12px;
+`;
+
 export const StoreLogo = () => {
   const { store } = useStore();
+  console.log('store', store?.image);
 
   return (
     <StoreImgAndName to={routes.store.inventory}>
-      <StoreImg src="http://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-12/256/running-shoe.png" />
+      <StyledStoreImgIcon image={store?.image} storeName={store?.storeName} />
+      {/* <StoreImg src="http://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-12/256/running-shoe.png" /> */}
       <PageTitle>{store?.storeName}</PageTitle>
     </StoreImgAndName>
   );
