@@ -83,7 +83,7 @@ const LoaderWrapper = styled.div`
 `;
 
 const InnerLoader = styled.div`
-  border: 2px solid ${(p) => p.theme.color.buttonText};
+  border: 2px solid;
   border-right-color: transparent;
   border-radius: 50%;
   height: 16px;

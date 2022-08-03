@@ -13,7 +13,7 @@ import { HalfImagePageLayout } from 'pages/auth-page';
 import { ChangeEvent, FormEvent, useCallback, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled, { css } from 'styled-components';
-import { Logger, routes, validateSolanaAddress } from 'utils';
+import { Logger, resizeFileImg, routes, validateSolanaAddress } from 'utils';
 
 const Par = styled.p`
   color: ${(p) => p.theme.color.lightText};
@@ -49,6 +49,8 @@ const ShareStyles = css`
 `;
 
 const Img = styled.img`
+  object-fit: cover;
+
   ${ShareStyles}
 `;
 
@@ -91,6 +93,7 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
 
   // Image
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [resizeImgIsLoading, setResizeImgIsLoading] = useState(false);
 
   let currentImageSrc = user?.image;
 
@@ -105,7 +108,7 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
     }
   }, []);
 
-  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback(async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.name === 'storeName') {
       setStoreName(e.target.value);
     }
@@ -141,7 +144,13 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
     if (e.target.name === 'image') {
       const files = (e.target as HTMLInputElement)?.files as FileList;
       if (files[0]) {
-        setImageFile(files[0]);
+        // Resize the image and store the image
+        setResizeImgIsLoading(true);
+        const resizedFile = await resizeFileImg(files[0], 400);
+        if (resizedFile) {
+          setImageFile(resizedFile);
+        }
+        setResizeImgIsLoading(false);
       }
     }
   }, []);
@@ -261,7 +270,12 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
           </NoImageWrapper>
         )}
 
-        <Button type="button" secondary onClick={handleUploadFileClick}>
+        <Button
+          type="button"
+          secondary
+          onClick={handleUploadFileClick}
+          isLoading={resizeImgIsLoading}
+        >
           {currentImageSrc ? 'Update image' : 'Add image'}
         </Button>
       </ImageWrapper>

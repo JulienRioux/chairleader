@@ -89,6 +89,8 @@ const SharedStyles = css`
 `;
 
 const StoreImg = styled.img`
+  object-fit: cover;
+
   ${SharedStyles}
 `;
 

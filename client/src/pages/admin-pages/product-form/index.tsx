@@ -30,7 +30,7 @@ import {
 } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { routes } from 'utils';
+import { resizeFileImg, routes } from 'utils';
 
 const FormWrapper = styled.form`
   max-width: ${(p) => p.theme.layout.mediumWidth};
@@ -109,6 +109,7 @@ export const ProductForm = () => {
   const [category, setCategory] = useState('');
   const [totalSupply, setTotalSupply] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [resizeImgIsLoading, setResizeImgIsLoading] = useState(false);
 
   const [deleteProductById, { loading: deleteProductIsLoading }] =
     useMutation(DELETE_PRODUCT_BY_ID);
@@ -162,7 +163,7 @@ export const ProductForm = () => {
   }, [isEditting]);
 
   const handleChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    async (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       if (e.target.name === 'title') {
         setTitle(e.target.value);
       }
@@ -180,7 +181,15 @@ export const ProductForm = () => {
       }
       if (e.target.name === 'image') {
         const files = (e.target as HTMLInputElement)?.files as FileList;
-        setImageFile(files[0]);
+        if (files[0]) {
+          // Resize the image and store the image
+          setResizeImgIsLoading(true);
+          const resizedFile = await resizeFileImg(files[0]);
+          if (resizedFile) {
+            setImageFile(resizedFile);
+          }
+          setResizeImgIsLoading(false);
+        }
       }
     },
     []
@@ -264,13 +273,17 @@ export const ProductForm = () => {
           <>
             <Img src={currentImageSrc} />
 
-            <AddImgBtn>Change image</AddImgBtn>
+            <AddImgBtn>
+              {resizeImgIsLoading ? 'Loading...' : 'Change image'}
+            </AddImgBtn>
           </>
         ) : (
           <>
             <Icon name="image" />
 
-            <AddImgBtn>Add image</AddImgBtn>
+            <AddImgBtn>
+              {resizeImgIsLoading ? 'Loading...' : 'Add image'}
+            </AddImgBtn>
           </>
         )}
       </ImgWrapper>

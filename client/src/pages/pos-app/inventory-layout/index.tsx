@@ -109,7 +109,6 @@ export const StoreLogo = () => {
   return (
     <StoreImgAndName to={routes.store.inventory}>
       <StyledStoreImgIcon image={store?.image} storeName={store?.storeName} />
-      {/* <StoreImg src="http://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-12/256/running-shoe.png" /> */}
       <PageTitle>{store?.storeName}</PageTitle>
     </StoreImgAndName>
   );

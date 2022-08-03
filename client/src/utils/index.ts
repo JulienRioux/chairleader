@@ -5,3 +5,4 @@ export * from './logger';
 export * from './local-storage';
 export * from './validate-solana-address';
 export * from './solana-pay-constants';
+export * from './resize-image';
