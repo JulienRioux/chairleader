@@ -2,7 +2,7 @@ import { useCurrency } from 'hooks/currency';
 import { useStore } from 'hooks/store';
 import * as React from 'react';
 import { useContext } from 'react';
-import { Logger, StorageKeys } from 'utils';
+import { Logger, routes, StorageKeys } from 'utils';
 import { v4 as uuid } from 'uuid';
 import {
   createContext,
@@ -14,6 +14,7 @@ import {
   useMemo,
 } from 'react';
 import { message } from 'components-library';
+import { useSearchParams } from 'react-router-dom';
 
 export interface IInventoryItem {
   _id: string;
@@ -42,6 +43,7 @@ interface ICartContext {
     title: string;
     price: number;
   }) => void;
+  getPaymentLink: () => any;
 }
 
 export interface ICartItem {
@@ -76,6 +78,8 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const { decimals } = useCurrency();
 
   const { inventory, store } = useStore();
+
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const inventoryAndCustomItems = useMemo(
     () => [...customItems, ...inventory],
@@ -189,6 +193,31 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   const cartItemsNumber = cartItems.reduce((acc, curr) => acc + curr.qty, 0);
 
+  // Prepare the URL params for the payent link
+  const getPaymentLink = useCallback(() => {
+    const paymentLink = `${window.location.origin}${
+      routes.store.cart
+    }?payment_link_items=${JSON.stringify(cartItems)}`;
+
+    navigator.clipboard.writeText(paymentLink);
+    message.success(`The payment link has been copied to your clipboard.`);
+  }, [cartItems]);
+
+  useEffect(() => {
+    try {
+      const paymentLinkItems = searchParams.get('payment_link_items');
+      if (paymentLinkItems) {
+        const parsedPaymentLinkItems = JSON.parse(paymentLinkItems);
+        setCartItems(parsedPaymentLinkItems);
+      }
+    } catch (err) {
+      Logger.error(err);
+    }
+    setSearchParams('');
+    // Make sure we're only running this once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const getCartSummaryForInvoice = useCallback(() => {
     return {
       cartItems: JSON.stringify(populatedCartItems),
@@ -210,6 +239,7 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
       getCartSummaryForInvoice,
       cartItemsNumber,
       handleAddCustomItems,
+      getPaymentLink,
     };
   }, [
     populatedCartItems,
@@ -222,6 +252,7 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
     getCartSummaryForInvoice,
     cartItemsNumber,
     handleAddCustomItems,
+    getPaymentLink,
   ]);
 
   return (

@@ -6,7 +6,7 @@ import { TransactionsProvider } from 'contexts/TransactionsProvider';
 import { PaymentStatus, usePayment } from 'hooks/usePayment';
 import { ReactNode, useEffect, useMemo } from 'react';
 import BigNumber from 'bignumber.js';
-import { Logger, routes } from 'utils';
+import { isMobileDevice, Logger, routes } from 'utils';
 import {
   ConnectionProvider,
   WalletProvider,
@@ -23,7 +23,7 @@ import { CartSummary } from 'components';
 import { useCart } from 'hooks/cart';
 import { useNavigate, useParams } from 'react-router-dom';
 import { PoweredBySolanaPay } from 'components/powered-by-solana-pay';
-import { APP_NAME, USE_TRANSACTION } from 'configs';
+import { USE_TRANSACTION } from 'configs';
 import { useStore } from 'hooks/store';
 import { useCurrency } from 'hooks/currency';
 import { useScrollTop } from 'hooks/scroll-top';
@@ -146,10 +146,15 @@ export const ConfirmationPage = () => {
 const QrCodeLink = () => {
   const { amount, url } = usePayment();
   const isMobileView = useMediaQuery('(max-width: 800px)');
+  const { getPaymentLink } = useCart();
 
   if (!amount) {
     return null;
   }
+
+  const isMobile = isMobileDevice();
+
+  console.log('=>', isMobile);
 
   return (
     <CartPaymentWrapper>
@@ -167,12 +172,21 @@ const QrCodeLink = () => {
 
       <OrText>or pay with Phantom wallet on mobile.</OrText>
 
-      <PayWithSolanaPayLink href={url?.href} target="_blank">
-        <PayWithSolanaPay fullWidth={isMobileView}>
-          <span style={{ marginRight: '12px' }}>Pay with</span>
-          <SolanaPayLogo />
-        </PayWithSolanaPay>
-      </PayWithSolanaPayLink>
+      {/* Dont show the payment button is on desktop.  */}
+
+      {isMobile && (
+        <PayWithSolanaPayLink href={url?.href} target="_blank">
+          <PayWithSolanaPay fullWidth={isMobileView}>
+            <span style={{ marginRight: '12px' }}>Pay with</span>
+            <SolanaPayLogo />
+          </PayWithSolanaPay>
+        </PayWithSolanaPayLink>
+      )}
+
+      <Button secondary onClick={getPaymentLink} fullWidth={isMobileView}>
+        Get payment link
+        <Icon name="insert_link" style={{ marginLeft: '8px' }} />
+      </Button>
     </CartPaymentWrapper>
   );
 };

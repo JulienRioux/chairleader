@@ -115,7 +115,7 @@ export const PaymentsPage = () => {
             onChange={handleSearchChange}
             placeholder="Search by order ID or customer wallet ID"
           />
-          <Button icon="search" />
+          <Button icon="search" secondary />
         </SearchWrapper>
         <div style={{ display: 'flex' }}>
           <UnstyledExternalLink

@@ -6,7 +6,7 @@ import {
 } from 'components-library';
 import { USE_CATEGORY } from 'configs';
 import { ReactNode } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useMatch } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { routes } from 'utils';
 import { ToggleTheme } from 'pages/homepage';
@@ -175,6 +175,11 @@ export const AdminLayout = ({ children }: { children: ReactNode }) => {
   const isMobileView = useMediaQuery('(max-width: 800px)');
   const { user } = useAuth();
 
+  const isOnProductPage = useMatch(`${routes.admin.inventory}/:productId`);
+  const isOnInvoicePage = useMatch(`${routes.admin.payments}/:invoiceId`);
+
+  const showBackButton = isOnProductPage || isOnInvoicePage;
+
   const pageTitle = pathname
     .replace('/admin/', '')
     .replaceAll('-', ' ')
@@ -242,13 +247,19 @@ export const AdminLayout = ({ children }: { children: ReactNode }) => {
 
             <Button
               to={routes.admin.newProduct}
-              style={{ marginRight: '8px' }}
               icon={isMobileView ? 'add' : undefined}
             >
               {isMobileView ? '' : 'Add product'}
             </Button>
 
-            <Button secondary icon="search" to={routes.admin.search} />
+            {showBackButton && (
+              <Button
+                style={{ marginLeft: '8px' }}
+                secondary
+                icon="arrow_back"
+                to={-1}
+              />
+            )}
           </RightButtonWrapper>
         </TopNav>
         <ChildrenWrapper>{children}</ChildrenWrapper>

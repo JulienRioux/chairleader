@@ -1,10 +1,16 @@
 import { Button, Input, Loader, useModal } from 'components-library';
 import { ProductPreview } from 'components/product-preview';
-import { useCart } from 'hooks/cart';
+import { IInventoryItem, useCart } from 'hooks/cart';
 import { useCurrency } from 'hooks/currency';
 import { useInventory } from 'hooks/inventory';
 import { useStore } from 'hooks/store';
-import { useState, useCallback, FormEvent } from 'react';
+import {
+  useState,
+  useCallback,
+  FormEvent,
+  ChangeEvent,
+  useEffect,
+} from 'react';
 import styled, { css } from 'styled-components';
 
 const PosStyles = css`
@@ -48,8 +54,46 @@ const AddCustomProductBtn = styled(Button)`
   aspect-ratio: ${(p) => p.theme.products.image.aspectRatio};
 `;
 
+const Form = styled.form`
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+
+  button {
+    margin-left: 8px;
+  }
+
+  input {
+    max-width: 400px;
+  }
+`;
+
 export const InventoryPage = () => {
   const { inventory, isLoading } = useInventory();
+
+  const [searchString, setSearchString] = useState('');
+  const [result, setResult] = useState<IInventoryItem[]>(inventory);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchString(e.target.value);
+  };
+
+  const handleSubmit = useCallback(
+    (e: FormEvent) => {
+      e.preventDefault();
+      const searchResult = inventory.filter(({ title }) => {
+        console.log(title, searchString, title.includes(searchString));
+        return title.toLowerCase().includes(searchString.toLowerCase());
+      });
+      setResult(searchResult);
+    },
+    [inventory, searchString]
+  );
+
+  useEffect(() => {
+    setResult(inventory);
+  }, [inventory]);
 
   if (isLoading) {
     return <Loader />;
@@ -57,8 +101,17 @@ export const InventoryPage = () => {
 
   return (
     <div>
+      <Form onSubmit={handleSubmit}>
+        <Input
+          value={searchString}
+          onChange={handleChange}
+          placeholder="Search for item name"
+        />
+        <Button icon="search" secondary />
+      </Form>
+
       <ProductGrid>
-        {inventory?.map(({ image, title, price, _id }) => (
+        {result?.map(({ image, title, price, _id }) => (
           <ProductPreview
             key={_id}
             image={image}
@@ -69,6 +122,10 @@ export const InventoryPage = () => {
         ))}
 
         {!inventory?.length && <p>No product yet.</p>}
+
+        {inventory?.length && !result.length && searchString && (
+          <p>No search result.</p>
+        )}
       </ProductGrid>
     </div>
   );

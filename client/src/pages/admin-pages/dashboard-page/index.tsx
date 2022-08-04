@@ -78,7 +78,7 @@ export const DashboardPage = () => {
         }
       </DetailItem>
 
-      <h4 style={{ marginTop: '40px' }}>USDC summary:</h4>
+      <h4 style={{ marginTop: '40px' }}>USDC sales:</h4>
       <DetailItem label="Total sale before tax:">{totalPriceUSDC}</DetailItem>
       <DetailItem label="Total sale tax:">{totalSaleTaxUSDC}</DetailItem>
       <DetailItem label="Total sale with tax:">
@@ -88,7 +88,7 @@ export const DashboardPage = () => {
         {totalTransactionsUSDC}
       </DetailItem>
 
-      <h4 style={{ marginTop: '80px' }}>SOL summary:</h4>
+      <h4 style={{ marginTop: '80px' }}>SOL sales:</h4>
 
       <DetailItem label="Total sale before tax:">{totalPriceSOL}</DetailItem>
       <DetailItem label="Total sale tax:">{totalSaleTaxSOL}</DetailItem>

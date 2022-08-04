@@ -49,8 +49,6 @@ export const AdminAppRouter = () => {
           <Route path={'/new-category'} element={<CategoryForm />} />
         )}
 
-        <Route path={'/search'} element={<h1>Search</h1>} />
-
         <Route path={'/dashboard'} element={<DashboardPage />} />
 
         <Route path="*" element={<ErrorPage />} />
