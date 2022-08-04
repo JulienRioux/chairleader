@@ -102,6 +102,11 @@ const StyledStoreImgIcon = styled(StoreImgIcon)`
   margin-right: 12px;
 `;
 
+const ButtonsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 export const StoreLogo = () => {
   const { store } = useStore();
 
@@ -142,15 +147,23 @@ export const InventoryLayout = ({ children }: { children: ReactNode }) => {
         <LeftSideWrapper>
           <TopNav>
             <StoreLogo />
-            <div>
+            <ButtonsWrapper>
+              {isNotOnInventoryPage && (
+                <Button
+                  style={{ marginRight: '8px' }}
+                  secondary
+                  icon="arrow_back"
+                  to={-1}
+                />
+              )}
               <ToggleTheme />
 
-              {isNotOnInventoryPage ? (
+              {/* {isNotOnInventoryPage ? (
                 <Button secondary icon="arrow_back" to={-1} />
               ) : (
                 <Button secondary icon="search" to={routes.store.search} />
-              )}
-            </div>
+              )} */}
+            </ButtonsWrapper>
           </TopNav>
           <ChildrenWrapper>{children}</ChildrenWrapper>
         </LeftSideWrapper>

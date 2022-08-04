@@ -233,7 +233,7 @@ export const AdminLayout = ({ children }: { children: ReactNode }) => {
           <PageTitle>{pageTitle}</PageTitle>
 
           <RightButtonWrapper>
-            <ToggleTheme />
+            <ToggleTheme style={{ marginRight: '8px' }} />
 
             {USE_CATEGORY && (
               <Button

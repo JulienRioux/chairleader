@@ -108,7 +108,6 @@ const VideoWrapper = styled.div`
 `;
 
 const ModeBtn = styled(Button)`
-  margin-right: 8px;
   color: ${(p) => p.theme.color.text};
   border-radius: 2rem;
   padding: 0;
@@ -182,10 +181,10 @@ const SecondHeroBtn = styled(Button)`
   }
 `;
 
-export const ToggleTheme = () => {
+export const ToggleTheme = (props: any) => {
   const { toggleTheme, isDarkTheme } = useTheme();
   return (
-    <ModeBtn secondary onClick={toggleTheme}>
+    <ModeBtn secondary onClick={toggleTheme} {...props}>
       <IconWrapper isActive={isDarkTheme}>
         <Icon name="dark_mode" />
       </IconWrapper>
@@ -213,7 +212,7 @@ export const HomepageTopNav = () => {
         <BtnWrapper>
           {!isLoading && (
             <>
-              <ToggleTheme />
+              <ToggleTheme style={{ marginRight: '8px' }} />
 
               {isAuthenticated() ? (
                 <Button to={routes.admin.inventory} secondary icon="home" />
