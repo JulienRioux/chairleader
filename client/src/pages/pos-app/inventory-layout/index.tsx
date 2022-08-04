@@ -18,6 +18,10 @@ const TopNav = styled.div`
   align-items: center;
   justify-content: space-between;
   white-space: nowrap;
+  position: sticky;
+  top: 0;
+  background: ${(p) => p.theme.color.background};
+  z-index: 9;
 `;
 
 const PageTitle = styled.div`

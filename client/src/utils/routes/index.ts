@@ -25,6 +25,7 @@ export const routes = {
     inventory: '/inventory',
     search: '/inventory/search',
     cart: '/cart',
+    payment: '/payment',
     confirmation: '/confirmation',
   },
 };

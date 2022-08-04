@@ -4,18 +4,17 @@ import { SolanaPayLogo } from './SolanaPayLogo';
 
 const PoweredBySolanaPayWrapper = styled.div`
   display: flex;
-  margin: 16px;
+  margin: 0 8px;
   justify-content: center;
   align-items: center;
-  gap: 10px;
-  line-height: 48px;
-  font-weight: 500;
+  font-weight: bold;
 `;
 
 export const PoweredBySolanaPay: FC = () => {
   return (
     <PoweredBySolanaPayWrapper>
-      Powered by <SolanaPayLogo />
+      <span style={{ marginRight: '12px' }}>Powered by</span>
+      <SolanaPayLogo />
     </PoweredBySolanaPayWrapper>
   );
 };

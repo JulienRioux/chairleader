@@ -1,12 +1,11 @@
 import { PublicKey } from '@solana/web3.js';
-import { Button, Icon, Loader, UnstyledExternalLink } from 'components-library';
+import { Button, Icon } from 'components-library';
 import { ConfigProvider } from 'contexts/ConfigProvider';
 import { PaymentProvider } from 'contexts/PaymentProvider';
 import { TransactionsProvider } from 'contexts/TransactionsProvider';
 import { PaymentStatus, usePayment } from 'hooks/usePayment';
 import { ReactNode, useEffect, useMemo } from 'react';
-import BigNumber from 'bignumber.js';
-import { isMobileDevice, Logger, routes } from 'utils';
+import { Logger, routes } from 'utils';
 import {
   ConnectionProvider,
   WalletProvider,
@@ -15,19 +14,17 @@ import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
-import { QRCode } from 'components/qr-code';
 import { Digits } from 'types';
 import styled from 'styled-components';
 import { CartItems } from 'components/cart';
 import { CartSummary } from 'components';
 import { useCart } from 'hooks/cart';
 import { useNavigate, useParams } from 'react-router-dom';
-import { PoweredBySolanaPay } from 'components/powered-by-solana-pay';
 import { USE_TRANSACTION } from 'configs';
 import { useStore } from 'hooks/store';
 import { useCurrency } from 'hooks/currency';
 import { useScrollTop } from 'hooks/scroll-top';
-import { SolanaPayLogo } from 'components/powered-by-solana-pay/SolanaPayLogo';
+import { PaymentOptions } from 'pages/cart-payment-page';
 import { useMediaQuery } from 'hooks/media-query';
 
 export const getTxExplorerUrl = ({ signature = '', isDev = false }) =>
@@ -60,51 +57,20 @@ const PageTitle = styled.div`
   text-transform: capitalize;
 `;
 
-const PayWithSolanaPay = styled(Button)`
-  margin: 20px 0;
-  color: ${(p) => p.theme.color.background};
-  background: ${(p) => p.theme.color.text};
-  border-color: ${(p) => p.theme.color.text};
-  display: flex;
-  align-items: center;
-`;
-
-const CartPaymentWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 8px;
-
-  @media (max-width: 800px) {
-    margin-top: 40px;
-    border-top: 1px solid ${(p) => p.theme.color.lightGrey};
-  }
-`;
-
-const PayWithSolanaPayLink = styled(UnstyledExternalLink)`
-  @media (max-width: 800px) {
-    width: 100%;
-  }
-`;
-
-const OrText = styled.div`
-  padding: 20px 8px;
-  text-align: center;
-  opacity: 0.7;
-`;
-
-const Hr = styled.div`
-  width: 100%;
-  padding: 20px;
-  border-bottom: 1px solid ${(p) => p.theme.color.lightGrey};
-`;
-
-const CartPageLayout = ({ children }: { children: ReactNode }) => (
+export const CartPageLayout = ({
+  title,
+  link = routes.store.inventory,
+  children,
+}: {
+  title: string;
+  children: ReactNode;
+  link?: string;
+}) => (
   <div>
     <TopNav>
-      <PageTitle>Current order</PageTitle>
+      <PageTitle>{title}</PageTitle>
 
-      <Button icon="arrow_back" secondary to={routes.store.inventory} />
+      <Button icon="arrow_back" secondary to={link} />
     </TopNav>
 
     {children}
@@ -115,7 +81,7 @@ export const ConfirmationPage = () => {
   const { orderId, signatureId } = useParams();
 
   return (
-    <CartPageLayout>
+    <CartPageLayout title="Confirmation">
       <FinalizedTransactionWrapper>
         <CheckIconWrapper>
           <Icon name="check" />
@@ -143,54 +109,6 @@ export const ConfirmationPage = () => {
   );
 };
 
-const QrCodeLink = () => {
-  const { amount, url } = usePayment();
-  const isMobileView = useMediaQuery('(max-width: 800px)');
-  const { getPaymentLink } = useCart();
-
-  if (!amount) {
-    return null;
-  }
-
-  const isMobile = isMobileDevice();
-
-  console.log('=>', isMobile);
-
-  return (
-    <CartPaymentWrapper>
-      <PoweredBySolanaPay />
-
-      <p style={{ fontWeight: 'bold' }}>
-        Scan this code with your Solana Pay wallet
-      </p>
-
-      <QRCode />
-
-      <p>You'll be asked to approve the transaction</p>
-
-      <Hr />
-
-      <OrText>or pay with Phantom wallet on mobile.</OrText>
-
-      {/* Dont show the payment button is on desktop.  */}
-
-      {isMobile && (
-        <PayWithSolanaPayLink href={url?.href} target="_blank">
-          <PayWithSolanaPay fullWidth={isMobileView}>
-            <span style={{ marginRight: '12px' }}>Pay with</span>
-            <SolanaPayLogo />
-          </PayWithSolanaPay>
-        </PayWithSolanaPayLink>
-      )}
-
-      <Button secondary onClick={getPaymentLink} fullWidth={isMobileView}>
-        Get payment link
-        <Icon name="insert_link" style={{ marginLeft: '8px' }} />
-      </Button>
-    </CartPaymentWrapper>
-  );
-};
-
 const TopNav = styled.div`
   padding: 8px 20px;
   border-bottom: 1px solid ${(p) => p.theme.color.lightGrey};
@@ -198,6 +116,10 @@ const TopNav = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: ${(p) => p.theme.color.background};
+  z-index: 9;
 `;
 
 const CartPaymentLayout = styled.div`
@@ -227,21 +149,26 @@ const CartItemsWrapper = styled.div`
   }
 `;
 
+const ContinueToPayButtonWrapper = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 8px;
+  background: ${(p) => p.theme.color.background};
+  border-top: 1px solid ${(p) => p.theme.color.lightGrey};
+`;
+
 export const CartPage = () => {
   useScrollTop();
-  const { generate, setAmount, progress } = usePayment();
   const { totalWithSaleTax, cartItems, totalPrice, totalSaleTax } = useCart();
   const { status } = usePayment();
   const navigate = useNavigate();
+  const showPaymentOptions = useMediaQuery('(max-width: 1000px)');
 
   const { currency } = useCurrency();
 
   const isFinalized = status === PaymentStatus.Finalized;
-
-  useEffect(() => {
-    setAmount(totalWithSaleTax ? new BigNumber(totalWithSaleTax) : undefined);
-    generate();
-  }, [generate, setAmount, totalWithSaleTax]);
 
   useEffect(() => {
     // Redirect the user if they dont have cart items or in the confirmation page
@@ -251,35 +178,36 @@ export const CartPage = () => {
   }, [cartItems.length, isFinalized, navigate]);
 
   return (
-    <CartPageLayout>
+    <CartPageLayout title="Current order">
       <CartPaymentLayout>
         <CartItemsWrapper>
           <CartItems showHeaderText={false} />
-
-          <CartSummaryWrapper>
-            <CartSummary
-              totalPrice={totalPrice}
-              totalSaleTax={totalSaleTax}
-              totalWithSaleTax={totalWithSaleTax}
-              currency={currency}
-            />
-          </CartSummaryWrapper>
         </CartItemsWrapper>
 
-        <div>
-          {progress === 0 && (
-            <div>
-              <QrCodeLink />
-            </div>
-          )}
+        {showPaymentOptions ? (
+          <ContinueToPayButtonWrapper>
+            <CartSummaryWrapper>
+              <CartSummary
+                totalPrice={totalPrice}
+                totalSaleTax={totalSaleTax}
+                totalWithSaleTax={totalWithSaleTax}
+                currency={currency}
+              />
+            </CartSummaryWrapper>
 
-          {progress > 0 && <Loader />}
-        </div>
+            <Button to={routes.store.payment} fullWidth>
+              Pay
+            </Button>
+          </ContinueToPayButtonWrapper>
+        ) : (
+          <PaymentOptions />
+        )}
       </CartPaymentLayout>
     </CartPageLayout>
   );
 };
 
+// TODO: Move this in it's own file
 export const SolanaPayProviders = ({ children }: { children: ReactNode }) => {
   const {
     symbol,

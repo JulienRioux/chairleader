@@ -26,6 +26,7 @@ import { StoreNotFoundPage } from 'pages/store-not-found-page';
 import { Loader } from 'components-library';
 import { useStore } from 'hooks/store';
 import { DashboardPage } from 'pages/admin-pages/dashboard-page';
+import { CartPaymentPage } from 'pages/cart-payment-page';
 
 export const AdminAppRouter = () => {
   return (
@@ -66,6 +67,8 @@ export const StoreAppRouter = () => {
             <Route path={'/inventory/*'} element={<StoreApp />} />
 
             <Route path={routes.store.cart} element={<CartPage />} />
+
+            <Route path={routes.store.payment} element={<CartPaymentPage />} />
 
             <Route
               path={'/confirmation/:orderId/tx/:signatureId'}
