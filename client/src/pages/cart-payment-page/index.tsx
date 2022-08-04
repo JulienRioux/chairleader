@@ -78,6 +78,23 @@ const InnerCircle = styled.div<{ isExpanded: boolean }>`
   ${(p) => p.isExpanded && `background: ${p.theme.color.primary}`}
 `;
 
+const PaymentOptionsMainWrapper = styled.div`
+  max-width: 100%;
+  margin: 0 auto;
+  width: 600px;
+  border: 1px solid ${(p) => p.theme.color.lightGrey};
+  height: fit-content;
+  border-radius: ${(p) => p.theme.borderRadius.default};
+
+  @media (max-width: 1248px) {
+    width: 480px;
+  }
+
+  @media (max-width: 1000px) {
+    border: none;
+  }
+`;
+
 enum TABS {
   QR_CODE = 'QR_CODE',
   SOLANA_PAY = 'SOLANA_PAY',
@@ -130,7 +147,7 @@ export const PaymentOptions = () => {
   if (progress > 0) return <Loader />;
 
   return (
-    <div>
+    <PaymentOptionsMainWrapper>
       <Option
         title="Qr code"
         isExpanded={currentTab === TABS.QR_CODE}
@@ -162,7 +179,7 @@ export const PaymentOptions = () => {
           onClick={() => setCurrentTab(TABS.SOLANA_PAY)}
         >
           <PayWithSolanaPayLink href={url?.href} target="_blank">
-            <PayWithSolanaPay fullWidth={isMobileView}>
+            <PayWithSolanaPay fullWidth>
               <span style={{ marginRight: '12px' }}>Pay with</span>
               <SolanaPayLogo />
             </PayWithSolanaPay>
@@ -175,21 +192,17 @@ export const PaymentOptions = () => {
         isExpanded={currentTab === TABS.PAYMENT_LINK}
         onClick={() => setCurrentTab(TABS.PAYMENT_LINK)}
       >
-        <Button secondary onClick={getPaymentLink} fullWidth={isMobileView}>
+        <Button secondary onClick={getPaymentLink} fullWidth>
           Copy payment link
           <Icon name="insert_link" style={{ marginLeft: '8px' }} />
         </Button>
       </Option>
-    </div>
+    </PaymentOptionsMainWrapper>
   );
 };
 
 const PaymentOptionsWrapper = styled.div`
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  border-top: 1px solid ${(p) => p.theme.color.lightGrey};
+  background: ${(p) => p.theme.color.white};
 `;
 
 export const CartPaymentPage = () => {

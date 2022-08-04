@@ -4,7 +4,7 @@ import { ConfigProvider } from 'contexts/ConfigProvider';
 import { PaymentProvider } from 'contexts/PaymentProvider';
 import { TransactionsProvider } from 'contexts/TransactionsProvider';
 import { PaymentStatus, usePayment } from 'hooks/usePayment';
-import { ReactNode, useEffect, useMemo } from 'react';
+import { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { Logger, routes } from 'utils';
 import {
   ConnectionProvider,
@@ -116,10 +116,6 @@ const TopNav = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: sticky;
-  top: 0;
-  background: ${(p) => p.theme.color.background};
-  z-index: 9;
 `;
 
 const CartPaymentLayout = styled.div`
@@ -133,30 +129,42 @@ const CartPaymentLayout = styled.div`
   }
 `;
 
-const CartSummaryWrapper = styled.div`
-  padding: 40px 20px 8px;
-`;
+const CartSummaryWrapper = styled.div``;
 
 const CartItemsWrapper = styled.div`
   max-width: calc(100vw / 2);
   width: 600px;
   margin: 0 auto;
+  border: 1px solid #dfdfdf;
+  border-radius: 8px;
+  height: min-content;
 
   @media (max-width: 1000px) {
     max-width: none;
     margin: 0;
     width: auto;
+    border: none;
   }
 `;
 
-const ContinueToPayButtonWrapper = styled.div`
+const TotalAndContinue = styled.div`
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  margin: 8px;
   background: ${(p) => p.theme.color.background};
   border-top: 1px solid ${(p) => p.theme.color.lightGrey};
+  border-top: 1px solid ${(p) => p.theme.color.lightGrey};
+`;
+
+const TotalAndContinueInner = styled.div`
+  margin: 8px;
+`;
+
+const DesktopSummaryWrapper = styled.div`
+  border-top: 1px solid ${(p) => p.theme.color.lightGrey};
+  margin-top: 20px;
+  padding: 40px 20px 8px;
 `;
 
 export const CartPage = () => {
@@ -165,6 +173,9 @@ export const CartPage = () => {
   const { status } = usePayment();
   const navigate = useNavigate();
   const showPaymentOptions = useMediaQuery('(max-width: 1000px)');
+
+  const [height, setHeight] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
 
   const { currency } = useCurrency();
 
@@ -177,28 +188,47 @@ export const CartPage = () => {
     }
   }, [cartItems.length, isFinalized, navigate]);
 
+  useEffect(() => {
+    setHeight(ref?.current?.clientHeight ?? 0);
+  }, []);
+
   return (
     <CartPageLayout title="Current order">
       <CartPaymentLayout>
-        <CartItemsWrapper>
+        <CartItemsWrapper style={{ marginBottom: `${height + 20}px` }}>
           <CartItems showHeaderText={false} />
+
+          {!showPaymentOptions && (
+            <DesktopSummaryWrapper>
+              <CartSummaryWrapper>
+                <CartSummary
+                  totalPrice={totalPrice}
+                  totalSaleTax={totalSaleTax}
+                  totalWithSaleTax={totalWithSaleTax}
+                  currency={currency}
+                />
+              </CartSummaryWrapper>
+            </DesktopSummaryWrapper>
+          )}
         </CartItemsWrapper>
 
         {showPaymentOptions ? (
-          <ContinueToPayButtonWrapper>
-            <CartSummaryWrapper>
-              <CartSummary
-                totalPrice={totalPrice}
-                totalSaleTax={totalSaleTax}
-                totalWithSaleTax={totalWithSaleTax}
-                currency={currency}
-              />
-            </CartSummaryWrapper>
+          <TotalAndContinue ref={ref}>
+            <TotalAndContinueInner>
+              <CartSummaryWrapper>
+                <CartSummary
+                  totalPrice={totalPrice}
+                  totalSaleTax={totalSaleTax}
+                  totalWithSaleTax={totalWithSaleTax}
+                  currency={currency}
+                />
+              </CartSummaryWrapper>
 
-            <Button to={routes.store.payment} fullWidth>
-              Pay
-            </Button>
-          </ContinueToPayButtonWrapper>
+              <Button to={routes.store.payment} fullWidth>
+                Continue
+              </Button>
+            </TotalAndContinueInner>
+          </TotalAndContinue>
         ) : (
           <PaymentOptions />
         )}
