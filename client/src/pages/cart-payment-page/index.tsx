@@ -85,6 +85,8 @@ const PaymentOptionsMainWrapper = styled.div`
   border: 1px solid ${(p) => p.theme.color.lightGrey};
   height: fit-content;
   border-radius: ${(p) => p.theme.borderRadius.default};
+  position: sticky;
+  top: 8px;
 
   @media (max-width: 1248px) {
     width: 480px;
@@ -130,8 +132,6 @@ export const PaymentOptions = () => {
   const [currentTab, setCurrentTab] = useState(
     isMobile ? TABS.SOLANA_PAY : TABS.QR_CODE
   );
-
-  const isMobileView = useMediaQuery('(max-width: 800px)');
 
   const { getPaymentLink } = useCart();
   const { url, amount } = usePayment();
@@ -202,7 +202,7 @@ export const PaymentOptions = () => {
 };
 
 const PaymentOptionsWrapper = styled.div`
-  background: ${(p) => p.theme.color.white};
+  background: ${(p) => p.theme.color.background};
 `;
 
 export const CartPaymentPage = () => {

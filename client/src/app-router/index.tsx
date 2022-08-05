@@ -27,6 +27,8 @@ import { Loader } from 'components-library';
 import { useStore } from 'hooks/store';
 import { DashboardPage } from 'pages/admin-pages/dashboard-page';
 import { CartPaymentPage } from 'pages/cart-payment-page';
+import { StaticPage } from 'pages/static-page/inex';
+import { PricingPage } from 'pages/pricing-page';
 
 export const AdminAppRouter = () => {
   return (
@@ -107,6 +109,13 @@ const MainAppRouter = () => {
       <Route path={routes.admin.base + '/*'} element={<AdminAppRouter />} />
 
       <Route path={routes.store.base + '/*'} element={<StoreAppRouter />} />
+
+      <Route
+        path={routes.static.base + '/:staticPage'}
+        element={<StaticPage />}
+      />
+
+      <Route path={routes.pricing} element={<PricingPage />} />
 
       <Route path="*" element={<ErrorPage />} />
     </Routes>

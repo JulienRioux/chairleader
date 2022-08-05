@@ -20,6 +20,10 @@ const PosStyles = css`
     grid-template-columns: 1fr 1fr 1fr;
   }
 
+  @media (max-width: 1000px) {
+    margin-bottom: 80px;
+  }
+
   @media (max-width: 600px) {
     grid-template-columns: 1fr 1fr;
   }

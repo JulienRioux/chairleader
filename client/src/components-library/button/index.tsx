@@ -97,7 +97,7 @@ const BtnLoader = () => (
   </LoaderWrapper>
 );
 
-const ChildWrapper = styled.span<{ $isLoading?: boolean }>`
+export const ChildWrapper = styled.span<{ $isLoading?: boolean }>`
   display: inline-flex;
   justify-content: center;
   align-items: center;

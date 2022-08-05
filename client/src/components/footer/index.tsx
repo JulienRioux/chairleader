@@ -56,8 +56,8 @@ const footerData = [
   },
   {
     content: [
-      { title: 'Privacy policy', to: routes.privacy },
-      { title: 'Terms of service', to: routes.tos },
+      { title: 'Privacy policy', to: routes.static.privacy },
+      { title: 'Terms of service', to: routes.static.termsOfService },
     ],
     title: 'Legal',
   },

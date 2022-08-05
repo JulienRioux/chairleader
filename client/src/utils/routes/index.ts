@@ -1,12 +1,15 @@
 export const routes = {
   base: '/',
   auth: '/authenticate',
-  privacy: '/privacy',
-  tos: '/terms-of-service',
   pricing: '/pricing',
   magicLink: '/magic-link',
   completeSignup: '/complete-signup',
   storeNotFound: '/store-not-found',
+  static: {
+    base: '/static',
+    privacy: '/static/privacy',
+    termsOfService: '/static/terms-of-service',
+  },
 
   admin: {
     base: '/admin',

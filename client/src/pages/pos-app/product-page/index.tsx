@@ -63,9 +63,6 @@ const DummyDiv = styled.div`
 
 const AddToCartWrapper = styled.div`
   border-top: 1px solid ${(p) => p.theme.color.lightGrey};
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   padding: 8px;
   position: fixed;
   bottom: 0;
@@ -76,6 +73,14 @@ const AddToCartWrapper = styled.div`
   @media (max-width: 1000px) {
     right: 0;
   }
+`;
+
+const InnerAddToCartWrapper = styled.div`
+  max-width: ${(p) => p.theme.layout.mediumWidth};
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 export const ProductPage = () => {
@@ -152,12 +157,14 @@ export const ProductPage = () => {
 
       {!isOutOfStock && (
         <AddToCartWrapper>
-          <NumberInput value={qty} onChange={setQty} max={maxQuantity} />
+          <InnerAddToCartWrapper>
+            <NumberInput value={qty} onChange={setQty} max={maxQuantity} />
 
-          <Button onClick={handleAddToCart} disabled={maxQuantity === 0}>
-            {isUpdating ? 'Update cart' : 'Add to cart'}{' '}
-            {Number((Number(price) * qty).toFixed(decimals))} {currency}
-          </Button>
+            <Button onClick={handleAddToCart} disabled={maxQuantity === 0}>
+              {isUpdating ? 'Update cart' : 'Add to cart'}{' '}
+              {Number((Number(price) * qty).toFixed(decimals))} {currency}
+            </Button>
+          </InnerAddToCartWrapper>
         </AddToCartWrapper>
       )}
 

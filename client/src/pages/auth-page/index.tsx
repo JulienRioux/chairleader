@@ -123,8 +123,8 @@ export const AuthPage = () => {
 
         <Par>
           By clicking &quot;Create account&quot;, I agree to {APP_NAME}&apos;s{' '}
-          <Link to={routes.tos}>TOS</Link> and{' '}
-          <Link to={routes.privacy}>privacy policy</Link>.
+          <Link to={routes.static.termsOfService}>TOS</Link> and{' '}
+          <Link to={routes.static.privacy}>privacy policy</Link>.
         </Par>
       </form>
     </HalfImagePageLayout>

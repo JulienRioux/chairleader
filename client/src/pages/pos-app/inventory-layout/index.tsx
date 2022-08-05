@@ -1,5 +1,5 @@
 import { StoreImgIcon } from 'components';
-import { Button, Icon, UnstyledLink } from 'components-library';
+import { Button, ChildWrapper, Icon, UnstyledLink } from 'components-library';
 import { Cart } from 'components/cart';
 import { useCart } from 'hooks/cart';
 import { useCurrency } from 'hooks/currency';
@@ -73,33 +73,17 @@ const MobileCartFixedBtn = styled(Button)`
   bottom: 8px;
   right: 8px;
   z-index: 9;
+  width: calc(100% - 16px);
+
+  ${ChildWrapper} {
+    justify-content: space-between;
+    width: 100%;
+  }
 
   display: none;
   @media (max-width: 1000px) {
     display: inline-flex;
   }
-`;
-
-const InnerMobileCartBtn = styled.span`
-  position: relative;
-`;
-
-const QtyBadge = styled.div`
-  position: absolute;
-  bottom: calc(100% + 4px);
-  left: calc(100% + 4px);
-  border: 1px solid ${(p) => p.theme.color.primary};
-  background: ${(p) => p.theme.color.background};
-  color: ${(p) => p.theme.color.primary};
-  heigth: 14px;
-  min-heigth: 14px;
-  min-width: 14px;
-  font-size: 14px;
-  border-radius: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 2px;
 `;
 
 const StyledStoreImgIcon = styled(StoreImgIcon)`
@@ -133,11 +117,10 @@ const MobileCartBtn = () => {
 
   return (
     <MobileCartFixedBtn to={routes.store.cart}>
-      <InnerMobileCartBtn>
-        {currency} {totalWithSaleTax}{' '}
-        <Icon style={{ marginLeft: '8px' }} name="shopping_cart" />
-        <QtyBadge>{cartItemsNumber}</QtyBadge>
-      </InnerMobileCartBtn>
+      <span>{cartItemsNumber} items</span>
+      <span>
+        {currency} {totalWithSaleTax}
+      </span>
     </MobileCartFixedBtn>
   );
 };
@@ -161,12 +144,6 @@ export const InventoryLayout = ({ children }: { children: ReactNode }) => {
                 />
               )}
               <ToggleTheme />
-
-              {/* {isNotOnInventoryPage ? (
-                <Button secondary icon="arrow_back" to={-1} />
-              ) : (
-                <Button secondary icon="search" to={routes.store.search} />
-              )} */}
             </ButtonsWrapper>
           </TopNav>
           <ChildrenWrapper>{children}</ChildrenWrapper>

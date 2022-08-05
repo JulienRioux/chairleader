@@ -135,7 +135,7 @@ const CartItemsWrapper = styled.div`
   max-width: calc(100vw / 2);
   width: 600px;
   margin: 0 auto;
-  border: 1px solid #dfdfdf;
+  border: 1px solid ${(p) => p.theme.color.lightGrey};
   border-radius: 8px;
   height: min-content;
 
@@ -158,7 +158,7 @@ const TotalAndContinue = styled.div`
 `;
 
 const TotalAndContinueInner = styled.div`
-  margin: 8px;
+  margin: 20px 8px 8px;
 `;
 
 const DesktopSummaryWrapper = styled.div`
@@ -195,7 +195,7 @@ export const CartPage = () => {
   return (
     <CartPageLayout title="Current order">
       <CartPaymentLayout>
-        <CartItemsWrapper style={{ marginBottom: `${height + 20}px` }}>
+        <CartItemsWrapper style={{ marginBottom: `${height}px` }}>
           <CartItems showHeaderText={false} />
 
           {!showPaymentOptions && (
@@ -224,8 +224,12 @@ export const CartPage = () => {
                 />
               </CartSummaryWrapper>
 
-              <Button to={routes.store.payment} fullWidth>
-                Continue
+              <Button
+                style={{ marginTop: '8px' }}
+                to={routes.store.payment}
+                fullWidth
+              >
+                Continue to payment
               </Button>
             </TotalAndContinueInner>
           </TotalAndContinue>
