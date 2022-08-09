@@ -21,7 +21,7 @@ import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { PublicKey } from '@solana/web3.js';
 import { useStore } from 'hooks/store';
 
-enum CURRENCY_AND_NETWORK {
+export enum CURRENCY_AND_NETWORK {
   USDC_DEVNET = 'USDC_DEVNET',
   USDC_MAINNET = 'USDC_MAINNET',
   SOL_DEVNET = 'SOL_DEVNET',
@@ -38,7 +38,7 @@ export enum NETWORK {
   MAINNET = 'MAINNET',
 }
 
-const currencyMap = {
+export const currencyMap = {
   [CURRENCY_AND_NETWORK.USDC_DEVNET]: {
     icon: <USDCIcon />,
     symbol: 'USDC',

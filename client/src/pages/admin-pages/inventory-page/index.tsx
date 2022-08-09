@@ -87,7 +87,6 @@ export const InventoryPage = () => {
     (e: FormEvent) => {
       e.preventDefault();
       const searchResult = inventory.filter(({ title }) => {
-        console.log(title, searchString, title.includes(searchString));
         return title.toLowerCase().includes(searchString.toLowerCase());
       });
       setResult(searchResult);

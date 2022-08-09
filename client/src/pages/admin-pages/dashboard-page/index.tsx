@@ -1,8 +1,14 @@
 import { useQuery } from '@apollo/client';
 import { Button, Loader } from 'components-library';
-import { CURRENCY, NETWORK } from 'hooks/currency';
+import { useAuth } from 'hooks/auth';
+import {
+  CURRENCY,
+  currencyMap,
+  CURRENCY_AND_NETWORK,
+  NETWORK,
+} from 'hooks/currency';
 import { GET_INVOICES_BY_STORE_ID } from 'queries';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { DetailItem } from '../invoice-page';
 
@@ -15,6 +21,7 @@ const NetworkTab = styled(Button)`
   margin-left: 8px;
   min-width: auto;
   padding: 4px 12px;
+  min-width: 80px;
 `;
 
 // TODO: Move this into the BE
@@ -23,43 +30,35 @@ export const DashboardPage = () => {
     notifyOnNetworkStatusChange: true,
   });
 
+  const { user } = useAuth();
   const [network, setNetwork] = useState(NETWORK.DEVNET);
+  const [currency, setCurrency] = useState(user?.currency ?? CURRENCY.USDC);
 
-  let totalWithSaleTaxUSDC = 0;
-  let totalTransactionsUSDC = 0;
-  let totalSaleTaxUSDC = 0;
-  let totalPriceUSDC = 0;
+  let totalWithSaleTax = 0;
+  let totalTransactions = 0;
+  let totalSaleTax = 0;
+  let totalPrice = 0;
 
-  let totalWithSaleTaxSOL = 0;
-  let totalTransactionsSOL = 0;
-  let totalSaleTaxSOL = 0;
-  let totalPriceSOL = 0;
+  const { decimals } =
+    currencyMap[CURRENCY_AND_NETWORK[`${currency as CURRENCY}_${network}`]];
+
+  const fixDecimal = (amount: any) =>
+    typeof amount === 'number' ? Number(amount.toFixed(decimals)) : 0;
 
   data?.getInvoicesByStoreId?.forEach((invoice: any) => {
-    if (invoice.network === network) {
-      if (invoice?.currency === CURRENCY.USDC) {
-        totalWithSaleTaxUSDC += invoice.totalWithSaleTax;
-        totalTransactionsUSDC++;
-        totalSaleTaxUSDC += invoice.totalSaleTax;
-        totalPriceUSDC += invoice.totalPrice;
-      }
-
-      if (invoice?.currency === CURRENCY.SOL) {
-        totalWithSaleTaxSOL += invoice.totalWithSaleTax;
-        totalTransactionsSOL++;
-        totalSaleTaxSOL += invoice.totalSaleTax;
-        totalPriceSOL += invoice.totalPrice;
-      }
+    if (invoice.network === network && invoice.currency === currency) {
+      totalWithSaleTax += invoice.totalWithSaleTax;
+      totalTransactions++;
+      totalSaleTax += invoice.totalSaleTax;
+      totalPrice += invoice.totalPrice;
     }
   });
-
-  console.log(data?.getInvoicesByStoreId);
 
   if (loading) return <Loader />;
 
   return (
     <DashboardPageWrapper>
-      <DetailItem label="Network:">
+      <DetailItem label="Currency:">
         {
           <>
             <NetworkTab
@@ -78,25 +77,36 @@ export const DashboardPage = () => {
         }
       </DetailItem>
 
-      <h4 style={{ marginTop: '40px' }}>USDC sales:</h4>
-      <DetailItem label="Total sale before tax:">{totalPriceUSDC}</DetailItem>
-      <DetailItem label="Total sale tax:">{totalSaleTaxUSDC}</DetailItem>
-      <DetailItem label="Total sale with tax:">
-        {totalWithSaleTaxUSDC}
-      </DetailItem>
-      <DetailItem label="Number of transactions:">
-        {totalTransactionsUSDC}
+      <DetailItem label="Network:">
+        {
+          <>
+            <NetworkTab
+              secondary={currency !== CURRENCY.USDC}
+              onClick={() => setCurrency(CURRENCY.USDC)}
+            >
+              {CURRENCY.USDC}
+            </NetworkTab>
+            <NetworkTab
+              secondary={currency !== CURRENCY.SOL}
+              onClick={() => setCurrency(CURRENCY.SOL)}
+            >
+              {CURRENCY.SOL}
+            </NetworkTab>
+          </>
+        }
       </DetailItem>
 
-      <h4 style={{ marginTop: '80px' }}>SOL sales:</h4>
-
-      <DetailItem label="Total sale before tax:">{totalPriceSOL}</DetailItem>
-      <DetailItem label="Total sale tax:">{totalSaleTaxSOL}</DetailItem>
+      <DetailItem label="Total sale before tax:">
+        {fixDecimal(totalPrice)}
+      </DetailItem>
+      <DetailItem label="Total sale tax:">
+        {fixDecimal(totalSaleTax)}
+      </DetailItem>
       <DetailItem label="Total sale with tax:">
-        {totalWithSaleTaxSOL}
+        {fixDecimal(totalWithSaleTax)}
       </DetailItem>
       <DetailItem label="Number of transactions:">
-        {totalTransactionsSOL}
+        {totalTransactions}
       </DetailItem>
     </DashboardPageWrapper>
   );

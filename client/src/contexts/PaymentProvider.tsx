@@ -6,8 +6,6 @@ import {
   findReference,
   FindReferenceError,
   parseURL,
-  validateTransfer,
-  ValidateTransferError,
 } from '@solana/pay';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import {
@@ -127,7 +125,17 @@ export const PaymentProvider: FC<PaymentProviderProps> = ({ children }) => {
         memo,
       });
     }
-  }, [link, recipient, amount, splToken, reference, label, message, memo]);
+  }, [
+    link,
+    recipient,
+    amount,
+    splToken,
+    reference,
+    memo,
+    label,
+    store?.image,
+    message,
+  ]);
 
   const reset = useCallback(() => {
     setAmount(undefined);
@@ -198,6 +206,12 @@ export const PaymentProvider: FC<PaymentProviderProps> = ({ children }) => {
       let signature: ConfirmedSignatureInfo;
       try {
         signature = await findReference(connection, reference);
+
+        // Getting the customer wallet ID
+        const response = await connection.getTransaction(signature.signature);
+        setCustomerWalletAddress(
+          response?.transaction?.message?.accountKeys[0].toString() ?? ''
+        );
 
         if (!changed) {
           clearInterval(interval);

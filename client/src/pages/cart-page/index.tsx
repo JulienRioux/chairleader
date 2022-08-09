@@ -260,11 +260,9 @@ export const SolanaPayProviders = ({ children }: { children: ReactNode }) => {
   // If you're testing without a mobile wallet, set this to true to allow a browser wallet to be used.
   const connectWallet = false;
 
-  // const link = USE_TRANSACTION
-  //   ? new URL('https://9w2ejfrzsb.execute-api.us-east-1.amazonaws.com')
-  //   : undefined;
-
-  const link = new URL('https://0110-96-20-253-84.ngrok.io');
+  const link = new URL(
+    'https://9w2ejfrzsb.execute-api.us-east-1.amazonaws.com'
+  );
 
   let recipient: PublicKey | undefined = undefined;
 
