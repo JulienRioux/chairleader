@@ -1,6 +1,6 @@
 import { PublicKey } from '@solana/web3.js';
 import { createContext, ReactElement, useContext } from 'react';
-import { Confirmations, Digits } from '../types';
+import { Confirmations, Digits } from '../../types';
 
 export interface ConfigContextState {
   baseURL: string;
@@ -14,7 +14,6 @@ export interface ConfigContextState {
   decimals: Digits;
   minDecimals: Digits;
   requiredConfirmations: Confirmations;
-  connectWallet: boolean;
 }
 
 export const ConfigContext = createContext<ConfigContextState>(

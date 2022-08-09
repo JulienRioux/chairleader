@@ -1,18 +1,10 @@
 import { useMutation } from '@apollo/client';
-import {
-  createTransfer,
-  encodeURL,
-  fetchTransaction,
-  findReference,
-  FindReferenceError,
-  parseURL,
-} from '@solana/pay';
-import { useConnection, useWallet } from '@solana/wallet-adapter-react';
+import { encodeURL, findReference, FindReferenceError } from '@solana/pay';
+import { useConnection } from '@solana/wallet-adapter-react';
 import {
   ConfirmedSignatureInfo,
   Keypair,
   PublicKey,
-  Transaction,
   TransactionSignature,
 } from '@solana/web3.js';
 import BigNumber from 'bignumber.js';
@@ -27,9 +19,9 @@ import React, {
 } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Logger, routes } from 'utils';
-import { useConfig } from '../hooks/useConfig';
-import { PaymentContext, PaymentStatus } from '../hooks/usePayment';
-import { Confirmations } from '../types';
+import { useConfig } from '../../hooks/config';
+import { PaymentContext, PaymentStatus } from '../../hooks/payment';
+import { Confirmations } from '../../types';
 import { message as messageComponent } from 'components-library';
 import { useCart } from 'hooks/cart';
 import { useStore } from 'hooks/store';
@@ -41,16 +33,8 @@ export interface PaymentProviderProps {
 
 export const PaymentProvider: FC<PaymentProviderProps> = ({ children }) => {
   const { connection } = useConnection();
-  const {
-    link,
-    recipient,
-    splToken,
-    label,
-    message,
-    requiredConfirmations,
-    connectWallet,
-  } = useConfig();
-  const { publicKey, sendTransaction } = useWallet();
+  const { link, recipient, splToken, label, message, requiredConfirmations } =
+    useConfig();
 
   const { currency, network } = useCurrency();
 
@@ -79,38 +63,25 @@ export const PaymentProvider: FC<PaymentProviderProps> = ({ children }) => {
 
       url.searchParams.append('recipient', recipient.toBase58());
 
-      if (amount) {
+      if (amount)
         url.searchParams.append(
           'amount',
           amount.toFixed(amount.decimalPlaces())
         );
-      }
 
-      if (splToken) {
-        url.searchParams.append('spl-token', splToken.toBase58());
-      }
+      if (splToken) url.searchParams.append('spl-token', splToken.toBase58());
 
-      if (reference) {
-        url.searchParams.append('reference', reference.toBase58());
-      }
+      if (reference) url.searchParams.append('reference', reference.toBase58());
 
-      if (memo) {
-        url.searchParams.append('memo', memo);
-      }
+      if (memo) url.searchParams.append('memo', memo);
 
-      if (label) {
-        url.searchParams.append('label', label);
-      }
+      if (label) url.searchParams.append('label', label);
 
       const icon = store?.image;
 
-      if (icon) {
-        url.searchParams.append('icon', icon);
-      }
+      if (icon) url.searchParams.append('icon', icon);
 
-      if (message) {
-        url.searchParams.append('message', message);
-      }
+      if (message) url.searchParams.append('message', message);
 
       return encodeURL({ link: url });
     } else {
@@ -151,50 +122,6 @@ export const PaymentProvider: FC<PaymentProviderProps> = ({ children }) => {
       setStatus(PaymentStatus.Pending);
     }
   }, [status, reference]);
-
-  // If there's a connected wallet, use it to sign and send the transaction
-  useEffect(() => {
-    if (status === PaymentStatus.Pending && connectWallet && publicKey) {
-      let changed = false;
-
-      const run = async () => {
-        try {
-          const request = parseURL(url);
-          let transaction: Transaction;
-
-          if ('link' in request) {
-            const { link } = request;
-            transaction = await fetchTransaction(connection, publicKey, link);
-          } else {
-            const { recipient, amount, splToken, reference, memo } = request;
-            if (!amount) return;
-
-            transaction = await createTransfer(connection, publicKey, {
-              recipient,
-              amount,
-              splToken,
-              reference,
-              memo,
-            });
-          }
-
-          if (!changed) {
-            await sendTransaction(transaction, connection);
-          }
-        } catch (error) {
-          // If the transaction is declined or fails, try again
-          Logger.error(error);
-          timeout = setTimeout(run, 5000);
-        }
-      };
-      let timeout = setTimeout(run, 0);
-
-      return () => {
-        changed = true;
-        clearTimeout(timeout);
-      };
-    }
-  }, [status, connectWallet, publicKey, url, connection, sendTransaction]);
 
   // When the status is pending, poll for the transaction using the reference key
   useEffect(() => {

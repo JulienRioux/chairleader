@@ -2,7 +2,7 @@ import { createQROptions } from '@solana/pay';
 import QRCodeStyling from '@solana/qr-code-styling';
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { useTheme } from 'styled-components';
-import { usePayment } from '../hooks/usePayment';
+import { usePayment } from '../hooks/payment';
 
 export const QRCode: FC = () => {
   const theme = useTheme() as any;

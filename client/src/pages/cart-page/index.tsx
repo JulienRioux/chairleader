@@ -1,26 +1,12 @@
-import { PublicKey } from '@solana/web3.js';
 import { Button, Icon } from 'components-library';
-import { ConfigProvider } from 'contexts/ConfigProvider';
-import { PaymentProvider } from 'contexts/PaymentProvider';
-import { TransactionsProvider } from 'contexts/TransactionsProvider';
-import { PaymentStatus, usePayment } from 'hooks/usePayment';
-import { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
-import { Logger, routes } from 'utils';
-import {
-  ConnectionProvider,
-  WalletProvider,
-} from '@solana/wallet-adapter-react';
-import {
-  PhantomWalletAdapter,
-  SolflareWalletAdapter,
-} from '@solana/wallet-adapter-wallets';
-import { Digits } from 'types';
+import { PaymentStatus, usePayment } from 'hooks/payment';
+import { ReactNode, useEffect, useRef, useState } from 'react';
+import { routes } from 'utils';
 import styled from 'styled-components';
 import { CartItems } from 'components/cart';
 import { CartSummary } from 'components';
 import { useCart } from 'hooks/cart';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useStore } from 'hooks/store';
 import { useCurrency } from 'hooks/currency';
 import { useScrollTop } from 'hooks/scroll-top';
 import { PaymentOptions } from 'pages/cart-payment-page';
@@ -237,81 +223,5 @@ export const CartPage = () => {
         )}
       </CartPaymentLayout>
     </CartPageLayout>
-  );
-};
-
-// TODO: Move this in it's own file!!!
-export const SolanaPayProviders = ({ children }: { children: ReactNode }) => {
-  const {
-    symbol,
-    walletAdapterNetwork,
-    icon,
-    networkEndpoint,
-    splToken,
-    decimals,
-    minDecimals,
-  } = useCurrency();
-  const { cartItemsNumber } = useCart();
-
-  const baseURL = `https://${window.location.host}`;
-
-  const { store } = useStore();
-
-  // If you're testing without a mobile wallet, set this to true to allow a browser wallet to be used.
-  const connectWallet = false;
-
-  const link = new URL(
-    'https://9w2ejfrzsb.execute-api.us-east-1.amazonaws.com'
-  );
-
-  let recipient: PublicKey | undefined = undefined;
-
-  const recipientParam =
-    store?.walletAddress ?? 'CaLiBb3CPagr4Vfaiyr6dsBZ5vxadjN33o6QgaMzj48m';
-  const label = store?.storeName;
-
-  const message = `${cartItemsNumber} items`;
-
-  if (recipientParam && label) {
-    try {
-      recipient = new PublicKey(recipientParam);
-    } catch (error) {
-      Logger.error(error);
-    }
-  }
-
-  const wallets = useMemo(
-    () =>
-      connectWallet
-        ? [
-            new PhantomWalletAdapter(),
-            new SolflareWalletAdapter({ network: walletAdapterNetwork }),
-          ]
-        : [],
-    [connectWallet, walletAdapterNetwork]
-  );
-
-  return (
-    <ConnectionProvider endpoint={networkEndpoint}>
-      <WalletProvider wallets={wallets} autoConnect={connectWallet}>
-        <ConfigProvider
-          baseURL={baseURL}
-          link={link}
-          recipient={recipient as PublicKey}
-          label={label}
-          message={message}
-          symbol={symbol}
-          icon={icon}
-          decimals={decimals as Digits}
-          minDecimals={minDecimals as Digits}
-          connectWallet={connectWallet}
-          splToken={splToken}
-        >
-          <TransactionsProvider>
-            <PaymentProvider>{children}</PaymentProvider>
-          </TransactionsProvider>
-        </ConfigProvider>
-      </WalletProvider>
-    </ConnectionProvider>
   );
 };

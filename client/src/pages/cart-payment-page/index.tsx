@@ -9,7 +9,7 @@ import {
   UnstyledExternalLink,
   Loader,
 } from 'components-library';
-import { usePayment } from 'hooks/usePayment';
+import { usePayment } from 'hooks/payment';
 import { isMobileDevice, routes } from 'utils';
 import { QRCode } from 'components/qr-code';
 import { useCart } from 'hooks/cart';

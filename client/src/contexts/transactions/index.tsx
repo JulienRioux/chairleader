@@ -10,9 +10,9 @@ import {
 } from '@solana/web3.js';
 import BigNumber from 'bignumber.js';
 import React, { FC, ReactNode, useEffect, useState } from 'react';
-import { Transaction, TransactionsContext } from '../hooks/useTransactions';
-import { Confirmations } from '../types';
-import { useConfig } from '../hooks/useConfig';
+import { Transaction, TransactionsContext } from '../../hooks/transaction';
+import { Confirmations } from '../../types';
+import { useConfig } from '../../hooks/config';
 import { Logger, MAX_CONFIRMATIONS } from 'utils';
 
 function arraysEqual(a: any[], b: any[]) {

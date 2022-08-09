@@ -1,7 +1,7 @@
 import { PublicKey, TransactionSignature } from '@solana/web3.js';
 import BigNumber from 'bignumber.js';
 import { createContext, useContext } from 'react';
-import { Confirmations } from '../types';
+import { Confirmations } from '../../types';
 
 export enum PaymentStatus {
   New = 'New',

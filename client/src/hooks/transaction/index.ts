@@ -4,7 +4,7 @@ import {
   TransactionSignature,
 } from '@solana/web3.js';
 import { createContext, useContext } from 'react';
-import { Confirmations } from '../types';
+import { Confirmations } from '../../types';
 
 export interface Transaction {
   signature: TransactionSignature;

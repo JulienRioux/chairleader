@@ -14,11 +14,7 @@ import { StoreApp } from 'pages/pos-app';
 import { VerifyCodePage } from 'pages/verify-code-page';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { routes } from 'utils';
-import {
-  CartPage,
-  ConfirmationPage,
-  SolanaPayProviders,
-} from 'pages/cart-page';
+import { CartPage, ConfirmationPage } from 'pages/cart-page';
 import { CartProvider } from 'hooks/cart';
 import { CurrencyProvider } from 'hooks/currency';
 import { InvoicePage } from 'pages/admin-pages/invoice-page';
@@ -29,6 +25,7 @@ import { DashboardPage } from 'pages/admin-pages/dashboard-page';
 import { CartPaymentPage } from 'pages/cart-payment-page';
 import { StaticPage } from 'pages/static-page/inex';
 import { PricingPage } from 'pages/pricing-page';
+import { SolanaPayProviders } from 'contexts/solana-pay';
 
 export const AdminAppRouter = () => {
   return (
