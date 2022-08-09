@@ -20,7 +20,6 @@ import { CartItems } from 'components/cart';
 import { CartSummary } from 'components';
 import { useCart } from 'hooks/cart';
 import { useNavigate, useParams } from 'react-router-dom';
-import { USE_TRANSACTION } from 'configs';
 import { useStore } from 'hooks/store';
 import { useCurrency } from 'hooks/currency';
 import { useScrollTop } from 'hooks/scroll-top';
@@ -241,7 +240,7 @@ export const CartPage = () => {
   );
 };
 
-// TODO: Move this in it's own file
+// TODO: Move this in it's own file!!!
 export const SolanaPayProviders = ({ children }: { children: ReactNode }) => {
   const {
     symbol,
@@ -261,9 +260,11 @@ export const SolanaPayProviders = ({ children }: { children: ReactNode }) => {
   // If you're testing without a mobile wallet, set this to true to allow a browser wallet to be used.
   const connectWallet = false;
 
-  const link = USE_TRANSACTION
-    ? new URL('https://9w2ejfrzsb.execute-api.us-east-1.amazonaws.com')
-    : undefined;
+  // const link = USE_TRANSACTION
+  //   ? new URL('https://9w2ejfrzsb.execute-api.us-east-1.amazonaws.com')
+  //   : undefined;
+
+  const link = new URL('https://0110-96-20-253-84.ngrok.io');
 
   let recipient: PublicKey | undefined = undefined;
 

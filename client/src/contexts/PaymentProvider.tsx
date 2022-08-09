@@ -202,7 +202,7 @@ export const PaymentProvider: FC<PaymentProviderProps> = ({ children }) => {
         if (!changed) {
           clearInterval(interval);
           setSignature(signature.signature);
-          setStatus(PaymentStatus.Confirmed);
+          setStatus(PaymentStatus.Valid);
         }
       } catch (error: any) {
         // If the RPC node doesn't have the transaction signature yet, try again
@@ -217,50 +217,6 @@ export const PaymentProvider: FC<PaymentProviderProps> = ({ children }) => {
       clearInterval(interval);
     };
   }, [status, reference, signature, connection]);
-
-  // When the status is confirmed, validate the transaction against the provided params
-  useEffect(() => {
-    if (!(status === PaymentStatus.Confirmed && signature && amount)) return;
-    let changed = false;
-
-    const run = async () => {
-      try {
-        const transfertData = await validateTransfer(connection, signature, {
-          recipient,
-          amount,
-          splToken,
-          reference,
-        });
-        // Get the customer address
-        setCustomerWalletAddress(
-          transfertData.transaction.message.accountKeys[0].toString()
-        );
-
-        if (!changed) {
-          setStatus(PaymentStatus.Valid);
-        }
-      } catch (error: any) {
-        // If the RPC node doesn't have the transaction yet, try again
-        if (
-          error instanceof ValidateTransferError &&
-          (error.message === 'not found' || error.message === 'missing meta')
-        ) {
-          Logger.info(error);
-          timeout = setTimeout(run, 250);
-          return;
-        }
-
-        Logger.error(error);
-        setStatus(PaymentStatus.Invalid);
-      }
-    };
-    let timeout = setTimeout(run, 0);
-
-    return () => {
-      changed = true;
-      clearTimeout(timeout);
-    };
-  }, [status, signature, amount, connection, recipient, splToken, reference]);
 
   // When the status is valid, poll for confirmations until the transaction is finalized
   useEffect(() => {

@@ -1,0 +1,44 @@
+{
+  "version": "0.1.0",
+  "name": "split_payment_sol",
+  "instructions": [
+    {
+      "name": "splitPaymentSol",
+      "accounts": [
+        {
+          "name": "recipient",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "intermediaryAccount",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "fees",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "address": "GoGJ4gK7W76K5CRreoiYUEztm1BFR8CPrHpuNQnKphq5"
+  }
+}
