@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { CartItem, CartSummary } from 'components';
 import { Icon, Loader } from 'components-library';
-import { NETWORK } from 'hooks/currency';
+import { CURRENCY, NETWORK } from 'hooks/currency';
 import { getTxExplorerUrl } from 'pages/cart-page';
 import { GET_INVOICE_BY_ID } from 'queries';
 import { ReactNode } from 'react';
@@ -68,6 +68,8 @@ export const InvoicePage = () => {
     return <Loader />;
   }
 
+  const decimals = invoiceData?.currency === CURRENCY.SOL ? 9 : 6;
+
   const isDevNetwork = invoiceData?.network === NETWORK.DEVNET;
 
   return (
@@ -87,6 +89,10 @@ export const InvoicePage = () => {
         <DetailItem label="Currency:">{invoiceData?.currency}</DetailItem>
 
         <DetailItem label="Network:">{invoiceData?.network}</DetailItem>
+
+        <DetailItem label="Service fees:">
+          {invoiceData?.serviceFees.toFixed(decimals)} {invoiceData?.currency}
+        </DetailItem>
 
         <DetailItem label="Customer wallet address:">
           <a

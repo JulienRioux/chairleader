@@ -52,6 +52,7 @@ export const schemaTypes = `
     customerWalletAddress: String
     currency: String
     network: String
+    serviceFees: Float
   }
 
   type StoreData {

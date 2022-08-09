@@ -12,6 +12,7 @@ export const addInvoice = async ({
   customerWalletAddress,
   currency,
   network,
+  serviceFees,
 }: {
   signature: string;
   totalPrice: number;
@@ -22,6 +23,7 @@ export const addInvoice = async ({
   customerWalletAddress: string;
   currency: string;
   network: string;
+  serviceFees: number;
 }) => {
   try {
     const doc = new InvoiceModel({
@@ -34,6 +36,7 @@ export const addInvoice = async ({
       customerWalletAddress,
       currency,
       network,
+      serviceFees,
     });
 
     // Updating the product quantity

@@ -60,7 +60,6 @@ export const PaymentProvider: FC<PaymentProviderProps> = ({ children }) => {
   const [signature, setSignature] = useState<TransactionSignature>();
   const [status, setStatus] = useState(PaymentStatus.New);
   const [confirmations, setConfirmations] = useState<Confirmations>(0);
-  const [customerWalletAddress, setCustomerWalletAddress] = useState('');
   const navigate = useNavigate();
   const progress = useMemo(
     () => confirmations / requiredConfirmations,
@@ -207,12 +206,6 @@ export const PaymentProvider: FC<PaymentProviderProps> = ({ children }) => {
       try {
         signature = await findReference(connection, reference);
 
-        // Getting the customer wallet ID
-        const response = await connection.getTransaction(signature.signature);
-        setCustomerWalletAddress(
-          response?.transaction?.message?.accountKeys[0].toString() ?? ''
-        );
-
         if (!changed) {
           clearInterval(interval);
           setSignature(signature.signature);
@@ -257,6 +250,21 @@ export const PaymentProvider: FC<PaymentProviderProps> = ({ children }) => {
             // Saving the invoice in out DB
             const cartSummary = getCartSummaryForInvoice();
 
+            // Getting the customer wallet ID
+            const response = await connection.getTransaction(signature);
+            const customerWalletAddress =
+              response?.transaction?.message?.accountKeys[0].toString() ?? '';
+
+            // Retrieve the service fee data
+            const serviceFeePreTokenBalances =
+              response?.meta?.preTokenBalances?.at(0)?.uiTokenAmount?.uiAmount;
+            const serviceFeePostTokenBalances =
+              response?.meta?.postTokenBalances?.at(0)?.uiTokenAmount?.uiAmount;
+
+            const serviceFees =
+              Number(serviceFeePostTokenBalances) -
+              Number(serviceFeePreTokenBalances);
+
             const newInvoice = await saveTransactionInvoice({
               variables: {
                 ...cartSummary,
@@ -265,6 +273,7 @@ export const PaymentProvider: FC<PaymentProviderProps> = ({ children }) => {
                 storeId: store?._id,
                 currency,
                 network,
+                serviceFees,
               },
             });
 
@@ -299,7 +308,6 @@ export const PaymentProvider: FC<PaymentProviderProps> = ({ children }) => {
     reset,
     resetCart,
     navigate,
-    customerWalletAddress,
     store?._id,
     currency,
     network,

@@ -12,6 +12,7 @@ export const saveTransactionInvoiceMutation = async (
     storeId,
     currency,
     network,
+    serviceFees,
   },
   context
 ) => {
@@ -25,5 +26,6 @@ export const saveTransactionInvoiceMutation = async (
     customerWalletAddress,
     currency,
     network,
+    serviceFees,
   });
 };

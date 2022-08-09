@@ -34,6 +34,6 @@ export const mutations = `
       """
       Save transaction invoice
       """
-      saveTransactionInvoice(cartItems: String!, signature: String!, totalPrice: Float!, totalSaleTax: Float!, totalWithSaleTax: Float!, customerWalletAddress: String!, storeId: String!, currency: String!, network: String!): Invoice
+      saveTransactionInvoice(cartItems: String!, signature: String!, totalPrice: Float!, totalSaleTax: Float!, totalWithSaleTax: Float!, customerWalletAddress: String!, storeId: String!, currency: String!, network: String!, serviceFees: Float!): Invoice
   }
 `;

@@ -8,7 +8,7 @@ import {
   NETWORK,
 } from 'hooks/currency';
 import { GET_INVOICES_BY_STORE_ID } from 'queries';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { DetailItem } from '../invoice-page';
 
@@ -24,20 +24,27 @@ const NetworkTab = styled(Button)`
   min-width: 80px;
 `;
 
+const CurrencyWrapper = styled.span`
+  color: ${(p) => p.theme.color.text}aa;
+`;
+
 // TODO: Move this into the BE
 export const DashboardPage = () => {
-  const { data, loading, refetch } = useQuery(GET_INVOICES_BY_STORE_ID, {
+  const { data, loading } = useQuery(GET_INVOICES_BY_STORE_ID, {
     notifyOnNetworkStatusChange: true,
   });
 
   const { user } = useAuth();
+  const currentCurrency = user?.currency;
+
   const [network, setNetwork] = useState(NETWORK.DEVNET);
-  const [currency, setCurrency] = useState(user?.currency ?? CURRENCY.USDC);
+  const [currency, setCurrency] = useState(currentCurrency ?? CURRENCY.USDC);
 
   let totalWithSaleTax = 0;
   let totalTransactions = 0;
   let totalSaleTax = 0;
   let totalPrice = 0;
+  let totalServiceFees = 0;
 
   const { decimals } =
     currencyMap[CURRENCY_AND_NETWORK[`${currency as CURRENCY}_${network}`]];
@@ -51,6 +58,7 @@ export const DashboardPage = () => {
       totalTransactions++;
       totalSaleTax += invoice.totalSaleTax;
       totalPrice += invoice.totalPrice;
+      totalServiceFees += invoice.serviceFees ?? 0;
     }
   });
 
@@ -97,14 +105,23 @@ export const DashboardPage = () => {
       </DetailItem>
 
       <DetailItem label="Total sale before tax:">
-        {fixDecimal(totalPrice)}
+        {fixDecimal(totalPrice)} <CurrencyWrapper>{currency}</CurrencyWrapper>
       </DetailItem>
+
       <DetailItem label="Total sale tax:">
-        {fixDecimal(totalSaleTax)}
+        {fixDecimal(totalSaleTax)} <CurrencyWrapper>{currency}</CurrencyWrapper>
       </DetailItem>
+
       <DetailItem label="Total sale with tax:">
-        {fixDecimal(totalWithSaleTax)}
+        {fixDecimal(totalWithSaleTax)}{' '}
+        <CurrencyWrapper>{currency}</CurrencyWrapper>
       </DetailItem>
+
+      <DetailItem label="Total service fees:">
+        {fixDecimal(totalServiceFees)}{' '}
+        <CurrencyWrapper>{currency}</CurrencyWrapper>
+      </DetailItem>
+
       <DetailItem label="Number of transactions:">
         {totalTransactions}
       </DetailItem>

@@ -12,6 +12,7 @@ export interface IInvoice {
   customerWalletAddress: string;
   currency: string;
   network: string;
+  serviceFees: number;
 }
 
 const InvoiceSchema = new Schema<IInvoice>({
@@ -25,6 +26,7 @@ const InvoiceSchema = new Schema<IInvoice>({
   customerWalletAddress: String,
   currency: String,
   network: String,
+  serviceFees: Number,
 });
 
 export const InvoiceModel = model<IInvoice>('Invoice', InvoiceSchema);

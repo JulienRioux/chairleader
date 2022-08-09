@@ -154,6 +154,7 @@ export const SAVE_TRANSACTION_INVOICE = gql`
     $storeId: String!
     $currency: String!
     $network: String!
+    $serviceFees: Float!
   ) {
     saveTransactionInvoice(
       cartItems: $cartItems
@@ -165,6 +166,7 @@ export const SAVE_TRANSACTION_INVOICE = gql`
       storeId: $storeId
       currency: $currency
       network: $network
+      serviceFees: $serviceFees
     ) {
       _id
       signature
@@ -188,6 +190,7 @@ export const GET_INVOICES_BY_STORE_ID = gql`
       customerWalletAddress
       currency
       network
+      serviceFees
       cartItems {
         title
         _id
@@ -242,6 +245,7 @@ export const GET_INVOICE_BY_ID = gql`
       customerWalletAddress
       currency
       network
+      serviceFees
       cartItems {
         title
         _id
