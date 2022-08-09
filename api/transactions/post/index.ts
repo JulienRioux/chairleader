@@ -1,22 +1,11 @@
-import { TextEncoder } from 'util';
-import {
-  ConfirmOptions,
-  Keypair,
-  LAMPORTS_PER_SOL,
-  PublicKey,
-  Transaction,
-} from '@solana/web3.js';
+import { LAMPORTS_PER_SOL, PublicKey, Transaction } from '@solana/web3.js';
 import BigNumber from 'bignumber.js';
 import { connection } from '../connection';
-import { Program, web3, BN, AnchorProvider } from '@project-serum/anchor';
-import * as idl from './idl/split_payment_sol.json';
-import { Idl } from '@project-serum/anchor/dist/cjs/idl';
+import { web3, BN } from '@project-serum/anchor';
 const { SystemProgram } = web3;
-import { opts, programId, SERVICE_FEES } from './utils';
-import * as dotenv from 'dotenv';
-import { NodeWallet } from './node-wallet';
-
-dotenv.config();
+import { DEVNET_DUMMY_MINT, SERVICE_FEES } from './utils';
+import { getMint } from '@solana/spl-token';
+import { createSPLTokenInstruction } from './create-spl-token-instruction';
 
 export const post = async (request, response) => {
   try {
@@ -42,11 +31,6 @@ export const post = async (request, response) => {
       throw new Error('invalid reference');
     const reference = new PublicKey(referenceField);
 
-    const memoParam = request.query.memo;
-    if (memoParam && typeof memoParam !== 'string')
-      throw new Error('invalid memo');
-    const memo = memoParam || undefined;
-
     const messageParam = request.query.message;
     if (messageParam && typeof messageParam !== 'string')
       throw new Error('invalid message');
@@ -64,52 +48,85 @@ export const post = async (request, response) => {
       'CaLiBb3CPagr4Vfaiyr6dsBZ5vxadjN33o6QgaMzj48m'
     );
 
-    const PRIVATE_KEY = new TextEncoder().encode(process.env.SECRET_KEY);
-    const PUBLIC_KEY = new PublicKey(process.env.PUBLIC_KEY ?? '');
-
-    const wallet = new NodeWallet({
-      secretKey: PRIVATE_KEY,
-      publicKey: PUBLIC_KEY,
-    } as Keypair);
-
-    const provider = new AnchorProvider(
-      connection,
-      wallet,
-      opts.preflightCommitment as ConfirmOptions
-    );
-
-    const program = new Program(idl as Idl, programId, provider);
-
-    // Setting up the differents recipient amount
-    const totalAmountInLamport = Number(amount) * LAMPORTS_PER_SOL;
-    const recipientPayout = new BN(totalAmountInLamport * (1 - SERVICE_FEES));
-    const servicePayout = new BN(totalAmountInLamport * SERVICE_FEES);
-
+    // Creating a new transaction
     const transaction = new Transaction();
 
-    // Creating the transaction instructions
-    const instructions = program.instruction.splitPaymentSol(
-      recipientPayout,
-      servicePayout,
-      {
-        accounts: {
-          payer: account,
-          recipient,
-          systemProgram: new PublicKey(SystemProgram.programId),
-          intermediaryAccount,
-        },
-      }
-    );
+    const IS_SOL_PAYMENT = !splToken;
 
-    // Adding the reference to the instructions
-    instructions.keys.push({
-      pubkey: reference,
-      isSigner: false,
-      isWritable: false,
-    });
+    if (IS_SOL_PAYMENT) {
+      // Setting up the differents recipient amount
+      const totalAmountInLamport = Number(amount) * LAMPORTS_PER_SOL;
+      const recipientPayout = new BN(totalAmountInLamport * (1 - SERVICE_FEES));
+      const servicePayout = new BN(totalAmountInLamport * SERVICE_FEES);
 
-    // Adding the instruction to the current transaction
-    transaction.add(instructions);
+      // Payment instructions
+      const paymentInstructions = SystemProgram.transfer({
+        fromPubkey: account,
+        toPubkey: recipient,
+        lamports: recipientPayout,
+      });
+
+      // Adding the reference to the payment instructions
+      paymentInstructions.keys.push({
+        pubkey: reference,
+        isSigner: false,
+        isWritable: false,
+      });
+
+      // Adding the payment instruction to the current transaction
+      transaction.add(paymentInstructions);
+
+      // Fees instructions
+      const feesInstructions = SystemProgram.transfer({
+        fromPubkey: account,
+        toPubkey: intermediaryAccount,
+        lamports: servicePayout,
+      });
+
+      // Adding the instruction to the current transaction
+      transaction.add(feesInstructions);
+    } else {
+      const mint = await getMint(connection, splToken);
+
+      // Setting up the differents recipient amount
+      const totalAmount = Number(amount);
+
+      const servicePayout = Number(
+        (totalAmount * SERVICE_FEES).toFixed(mint.decimals)
+      );
+
+      const recipientPayout = totalAmount - servicePayout;
+
+      const paymentInstructions = await createSPLTokenInstruction({
+        recipient,
+        amount: new BigNumber(recipientPayout),
+        splToken: DEVNET_DUMMY_MINT,
+        sender: account,
+        connection,
+      });
+
+      // Adding the reference to the payment instructions
+      paymentInstructions.keys.push({
+        pubkey: reference,
+        isSigner: false,
+        isWritable: false,
+      });
+
+      // Adding the payment instruction to the current transaction
+      transaction.add(paymentInstructions);
+
+      // Fees instructions
+      const feesInstructions = await createSPLTokenInstruction({
+        recipient: intermediaryAccount,
+        amount: new BigNumber(servicePayout),
+        splToken: DEVNET_DUMMY_MINT,
+        sender: account,
+        connection,
+      });
+
+      // Adding the instruction to the current transaction
+      transaction.add(feesInstructions);
+    }
 
     // Getting the latest block hash
     const blockhash = (await connection.getLatestBlockhash('finalized'))

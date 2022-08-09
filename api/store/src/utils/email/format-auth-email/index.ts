@@ -19,7 +19,7 @@ export const formatAuthEmailMsg = ({ email, authLink, validationCode }) => {
   return {
     from: APP_EMAIL_ADDRESS,
     html: content,
-    subject: `Your Gouache code is ${validationCode} 🔐`,
+    subject: `Your validation code is ${validationCode} 🔐`,
     text: content,
     to: email,
   };
