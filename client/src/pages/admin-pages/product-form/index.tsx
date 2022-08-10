@@ -100,7 +100,7 @@ const QTY_OPTIONS = [
 export const ProductForm = () => {
   useScrollTop();
 
-  const { user } = useAuth();
+  const { user, currencyDecimals } = useAuth();
 
   const [imageSrc, setImageSrc] = useState('');
   const [title, setTitle] = useState('');
@@ -145,7 +145,10 @@ export const ProductForm = () => {
       if (currentProduct) {
         setTitle(currentProduct.title);
         setDescription(currentProduct.description);
-        setPrice(currentProduct.price.toString());
+        const priceDisplay = Number(
+          currentProduct.price.toFixed(currencyDecimals)
+        );
+        setPrice(priceDisplay.toString());
         setTotalSupply(currentProduct.totalSupply?.toString());
         setImageSrc(currentProduct.image);
       }

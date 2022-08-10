@@ -78,10 +78,14 @@ export const ProductPreview = ({
   isPos,
   totalSupply,
 }: ProductPreviewProps) => {
-  const { user } = useAuth();
-  const { currency } = useCurrency();
+  const { user, currencyDecimals } = useAuth();
+  const { currency, decimals } = useCurrency();
 
   const isOutOfStock = totalSupply === 0;
+
+  const priceDisplay = Number(
+    Number(price).toFixed(isPos ? decimals : currencyDecimals)
+  );
 
   return (
     <ProductWrapper
@@ -97,7 +101,7 @@ export const ProductPreview = ({
       )}
       <ProductTitle>{title}</ProductTitle>
       <Price>
-        {price} {isPos ? currency : user?.currency}
+        {priceDisplay} {isPos ? currency : user?.currency}
       </Price>
 
       {isOutOfStock && <OutOfStockBadge />}

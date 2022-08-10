@@ -10,4 +10,5 @@ export interface IAuthContext {
   logoutUser: () => void;
   updateUser: any;
   updateUserIsLoading: boolean;
+  currencyDecimals: number;
 }

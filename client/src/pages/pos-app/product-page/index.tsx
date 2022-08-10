@@ -133,6 +133,8 @@ export const ProductPage = () => {
 
   const isOutOfStock = maxQuantity === 0;
 
+  const priceDisplay = Number(Number(price).toFixed(decimals));
+
   return (
     <ProductWrapper>
       <ImgWrapper>
@@ -149,7 +151,7 @@ export const ProductPage = () => {
 
       <ProductTitle>{name}</ProductTitle>
       <Price>
-        {price} {currency}
+        {priceDisplay} {currency}
       </Price>
       <Description>{description}</Description>
 

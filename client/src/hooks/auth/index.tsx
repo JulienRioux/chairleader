@@ -85,6 +85,7 @@ export const AuthProvider: React.FC<IBaseProps> = ({ children }) => {
       updateUser: updateUserAndRefetch,
       updateUserIsLoading,
       user,
+      currencyDecimals: user?.currency === CURRENCY.SOL ? 9 : 6,
     };
   }, [
     error,
