@@ -7,7 +7,7 @@ import { CartItems } from 'components/cart';
 import { CartSummary } from 'components';
 import { useCart } from 'hooks/cart';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useCurrency } from 'hooks/currency';
+import { CURRENCY, useCurrency } from 'hooks/currency';
 import { useScrollTop } from 'hooks/scroll-top';
 import { PaymentOptions } from 'pages/cart-payment-page';
 import { useMediaQuery } from 'hooks/media-query';
@@ -117,7 +117,7 @@ const CartPaymentLayout = styled.div`
 const CartSummaryWrapper = styled.div``;
 
 const CartItemsWrapper = styled.div`
-  max-width: calc(100vw / 2);
+  max-width: calc(100vw / 2 - 16px);
   width: 600px;
   margin: 0 auto;
   border: 1px solid ${(p) => p.theme.color.lightGrey};
@@ -152,6 +152,53 @@ const DesktopSummaryWrapper = styled.div`
   padding: 40px 20px 8px;
 `;
 
+const AlertMsgWrapper = styled.div`
+  max-width: calc(100vw / 2 - 16px);
+  margin: 0 auto 20px;
+  width: 600px;
+
+  @media (max-width: 1000px) {
+    width: auto;
+    max-width: initial;
+    margin: 20px 20px 0;
+    font-size: 14px;
+  }
+`;
+
+const AlertMsg = styled.div`
+  padding: 20px;
+  border: 1px solid ${(p) => p.theme.color.primary};
+  border-radius: ${(p) => p.theme.borderRadius.default};
+  color: ${(p) => p.theme.color.primary};
+  background-color: ${(p) => p.theme.color.primary}09;
+  line-height: 1.4;
+
+  @media (max-width: 1000px) {
+    padding: 8px;
+  }
+`;
+
+const DevnetMsg = () => {
+  const { currency } = useCurrency();
+
+  const faucetLink = `https://spl-token-faucet.com/${
+    currency === CURRENCY.SOL ? '' : '?token-name=USDC'
+  }`;
+
+  return (
+    <AlertMsgWrapper>
+      <AlertMsg>
+        To make a purchase, switch your wallet to the DEVNET, and you can
+        airdrop some {currency} here{' '}
+        <a href={faucetLink} target="_blank" rel="noreferrer">
+          {faucetLink}
+        </a>
+        .
+      </AlertMsg>
+    </AlertMsgWrapper>
+  );
+};
+
 export const CartPage = () => {
   useScrollTop();
   const { totalWithSaleTax, cartItems, totalPrice, totalSaleTax } = useCart();
@@ -180,22 +227,25 @@ export const CartPage = () => {
   return (
     <CartPageLayout title="Current order">
       <CartPaymentLayout>
-        <CartItemsWrapper style={{ marginBottom: `${height}px` }}>
-          <CartItems showHeaderText={false} />
+        <div>
+          <DevnetMsg />
 
-          {!showPaymentOptions && (
-            <DesktopSummaryWrapper>
-              <CartSummaryWrapper>
-                <CartSummary
-                  totalPrice={totalPrice}
-                  totalSaleTax={totalSaleTax}
-                  totalWithSaleTax={totalWithSaleTax}
-                  currency={currency}
-                />
-              </CartSummaryWrapper>
-            </DesktopSummaryWrapper>
-          )}
-        </CartItemsWrapper>
+          <CartItemsWrapper style={{ marginBottom: `${height}px` }}>
+            <CartItems showHeaderText={false} />
+            {!showPaymentOptions && (
+              <DesktopSummaryWrapper>
+                <CartSummaryWrapper>
+                  <CartSummary
+                    totalPrice={totalPrice}
+                    totalSaleTax={totalSaleTax}
+                    totalWithSaleTax={totalWithSaleTax}
+                    currency={currency}
+                  />
+                </CartSummaryWrapper>
+              </DesktopSummaryWrapper>
+            )}
+          </CartItemsWrapper>
+        </div>
 
         {showPaymentOptions ? (
           <TotalAndContinue ref={ref}>
