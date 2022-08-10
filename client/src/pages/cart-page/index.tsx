@@ -119,7 +119,7 @@ const CartSummaryWrapper = styled.div``;
 const CartItemsWrapper = styled.div`
   max-width: calc(100vw / 2 - 16px);
   width: 600px;
-  margin: 0 auto;
+  margin: 0 auto 20px;
   border: 1px solid ${(p) => p.theme.color.lightGrey};
   border-radius: 8px;
   height: min-content;

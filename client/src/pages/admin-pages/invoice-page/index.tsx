@@ -136,6 +136,7 @@ export const InvoicePage = () => {
               totalSupply={totalSupply}
               enableUpdate={false}
               currency={invoiceData?.currency}
+              isAdmin
             />
           )
         )}

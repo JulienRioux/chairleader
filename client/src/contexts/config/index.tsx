@@ -20,7 +20,7 @@ export const ConfigProvider: FC<ConfigProviderProps> = ({ children }) => {
   const { store } = useStore();
 
   const link = new URL(
-    'https://9w2ejfrzsb.execute-api.us-east-1.amazonaws.com'
+    'https://79ex4zrxy9.execute-api.us-east-1.amazonaws.com'
   );
 
   const recipientParam = store?.walletAddress ?? 'NO_STORE_WALLET';

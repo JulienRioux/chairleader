@@ -1,4 +1,9 @@
-import { Button, Icon, UnstyledLink } from 'components-library';
+import {
+  Button,
+  Icon,
+  UnstyledExternalLink,
+  UnstyledLink,
+} from 'components-library';
 import styled from 'styled-components';
 import { routes } from 'utils';
 import { Footer } from 'components';
@@ -7,6 +12,7 @@ import homeVideo from 'assets/home-video-2.mp4';
 import { useTheme } from 'hooks/theme';
 import { useAuth } from 'hooks/auth';
 import { useMediaQuery } from 'hooks/media-query';
+import { useCallback, useState } from 'react';
 
 const HeroWrapper = styled.div`
   max-width: ${(p) => p.theme.layout.maxWidth};
@@ -198,6 +204,112 @@ export const ToggleTheme = (props: any) => {
   );
 };
 
+const featuredStore = [
+  {
+    name: 'Cafe Calypso',
+    subdomain: 'cafe-calypso',
+    img: 'https://dev-alt-gate-products.s3.amazonaws.com/products/62f40aa40c9249b03d773ec0-5ab8bc6c-3e2b-457c-87ef-e59239fde25b.webp',
+  },
+  {
+    name: 'Fast bike shop',
+    subdomain: 'fast-bike-shop',
+    img: 'https://bicyclespeedshop.co/wp-content/themes/bss/img/bike-rider.gif',
+  },
+];
+
+const FeaturedStoreImg = styled.img`
+  width: 100%;
+  border-radius: 32px;
+  aspect-ratio: 1;
+  object-position: center;
+  object-fit: cover;
+`;
+
+const FeaturedStoresWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  max-width: ${(p) => p.theme.layout.maxWidth};
+  margin: 160px auto;
+
+  @media (max-width: 800px) {
+    display: flex;
+    flex-direction: column-reverse;
+
+    h4 {
+      font-size: 16px;
+      margin: 20px 0 8px;
+    }
+
+    h3 {
+      font-size: 40px;
+    }
+  }
+`;
+
+const FeaturedStoreSubtitle = styled.h4`
+  font-size: 20px;
+  margin: 0 0 24px;
+`;
+
+const FeaturedStoreTitle = styled.h3`
+  font-size: 60px;
+  margin: 0 0 32px;
+`;
+
+const ArrowBtnsWrapper = styled.div`
+  margin-top: 20px;
+
+  button {
+    margin-right: 8px;
+  }
+`;
+
+const LeftWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const FeaturedStores = () => {
+  const [shopIndex, setShopIndex] = useState(0);
+
+  const currentStore = featuredStore[shopIndex];
+
+  const handleNext = useCallback(() => {
+    setShopIndex((shopIndex + 1) % featuredStore.length);
+  }, [shopIndex]);
+
+  const storeLink = `${window.location.protocol}//${currentStore.subdomain}.${window.location.host}`;
+
+  return (
+    <FeaturedStoresWrapper>
+      <LeftWrapper>
+        <div>
+          <FeaturedStoreSubtitle>
+            Meet the merchants who chose Chairleader
+          </FeaturedStoreSubtitle>
+          <FeaturedStoreTitle>{currentStore.name}</FeaturedStoreTitle>
+          <UnstyledExternalLink href={storeLink} target="_blank">
+            <Button>
+              Visit store{' '}
+              <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
+            </Button>
+          </UnstyledExternalLink>
+        </div>
+
+        <ArrowBtnsWrapper>
+          <Button secondary icon="arrow_back" onClick={handleNext} />
+          <Button secondary icon="arrow_forward" onClick={handleNext} />
+        </ArrowBtnsWrapper>
+      </LeftWrapper>
+
+      <UnstyledExternalLink href={storeLink} target="_blank">
+        <FeaturedStoreImg src={currentStore.img} />
+      </UnstyledExternalLink>
+    </FeaturedStoresWrapper>
+  );
+};
+
 export const HomepageTopNav = () => {
   const { isAuthenticated, isLoading } = useAuth();
 
@@ -297,6 +409,8 @@ export const Homepage = () => {
             </Par>
           </Banner>
         </BannerWrapper>
+
+        <FeaturedStores />
 
         <HeroWrapper style={{ margin: '120px auto 60px' }}>
           <Img

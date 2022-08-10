@@ -15,6 +15,7 @@ import {
 } from 'react';
 import { message } from 'components-library';
 import { useSearchParams } from 'react-router-dom';
+import { encodeURL } from '@solana/pay';
 
 export interface IInventoryItem {
   _id: string;
@@ -203,11 +204,13 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   // Prepare the URL params for the payent link
   const getPaymentLink = useCallback(() => {
-    const paymentLink = `${window.location.origin}${
-      routes.store.cart
-    }?payment_link_items=${JSON.stringify(
-      cartItems
-    )}&custom_items=${JSON.stringify(customItems)}`;
+    const params = `?payment_link_items=${encodeURIComponent(
+      JSON.stringify(cartItems)
+    )}&custom_items=${encodeURIComponent(JSON.stringify(customItems))}`;
+
+    console.log(encodeURIComponent(params));
+
+    const paymentLink = `${window.location.origin}${routes.store.cart}${params}`;
 
     navigator.clipboard.writeText(paymentLink);
     message.success(`The payment link has been copied to your clipboard.`);

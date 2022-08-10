@@ -122,6 +122,7 @@ export const CartItem = ({
   totalSupply,
   enableUpdate,
   currency,
+  isAdmin,
 }: {
   id: string;
   qty: number;
@@ -131,6 +132,7 @@ export const CartItem = ({
   totalSupply: number;
   enableUpdate: boolean;
   currency: string;
+  isAdmin?: boolean;
 }) => {
   const { decimals } = useCurrency();
 
@@ -164,7 +166,11 @@ export const CartItem = ({
 
         <TextAndBtns>
           <TitleAndDeleteBtn>
-            <ProductTitle to={`${routes.store.inventory}/${id}`}>
+            <ProductTitle
+              to={`${
+                isAdmin ? routes.admin.inventory : routes.store.inventory
+              }/${id}`}
+            >
               {title}
             </ProductTitle>
 

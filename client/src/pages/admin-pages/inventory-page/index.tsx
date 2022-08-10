@@ -126,7 +126,7 @@ export const InventoryPage = () => {
 
         {!inventory?.length && <p>No product yet.</p>}
 
-        {inventory?.length && !result.length && searchString && (
+        {!!inventory?.length && !result.length && searchString && (
           <p>No search result.</p>
         )}
       </ProductGrid>
