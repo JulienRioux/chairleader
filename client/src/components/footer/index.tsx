@@ -42,24 +42,28 @@ const footerData = [
   },
   {
     content: [
-      {
-        href: 'mailto:julien.rioux@toptal.com',
-        title: 'Investors',
-      },
-      { href: 'mailto:julien.rioux@toptal.com', title: 'Contact' },
-      {
-        href: 'https://chairleader.canny.io/',
-        title: 'Send feedback',
-      },
-    ],
-    title: 'More',
-  },
-  {
-    content: [
       { title: 'Privacy policy', to: routes.static.privacy },
       { title: 'Terms of service', to: routes.static.termsOfService },
     ],
     title: 'Legal',
+  },
+  {
+    content: [
+      {
+        href: 'mailto:chairleaderapp@gmail.com',
+        title: 'Investors',
+      },
+      { href: 'mailto:chairleaderapp@gmail.com', title: 'Contact' },
+      {
+        href: 'https://chairleader.canny.io/',
+        title: 'Send feedback',
+      },
+      {
+        href: 'https://twitter.com/chairleader_app',
+        title: 'Twitter',
+      },
+    ],
+    title: 'More',
   },
 ];
 

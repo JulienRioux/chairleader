@@ -2,8 +2,8 @@ import { UnstyledButton } from 'components-library';
 import styled from 'styled-components';
 
 export const OtpPageWrapper = styled.div`
-  max-width: 400px;
-  margin: 40px auto;
+  margin: 100px auto;
+  width: ${(p) => p.theme.layout.smallWidth};
 `;
 
 export const ResendCodeBtn = styled(UnstyledButton)`

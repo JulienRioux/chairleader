@@ -65,6 +65,11 @@ const NoImageWrapper = styled.div`
   font-size: 48px;
 `;
 
+const AuthPageWrapper = styled.div`
+  margin: 100px auto;
+  width: ${(p) => p.theme.layout.smallWidth};
+`;
+
 const CURRENCY_OPTIONS = [
   {
     value: CURRENCY.SOL,
@@ -327,25 +332,27 @@ export const CompleteSignupPage = () => {
 
   return (
     <HalfImagePageLayout>
-      <h1>Complete Signup</h1>
+      <AuthPageWrapper>
+        <h1>Complete Signup</h1>
 
-      <Par>
-        Please fill these informations to help us setting up your Chairleader
-        POS.
-      </Par>
+        <Par>
+          Please fill these informations to help us setting up your Chairleader
+          POS.
+        </Par>
 
-      <UpdateUserForm isCompletingSignup />
+        <UpdateUserForm isCompletingSignup />
 
-      <Button
-        style={{ marginTop: '8px' }}
-        secondary
-        type="button"
-        fullWidth
-        onClick={logoutUser}
-        isLoading={logoutLoading}
-      >
-        Cancel registration
-      </Button>
+        <Button
+          style={{ marginTop: '8px' }}
+          secondary
+          type="button"
+          fullWidth
+          onClick={logoutUser}
+          isLoading={logoutLoading}
+        >
+          Cancel registration
+        </Button>
+      </AuthPageWrapper>
     </HalfImagePageLayout>
   );
 };

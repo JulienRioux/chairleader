@@ -35,8 +35,8 @@ const Img = styled.img`
 
 const ChildrenWrapper = styled.div`
   max-width: 100%;
-  width: ${(p) => p.theme.layout.smallWidth};
-  margin: 100px auto;
+  width: 100%;
+  /* margin: 100px auto; */
 `;
 
 const ChildrenInnerWrapper = styled.div`
@@ -47,6 +47,11 @@ const BackButtonWrapper = styled.div`
   position: absolute;
   top: 20px;
   left: 20px;
+`;
+
+const AuthPageWrapper = styled.div`
+  margin: 100px auto;
+  width: ${(p) => p.theme.layout.smallWidth};
 `;
 
 export const HalfImagePageLayout = ({ children }: { children: ReactNode }) => {
@@ -69,7 +74,7 @@ const Par = styled.p`
 `;
 
 export const AuthPage = () => {
-  const [email, setEmail] = useState('julien.rioux@toptal.com');
+  const [email, setEmail] = useState('');
   const [authenticate, { loading: authIsLoading }] = useMutation(AUTHENTICATE);
 
   const navigate = useNavigate();
@@ -105,28 +110,30 @@ export const AuthPage = () => {
 
   return (
     <HalfImagePageLayout>
-      <h1>Register or log in</h1>
+      <AuthPageWrapper>
+        <h1>Register or log in</h1>
 
-      <form onSubmit={handleSubmit}>
-        <Input
-          label="Email"
-          value={email}
-          onChange={handleChange}
-          placeholder="Enter your email to login or register"
-          required
-          type="email"
-        />
+        <form onSubmit={handleSubmit}>
+          <Input
+            label="Email"
+            value={email}
+            onChange={handleChange}
+            placeholder="Enter your email to login or register"
+            required
+            type="email"
+          />
 
-        <Button isLoading={authIsLoading} type="submit" fullWidth>
-          Send magic link
-        </Button>
+          <Button isLoading={authIsLoading} type="submit" fullWidth>
+            Send magic link
+          </Button>
 
-        <Par>
-          By clicking &quot;Create account&quot;, I agree to {APP_NAME}&apos;s{' '}
-          <Link to={routes.static.termsOfService}>TOS</Link> and{' '}
-          <Link to={routes.static.privacy}>privacy policy</Link>.
-        </Par>
-      </form>
+          <Par>
+            By clicking &quot;Create account&quot;, I agree to {APP_NAME}&apos;s{' '}
+            <Link to={routes.static.termsOfService}>TOS</Link> and{' '}
+            <Link to={routes.static.privacy}>privacy policy</Link>.
+          </Par>
+        </form>
+      </AuthPageWrapper>
     </HalfImagePageLayout>
   );
 };
