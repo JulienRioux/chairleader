@@ -28,17 +28,21 @@ export const CartSummary = ({
   totalSaleTax,
   totalWithSaleTax,
   currency,
+  isAdminApp,
 }: {
   totalPrice: number;
   totalSaleTax: number;
   totalWithSaleTax: number;
   currency: string;
+  isAdminApp?: boolean;
 }) => {
   const { store } = useStore();
 
+  const saleTax = isAdminApp ? 1 : store?.saleTax;
+
   return (
     <>
-      {!!store?.saleTax && (
+      {saleTax && (
         <>
           <SubTotalItem>
             <span>Subtotal:</span>
@@ -48,7 +52,7 @@ export const CartSummary = ({
           </SubTotalItem>
 
           <SubTotalItem>
-            <span>Total sale tax ({store.saleTax}%):</span>
+            <span>Total sale tax ({saleTax}%):</span>
             <strong>
               {totalSaleTax} {currency}
             </strong>

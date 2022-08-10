@@ -146,14 +146,14 @@ export const ProductForm = () => {
         setTitle(currentProduct.title);
         setDescription(currentProduct.description);
         const priceDisplay = Number(
-          currentProduct.price.toFixed(currencyDecimals)
+          currentProduct.price?.toFixed(currencyDecimals)
         );
         setPrice(priceDisplay.toString());
         setTotalSupply(currentProduct.totalSupply?.toString());
         setImageSrc(currentProduct.image);
       }
     }
-  }, [inventory, productId]);
+  }, [currencyDecimals, inventory, productId]);
 
   useEffect(() => {
     if (!isEditting) {

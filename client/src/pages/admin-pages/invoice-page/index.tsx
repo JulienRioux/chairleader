@@ -91,7 +91,7 @@ export const InvoicePage = () => {
         <DetailItem label="Network:">{invoiceData?.network}</DetailItem>
 
         <DetailItem label="Service fees:">
-          {invoiceData?.serviceFees.toFixed(decimals)} {invoiceData?.currency}
+          {invoiceData?.serviceFees?.toFixed(decimals)} {invoiceData?.currency}
         </DetailItem>
 
         <DetailItem label="Customer wallet address:">
@@ -146,6 +146,7 @@ export const InvoicePage = () => {
             totalSaleTax={invoiceData?.totalSaleTax}
             totalWithSaleTax={invoiceData?.totalWithSaleTax}
             currency={invoiceData?.currency}
+            isAdminApp
           />
         </div>
       </InvoiceDiv>

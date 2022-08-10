@@ -180,15 +180,15 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const totalPrice = Number(
     populatedCartItems
       .reduce((acc, curr) => curr.price * curr.qty + acc, 0)
-      .toFixed(decimals)
+      ?.toFixed(decimals)
   );
 
   const totalSaleTax = Number(
-    (totalPrice * SALE_TAX_PERCENT).toFixed(decimals)
+    (totalPrice * SALE_TAX_PERCENT)?.toFixed(decimals)
   );
 
   const totalWithSaleTax = Number(
-    (totalPrice + totalSaleTax).toFixed(decimals)
+    (totalPrice + totalSaleTax)?.toFixed(decimals)
   );
 
   const cartItemsNumber = cartItems.reduce((acc, curr) => acc + curr.qty, 0);

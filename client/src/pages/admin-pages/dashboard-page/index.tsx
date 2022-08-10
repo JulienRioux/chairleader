@@ -50,7 +50,7 @@ export const DashboardPage = () => {
     currencyMap[CURRENCY_AND_NETWORK[`${currency as CURRENCY}_${network}`]];
 
   const fixDecimal = (amount: any) =>
-    typeof amount === 'number' ? Number(amount.toFixed(decimals)) : 0;
+    typeof amount === 'number' ? Number(amount?.toFixed(decimals)) : 0;
 
   data?.getInvoicesByStoreId?.forEach((invoice: any) => {
     if (invoice.network === network && invoice.currency === currency) {

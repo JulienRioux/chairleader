@@ -92,7 +92,7 @@ export const post = async (request, response) => {
       const totalAmount = Number(amount);
 
       const servicePayout = Number(
-        (totalAmount * SERVICE_FEES).toFixed(mint.decimals)
+        (totalAmount * SERVICE_FEES)?.toFixed(mint.decimals)
       );
 
       const recipientPayout = totalAmount - servicePayout;

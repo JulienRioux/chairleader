@@ -145,7 +145,7 @@ export const CartItem = ({
 
   const isCustomProduct = id?.startsWith('CUSTOM_ITEM_');
 
-  const priceDisplay = Number((price * qty).toFixed(decimals));
+  const priceDisplay = Number((price * qty)?.toFixed(decimals));
 
   return (
     <CartItemWrapper>

@@ -133,7 +133,7 @@ export const ProductPage = () => {
 
   const isOutOfStock = maxQuantity === 0;
 
-  const priceDisplay = Number(Number(price).toFixed(decimals));
+  const priceDisplay = Number(Number(price)?.toFixed(decimals));
 
   return (
     <ProductWrapper>
@@ -164,7 +164,7 @@ export const ProductPage = () => {
 
             <Button onClick={handleAddToCart} disabled={maxQuantity === 0}>
               {isUpdating ? 'Update cart' : 'Add to cart'}{' '}
-              {Number((Number(price) * qty).toFixed(decimals))} {currency}
+              {Number((Number(price) * qty)?.toFixed(decimals))} {currency}
             </Button>
           </InnerAddToCartWrapper>
         </AddToCartWrapper>

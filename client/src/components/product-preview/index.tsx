@@ -84,7 +84,7 @@ export const ProductPreview = ({
   const isOutOfStock = totalSupply === 0;
 
   const priceDisplay = Number(
-    Number(price).toFixed(isPos ? decimals : currencyDecimals)
+    Number(price)?.toFixed(isPos ? decimals : currencyDecimals)
   );
 
   return (

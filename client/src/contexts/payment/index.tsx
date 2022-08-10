@@ -66,7 +66,7 @@ export const PaymentProvider: FC<PaymentProviderProps> = ({ children }) => {
       if (amount)
         url.searchParams.append(
           'amount',
-          amount.toFixed(amount.decimalPlaces())
+          amount?.toFixed(amount?.decimalPlaces())
         );
 
       if (splToken) url.searchParams.append('spl-token', splToken.toBase58());
