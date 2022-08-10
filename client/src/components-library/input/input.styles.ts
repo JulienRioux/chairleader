@@ -45,3 +45,8 @@ export const Error = styled.div`
   margin-bottom: 12px;
   font-weight: bold;
 `;
+
+export const RequiredWrapper = styled.span`
+  font-weight: normal;
+  color: ${(p) => p.theme.color.text}cc;
+`;

@@ -138,6 +138,13 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   // Make sure we're on a good quantity state (i.e. if unavailable, remove from cart)
   useEffect(() => {
+    // Don'T run this if we did not add the items from URL yet
+    const gettingCartFromUrl =
+      searchParams.get('payment_link_items') ||
+      searchParams.get('custom_items');
+    if (gettingCartFromUrl) {
+      return;
+    }
     // TODO: We'll need to make sure we're not changing the qty when someone is making a payment
     let cartItemsChanged = false;
     const itemRelativeToTotalSupply = cartItems.reduce(
@@ -145,6 +152,7 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
         const item = inventoryAndCustomItems?.find(
           (product) => currItem._id === product._id
         );
+
         // If the item did not exists anymore or has a supply of 0, remove it from the cart
         if (!item?.totalSupply) {
           message.info('Some of the items are not available anymore.');
@@ -165,7 +173,7 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
     if (cartItemsChanged) {
       setCartItems(itemRelativeToTotalSupply);
     }
-  }, [cartItems, inventoryAndCustomItems]);
+  }, [cartItems, inventoryAndCustomItems, searchParams]);
 
   const resetCart = useCallback(() => {
     setCartItems([]);
@@ -197,14 +205,24 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const getPaymentLink = useCallback(() => {
     const paymentLink = `${window.location.origin}${
       routes.store.cart
-    }?payment_link_items=${JSON.stringify(cartItems)}`;
+    }?payment_link_items=${JSON.stringify(
+      cartItems
+    )}&custom_items=${JSON.stringify(customItems)}`;
 
     navigator.clipboard.writeText(paymentLink);
     message.success(`The payment link has been copied to your clipboard.`);
-  }, [cartItems]);
+  }, [cartItems, customItems]);
 
   useEffect(() => {
     try {
+      const customItemsFromUrl = searchParams.get('custom_items');
+      // Get the custom items
+      if (customItemsFromUrl) {
+        const parsedCustomItemsFromUrl = JSON.parse(customItemsFromUrl);
+        console.log('parsedCustomItemsFromUrl', parsedCustomItemsFromUrl);
+        setCustomItems(parsedCustomItemsFromUrl);
+      }
+      // Get the cart items
       const paymentLinkItems = searchParams.get('payment_link_items');
       if (paymentLinkItems) {
         const parsedPaymentLinkItems = JSON.parse(paymentLinkItems);

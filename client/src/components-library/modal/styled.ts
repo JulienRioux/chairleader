@@ -4,7 +4,7 @@ import { Styles } from 'styles';
 import { fadeIn, fadeOut, modalIn } from 'utils/keyframes';
 
 // TODO: Put this in the Styles object
-const MODAL_SIDE_MARGIN = '8px';
+const MODAL_SIDE_MARGIN = '20px';
 const MODAL_ANIM_TIME = `${Styles.components.modal.animationDuration - 150}ms`;
 const MODAL_CONTAINER_ANIM_TIME = `${Styles.components.modal.animationDuration}ms`;
 
@@ -74,19 +74,19 @@ export const ModalHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 ${MODAL_SIDE_MARGIN};
+  padding: 8px ${MODAL_SIDE_MARGIN};
   font-size: 16px;
   position: sticky;
   top: 0;
   z-index: 9;
   background: ${(p) => p.theme.color.background};
-  border-bottom: 1px solid ${(p) => p.theme.color.lightText};
+  border-bottom: 1px solid ${(p) => p.theme.color.text}22;
 `;
 
-const CLOSE_BUTTON_SIZE = '32px';
+const CLOSE_BUTTON_SIZE = '40px';
 
 export const CloseBtn = styled(UnstyledButton)`
-  font-size: 20px;
+  font-size: 24px;
   height: ${CLOSE_BUTTON_SIZE};
   min-height: ${CLOSE_BUTTON_SIZE};
   width: ${CLOSE_BUTTON_SIZE};
@@ -105,7 +105,7 @@ export const CloseBtn = styled(UnstyledButton)`
 `;
 
 export const ContentWrapper = styled.div`
-  padding: 8px ${MODAL_SIDE_MARGIN};
+  padding: 20px ${MODAL_SIDE_MARGIN};
 `;
 
 export const ModalTitle = styled.div`

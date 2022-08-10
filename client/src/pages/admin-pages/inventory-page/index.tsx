@@ -1,4 +1,4 @@
-import { Button, Input, Loader, useModal } from 'components-library';
+import { Button, Input, Loader, useModal, Textarea } from 'components-library';
 import { ProductPreview } from 'components/product-preview';
 import { IInventoryItem, useCart } from 'hooks/cart';
 import { useCurrency } from 'hooks/currency';
@@ -137,6 +137,7 @@ export const InventoryPage = () => {
 const AddCustomItem = ({ closeModal }: { closeModal: () => void }) => {
   const [title, setTitle] = useState('');
   const [price, setPrice] = useState('');
+
   const { currency, decimals } = useCurrency();
 
   const { handleAddCustomItems } = useCart();
@@ -211,7 +212,7 @@ export const StorePage = () => {
 
         {!inventory?.length && <p>No product yet.</p>}
 
-        <Modal title="Custom product">
+        <Modal title="New custom product">
           <AddCustomItem closeModal={closeModal} />
         </Modal>
       </ProductGrid>

@@ -68,7 +68,7 @@ export const DarkTheme = {
     background: primitives.black,
     danger: '#ff2626',
     lightText: `${primitives.white}cc`,
-    backdrop: `${primitives.black}44`,
+    backdrop: `${primitives.white}22`,
     buttonText: primitives.black,
   },
   layout: {

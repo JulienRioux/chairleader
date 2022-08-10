@@ -19,11 +19,9 @@ export const ConfigProvider: FC<ConfigProviderProps> = ({ children }) => {
 
   const { store } = useStore();
 
-  // const link = new URL(
-  //   'https://9w2ejfrzsb.execute-api.us-east-1.amazonaws.com'
-  // );
-
-  const link = new URL('https://0110-96-20-253-84.ngrok.io');
+  const link = new URL(
+    'https://9w2ejfrzsb.execute-api.us-east-1.amazonaws.com'
+  );
 
   const recipientParam = store?.walletAddress ?? 'NO_STORE_WALLET';
   const label = store?.storeName;
