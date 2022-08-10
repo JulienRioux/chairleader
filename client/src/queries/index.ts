@@ -259,3 +259,9 @@ export const GET_INVOICE_BY_ID = gql`
     }
   }
 `;
+
+export const CHECK_IF_SUBODMAIN_IS_AVAILABLE = gql`
+  query CheckIfSubdomainIsAvailable($subdomain: String!) {
+    checkIfSubdomainIsAvailable(subdomain: $subdomain)
+  }
+`;

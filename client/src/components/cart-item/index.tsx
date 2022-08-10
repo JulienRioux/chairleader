@@ -55,7 +55,7 @@ const Img = styled.img`
   ${sharedStyles}
 `;
 
-const NoImageProduct = styled.div`
+const NoImageProduct = styled.div<{ isCustomProduct: boolean }>`
   font-size: 60px;
   display: inline-flex;
   align-items: center;
@@ -64,6 +64,7 @@ const NoImageProduct = styled.div`
   background: ${(p) => p.theme.color.lightGrey};
   ${sharedStyles}
   min-width: 120px;
+  ${(p) => p.isCustomProduct && `background: transparent;`}
 `;
 
 const PriceAndTotal = styled.div`
@@ -81,6 +82,18 @@ const Total = styled.div`
 const DeleteButton = styled(UnstyledButton)`
   color: ${(p) => p.theme.color.lightText};
   padding: 8px;
+  border-radius: 50%;
+  height: 32px;
+  width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${(p) => p.theme.color.text}0c;
+  transition: 0.2s;
+
+  :hover {
+    background: ${(p) => p.theme.color.text}1c;
+  }
 `;
 
 const TitleAndDeleteBtn = styled.div`
@@ -92,6 +105,12 @@ const TextAndBtns = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+`;
+
+const CustomText = styled.span`
+  font-size: 20px;
+  font-weight: bold;
+  color: ${(p) => p.theme.color.primary};
 `;
 
 export const CartItem = ({
@@ -124,14 +143,20 @@ export const CartItem = ({
     [id, updateQuantity]
   );
 
+  const isCustomProduct = id?.startsWith('CUSTOM_ITEM_');
+
   return (
     <CartItemWrapper>
       <ImgAndName>
         {image ? (
           <Img src={image} />
         ) : (
-          <NoImageProduct>
-            <Icon name="image" />
+          <NoImageProduct isCustomProduct={isCustomProduct}>
+            {isCustomProduct ? (
+              <CustomText>CUSTOM</CustomText>
+            ) : (
+              <Icon name="image" />
+            )}
           </NoImageProduct>
         )}
 

@@ -1,7 +1,7 @@
 import { getInvoiceByIdQuery, getInvoicesByStoreIdQuery } from './invoices';
 import { getProductsByUserIdQuery } from './products';
 import { getStoreDataQuery } from './store';
-import { getMeQuery } from './user';
+import { checkIfSubdomainIsAvailableQuery, getMeQuery } from './user';
 
 export const Query = {
   getMe: getMeQuery,
@@ -9,4 +9,5 @@ export const Query = {
   getInvoicesByStoreId: getInvoicesByStoreIdQuery,
   getStoreData: getStoreDataQuery,
   getInvoiceById: getInvoiceByIdQuery,
+  checkIfSubdomainIsAvailable: checkIfSubdomainIsAvailableQuery,
 };

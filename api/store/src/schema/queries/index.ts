@@ -9,5 +9,7 @@ export const queries = `
     getStoreData: StoreData
 
     getInvoiceById(id: String!): Invoice
+
+    checkIfSubdomainIsAvailable(subdomain: String!): Boolean
   }
 `;

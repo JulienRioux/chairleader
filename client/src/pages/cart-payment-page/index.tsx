@@ -157,9 +157,7 @@ export const PaymentOptions = () => {
           <>
             <PoweredBySolanaPay />
 
-            <p style={{ fontWeight: 'bold' }}>
-              Scan this code with your Solana Pay wallet
-            </p>
+            <p>Scan this code with your Solana Pay wallet</p>
 
             <QRCode />
 

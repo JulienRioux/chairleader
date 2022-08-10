@@ -1,3 +1,4 @@
+import { useLazyQuery } from '@apollo/client';
 import {
   Button,
   Icon,
@@ -10,6 +11,7 @@ import { Label } from 'components-library/input/input.styles';
 import { useAuth } from 'hooks/auth';
 import { CURRENCY } from 'hooks/currency';
 import { HalfImagePageLayout } from 'pages/auth-page';
+import { CHECK_IF_SUBODMAIN_IS_AVAILABLE } from 'queries';
 import { ChangeEvent, FormEvent, useCallback, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled, { css } from 'styled-components';
@@ -101,6 +103,11 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
     currentImageSrc = URL.createObjectURL(imageFile);
   }
 
+  const [
+    checkIfSubdomainIsAvailable,
+    { loading: subdomainAvailabilityIsLoading },
+  ] = useLazyQuery(CHECK_IF_SUBODMAIN_IS_AVAILABLE);
+
   const handleUploadFileClick = useCallback(() => {
     // Click on the visually hidden file input
     if (fileInput?.current) {
@@ -158,12 +165,26 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
-      // Authenticate
+      // Authenticate or update user info
       try {
         const solanaAddressIsValid = await validateSolanaAddress(walletAddress);
         if (!solanaAddressIsValid) {
           setWalletAddressError('Your address is not valid.');
           return;
+        }
+
+        // If the subdomain changed, make sure it's available before updating
+        if (user?.subDomain !== subDomain) {
+          const subdomainIsAvaliableData = await checkIfSubdomainIsAvailable({
+            variables: { subdomain: subDomain },
+          });
+          const subdomainIsAvaliable =
+            subdomainIsAvaliableData?.data?.checkIfSubdomainIsAvailable;
+
+          if (!subdomainIsAvaliable) {
+            setDomainNameError(`${subDomain} is already taken.`);
+            return;
+          }
         }
 
         // Edit user mutation
@@ -189,14 +210,16 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
     },
     [
       walletAddress,
+      user?.subDomain,
+      subDomain,
       updateUser,
       storeName,
-      subDomain,
-      isCompletingSignup,
-      navigate,
       currency,
       saleTax,
       imageFile,
+      isCompletingSignup,
+      checkIfSubdomainIsAvailable,
+      navigate,
     ]
   );
 
@@ -288,7 +311,11 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
         ref={fileInput}
       />
 
-      <Button isLoading={updateUserIsLoading} type="submit" fullWidth>
+      <Button
+        isLoading={updateUserIsLoading || subdomainAvailabilityIsLoading}
+        type="submit"
+        fullWidth
+      >
         Save and continue
       </Button>
     </form>
