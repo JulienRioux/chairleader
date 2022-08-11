@@ -12,7 +12,7 @@ import homeVideo from 'assets/home-video-2.mp4';
 import { useTheme } from 'hooks/theme';
 import { useAuth } from 'hooks/auth';
 import { useMediaQuery } from 'hooks/media-query';
-import { useCallback, useState } from 'react';
+import { ReactNode, useCallback, useState } from 'react';
 
 const HeroWrapper = styled.div`
   max-width: ${(p) => p.theme.layout.maxWidth};
@@ -204,6 +204,65 @@ export const ToggleTheme = (props: any) => {
   );
 };
 
+const PresentationItemGrid = styled.div<{ isLeftImg?: boolean }>`
+  display: grid;
+  grid-template-columns: ${(p) => (p.isLeftImg ? '1fr 2fr' : '2fr 1fr')};
+  max-width: ${(p) => p.theme.layout.maxWidth};
+  margin: 160px auto;
+  gap: 100px;
+
+  @media (max-width: 800px) {
+    display: flex;
+    flex-direction: ${(p) => (p.isLeftImg ? 'column' : 'column-reverse')};
+  }
+`;
+
+const ItemWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 100px;
+
+  @media (max-width: 800px) {
+    margin-bottom: 100px;
+  }
+`;
+
+const PresentationItem = ({
+  title,
+  content,
+  btnText,
+  isLeftImg = false,
+  img,
+}: {
+  title: ReactNode;
+  content: ReactNode;
+  btnText: ReactNode;
+  isLeftImg?: boolean;
+  img: string;
+}) => {
+  const isMobileView = useMediaQuery('(max-width: 800px)');
+
+  return (
+    <PresentationItemGrid isLeftImg={isLeftImg}>
+      {isLeftImg && <FeaturedStoreImg src={img} />}
+
+      <ItemWrapper>
+        <Header>{title}</Header>
+        <Par>{content}</Par>
+
+        <div>
+          <Button to={routes.auth} fullWidth={isMobileView}>
+            {btnText}
+          </Button>
+        </div>
+      </ItemWrapper>
+
+      {!isLeftImg && <FeaturedStoreImg src={img} />}
+    </PresentationItemGrid>
+  );
+};
+
 const featuredStore = [
   {
     name: 'Cafe Calypso',
@@ -230,6 +289,7 @@ const FeaturedStoresWrapper = styled.div`
   grid-template-columns: 2fr 1fr;
   max-width: ${(p) => p.theme.layout.maxWidth};
   margin: 160px auto;
+  gap: 20px;
 
   @media (max-width: 800px) {
     display: flex;
@@ -248,7 +308,8 @@ const FeaturedStoresWrapper = styled.div`
 
 const FeaturedStoreSubtitle = styled.h4`
   font-size: 20px;
-  margin: 0 0 24px;
+  margin: 0 0 20px;
+  font-weight: normal;
 `;
 
 const FeaturedStoreTitle = styled.h3`
@@ -271,7 +332,7 @@ const LeftWrapper = styled.div`
 `;
 
 const FeaturedStores = () => {
-  const [shopIndex, setShopIndex] = useState(0);
+  const [shopIndex, setShopIndex] = useState(1);
 
   const currentStore = featuredStore[shopIndex];
 
@@ -412,16 +473,10 @@ export const Homepage = () => {
 
         <FeaturedStores />
 
-        <HeroWrapper style={{ margin: '120px auto 60px' }}>
-          <Img
-            src={
-              'https://images.unsplash.com/photo-1442512595331-e89e73853f31?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80'
-            }
-          />
-
-          <LeftHero>
-            <Header>Solutions built for your business model</Header>
-            <Par>
+        <PresentationItem
+          title="Solutions built for your business model"
+          content={
+            <>
               Unlock superior financial experiences through our single platform.
               Simplify cash management, receive payments faster, and gain full
               visibility of your funds leveraged by{' '}
@@ -429,17 +484,39 @@ export const Homepage = () => {
                 Solana Pay
               </a>
               .
-            </Par>
+            </>
+          }
+          btnText={
+            <>
+              Start now{' '}
+              <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
+            </>
+          }
+          img="https://images.unsplash.com/photo-1462392246754-28dfa2df8e6b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2400&q=80"
+          isLeftImg
+        />
 
-            <div>
-              <Button to={routes.auth} fullWidth={isMobileView}>
-                Start now
-              </Button>
-            </div>
-          </LeftHero>
-        </HeroWrapper>
-
-        {/* <FullWidthImg src={homepageImgSrc} /> */}
+        <PresentationItem
+          title="Another title"
+          content={
+            <>
+              Unlock superior financial experiences through our single platform.
+              Simplify cash management, receive payments faster, and gain full
+              visibility of your funds leveraged by{' '}
+              <a href="https://solanapay.com/" target="_blank" rel="noreferrer">
+                Solana Pay
+              </a>
+              .
+            </>
+          }
+          btnText={
+            <>
+              Start now{' '}
+              <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
+            </>
+          }
+          img="https://images.unsplash.com/photo-1442512595331-e89e73853f31?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80"
+        />
 
         <Footer />
       </HomepageWrapper>
