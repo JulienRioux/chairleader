@@ -2,31 +2,41 @@
 const webpack = require('webpack');
 const rewireStyledComponents = require('react-app-rewire-styled-components');
 
-module.exports = function override(config, env) {
-  const fallback = config.resolve.fallback || {};
+module.exports = function override(webpackConfig, env) {
+  const fallback = webpackConfig.resolve.fallback || {};
   Object.assign(fallback, {
     crypto: require.resolve('crypto-browserify'),
     stream: require.resolve('stream-browserify'),
+    util: require.resolve('util/'),
     assert: require.resolve('assert'),
     http: require.resolve('stream-http'),
     https: require.resolve('https-browserify'),
     os: require.resolve('os-browserify'),
     url: require.resolve('url'),
-    util: require.resolve('util/'),
+    fs: false,
+    process: false,
+    path: false,
+    zlib: false,
   });
-  config.resolve.fallback = fallback;
-  config.plugins = (config.plugins || []).concat([
+
+  // Ignore source map warnings from node_modules.
+  // See: https://github.com/facebook/create-react-app/pull/11752
+  webpackConfig.ignoreWarnings = [/Failed to parse source map/];
+
+  webpackConfig.resolve.fallback = fallback;
+  webpackConfig.plugins = (webpackConfig.plugins || []).concat([
     new webpack.ProvidePlugin({
       process: 'process/browser',
       Buffer: ['buffer', 'Buffer'],
     }),
   ]);
-  config.module.rules.push({
+
+  webpackConfig.module.rules.push({
     test: /\.m?js/,
     resolve: {
       fullySpecified: false,
     },
   });
-  config = rewireStyledComponents(config, env);
-  return config;
+  webpackConfig = rewireStyledComponents(webpackConfig, env);
+  return webpackConfig;
 };

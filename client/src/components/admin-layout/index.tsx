@@ -12,6 +12,7 @@ import { routes } from 'utils';
 import { ToggleTheme } from 'pages/homepage';
 import { useMediaQuery } from 'hooks/media-query';
 import { useAuth } from 'hooks/auth';
+import { ConnectWalletBtn } from 'components/connect-wallet-btn';
 
 export const AdminLayoutWrapper = styled.div`
   display: grid;
@@ -205,6 +206,14 @@ export const AdminLayout = ({ children }: { children: ReactNode }) => {
 
           <SideNavWrapper>
             <SideNavLink
+              to={routes.admin.tokenGating}
+              icon="loyalty"
+              isActive={pathname === routes.admin.tokenGating}
+            />
+          </SideNavWrapper>
+
+          <SideNavWrapper>
+            <SideNavLink
               to={routes.admin.payments}
               icon="receipt_long"
               isActive={pathname === routes.admin.payments}
@@ -260,6 +269,10 @@ export const AdminLayout = ({ children }: { children: ReactNode }) => {
                 to={-1}
               />
             )}
+
+            <span style={{ marginLeft: '8px' }}>
+              <ConnectWalletBtn />
+            </span>
           </RightButtonWrapper>
         </TopNav>
         <ChildrenWrapper>{children}</ChildrenWrapper>

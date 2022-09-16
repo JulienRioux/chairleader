@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.6.6",
+    "@metaplex-foundation/js": "^0.15.0",
     "@solana/pay": "^0.2.0",
     "@solana/spl-token": "^0.2.0",
     "@solana/wallet-adapter-react": "^0.15.8",

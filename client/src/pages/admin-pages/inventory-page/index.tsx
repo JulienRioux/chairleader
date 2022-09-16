@@ -1,4 +1,4 @@
-import { Button, Input, Loader, useModal, Textarea } from 'components-library';
+import { Button, Input, Loader, useModal } from 'components-library';
 import { ProductPreview } from 'components/product-preview';
 import { IInventoryItem, useCart } from 'hooks/cart';
 import { useCurrency } from 'hooks/currency';

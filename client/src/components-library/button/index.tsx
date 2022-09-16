@@ -128,7 +128,9 @@ export const Button = ({
       {isLoading && <BtnLoader />}
 
       <ChildWrapper $isLoading={isLoading}>
-        {icon && <Icon name={icon} />}
+        {icon && (
+          <Icon style={{ marginRight: children ? '8px' : '0' }} name={icon} />
+        )}
         {children}
       </ChildWrapper>
     </ButtonWrapper>

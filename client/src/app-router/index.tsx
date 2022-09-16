@@ -26,6 +26,7 @@ import { CartPaymentPage } from 'pages/cart-payment-page';
 import { StaticPage } from 'pages/static-page/inex';
 import { PricingPage } from 'pages/pricing-page';
 import { SolanaPayProviders } from 'contexts/solana-pay';
+import { TokenGating } from 'pages/admin-pages/token-gating';
 
 export const AdminAppRouter = () => {
   return (
@@ -44,6 +45,8 @@ export const AdminAppRouter = () => {
         <Route path={'/my-store'} element={<UserPage />} />
 
         <Route path={'/new-product'} element={<ProductForm />} />
+
+        <Route path={'/token-gating'} element={<TokenGating />} />
 
         {USE_CATEGORY && (
           <Route path={'/new-category'} element={<CategoryForm />} />

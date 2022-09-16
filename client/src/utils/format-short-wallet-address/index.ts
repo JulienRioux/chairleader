@@ -6,6 +6,6 @@ export const formatShortAddress = (userAddress?: string) => {
     return userAddress;
   }
   return userAddress
-    ? userAddress?.slice(0, 6) + '...' + userAddress?.slice(-6)
+    ? userAddress?.slice(0, 4) + '...' + userAddress?.slice(-4)
     : '';
 };

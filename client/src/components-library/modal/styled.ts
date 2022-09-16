@@ -59,6 +59,7 @@ export const ModalContainer = styled.div<{
   overflow: scroll;
   margin: 8px;
   border-radius: ${(p) => p.theme.borderRadius.default};
+  white-space: normal;
 
   animation: ${({ isClosing }) =>
     isClosing
@@ -91,8 +92,7 @@ export const CloseBtn = styled(UnstyledButton)`
   min-height: ${CLOSE_BUTTON_SIZE};
   width: ${CLOSE_BUTTON_SIZE};
   min-width: ${CLOSE_BUTTON_SIZE};
-  color: ${(p) => p.theme.text};
-  background: ${(p) => p.theme.text}22;
+  color: ${(p) => p.theme.color.text};
   border-radius: ${(p) => p.theme.borderRadius.default};
   display: flex;
   justify-content: center;

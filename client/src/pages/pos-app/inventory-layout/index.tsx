@@ -1,6 +1,7 @@
-import { StoreImgIcon } from 'components';
+import { ConnectWallet, StoreImgIcon } from 'components';
 import { Button, ChildWrapper, Icon, UnstyledLink } from 'components-library';
 import { Cart } from 'components/cart';
+import { ConnectWalletBtn } from 'components/connect-wallet-btn';
 import { useCart } from 'hooks/cart';
 import { useCurrency } from 'hooks/currency';
 import { useStore } from 'hooks/store';
@@ -143,6 +144,8 @@ export const InventoryLayout = ({ children }: { children: ReactNode }) => {
                   to={-1}
                 />
               )}
+
+              <ConnectWalletBtn />
               <ToggleTheme />
             </ButtonsWrapper>
           </TopNav>

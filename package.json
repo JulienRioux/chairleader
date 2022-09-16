@@ -18,6 +18,16 @@
   },
   "dependencies": {
     "@solana/spl-token": "^0.2.0",
+    "@solana/wallet-adapter-base": "^0.9.17",
     "shelljs": "^0.8.5"
+  },
+  "browserslist": {
+    "production": [
+      "chrome >= 67",
+      "edge >= 79",
+      "firefox >= 68",
+      "opera >= 54",
+      "safari >= 14"
+    ]
   }
 }
