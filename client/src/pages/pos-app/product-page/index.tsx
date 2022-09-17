@@ -1,9 +1,11 @@
-import { Button, NumberInput, Icon } from 'components-library';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { Button, NumberInput, Icon, message } from 'components-library';
 import { OutOfStockBadge } from 'components/product-preview';
 import { useCart } from 'hooks/cart';
 import { useCurrency } from 'hooks/currency';
 import { useScrollTop } from 'hooks/scroll-top';
 import { useStore } from 'hooks/store';
+import { useWalletModal } from 'hooks/wallet-modal';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled, { css } from 'styled-components';
@@ -88,6 +90,9 @@ export const ProductPage = () => {
   const { updateQuantity, cartItems } = useCart();
   const { decimals } = useCurrency();
   const navigate = useNavigate();
+  const { publicKey } = useWallet();
+
+  const { openConnectModal } = useWalletModal();
 
   const { inventory } = useStore();
 
@@ -135,6 +140,10 @@ export const ProductPage = () => {
 
   const priceDisplay = Number(Number(price)?.toFixed(decimals));
 
+  const isTokenGatedProduct = true;
+
+  const showConnectWalletBtn = !publicKey;
+
   return (
     <ProductWrapper>
       <ImgWrapper>
@@ -160,12 +169,26 @@ export const ProductPage = () => {
       {!isOutOfStock && (
         <AddToCartWrapper>
           <InnerAddToCartWrapper>
-            <NumberInput value={qty} onChange={setQty} max={maxQuantity} />
+            {!isTokenGatedProduct && (
+              <>
+                <NumberInput value={qty} onChange={setQty} max={maxQuantity} />
 
-            <Button onClick={handleAddToCart} disabled={maxQuantity === 0}>
-              {isUpdating ? 'Update cart' : 'Add to cart'}{' '}
-              {Number((Number(price) * qty)?.toFixed(decimals))} {currency}
-            </Button>
+                <Button onClick={handleAddToCart} disabled={maxQuantity === 0}>
+                  {isUpdating ? 'Update cart' : 'Add to cart'}{' '}
+                  {Number((Number(price) * qty)?.toFixed(decimals))} {currency}
+                </Button>
+              </>
+            )}
+
+            {isTokenGatedProduct && showConnectWalletBtn && (
+              <Button fullWidth icon="lock" onClick={openConnectModal}>
+                Connect your wallet to unlock
+              </Button>
+            )}
+
+            {isTokenGatedProduct && !showConnectWalletBtn && (
+              <p>LINK OR MODAL TO PURCHASE NFT?</p>
+            )}
           </InnerAddToCartWrapper>
         </AddToCartWrapper>
       )}

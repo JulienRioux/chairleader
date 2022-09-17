@@ -3,7 +3,6 @@ import {
   ConnectionProvider,
   WalletProvider,
 } from '@solana/wallet-adapter-react';
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import {
   GlowWalletAdapter,
   PhantomWalletAdapter,
@@ -18,7 +17,6 @@ export const ConnectWalletProvider = ({
 }: {
   children: ReactNode;
 }) => {
-  // TODO: Move this to be switched all at the same time using env variable
   const network = CLUSTER_ENV;
 
   const endpoint = useMemo(() => CLUSTER_ENDPOINT, []);

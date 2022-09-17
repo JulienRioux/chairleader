@@ -10,6 +10,7 @@ import { useCallback, useMemo, useEffect } from 'react';
 import styled from 'styled-components';
 import { WalletName, WalletReadyState } from '@solana/wallet-adapter-base';
 import { formatShortAddress } from 'utils';
+import { useWalletModal } from 'hooks/wallet-modal';
 
 const ConnectWalletBtnWrapper = styled.span`
   margin-right: 12px;
@@ -81,7 +82,7 @@ const SingleWalletBtn = ({
   </StyledButton>
 );
 
-const ConnectWalletModalContent = ({
+export const ConnectWalletModalContent = ({
   closeModal,
 }: {
   closeModal: () => void;
@@ -173,28 +174,55 @@ const ConnectWalletModalContent = ({
   );
 };
 
-export const ConnectWalletBtn = () => {
-  const {
-    openModal: openConnectModal,
-    Modal: ConnectModal,
-    closeModal: closeConnectModal,
-  } = useModal();
-
-  const {
-    openModal: openConnectedModal,
-    Modal: ConnectedModal,
-    closeModal: closeConnectedModal,
-  } = useModal();
-  const { publicKey, disconnect, wallet, connecting } = useWallet();
-
-  const walletAddress = useMemo(() => publicKey?.toBase58(), [publicKey]);
+export const ConnectedWalletModalContent = ({
+  closeModal,
+}: {
+  closeModal: () => void;
+}) => {
+  const { disconnect, wallet, publicKey } = useWallet();
 
   const handleDisconnect = useCallback(() => {
     disconnect();
-    closeConnectedModal();
-  }, [closeConnectedModal, disconnect]);
+    closeModal();
+  }, [closeModal, disconnect]);
+
+  const walletAddress = useMemo(() => publicKey?.toBase58(), [publicKey]);
 
   const cluster = 'devnet';
+
+  return (
+    <>
+      <p style={{ margin: '4px 0 24px' }}>
+        Connected with {wallet?.adapter.name}.
+      </p>
+
+      <UnstyledExternalLink
+        href={`https://solscan.io/account/${walletAddress}?cluster=${cluster}`}
+        target="_blank"
+      >
+        <Button
+          secondary
+          fullWidth
+          icon="launch"
+          style={{ marginBottom: '12px' }}
+        >
+          View on Explorer
+        </Button>
+      </UnstyledExternalLink>
+
+      <Button secondary fullWidth onClick={handleDisconnect}>
+        Disconnect
+      </Button>
+    </>
+  );
+};
+
+export const ConnectWalletBtn = () => {
+  const { publicKey, connecting } = useWallet();
+
+  const { openConnectModal, openConnectedModal } = useWalletModal();
+
+  const walletAddress = useMemo(() => publicKey?.toBase58(), [publicKey]);
 
   return (
     <ConnectWalletBtnWrapper>
@@ -213,34 +241,6 @@ export const ConnectWalletBtn = () => {
           {formatShortAddress(walletAddress)}
         </Button>
       )}
-
-      <ConnectModal title="Connect a wallet">
-        <ConnectWalletModalContent closeModal={closeConnectModal} />
-      </ConnectModal>
-
-      <ConnectedModal title="Account">
-        <p style={{ margin: '4px 0 24px' }}>
-          Connected with {wallet?.adapter.name}.
-        </p>
-
-        <UnstyledExternalLink
-          href={`https://solscan.io/account/${walletAddress}?cluster=${cluster}`}
-          target="_blank"
-        >
-          <Button
-            secondary
-            fullWidth
-            icon="launch"
-            style={{ marginBottom: '12px' }}
-          >
-            View on Explorer
-          </Button>
-        </UnstyledExternalLink>
-
-        <Button secondary fullWidth onClick={handleDisconnect}>
-          Disconnect
-        </Button>
-      </ConnectedModal>
     </ConnectWalletBtnWrapper>
   );
 };
