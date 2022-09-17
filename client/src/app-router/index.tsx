@@ -27,6 +27,7 @@ import { StaticPage } from 'pages/static-page/inex';
 import { PricingPage } from 'pages/pricing-page';
 import { SolanaPayProviders } from 'contexts/solana-pay';
 import { TokenGating } from 'pages/admin-pages/token-gating';
+import { TokenGatingNft } from 'pages/admin-pages/token-gating-nft';
 
 export const AdminAppRouter = () => {
   return (
@@ -47,6 +48,18 @@ export const AdminAppRouter = () => {
         <Route path={'/new-product'} element={<ProductForm />} />
 
         <Route path={'/token-gating'} element={<TokenGating />} />
+
+        <Route path={'/token-gating/:address'} element={<TokenGatingNft />} />
+
+        <Route
+          path={'/token-gating/:address/exclusivities'}
+          element={<h1>Select exclusivities</h1>}
+        />
+
+        <Route
+          path={'/token-gating/:address/rewards'}
+          element={<h1>Select rewards</h1>}
+        />
 
         {USE_CATEGORY && (
           <Route path={'/new-category'} element={<CategoryForm />} />

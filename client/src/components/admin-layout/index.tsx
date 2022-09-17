@@ -4,13 +4,11 @@ import {
   UnstyledExternalLink,
   UnstyledLink,
 } from 'components-library';
-import { USE_CATEGORY } from 'configs';
 import { ReactNode } from 'react';
 import { useLocation, useMatch } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { routes } from 'utils';
 import { ToggleTheme } from 'pages/homepage';
-import { useMediaQuery } from 'hooks/media-query';
 import { useAuth } from 'hooks/auth';
 import { ConnectWalletBtn } from 'components/connect-wallet-btn';
 
@@ -173,18 +171,29 @@ export const StoreImgIcon = ({
 
 export const AdminLayout = ({ children }: { children: ReactNode }) => {
   const { pathname } = useLocation();
-  const isMobileView = useMediaQuery('(max-width: 800px)');
   const { user } = useAuth();
 
   const isOnProductPage = useMatch(`${routes.admin.inventory}/:productId`);
   const isOnInvoicePage = useMatch(`${routes.admin.payments}/:invoiceId`);
+  const isOnNftPage = useMatch(`${routes.admin.tokenGating}/:address`);
+  const isOnSelectRewardsPage = useMatch(
+    `${routes.admin.tokenGating}/:address/rewards`
+  );
+  const isOnSelectExclusivitiesPage = useMatch(
+    `${routes.admin.tokenGating}/:address/exclusivities`
+  );
 
-  const showBackButton = isOnProductPage || isOnInvoicePage;
+  const showBackButton =
+    isOnProductPage ||
+    isOnInvoicePage ||
+    isOnNftPage ||
+    isOnSelectRewardsPage ||
+    isOnSelectExclusivitiesPage;
 
   const pageTitle = pathname
     .replace('/admin/', '')
     .replaceAll('-', ' ')
-    .replace('/', ' / ');
+    .replaceAll('/', ' / ');
 
   return (
     <AdminLayoutWrapper>
@@ -242,35 +251,18 @@ export const AdminLayout = ({ children }: { children: ReactNode }) => {
           <PageTitle>{pageTitle}</PageTitle>
 
           <RightButtonWrapper>
-            <ToggleTheme style={{ marginRight: '8px' }} />
-
-            {USE_CATEGORY && (
-              <Button
-                secondary
-                to={routes.admin.newCategory}
-                style={{ marginRight: '8px' }}
-              >
-                Add category
-              </Button>
-            )}
-
-            <Button
-              to={routes.admin.newProduct}
-              icon={isMobileView ? 'add' : undefined}
-            >
-              {isMobileView ? '' : 'Add product'}
-            </Button>
-
             {showBackButton && (
               <Button
-                style={{ marginLeft: '8px' }}
                 secondary
                 icon="arrow_back"
                 to={-1}
+                style={{ marginRight: '8px' }}
               />
             )}
 
-            <span style={{ marginLeft: '8px' }}>
+            <ToggleTheme style={{ marginRight: '8px' }} />
+
+            <span>
               <ConnectWalletBtn />
             </span>
           </RightButtonWrapper>

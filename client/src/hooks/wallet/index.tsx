@@ -11,7 +11,7 @@ import {
   SolflareWalletAdapter,
   TorusWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
-import { clusterApiUrl } from '@solana/web3.js';
+import { CLUSTER_ENDPOINT, CLUSTER_ENV } from 'utils';
 
 export const ConnectWalletProvider = ({
   children,
@@ -19,9 +19,9 @@ export const ConnectWalletProvider = ({
   children: ReactNode;
 }) => {
   // TODO: Move this to be switched all at the same time using env variable
-  const network = WalletAdapterNetwork.Devnet;
+  const network = CLUSTER_ENV;
 
-  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+  const endpoint = useMemo(() => CLUSTER_ENDPOINT, []);
 
   const wallets = useMemo(
     () => [

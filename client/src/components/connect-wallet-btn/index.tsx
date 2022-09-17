@@ -185,7 +185,7 @@ export const ConnectWalletBtn = () => {
     Modal: ConnectedModal,
     closeModal: closeConnectedModal,
   } = useModal();
-  const { publicKey, disconnect, wallet } = useWallet();
+  const { publicKey, disconnect, wallet, connecting } = useWallet();
 
   const walletAddress = useMemo(() => publicKey?.toBase58(), [publicKey]);
 
@@ -199,7 +199,7 @@ export const ConnectWalletBtn = () => {
   return (
     <ConnectWalletBtnWrapper>
       {!walletAddress && (
-        <Button secondary onClick={openConnectModal}>
+        <Button isLoading={connecting} secondary onClick={openConnectModal}>
           Connect wallet
         </Button>
       )}
