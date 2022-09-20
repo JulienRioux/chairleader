@@ -1,5 +1,12 @@
-import { useWallet } from '@solana/wallet-adapter-react';
-import { Button, Icon, Loader } from 'components-library';
+import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
+import {
+  LAMPORTS_PER_SOL,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+} from '@solana/web3.js';
+import { Button, Icon, Loader, message } from 'components-library';
 import { useMetaplex } from 'hooks/metaplex';
 import { usePrintedNftsEditions } from 'hooks/printed-nfts-editions';
 import { useCallback, useEffect, useState } from 'react';
@@ -7,9 +14,10 @@ import { useParams } from 'react-router-dom';
 import {
   CLUSTER_ENV,
   formatShortAddress,
-  printNewNftEdition,
+  printNewNftEditionWithoutFees,
   getNftMetadata,
   routes,
+  Logger,
 } from 'utils';
 import { DetailItem } from '../invoice-page';
 
@@ -27,6 +35,7 @@ import {
   DetailsWrapper,
   Description,
   SolScanLink,
+  EditionNumber,
   NftName,
   NftImg,
 } from './token-fating.nft.styles';
@@ -55,6 +64,50 @@ const CAROUSEL_DETAILS = {
     button: 'Select rewards',
     link: '/rewards',
   },
+};
+
+const usePayment = () => {
+  const { connection } = useConnection();
+  const { publicKey, sendTransaction } = useWallet();
+
+  const makePayment = useCallback(
+    async (amount: number) => {
+      if (!publicKey) throw new WalletNotConnectedError();
+
+      try {
+        const transaction = new Transaction().add(
+          SystemProgram.transfer({
+            fromPubkey: publicKey,
+            toPubkey: new PublicKey(
+              'CaLiBb3CPagr4Vfaiyr6dsBZ5vxadjN33o6QgaMzj48m'
+            ),
+            // Converting the amount of SOL in LAMPORTS
+            lamports: LAMPORTS_PER_SOL * amount,
+          })
+        );
+
+        const {
+          context: { slot: minContextSlot },
+          value: { blockhash, lastValidBlockHeight },
+        } = await connection.getLatestBlockhashAndContext();
+
+        const signature = await sendTransaction(transaction, connection, {
+          minContextSlot,
+        });
+
+        await connection.confirmTransaction({
+          blockhash,
+          lastValidBlockHeight,
+          signature,
+        });
+      } catch (err) {
+        Logger.error(err);
+      }
+    },
+    [publicKey, sendTransaction, connection]
+  );
+
+  return { makePayment };
 };
 
 const DealCarousel = ({ type }: { type: DealType }) => {
@@ -93,6 +146,8 @@ export const TokenGatingNft = () => {
   const { editionsPrintedList, editionsPrintedListIsLoading } =
     usePrintedNftsEditions(address);
 
+  const { makePayment } = usePayment();
+
   const [image, setImage] = useState('');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -100,6 +155,8 @@ export const TokenGatingNft = () => {
   const [currentSupply, setCurrentSupply] = useState<any>();
   const [maxSupply, setMaxSupply] = useState<any>();
   const [externalUrl, setExternalUrl] = useState('');
+
+  const [printNftIsLoading, setPrintNftIsLoading] = useState(false);
 
   const loadNftData = useCallback(async () => {
     if (address && metaplex) {
@@ -124,12 +181,23 @@ export const TokenGatingNft = () => {
     if (!address) {
       return;
     }
-    const printedNft = await printNewNftEdition({
+
+    setPrintNftIsLoading(true);
+
+    await makePayment(0.005);
+
+    message.success('Payment succeed.');
+
+    await printNewNftEditionWithoutFees({
       originalNftAddress: address,
-      metaplex,
     });
-    console.log('printedNft', printedNft);
-  }, [address, metaplex]);
+
+    setPrintNftIsLoading(false);
+
+    loadNftData();
+
+    message.success('NFT generated successfully.');
+  }, [address, loadNftData, makePayment]);
 
   useEffect(() => {
     // Load the NFT metadata
@@ -188,6 +256,7 @@ export const TokenGatingNft = () => {
             secondary
             style={{ margin: '20px 0' }}
             onClick={handlePrintNewEdition}
+            isLoading={printNftIsLoading}
           >
             Print new edition
           </Button>
@@ -198,27 +267,35 @@ export const TokenGatingNft = () => {
 
           {!editionsPrintedListIsLoading && (
             <>
-              {printedAddresses.map((printedNftAddress) => (
+              {printedAddresses.map((printedNftAddress, i) => (
                 <SolScanLink
                   href={`https://solscan.io/token/${printedNftAddress}?cluster=${CLUSTER_ENV}`}
                   target="_blank"
                   key={printedNftAddress}
                   style={{ margin: '0 8px 4px 0' }}
                 >
-                  {formatShortAddress(printedNftAddress)}
+                  <span>{formatShortAddress(printedNftAddress)}</span>
+                  <EditionNumber>
+                    (Edition #{i + 1}/{printedAddresses.length})
+                  </EditionNumber>
+
                   <Icon name="launch" style={{ marginLeft: '8px' }} />
                 </SolScanLink>
               ))}
 
               {!showAll && hasMorePrintedNfts && (
-                <Button
-                  onClick={() => setShowAll(true)}
-                  secondary
-                  style={{ padding: '4px' }}
-                >
-                  Show more
-                </Button>
+                <div>
+                  <Button
+                    onClick={() => setShowAll(true)}
+                    secondary
+                    style={{ padding: '4px' }}
+                  >
+                    Show more
+                  </Button>
+                </div>
               )}
+
+              {printedAddresses.length === 0 && <p>No printed token yet.</p>}
             </>
           )}
         </DetailsWrapper>

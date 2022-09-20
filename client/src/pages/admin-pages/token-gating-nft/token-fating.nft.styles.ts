@@ -32,6 +32,11 @@ export const SolScanLink = styled(UnstyledExternalLink)`
   display: inline-block;
 `;
 
+export const EditionNumber = styled.span`
+  margin-left: 8px;
+  color: ${(p) => p.theme.color.lightText};
+`;
+
 export const Description = styled.p`
   color: ${(p) => p.theme.color.lightText};
 `;
