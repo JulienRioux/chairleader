@@ -1,6 +1,6 @@
 import { Loader, UnstyledLink } from 'components-library';
 import { useCallback, useEffect, useState } from 'react';
-import { JsonMetadata, Metadata } from '@metaplex-foundation/js';
+import { JsonMetadata, Metadata, Nft } from '@metaplex-foundation/js';
 import { useMetaplex } from 'hooks/metaplex';
 import { PublicKey } from '@solana/web3.js';
 import styled from 'styled-components';
@@ -8,7 +8,9 @@ import { formatShortAddress, routes } from 'utils';
 
 const TEST_NFT_ADDRESSES = [
   'FPXX6oCHjDpRDLAqSYc9WDAACoPdixhBuWfqgLp5K336',
-  'FXdoUxHUZSLpWz7Br4k4gfTc5gQ73Cw7FhsqzNwvsWX8',
+  'FzYyQgf1uZGmW6ELqL6ofWY9pH2M1GKzvG3Jw6CJkGCg',
+  'FjwwrNsKxAQHodZ4fon7BorvQkxACfYAftxhrcJLm56b',
+  'zFJ4Za9VX7Tu9mxz8FVZgYJsSf2Qm5byXPjCtvWCwDp',
 ];
 
 const NftDisplayWrapper = styled.div`
@@ -114,6 +116,7 @@ export const NftsList = () => {
           .nfts()
           .load({ metadata: nft as Metadata<JsonMetadata<string>> })
           .run();
+
         return populatedNft;
       }, [])
     );

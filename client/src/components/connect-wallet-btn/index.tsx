@@ -144,14 +144,14 @@ export const ConnectWalletModalContent = ({
           />
         ) : (
           <UnstyledExternalLink href={url} target="_blank">
-            <SingleWalletBtn name={name + 'WTF'} icon={icon} key={name} />
+            <SingleWalletBtn name={name} icon={icon} key={name} />
           </UnstyledExternalLink>
         )
       )}
 
       <div>
         <LoginDisclaimer>
-          By connecting a wallet, you agree to Chairleader Labs'{' '}
+          By connecting a wallet, you agree to Chairleader'{' '}
           <a
             href="https://chairleader.xyz/static/terms-of-service"
             target="_blank"

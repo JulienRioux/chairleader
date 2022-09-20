@@ -53,23 +53,6 @@ const NoImageWrapper = styled.div`
   font-size: 48px;
 `;
 
-// const getNftsByOwner = async () => {
-//   try {
-//     console.log('Loading...');
-
-//     const myNfts = await metaplex
-//       .nfts()
-//       .findAllByOwner({
-//         owner: new PublicKey('BJ2L3GBiCiKd7nCdH3zYBzSbvvkiJZ3QjfASrxKhux2Q'),
-//       })
-//       .run();
-
-//     return myNfts;
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
-
 export const TokenGating = () => {
   const { metaplex } = useMetaplex();
   const wallet = useWallet();
@@ -164,6 +147,7 @@ export const TokenGating = () => {
           'NFT:',
           `https://solscan.io/account/${nft.address.toString()}?cluster=${CLUSTER_ENV}`
         );
+
         message.success('Nft created successfully!');
         setUploadingNft(false);
         closeModal();

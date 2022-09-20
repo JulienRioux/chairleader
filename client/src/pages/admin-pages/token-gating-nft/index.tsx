@@ -1,118 +1,35 @@
-import { Nft } from '@metaplex-foundation/js';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { PublicKey } from '@solana/web3.js';
-import {
-  Button,
-  Icon,
-  Loader,
-  UnstyledButton,
-  UnstyledExternalLink,
-} from 'components-library';
+import { Button, Icon, Loader } from 'components-library';
 import { useMetaplex } from 'hooks/metaplex';
+import { usePrintedNftsEditions } from 'hooks/printed-nfts-editions';
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
-import { CLUSTER_ENV, formatShortAddress, routes } from 'utils';
+import {
+  CLUSTER_ENV,
+  formatShortAddress,
+  printNewNftEdition,
+  getNftMetadata,
+  routes,
+} from 'utils';
 import { DetailItem } from '../invoice-page';
 
-const NftImg = styled.img`
-  border-radius: ${(p) => p.theme.borderRadius.default};
-  border: 1px solid ${(p) => p.theme.color.text}22;
-  aspect-ratio: 1 / 1;
-  width: 100%;
-  max-width: 400px;
-`;
-
-const NftName = styled.div`
-  font-weight: bold;
-  margin: 4px 0;
-  font-size: 24px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-`;
-
-const SolScanLink = styled(UnstyledExternalLink)`
-  margin-bottom: 8px;
-  padding: 4px;
-  color: ${(p) => p.theme.color.primary};
-  border-radius: ${(p) => p.theme.borderRadius.default};
-  border: 2px solid ${(p) => p.theme.color.primary}22;
-  display: inline-block;
-`;
-
-const Description = styled.p`
-  color: ${(p) => p.theme.color.lightText};
-`;
-
-const DetailsWrapper = styled.div`
-  width: 100%;
-`;
-
-const TokenGatingNftWrapper = styled.div`
-  display: grid;
-  grid-template-columns: 400px 1fr;
-  gap: 60px;
-
-  @media (max-width: 1200px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const TokenGateTypeTitle = styled.h3`
-  margin: 0;
-  font-size: 24px;
-`;
-
-const StyledButton = styled(Button)`
-  font-size: 14px;
-  padding: 8px 12px;
-  margin-left: 20px;
-`;
-
-const TitleWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 12px;
-  justify-content: space-between;
-`;
-
-const ProductImg = styled.img`
-  width: 100%;
-  border-radius: ${(p) => p.theme.borderRadius.default};
-  border: 1px solid ${(p) => p.theme.color.text}22;
-  aspect-ratio: 1 / 1;
-`;
-
-const Scoller = styled.div`
-  display: flex;
-  gap: 20px;
-  overflow: scroll;
-  padding: 12px 0;
-  border-top: 1px solid ${(p) => p.theme.color.text}22;
-`;
-
-const DealsWrapper = styled.div`
-  overflow: scroll;
-  margin-bottom: 80px;
-`;
-
-const DealTitle = styled.h4`
-  margin: 8px 0 0;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-`;
-
-const DealPrice = styled.div`
-  margin: 8px 0 0;
-  color: ${(p) => p.theme.color.primary};
-`;
-
-const DealItemButton = styled(UnstyledButton)`
-  width: 200px;
-  text-align: left;
-`;
+import {
+  DealItemButton,
+  DealPrice,
+  DealTitle,
+  DealsWrapper,
+  Scoller,
+  ProductImg,
+  TitleWrapper,
+  StyledButton,
+  TokenGateTypeTitle,
+  TokenGatingNftWrapper,
+  DetailsWrapper,
+  Description,
+  SolScanLink,
+  NftName,
+  NftImg,
+} from './token-fating.nft.styles';
 
 const DealItem = () => {
   return (
@@ -168,7 +85,13 @@ export const TokenGatingNft = () => {
   const { metaplex } = useMetaplex();
   const { address } = useParams();
 
+  const [showAll, setShowAll] = useState(false);
+
   const { connecting, publicKey } = useWallet();
+  const [nftDataIsLoading, setNftDataIsLoading] = useState(false);
+
+  const { editionsPrintedList, editionsPrintedListIsLoading } =
+    usePrintedNftsEditions(address);
 
   const [image, setImage] = useState('');
   const [name, setName] = useState('');
@@ -180,12 +103,8 @@ export const TokenGatingNft = () => {
 
   const loadNftData = useCallback(async () => {
     if (address && metaplex) {
-      const mintAddress = new PublicKey(address);
-
-      const nft = (await metaplex
-        .nfts()
-        .findByMint({ mintAddress })
-        .run()) as Nft;
+      setNftDataIsLoading(true);
+      const nft = await getNftMetadata(address);
 
       setImage(nft?.json?.image ?? '');
       setName(nft?.json?.name ?? '');
@@ -197,20 +116,39 @@ export const TokenGatingNft = () => {
         setMaxSupply(nft.edition.maxSupply);
         setCurrentSupply(nft.edition.supply);
       }
+      setNftDataIsLoading(false);
     }
   }, [address, metaplex]);
 
+  const handlePrintNewEdition = useCallback(async () => {
+    if (!address) {
+      return;
+    }
+    const printedNft = await printNewNftEdition({
+      originalNftAddress: address,
+      metaplex,
+    });
+    console.log('printedNft', printedNft);
+  }, [address, metaplex]);
+
   useEffect(() => {
+    // Load the NFT metadata
     loadNftData();
   }, [loadNftData]);
 
-  if (connecting) {
+  if (connecting || nftDataIsLoading) {
     return <Loader />;
   }
 
   if (!publicKey) {
     return <p>Connect your wallet in order to see this page.</p>;
   }
+
+  const printedAddresses = showAll
+    ? editionsPrintedList
+    : editionsPrintedList.slice(0, 5);
+
+  const hasMorePrintedNfts = editionsPrintedList.length > 5;
 
   return (
     <div>
@@ -244,6 +182,45 @@ export const TokenGatingNft = () => {
           </DetailItem>
 
           <DetailItem label="Royalty">{royalties}%</DetailItem>
+
+          <Button
+            fullWidth
+            secondary
+            style={{ margin: '20px 0' }}
+            onClick={handlePrintNewEdition}
+          >
+            Print new edition
+          </Button>
+
+          <h4>Printed token address:</h4>
+
+          {editionsPrintedListIsLoading && <p>Loading...</p>}
+
+          {!editionsPrintedListIsLoading && (
+            <>
+              {printedAddresses.map((printedNftAddress) => (
+                <SolScanLink
+                  href={`https://solscan.io/token/${printedNftAddress}?cluster=${CLUSTER_ENV}`}
+                  target="_blank"
+                  key={printedNftAddress}
+                  style={{ margin: '0 8px 4px 0' }}
+                >
+                  {formatShortAddress(printedNftAddress)}
+                  <Icon name="launch" style={{ marginLeft: '8px' }} />
+                </SolScanLink>
+              ))}
+
+              {!showAll && hasMorePrintedNfts && (
+                <Button
+                  onClick={() => setShowAll(true)}
+                  secondary
+                  style={{ padding: '4px' }}
+                >
+                  Show more
+                </Button>
+              )}
+            </>
+          )}
         </DetailsWrapper>
 
         <div>

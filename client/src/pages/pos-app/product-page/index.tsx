@@ -1,8 +1,9 @@
 import { useWallet } from '@solana/wallet-adapter-react';
-import { Button, NumberInput, Icon, message } from 'components-library';
+import { Button, NumberInput, Icon } from 'components-library';
 import { OutOfStockBadge } from 'components/product-preview';
 import { useCart } from 'hooks/cart';
 import { useCurrency } from 'hooks/currency';
+import { useNft } from 'hooks/nft';
 import { useScrollTop } from 'hooks/scroll-top';
 import { useStore } from 'hooks/store';
 import { useWalletModal } from 'hooks/wallet-modal';
@@ -94,6 +95,8 @@ export const ProductPage = () => {
 
   const { openConnectModal } = useWalletModal();
 
+  const { userNfts } = useNft();
+
   const { inventory } = useStore();
 
   const { currency } = useCurrency();
@@ -140,12 +143,25 @@ export const ProductPage = () => {
 
   const priceDisplay = Number(Number(price)?.toFixed(decimals));
 
-  const isTokenGatedProduct = true;
+  // TODO: This will needs to be rewrite...
+  // const tokenGated: string[] = [];
+  const tokenGated: string[] = ['3TXh8vQGvgAxUSEEkcHyZdpy12pTX6TcAXsmDJnvuPLJ'];
+  const isTokenGatedProduct = tokenGated.length > 0;
 
-  const showConnectWalletBtn = !publicKey;
+  // The product is unlocked if the user wallet is connected and the user has one token-gating NFT
+  const productIsUnlocked =
+    publicKey && tokenGated.some((nftAddress) => userNfts.includes(nftAddress));
+
+  // Show the connect wallet button if the product is token-gated and the user wallet is not connected.
+  const SHOW_CONNECT_WALLET_BUTTON = isTokenGatedProduct && !publicKey;
+
+  // Show the missing token msg if the product it token-gated, the user wallet is connected and the user did not have the right token
+  const SHOW_MISSING_TOKEN_MSG =
+    isTokenGatedProduct && publicKey && !productIsUnlocked;
 
   return (
     <ProductWrapper>
+      <p>Exclusive product (Token gated)</p>
       <ImgWrapper>
         {imageSrc ? (
           <Img src={imageSrc} />
@@ -169,7 +185,7 @@ export const ProductPage = () => {
       {!isOutOfStock && (
         <AddToCartWrapper>
           <InnerAddToCartWrapper>
-            {!isTokenGatedProduct && (
+            {(!isTokenGatedProduct || productIsUnlocked) && (
               <>
                 <NumberInput value={qty} onChange={setQty} max={maxQuantity} />
 
@@ -180,15 +196,13 @@ export const ProductPage = () => {
               </>
             )}
 
-            {isTokenGatedProduct && showConnectWalletBtn && (
+            {SHOW_CONNECT_WALLET_BUTTON && (
               <Button fullWidth icon="lock" onClick={openConnectModal}>
                 Connect your wallet to unlock
               </Button>
             )}
 
-            {isTokenGatedProduct && !showConnectWalletBtn && (
-              <p>LINK OR MODAL TO PURCHASE NFT?</p>
-            )}
+            {SHOW_MISSING_TOKEN_MSG && <p>LINK OR MODAL TO PURCHASE NFT?</p>}
           </InnerAddToCartWrapper>
         </AddToCartWrapper>
       )}
