@@ -23,5 +23,9 @@ export const usePrintedNftsEditions = (masterAddress?: string) => {
     loadPrintedVersions();
   }, [loadPrintedVersions]);
 
-  return { editionsPrintedList, editionsPrintedListIsLoading: isLoading };
+  return {
+    editionsPrintedList,
+    editionsPrintedListIsLoading: isLoading,
+    refreshEditionsPrintedList: loadPrintedVersions,
+  };
 };

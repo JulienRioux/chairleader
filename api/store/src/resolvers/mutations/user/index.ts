@@ -62,7 +62,7 @@ export const validateOtpMutation = async (
 
 export const updateUserMutation = async (
   _source: any,
-  { storeName, walletAddress, subDomain, currency, saleTax, image },
+  { storeName, walletAddress, subDomain, currency, saleTax, image, nfts },
   context
 ) => {
   const id = context?.user?._id;
@@ -76,6 +76,7 @@ export const updateUserMutation = async (
       currency,
       saleTax,
       image,
+      nfts,
     });
     if (user) {
       return user;

@@ -58,11 +58,13 @@ const CAROUSEL_DETAILS = {
     title: 'Exclusivities unlocked',
     button: 'Select exclusivities',
     link: '/exclusivities',
+    icon: 'lock_open',
   },
   reward: {
     title: 'Rewards',
     button: 'Select rewards',
     link: '/rewards',
+    icon: 'emoji_events',
   },
 };
 
@@ -74,13 +76,16 @@ const usePayment = () => {
     async (amount: number) => {
       if (!publicKey) throw new WalletNotConnectedError();
 
+      const payeePublicKey = process.env.REACT_APP_TRANSACTION_PAYEE_PUBLIC_KEY;
+      if (!payeePublicKey) {
+        return;
+      }
+
       try {
         const transaction = new Transaction().add(
           SystemProgram.transfer({
             fromPubkey: publicKey,
-            toPubkey: new PublicKey(
-              'CaLiBb3CPagr4Vfaiyr6dsBZ5vxadjN33o6QgaMzj48m'
-            ),
+            toPubkey: new PublicKey(payeePublicKey),
             // Converting the amount of SOL in LAMPORTS
             lamports: LAMPORTS_PER_SOL * amount,
           })
@@ -113,12 +118,14 @@ const usePayment = () => {
 const DealCarousel = ({ type }: { type: DealType }) => {
   const { address } = useParams();
 
-  const { title, button, link } = CAROUSEL_DETAILS[type];
+  const { title, button, link, icon } = CAROUSEL_DETAILS[type];
 
   return (
     <DealsWrapper>
       <TitleWrapper>
-        <TokenGateTypeTitle>{title}</TokenGateTypeTitle>
+        <TokenGateTypeTitle>
+          <Icon name={icon} /> {title}
+        </TokenGateTypeTitle>
         <StyledButton
           to={`${routes.admin.tokenGating}/${address}${link}`}
           secondary
@@ -143,8 +150,11 @@ export const TokenGatingNft = () => {
   const { connecting, publicKey } = useWallet();
   const [nftDataIsLoading, setNftDataIsLoading] = useState(false);
 
-  const { editionsPrintedList, editionsPrintedListIsLoading } =
-    usePrintedNftsEditions(address);
+  const {
+    editionsPrintedList,
+    editionsPrintedListIsLoading,
+    refreshEditionsPrintedList,
+  } = usePrintedNftsEditions(address);
 
   const { makePayment } = usePayment();
 
@@ -190,21 +200,32 @@ export const TokenGatingNft = () => {
 
     await printNewNftEditionWithoutFees({
       originalNftAddress: address,
+      metaplex,
     });
 
     setPrintNftIsLoading(false);
 
     loadNftData();
+    refreshEditionsPrintedList();
 
     message.success('NFT generated successfully.');
-  }, [address, loadNftData, makePayment]);
+  }, [address, loadNftData, makePayment, refreshEditionsPrintedList, metaplex]);
 
   useEffect(() => {
     // Load the NFT metadata
     loadNftData();
   }, [loadNftData]);
 
-  if (connecting || nftDataIsLoading) {
+  if (connecting) {
+    return (
+      <div>
+        <Loader />
+        <p style={{ textAlign: 'center' }}>Connecting to wallet</p>
+      </div>
+    );
+  }
+
+  if (nftDataIsLoading) {
     return <Loader />;
   }
 
@@ -276,7 +297,7 @@ export const TokenGatingNft = () => {
                 >
                   <span>{formatShortAddress(printedNftAddress)}</span>
                   <EditionNumber>
-                    (Edition #{i + 1}/{printedAddresses.length})
+                    (Edition #{i + 1}/{editionsPrintedList.length})
                   </EditionNumber>
 
                   <Icon name="launch" style={{ marginLeft: '8px' }} />

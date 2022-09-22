@@ -13,7 +13,7 @@ export const mutations = `
       """
       Update user
       """
-      updateUser(storeName: String, walletAddress: String, subDomain: String, currency: String, image: Upload, saleTax: Float): Store
+      updateUser(storeName: String, walletAddress: String, subDomain: String, currency: String, image: Upload, saleTax: Float, nfts: [String]): Store
 
       """
       Add Product

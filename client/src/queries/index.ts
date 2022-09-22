@@ -15,6 +15,7 @@ export const GET_ME = gql`
       currency
       saleTax
       image
+      nfts
     }
   }
 `;
@@ -46,6 +47,7 @@ export const UPDATE_USER = gql`
     $currency: String
     $saleTax: Float
     $image: Upload
+    $nfts: [String]
   ) {
     updateUser(
       storeName: $storeName
@@ -54,6 +56,7 @@ export const UPDATE_USER = gql`
       currency: $currency
       saleTax: $saleTax
       image: $image
+      nfts: $nfts
     ) {
       storeName
       walletAddress
@@ -61,6 +64,7 @@ export const UPDATE_USER = gql`
       currency
       saleTax
       image
+      nfts
     }
   }
 `;

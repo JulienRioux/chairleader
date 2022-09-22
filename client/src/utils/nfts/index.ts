@@ -100,13 +100,11 @@ export const printNewNftEdition = async ({
   return printedNft;
 };
 
-export const printNewNftEditionWithoutFees = async ({
-  originalNftAddress,
-}: {
-  originalNftAddress: string;
-}) => {
-  await getNftMetadata(originalNftAddress);
+export const ADMIN_PAYER_ADDRESS = Keypair.fromSecretKey(
+  bs58.decode(process.env.REACT_APP_NFT_CREATOR_SECRET_KEY ?? '')
+);
 
+export const getAdminMetaplex = () => {
   const secretKey = bs58.decode(
     process.env.REACT_APP_NFT_CREATOR_SECRET_KEY ?? ''
   );
@@ -125,17 +123,34 @@ export const printNewNftEditionWithoutFees = async ({
       })
     );
 
+  return metaplex;
+};
+
+export const printNewNftEditionWithoutFees = async ({
+  originalNftAddress,
+  metaplex,
+}: {
+  originalNftAddress: string;
+  metaplex: any;
+}) => {
+  await getNftMetadata(originalNftAddress);
+
+  const adminMetaplex = getAdminMetaplex();
+
   const mintAddress = new PublicKey(originalNftAddress);
 
-  const originalNft = await metaplex.nfts().findByMint({ mintAddress }).run();
+  const originalNft = await adminMetaplex
+    .nfts()
+    .findByMint({ mintAddress })
+    .run();
 
   // Check if it's an original ??? (Is it possible to print on a non original?? If not, don't do this check...)
   console.log('originalNft', originalNft);
 
   // Make the new print
-  const { nft: printedNft } = await metaplex
+  const { nft: printedNft } = await adminMetaplex
     .nfts()
-    .printNewEdition({ originalMint: mintAddress })
+    .printNewEdition({ originalMint: mintAddress, payer: ADMIN_PAYER_ADDRESS })
     .run();
 
   return printedNft;

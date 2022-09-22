@@ -8,6 +8,7 @@ export const schemaTypes = `
     currency: String
     image: String
     saleTax: Float
+    nfts: [String]
   }
 
   type AuthenticateResponse {

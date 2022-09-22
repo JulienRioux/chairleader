@@ -5,6 +5,7 @@ import { useMetaplex } from 'hooks/metaplex';
 import { PublicKey } from '@solana/web3.js';
 import styled from 'styled-components';
 import { formatShortAddress, routes } from 'utils';
+import { useAuth } from 'hooks/auth';
 
 const TEST_NFT_ADDRESSES = [
   'FPXX6oCHjDpRDLAqSYc9WDAACoPdixhBuWfqgLp5K336',
@@ -92,6 +93,8 @@ const NftDisplay = ({
 export const NftsList = () => {
   const { metaplex } = useMetaplex();
 
+  const { user, isLoading: isLoadingUser } = useAuth();
+
   const [storeNfts, setStoreNfts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -99,11 +102,15 @@ export const NftsList = () => {
     if (!metaplex) {
       return;
     }
+    if (!user?.nfts) {
+      return;
+    }
+
     setIsLoading(true);
     const nfts = await metaplex
       .nfts()
       .findAllByMintList({
-        mints: TEST_NFT_ADDRESSES.map((address) => new PublicKey(address)),
+        mints: user.nfts.map((address: string) => new PublicKey(address)),
       })
       .run();
 
@@ -123,11 +130,11 @@ export const NftsList = () => {
 
     setStoreNfts(populatedNfts);
     setIsLoading(false);
-  }, [metaplex]);
+  }, [metaplex, user?.nfts]);
 
   useEffect(() => {
     findNftByAddress();
-  }, []);
+  }, [findNftByAddress]);
 
   return (
     <NftsListWrapper>
@@ -140,7 +147,7 @@ export const NftsList = () => {
         />
       ))}
 
-      {isLoading && <Loader />}
+      {(isLoading || isLoadingUser) && <Loader />}
     </NftsListWrapper>
   );
 };

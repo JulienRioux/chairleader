@@ -15,6 +15,7 @@ export interface IUser {
   currency: string;
   saleTax: number;
   image: string;
+  nfts: string[];
 }
 
 const UserSchema = new Schema<IUser>({
@@ -30,6 +31,7 @@ const UserSchema = new Schema<IUser>({
   currency: String,
   saleTax: Number,
   image: String,
+  nfts: [String],
 });
 
 export const UserModel = model<IUser>('User', UserSchema);
