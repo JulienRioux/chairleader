@@ -70,6 +70,27 @@ interface ProductPreviewProps {
   totalSupply?: number;
 }
 
+export const ProductPreviewItem = ({
+  image,
+  title,
+  priceDisplay,
+  currency,
+}: any) => (
+  <>
+    {image ? (
+      <Img src={image} />
+    ) : (
+      <NoImageProduct>
+        <Icon name="image" />
+      </NoImageProduct>
+    )}
+    <ProductTitle>{title}</ProductTitle>
+    <Price>
+      {priceDisplay} {currency}
+    </Price>
+  </>
+);
+
 export const ProductPreview = ({
   image,
   title,
@@ -92,17 +113,12 @@ export const ProductPreview = ({
       to={`${isPos ? routes.store.inventory : routes.admin.inventory}/${id}`}
       $isOutOfStock={isOutOfStock}
     >
-      {image ? (
-        <Img src={image} />
-      ) : (
-        <NoImageProduct>
-          <Icon name="image" />
-        </NoImageProduct>
-      )}
-      <ProductTitle>{title}</ProductTitle>
-      <Price>
-        {priceDisplay} {isPos ? currency : user?.currency}
-      </Price>
+      <ProductPreviewItem
+        image={image}
+        title={title}
+        priceDisplay={priceDisplay}
+        currency={isPos ? currency : user?.currency}
+      />
 
       {isOutOfStock && <OutOfStockBadge />}
     </ProductWrapper>

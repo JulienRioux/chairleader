@@ -1,6 +1,6 @@
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 
-const USE_QUICKNODE = false;
+const USE_QUICKNODE = true;
 
 export const CLUSTER_ENV = WalletAdapterNetwork.Devnet;
 

@@ -40,7 +40,6 @@ export const AuthProvider: React.FC<IBaseProps> = ({ children }) => {
       currency,
       saleTax,
       image,
-      nfts,
     }: {
       storeName: string;
       walletAddress: string;
@@ -48,7 +47,6 @@ export const AuthProvider: React.FC<IBaseProps> = ({ children }) => {
       currency: CURRENCY;
       saleTax: number;
       image: File;
-      nfts: string[];
     }) => {
       await updateUser({
         variables: {
@@ -58,7 +56,6 @@ export const AuthProvider: React.FC<IBaseProps> = ({ children }) => {
           currency,
           saleTax,
           image,
-          nfts,
         },
       });
       await refetchMe();

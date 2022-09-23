@@ -8,7 +8,6 @@ export const schemaTypes = `
     currency: String
     image: String
     saleTax: Float
-    nfts: [String]
   }
 
   type AuthenticateResponse {
@@ -61,5 +60,12 @@ export const schemaTypes = `
     products: [Product]
   }
 
-    scalar Upload
+  type Nft {
+    _id: String
+    storeId: String,
+    nftAddress: String,
+    productsUnlocked: [String],
+  }
+
+  scalar Upload
 `;

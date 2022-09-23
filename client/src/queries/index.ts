@@ -15,7 +15,6 @@ export const GET_ME = gql`
       currency
       saleTax
       image
-      nfts
     }
   }
 `;
@@ -47,7 +46,6 @@ export const UPDATE_USER = gql`
     $currency: String
     $saleTax: Float
     $image: Upload
-    $nfts: [String]
   ) {
     updateUser(
       storeName: $storeName
@@ -56,7 +54,6 @@ export const UPDATE_USER = gql`
       currency: $currency
       saleTax: $saleTax
       image: $image
-      nfts: $nfts
     ) {
       storeName
       walletAddress
@@ -64,7 +61,6 @@ export const UPDATE_USER = gql`
       currency
       saleTax
       image
-      nfts
     }
   }
 `;
@@ -267,5 +263,38 @@ export const GET_INVOICE_BY_ID = gql`
 export const CHECK_IF_SUBODMAIN_IS_AVAILABLE = gql`
   query CheckIfSubdomainIsAvailable($subdomain: String!) {
     checkIfSubdomainIsAvailable(subdomain: $subdomain)
+  }
+`;
+
+const NFT = gql`
+  {
+    storeId
+    nftAddress
+    productsUnlocked
+    _id
+  }
+`;
+
+export const ADD_NFT = gql`
+  mutation AddNft($nftAddress: String!) {
+    addNft(nftAddress: $nftAddress) ${NFT}
+  }
+`;
+
+export const FIND_NFT_BY_ADDRESS = gql`
+  query FindNftByAddress($nftAddress: String!) {
+    findNftByAddress(nftAddress: $nftAddress) ${NFT}
+  }
+`;
+
+export const FIND_NFT_BY_STORE_ID = gql`
+  query FindNftsByStoreId {
+    findNftsByStoreId ${NFT}
+  }
+`;
+
+export const UPDATE_NFT = gql`
+  mutation UpdateNft($id: String!, $productsUnlocked: [String]) {
+    updateNft(id: $id, productsUnlocked: $productsUnlocked) ${NFT}
   }
 `;

@@ -23,6 +23,8 @@ import { NftsList } from 'components/nfts-list';
 import { useAuth } from 'hooks/auth';
 import bs58 from 'bs58';
 import { Keypair, PublicKey } from '@solana/web3.js';
+import { useMutation } from '@apollo/client';
+import { ADD_NFT } from 'queries';
 
 const ImageWrapper = styled.div`
   margin: 8px 0 24px;
@@ -61,7 +63,9 @@ export const TokenGating = () => {
   const { metaplex } = useMetaplex();
   const wallet = useWallet();
   const { openModal, Modal, closeModal } = useModal();
-  const { updateUser, user } = useAuth();
+  const { updateUser, user, refetchMe } = useAuth();
+
+  const [addNft, { loading: addNftIsLoading }] = useMutation(ADD_NFT);
 
   const [uploadingNft, setUploadingNft] = useState(false);
 
@@ -162,18 +166,20 @@ export const TokenGating = () => {
         const newNftAddress = nft.address.toString();
 
         console.log(
-          'NFT:',
+          'NFT ceated:',
           `https://solscan.io/account/${newNftAddress}?cluster=${CLUSTER_ENV}`
         );
 
-        const userNftArray = user?.nfts?.length
-          ? [newNftAddress, ...user.nfts]
-          : [newNftAddress];
+        // const userNftArray = user?.nfts?.length
+        //   ? [newNftAddress, ...user.nfts]
+        //   : [newNftAddress];
 
-        // Update the user object to add the new NFT
-        await updateUser({ nfts: userNftArray });
+        // Add the NFT to our DB
+        await addNft({ variables: { nftAddress: newNftAddress } });
 
         message.success(`${name} has been created successfully!`);
+
+        refetchMe();
 
         setUploadingNft(false);
         closeModal();
@@ -191,8 +197,8 @@ export const TokenGating = () => {
       name,
       description,
       maxSupply,
-      updateUser,
-      user?.nfts,
+      addNft,
+      refetchMe,
       closeModal,
       resetForm,
     ]

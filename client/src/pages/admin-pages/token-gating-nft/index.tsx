@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import {
@@ -6,9 +7,12 @@ import {
   SystemProgram,
   Transaction,
 } from '@solana/web3.js';
-import { Button, Icon, Loader, message } from 'components-library';
+import { Button, Icon, Loader, message, useModal } from 'components-library';
+import { useAuth } from 'hooks/auth';
+import { useInventory } from 'hooks/inventory';
 import { useMetaplex } from 'hooks/metaplex';
 import { usePrintedNftsEditions } from 'hooks/printed-nfts-editions';
+import { FIND_NFT_BY_ADDRESS } from 'queries';
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
@@ -16,9 +20,9 @@ import {
   formatShortAddress,
   printNewNftEditionWithoutFees,
   getNftMetadata,
-  routes,
   Logger,
 } from 'utils';
+import { ExclusivitiesSelection } from '../exclusitivies-selection';
 import { DetailItem } from '../invoice-page';
 
 import {
@@ -38,34 +42,25 @@ import {
   EditionNumber,
   NftName,
   NftImg,
-} from './token-fating.nft.styles';
+  RightWrapper,
+} from './token-gating.nft.styles';
 
-const DealItem = () => {
+const DealItem = ({ productId }: { productId: string }) => {
+  const { inventory } = useInventory();
+  const { user } = useAuth();
+
+  const currentProduct = inventory.find(({ _id }) => _id === productId);
+
   return (
     <DealItemButton>
-      <ProductImg src="https://dev-alt-gate-products.s3.amazonaws.com/products/62f40aa40c9249b03d773ec0-5ab8bc6c-3e2b-457c-87ef-e59239fde25b.webp" />
-      <DealTitle>Caffè Misto</DealTitle>
+      <ProductImg src={currentProduct?.image} />
+      <DealTitle>{currentProduct?.title}</DealTitle>
 
-      <DealPrice>2.5 USDC</DealPrice>
+      <DealPrice>
+        {currentProduct?.price} {user?.currency}
+      </DealPrice>
     </DealItemButton>
   );
-};
-
-type DealType = 'exclusivity' | 'reward';
-
-const CAROUSEL_DETAILS = {
-  exclusivity: {
-    title: 'Exclusivities unlocked',
-    button: 'Select exclusivities',
-    link: '/exclusivities',
-    icon: 'lock_open',
-  },
-  reward: {
-    title: 'Rewards',
-    button: 'Select rewards',
-    link: '/rewards',
-    icon: 'emoji_events',
-  },
 };
 
 const usePayment = () => {
@@ -115,28 +110,40 @@ const usePayment = () => {
   return { makePayment };
 };
 
-const DealCarousel = ({ type }: { type: DealType }) => {
-  const { address } = useParams();
-
-  const { title, button, link, icon } = CAROUSEL_DETAILS[type];
+const ExclusivitiesCarousel = ({
+  productsUnlocked,
+  refetchNftByAddress,
+}: {
+  productsUnlocked?: string[];
+  refetchNftByAddress: () => void;
+}) => {
+  const { Modal, openModal, closeModal } = useModal();
 
   return (
     <DealsWrapper>
       <TitleWrapper>
         <TokenGateTypeTitle>
-          <Icon name={icon} /> {title}
+          <Icon name="lock_open" /> Exclusivities unlocked
         </TokenGateTypeTitle>
-        <StyledButton
-          to={`${routes.admin.tokenGating}/${address}${link}`}
-          secondary
-        >
-          {button}
+        <StyledButton secondary onClick={openModal}>
+          Select exclusivities
         </StyledButton>
       </TitleWrapper>
 
       <Scoller>
-        <DealItem />
+        {productsUnlocked?.map((productId) => (
+          <DealItem key={productId} productId={productId} />
+        ))}
       </Scoller>
+
+      {!productsUnlocked?.length && <p>No exclusivities yet.</p>}
+
+      <Modal title="Select exclusive products" isMaxWidth>
+        <ExclusivitiesSelection
+          closeModal={closeModal}
+          refetchNftByAddress={refetchNftByAddress}
+        />
+      </Modal>
     </DealsWrapper>
   );
 };
@@ -149,6 +156,15 @@ export const TokenGatingNft = () => {
 
   const { connecting, publicKey } = useWallet();
   const [nftDataIsLoading, setNftDataIsLoading] = useState(false);
+
+  const {
+    loading: currentNftIsLoading,
+    data: currentNft,
+    refetch: refetchNftByAddress,
+  } = useQuery(FIND_NFT_BY_ADDRESS, {
+    variables: { nftAddress: address },
+    notifyOnNetworkStatusChange: true,
+  });
 
   const {
     editionsPrintedList,
@@ -194,13 +210,20 @@ export const TokenGatingNft = () => {
 
     setPrintNftIsLoading(true);
 
+    const identity = metaplex?.identity();
+    const newOwnerPublicKey = identity ? identity.publicKey : null;
+
+    if (!newOwnerPublicKey) {
+      return;
+    }
+
     await makePayment(0.005);
 
     message.success('Payment succeed.');
 
     await printNewNftEditionWithoutFees({
       originalNftAddress: address,
-      metaplex,
+      newOwnerPublicKey,
     });
 
     setPrintNftIsLoading(false);
@@ -319,13 +342,28 @@ export const TokenGatingNft = () => {
               {printedAddresses.length === 0 && <p>No printed token yet.</p>}
             </>
           )}
+
+          <div style={{ marginTop: '20px' }}>
+            <Button
+              fullWidth
+              danger
+              onClick={() => alert('TODO: Archive NFT!')}
+            >
+              Archive NFT
+            </Button>
+          </div>
         </DetailsWrapper>
 
-        <div>
-          <DealCarousel type="exclusivity" />
-
-          <DealCarousel type="reward" />
-        </div>
+        <RightWrapper>
+          {currentNftIsLoading ? (
+            <Loader />
+          ) : (
+            <ExclusivitiesCarousel
+              productsUnlocked={currentNft?.findNftByAddress?.productsUnlocked}
+              refetchNftByAddress={refetchNftByAddress}
+            />
+          )}
+        </RightWrapper>
       </TokenGatingNftWrapper>
     </div>
   );

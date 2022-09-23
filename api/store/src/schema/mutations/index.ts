@@ -13,7 +13,7 @@ export const mutations = `
       """
       Update user
       """
-      updateUser(storeName: String, walletAddress: String, subDomain: String, currency: String, image: Upload, saleTax: Float, nfts: [String]): Store
+      updateUser(storeName: String, walletAddress: String, subDomain: String, currency: String, image: Upload, saleTax: Float): Store
 
       """
       Add Product
@@ -25,7 +25,6 @@ export const mutations = `
       """
       deleteProductById(id: String!): Product
 
-
       """
       Edit Product by ID
       """
@@ -35,5 +34,15 @@ export const mutations = `
       Save transaction invoice
       """
       saveTransactionInvoice(cartItems: String!, signature: String!, totalPrice: Float!, totalSaleTax: Float!, totalWithSaleTax: Float!, customerWalletAddress: String!, storeId: String!, currency: String!, network: String!, serviceFees: Float!): Invoice
+
+      """
+      Add Nft by address
+      """
+      addNft(nftAddress: String!): Nft
+
+      """
+      Update Nft by ID
+      """
+      updateNft(id: String!, productsUnlocked: [String]): Nft
   }
 `;

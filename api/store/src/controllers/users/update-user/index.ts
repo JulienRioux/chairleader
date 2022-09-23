@@ -15,7 +15,7 @@ export const updateUser = async ({
   saleTax,
   image,
   nfts,
-}) => {
+}: any) => {
   let imgSrc = '';
 
   // First update the image

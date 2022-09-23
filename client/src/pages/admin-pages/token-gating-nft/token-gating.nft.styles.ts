@@ -105,7 +105,12 @@ export const DealPrice = styled.div`
   color: ${(p) => p.theme.color.primary};
 `;
 
-export const DealItemButton = styled(UnstyledButton)`
+export const DealItemButton = styled.div`
+  min-width: 200px;
   width: 200px;
   text-align: left;
+`;
+
+export const RightWrapper = styled.div`
+  overflow: scroll;
 `;

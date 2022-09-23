@@ -128,10 +128,10 @@ export const getAdminMetaplex = () => {
 
 export const printNewNftEditionWithoutFees = async ({
   originalNftAddress,
-  metaplex,
+  newOwnerPublicKey,
 }: {
   originalNftAddress: string;
-  metaplex: any;
+  newOwnerPublicKey: any;
 }) => {
   await getNftMetadata(originalNftAddress);
 
@@ -150,7 +150,10 @@ export const printNewNftEditionWithoutFees = async ({
   // Make the new print
   const { nft: printedNft } = await adminMetaplex
     .nfts()
-    .printNewEdition({ originalMint: mintAddress, payer: ADMIN_PAYER_ADDRESS })
+    .printNewEdition({
+      originalMint: mintAddress,
+      newOwner: newOwnerPublicKey,
+    })
     .run();
 
   return printedNft;

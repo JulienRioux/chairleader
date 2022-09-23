@@ -1,4 +1,5 @@
 import { getInvoiceByIdQuery, getInvoicesByStoreIdQuery } from './invoices';
+import { findNftByAddressQuery, findNftsByStoreIdQuery } from './nft';
 import { getProductsByUserIdQuery } from './products';
 import { getStoreDataQuery } from './store';
 import { checkIfSubdomainIsAvailableQuery, getMeQuery } from './user';
@@ -10,4 +11,6 @@ export const Query = {
   getStoreData: getStoreDataQuery,
   getInvoiceById: getInvoiceByIdQuery,
   checkIfSubdomainIsAvailable: checkIfSubdomainIsAvailableQuery,
+  findNftByAddress: findNftByAddressQuery,
+  findNftsByStoreId: findNftsByStoreIdQuery,
 };

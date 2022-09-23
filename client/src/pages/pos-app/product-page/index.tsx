@@ -95,7 +95,7 @@ export const ProductPage = () => {
 
   const { openConnectModal } = useWalletModal();
 
-  const { userNfts } = useNft();
+  const { userNfts, productsLockedWithNftAddress } = useNft();
 
   const { inventory } = useStore();
 
@@ -145,12 +145,20 @@ export const ProductPage = () => {
 
   // TODO: This will needs to be rewrite...
   // const tokenGated: string[] = [];
-  const tokenGated: string[] = ['3TXh8vQGvgAxUSEEkcHyZdpy12pTX6TcAXsmDJnvuPLJ'];
-  const isTokenGatedProduct = tokenGated.length > 0;
+  const tokenGated: string[] = productId
+    ? productsLockedWithNftAddress[productId]
+    : null;
+
+  const isTokenGatedProduct = tokenGated !== undefined;
 
   // The product is unlocked if the user wallet is connected and the user has one token-gating NFT
   const productIsUnlocked =
-    publicKey && tokenGated.some((nftAddress) => userNfts.includes(nftAddress));
+    publicKey &&
+    tokenGated?.some((nftAddress) => userNfts.includes(nftAddress));
+
+  console.log('tokenGated', tokenGated);
+  console.log('userNfts', userNfts);
+  console.log('productsLockedWithNftAddress', productsLockedWithNftAddress);
 
   // Show the connect wallet button if the product is token-gated and the user wallet is not connected.
   const SHOW_CONNECT_WALLET_BUTTON = isTokenGatedProduct && !publicKey;
@@ -161,7 +169,7 @@ export const ProductPage = () => {
 
   return (
     <ProductWrapper>
-      <p>Exclusive product (Token gated)</p>
+      {isTokenGatedProduct && <p>Exclusive product (Token gated)</p>}
       <ImgWrapper>
         {imageSrc ? (
           <Img src={imageSrc} />

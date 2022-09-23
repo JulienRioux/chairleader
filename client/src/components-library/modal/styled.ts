@@ -40,6 +40,7 @@ export const ModalWrapperBackground = styled.div<{ isClosing: boolean }>`
 export const ModalContainer = styled.div<{
   isClosing: boolean;
   isFullScreenImg?: boolean;
+  isMaxWidth?: boolean;
 }>`
   /* margin: ${MODAL_SIDE_MARGIN}; */
   max-height: calc(
@@ -49,8 +50,9 @@ export const ModalContainer = styled.div<{
   /* margin: 10px ${MODAL_SIDE_MARGIN} 80px; */
   width: 100%;
   max-width: calc(
-    ${(p) => p.theme.layout.mediumWidth} - ${MODAL_SIDE_MARGIN} -
-      ${MODAL_SIDE_MARGIN}
+    ${(p) => (p) =>
+        p.isMaxWidth ? p.theme.layout.maxWidth : p.theme.layout.mediumWidth} -
+      ${MODAL_SIDE_MARGIN} - ${MODAL_SIDE_MARGIN}
   );
   min-height: 220px;
   background-color: ${(p) => p.theme.color.background};

@@ -7,6 +7,7 @@ const ButtonWrapper = styled.button<{
   secondary?: boolean;
   fullWidth?: boolean;
   isIconBtn?: boolean;
+  danger?: boolean;
 }>`
   position: relative;
   align-items: center;
@@ -43,6 +44,14 @@ const ButtonWrapper = styled.button<{
       border-color: ${(p) => p.theme.color.lightGrey};
       color: ${(p) => p.theme.color.primary};
       background-color: ${(p) => p.theme.color.background};
+    `}
+
+  ${(p) =>
+    p.danger &&
+    css`
+      border-color: ${(p) => p.theme.color.danger}00;
+      color: ${(p) => p.theme.color.danger};
+      background-color: ${(p) => p.theme.color.danger}22;
     `}
 
   ${(p) => p.fullWidth && 'width: 100%;'}
@@ -116,6 +125,7 @@ export const Button = ({
   to,
   icon,
   fullWidth,
+  danger,
   ...props
 }: any) => {
   const button = (
@@ -123,6 +133,7 @@ export const Button = ({
       secondary={secondary}
       isIconBtn={!children && icon}
       fullWidth={fullWidth}
+      danger={danger}
       {...props}
     >
       {isLoading && <BtnLoader />}

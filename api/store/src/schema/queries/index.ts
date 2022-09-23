@@ -11,5 +11,15 @@ export const queries = `
     getInvoiceById(id: String!): Invoice
 
     checkIfSubdomainIsAvailable(subdomain: String!): Boolean
+
+    """
+    Find Nfts by store ID
+    """
+    findNftsByStoreId: [Nft]
+
+    """
+    Find Nft by address
+    """
+    findNftByAddress(nftAddress: String!): Nft
   }
 `;

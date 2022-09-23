@@ -6,6 +6,8 @@ import { PublicKey } from '@solana/web3.js';
 import styled from 'styled-components';
 import { formatShortAddress, routes } from 'utils';
 import { useAuth } from 'hooks/auth';
+import { FIND_NFT_BY_STORE_ID } from 'queries';
+import { useQuery } from '@apollo/client';
 
 const TEST_NFT_ADDRESSES = [
   'FPXX6oCHjDpRDLAqSYc9WDAACoPdixhBuWfqgLp5K336',
@@ -93,16 +95,19 @@ const NftDisplay = ({
 export const NftsList = () => {
   const { metaplex } = useMetaplex();
 
-  const { user, isLoading: isLoadingUser } = useAuth();
+  const { isLoading: isLoadingUser } = useAuth();
 
   const [storeNfts, setStoreNfts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const { loading: nftsAreLoading, data: userNfts } =
+    useQuery(FIND_NFT_BY_STORE_ID);
 
   const findNftByAddress = useCallback(async () => {
     if (!metaplex) {
       return;
     }
-    if (!user?.nfts) {
+    if (!userNfts) {
       return;
     }
 
@@ -110,7 +115,9 @@ export const NftsList = () => {
     const nfts = await metaplex
       .nfts()
       .findAllByMintList({
-        mints: user.nfts.map((address: string) => new PublicKey(address)),
+        mints: userNfts?.findNftsByStoreId.map(
+          ({ nftAddress }: { nftAddress: string }) => new PublicKey(nftAddress)
+        ),
       })
       .run();
 
@@ -130,7 +137,7 @@ export const NftsList = () => {
 
     setStoreNfts(populatedNfts);
     setIsLoading(false);
-  }, [metaplex, user?.nfts]);
+  }, [metaplex, userNfts]);
 
   useEffect(() => {
     findNftByAddress();
