@@ -63,8 +63,6 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
         })
         .run();
 
-      console.log('walletNfts', JSON.stringify(walletNfts, null, 2));
-
       const populatedNfts = await Promise.all(
         walletNfts.map(async (nft) => {
           if (!nft) {

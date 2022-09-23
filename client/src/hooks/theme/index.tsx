@@ -26,7 +26,7 @@ export const ThemeContext = createContext<IThemeContext>({} as IThemeContext);
 
 export const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [theme, setTheme] = useState(
-    (localStorage.getItem(StorageKeys.THEME) ?? THEME.LIGHT) as THEME
+    (localStorage.getItem(StorageKeys.THEME) ?? THEME.DARK) as THEME
   );
 
   const isDarkTheme = theme === THEME.DARK;

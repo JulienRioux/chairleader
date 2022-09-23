@@ -4,47 +4,85 @@ import {
   UnstyledExternalLink,
   UnstyledLink,
 } from 'components-library';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { routes } from 'utils';
 import { Footer } from 'components';
 import { APP_NAME, APP_LOGO } from 'configs';
-import homeVideo from 'assets/home-video-2.mp4';
 import { useTheme } from 'hooks/theme';
 import { useAuth } from 'hooks/auth';
 import { useMediaQuery } from 'hooks/media-query';
 import { ReactNode, useCallback, useState } from 'react';
+import GranyFilter from './granny-filter.svg';
 
 const HeroWrapper = styled.div`
-  max-width: ${(p) => p.theme.layout.maxWidth};
+  /* max-width: ${(p) => p.theme.layout.maxWidth}; */
   margin: 0px auto 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 20px;
+  min-height: calc(100vh - 61px);
 
-  @media (max-width: 800px) {
-    grid-template-columns: 1fr;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 `;
 
-const Img = styled.img`
+const GradientWrapper = styled.div`
+  position: absolute;
+  z-index: -1;
+  overflow: hidden;
   width: 100%;
-  border-radius: 32px;
-  object-position: center;
-  object-fit: cover;
-  aspect-ratio: 3 / 4;
+  height: calc(100vh - 61px);
+`;
 
-  @media (max-width: 800px) {
-    max-height: 400px;
-  }
+const Gadient1 = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  /* background: url(${GranyFilter}); */
+  opacity: 0.3;
+`;
+
+const Gadient2 = styled.div`
+  position: absolute;
+  top: -200px;
+  left: -200px;
+  width: 826px;
+  height: 1026px;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    #dcc1e4 0,
+    rgba(220, 193, 228, 0) 100%
+  );
+`;
+
+export const backgroundTextAnim = keyframes`
+  100% {
+    background-position: 0 -50px;
+  }  
 `;
 
 const Header = styled.h1`
-  font-size: 60px;
-  margin-bottom: 20px;
+  font-size: 100px;
+  margin-bottom: 40px;
+  margin-top: 0;
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-image: url(${GranyFilter});
+  color: transparent;
+  mix-blend-mode: exclusion;
+  animation: 3s ${backgroundTextAnim} linear infinite;
 
   @media (max-width: 800px) {
     font-size: 48px;
   }
+`;
+
+const HeroPar = styled.p`
+  color: ${(p) => p.theme.color.lightText};
+  font-size: 18px;
+  margin: 0 0 24px;
+  line-height: 1.6;
+  max-width: 700px;
+  margin: 0 auto 24px;
 `;
 
 const Par = styled.p`
@@ -79,38 +117,13 @@ const LeftHero = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-bottom: 100px;
-
-  @media (max-width: 800px) {
-    margin-bottom: 100px;
-  }
+  margin-bottom: 80px;
+  max-width: ${(p) => p.theme.layout.maxWidth};
 `;
 
 const BtnWrapper = styled.div`
   display: flex;
   align-items: center;
-`;
-
-const Video = styled.video`
-  width: 100%;
-  border-radius: 32px;
-  object-fit: cover;
-  aspect-ratio: 3 / 4;
-  background: ${(p) => p.theme.color.text}11;
-
-  @media (max-width: 800px) {
-    aspect-ratio: 5 / 4;
-  }
-`;
-
-const VideoWrapper = styled.div`
-  height: calc(100vh - 61px);
-  display: flex;
-  align-items: center;
-
-  @media (max-width: 800px) {
-    height: auto;
-  }
 `;
 
 const ModeBtn = styled(Button)`
@@ -248,7 +261,7 @@ const PresentationItem = ({
       {isLeftImg && <FeaturedStoreImg src={img} />}
 
       <ItemWrapper>
-        <Header>{title}</Header>
+        <h1>{title}</h1>
         <Par>{content}</Par>
 
         <div>
@@ -332,7 +345,7 @@ const LeftWrapper = styled.div`
 `;
 
 const FeaturedStores = () => {
-  const [shopIndex, setShopIndex] = useState(1);
+  const [shopIndex, setShopIndex] = useState(0);
 
   const currentStore = featuredStore[shopIndex];
 
@@ -411,12 +424,17 @@ export const Homepage = () => {
       <HomepageTopNav />
       <HomepageWrapper>
         <HeroWrapper>
+          <GradientWrapper>
+            <Gadient1 />
+          </GradientWrapper>
+
           <LeftHero>
-            <Header>The future of payments is now.</Header>
-            <Par>
-              Unlock your potential with {APP_NAME}. Accept crypto with any
-              device, any browser, on the go.
-            </Par>
+            <Header>Web3 e-commerce platform build for the future</Header>
+            <HeroPar>
+              Unlock your online stores potential to the moon with our retailers
+              a suite of web3 services including crypto payments, NFT marketin
+              and engagement tools.
+            </HeroPar>
 
             <div>
               {!isLoading &&
@@ -449,12 +467,6 @@ export const Homepage = () => {
               )}
             </div>
           </LeftHero>
-
-          <VideoWrapper>
-            <Video autoPlay muted loop>
-              <source src={homeVideo} type="video/mp4"></source>
-            </Video>
-          </VideoWrapper>
         </HeroWrapper>
 
         <BannerWrapper>
