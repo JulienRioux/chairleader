@@ -1,6 +1,11 @@
 import { useWallet } from '@solana/wallet-adapter-react';
-import { Button, NumberInput, Icon } from 'components-library';
-import { OutOfStockBadge } from 'components/product-preview';
+import { PublicKey } from '@solana/web3.js';
+import { Button, NumberInput, Icon, UnstyledLink } from 'components-library';
+import {
+  BadgeWrapper,
+  OutOfStockBadge,
+  TokenGatedBadge,
+} from 'components/product-preview';
 import { useCart } from 'hooks/cart';
 import { useCurrency } from 'hooks/currency';
 import { useNft } from 'hooks/nft';
@@ -8,9 +13,9 @@ import { useScrollTop } from 'hooks/scroll-top';
 import { useStore } from 'hooks/store';
 import { useWalletModal } from 'hooks/wallet-modal';
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import styled, { css } from 'styled-components';
-import { routes } from 'utils';
+import { formatShortAddress, getNftDataFromAddressArr, routes } from 'utils';
 
 const ProductWrapper = styled.div`
   max-width: ${(p) => p.theme.layout.mediumWidth};
@@ -86,6 +91,50 @@ const InnerAddToCartWrapper = styled.div`
   align-items: center;
 `;
 
+const NftCardScroller = styled.div`
+  display: flex;
+`;
+
+const NftImg = styled(Img)``;
+
+const NftCardWrapper = styled(UnstyledLink)`
+  margin-right: 12px;
+  max-width: 140px;
+  width: 140px;
+`;
+
+const NftName = styled.div`
+  margin: 8px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: initial;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+`;
+
+const NftAddress = styled.div`
+  font-size: 14px;
+  color: ${(p) => p.theme.color.lightText};
+`;
+
+const NftCard = ({
+  image,
+  name,
+  address,
+}: {
+  image: string;
+  name: string;
+  address: string;
+}) => (
+  <NftCardWrapper to={`${routes.store.nfts}/${address}`}>
+    <NftImg src={image} />
+    <NftName>{name}</NftName>
+
+    <NftAddress>{formatShortAddress(address)}</NftAddress>
+  </NftCardWrapper>
+);
+
 export const ProductPage = () => {
   useScrollTop();
   const { updateQuantity, cartItems } = useCart();
@@ -95,7 +144,8 @@ export const ProductPage = () => {
 
   const { openConnectModal } = useWalletModal();
 
-  const { userNfts, productsLockedWithNftAddress } = useNft();
+  const { userNfts, productsLockedWithNftAddress, mapProductLockedToMaster } =
+    useNft();
 
   const { inventory } = useStore();
 
@@ -108,6 +158,8 @@ export const ProductPage = () => {
   const [maxQuantity, setMaxQuantity] = useState<number | undefined>();
   const [qty, setQty] = useState(1);
   const [isUpdating, setIsUpdating] = useState(false);
+
+  const [tokenGatedNftData, setTokenGatedNftData] = useState<any>([]);
 
   const { productId } = useParams();
 
@@ -156,10 +208,6 @@ export const ProductPage = () => {
     publicKey &&
     tokenGated?.some((nftAddress) => userNfts.includes(nftAddress));
 
-  console.log('tokenGated', tokenGated);
-  console.log('userNfts', userNfts);
-  console.log('productsLockedWithNftAddress', productsLockedWithNftAddress);
-
   // Show the connect wallet button if the product is token-gated and the user wallet is not connected.
   const SHOW_CONNECT_WALLET_BUTTON = isTokenGatedProduct && !publicKey;
 
@@ -167,9 +215,23 @@ export const ProductPage = () => {
   const SHOW_MISSING_TOKEN_MSG =
     isTokenGatedProduct && publicKey && !productIsUnlocked;
 
+  const getNftMetadata = useCallback(async () => {
+    const masterNftTokenGatingAddress =
+      mapProductLockedToMaster[productId ?? ''];
+
+    const nftData = await getNftDataFromAddressArr(masterNftTokenGatingAddress);
+
+    setTokenGatedNftData(nftData);
+  }, [productId, mapProductLockedToMaster]);
+
+  useEffect(() => {
+    getNftMetadata();
+  }, [getNftMetadata]);
+
+  console.log('tokenGatedNftData', tokenGatedNftData);
+
   return (
     <ProductWrapper>
-      {isTokenGatedProduct && <p>Exclusive product (Token gated)</p>}
       <ImgWrapper>
         {imageSrc ? (
           <Img src={imageSrc} />
@@ -179,7 +241,11 @@ export const ProductPage = () => {
           </NoImageProduct>
         )}
 
-        {isOutOfStock && <OutOfStockBadge />}
+        <BadgeWrapper>
+          {isTokenGatedProduct && <TokenGatedBadge />}
+
+          {isOutOfStock && <OutOfStockBadge />}
+        </BadgeWrapper>
       </ImgWrapper>
 
       <ProductTitle>{name}</ProductTitle>
@@ -187,6 +253,30 @@ export const ProductPage = () => {
         {priceDisplay} {currency}
       </Price>
       <Description>{description}</Description>
+
+      <h3>Qualifying NFTs:</h3>
+
+      <NftCardScroller>
+        {tokenGatedNftData.map(
+          ({
+            address,
+            json: { name, image },
+          }: {
+            address: PublicKey;
+            json: { name: string; image: string };
+          }) => {
+            const addressString = address.toBase58();
+            return (
+              <NftCard
+                key={addressString}
+                image={image}
+                name={name}
+                address={addressString}
+              />
+            );
+          }
+        )}
+      </NftCardScroller>
 
       <DummyDiv />
 
@@ -210,7 +300,14 @@ export const ProductPage = () => {
               </Button>
             )}
 
-            {SHOW_MISSING_TOKEN_MSG && <p>LINK OR MODAL TO PURCHASE NFT?</p>}
+            {SHOW_MISSING_TOKEN_MSG && (
+              <>
+                <p>You don't own qualifying NFT.</p>
+                <Button to={`${routes.store.nfts}?productId=${productId}`}>
+                  Shop qualifying NFTs
+                </Button>
+              </>
+            )}
           </InnerAddToCartWrapper>
         </AddToCartWrapper>
       )}

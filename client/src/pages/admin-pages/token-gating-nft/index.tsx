@@ -7,11 +7,21 @@ import {
   SystemProgram,
   Transaction,
 } from '@solana/web3.js';
-import { Button, Icon, Loader, message, useModal } from 'components-library';
+import {
+  Button,
+  Icon,
+  Loader,
+  message,
+  UnstyledExternalLink,
+  useModal,
+} from 'components-library';
 import { useAuth } from 'hooks/auth';
+import { useCurrency } from 'hooks/currency';
 import { useInventory } from 'hooks/inventory';
 import { useMetaplex } from 'hooks/metaplex';
+import { useNft } from 'hooks/nft';
 import { usePrintedNftsEditions } from 'hooks/printed-nfts-editions';
+import { useStore } from 'hooks/store';
 import { FIND_NFT_BY_ADDRESS } from 'queries';
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -21,9 +31,11 @@ import {
   printNewNftEditionWithoutFees,
   getNftMetadata,
   Logger,
+  routes,
 } from 'utils';
 import { ExclusivitiesSelection } from '../exclusitivies-selection';
 import { DetailItem } from '../invoice-page';
+import { useStoreLink } from '../point-of-sale-page';
 
 import {
   DealItemButton,
@@ -45,9 +57,22 @@ import {
   RightWrapper,
 } from './token-gating.nft.styles';
 
-const DealItem = ({ productId }: { productId: string }) => {
-  const { inventory } = useInventory();
+const DealItem = ({
+  productId,
+  isAdminApp,
+}: {
+  productId: string;
+  isAdminApp: boolean;
+}) => {
+  const { inventory: adminApp } = useInventory();
   const { user } = useAuth();
+
+  const { inventory: storeApp } = useStore();
+  const { currency: storeAppCurrency } = useCurrency();
+
+  const [inventory, currency] = isAdminApp
+    ? [adminApp, user?.currency]
+    : [storeApp, storeAppCurrency];
 
   const currentProduct = inventory.find(({ _id }) => _id === productId);
 
@@ -57,7 +82,7 @@ const DealItem = ({ productId }: { productId: string }) => {
       <DealTitle>{currentProduct?.title}</DealTitle>
 
       <DealPrice>
-        {currentProduct?.price} {user?.currency}
+        {currentProduct?.price} {currency}
       </DealPrice>
     </DealItemButton>
   );
@@ -113,9 +138,11 @@ const usePayment = () => {
 const ExclusivitiesCarousel = ({
   productsUnlocked,
   refetchNftByAddress,
+  isAdminApp,
 }: {
   productsUnlocked?: string[];
   refetchNftByAddress: () => void;
+  isAdminApp: boolean;
 }) => {
   const { Modal, openModal, closeModal } = useModal();
 
@@ -125,14 +152,20 @@ const ExclusivitiesCarousel = ({
         <TokenGateTypeTitle>
           <Icon name="lock_open" /> Exclusivities unlocked
         </TokenGateTypeTitle>
-        <StyledButton secondary onClick={openModal}>
-          Select exclusivities
-        </StyledButton>
+        {isAdminApp && (
+          <StyledButton secondary onClick={openModal}>
+            Select exclusivities
+          </StyledButton>
+        )}
       </TitleWrapper>
 
       <Scoller>
         {productsUnlocked?.map((productId) => (
-          <DealItem key={productId} productId={productId} />
+          <DealItem
+            key={productId}
+            productId={productId}
+            isAdminApp={isAdminApp}
+          />
         ))}
       </Scoller>
 
@@ -148,7 +181,11 @@ const ExclusivitiesCarousel = ({
   );
 };
 
-export const TokenGatingNft = () => {
+export const TokenGatingNft = ({
+  isAdminApp = false,
+}: {
+  isAdminApp?: boolean;
+}) => {
   const { metaplex } = useMetaplex();
   const { address } = useParams();
 
@@ -172,6 +209,8 @@ export const TokenGatingNft = () => {
     refreshEditionsPrintedList,
   } = usePrintedNftsEditions(address);
 
+  const { refreshUserNfts } = useNft();
+
   const { makePayment } = usePayment();
 
   const [image, setImage] = useState('');
@@ -183,6 +222,8 @@ export const TokenGatingNft = () => {
   const [externalUrl, setExternalUrl] = useState('');
 
   const [printNftIsLoading, setPrintNftIsLoading] = useState(false);
+
+  const storeLink = useStoreLink();
 
   const loadNftData = useCallback(async () => {
     if (address && metaplex) {
@@ -230,9 +271,17 @@ export const TokenGatingNft = () => {
 
     loadNftData();
     refreshEditionsPrintedList();
+    refreshUserNfts();
 
     message.success('NFT generated successfully.');
-  }, [address, loadNftData, makePayment, refreshEditionsPrintedList, metaplex]);
+  }, [
+    address,
+    loadNftData,
+    makePayment,
+    refreshEditionsPrintedList,
+    metaplex,
+    refreshUserNfts,
+  ]);
 
   useEffect(() => {
     // Load the NFT metadata
@@ -295,63 +344,86 @@ export const TokenGatingNft = () => {
 
           <DetailItem label="Royalty">{royalties}%</DetailItem>
 
-          <Button
-            fullWidth
-            secondary
-            style={{ margin: '20px 0' }}
-            onClick={handlePrintNewEdition}
-            isLoading={printNftIsLoading}
-          >
-            Print new edition
-          </Button>
-
-          <h4>Printed token address:</h4>
-
-          {editionsPrintedListIsLoading && <p>Loading...</p>}
-
-          {!editionsPrintedListIsLoading && (
-            <>
-              {printedAddresses.map((printedNftAddress, i) => (
-                <SolScanLink
-                  href={`https://solscan.io/token/${printedNftAddress}?cluster=${CLUSTER_ENV}`}
-                  target="_blank"
-                  key={printedNftAddress}
-                  style={{ margin: '0 8px 4px 0' }}
-                >
-                  <span>{formatShortAddress(printedNftAddress)}</span>
-                  <EditionNumber>
-                    (Edition #{i + 1}/{editionsPrintedList.length})
-                  </EditionNumber>
-
-                  <Icon name="launch" style={{ marginLeft: '8px' }} />
-                </SolScanLink>
-              ))}
-
-              {!showAll && hasMorePrintedNfts && (
-                <div>
-                  <Button
-                    onClick={() => setShowAll(true)}
-                    secondary
-                    style={{ padding: '4px' }}
-                  >
-                    Show more
-                  </Button>
-                </div>
-              )}
-
-              {printedAddresses.length === 0 && <p>No printed token yet.</p>}
-            </>
+          {isAdminApp && (
+            <UnstyledExternalLink
+              href={`${storeLink}${routes.store.nfts}/${address}`}
+              target="_blank"
+            >
+              <Button
+                fullWidth
+                secondary
+                style={{ margin: '20px 0' }}
+                icon="launch"
+              >
+                See in store
+              </Button>
+            </UnstyledExternalLink>
           )}
 
-          <div style={{ marginTop: '20px' }}>
+          {!isAdminApp && (
             <Button
               fullWidth
-              danger
-              onClick={() => alert('TODO: Archive NFT!')}
+              style={{ margin: '20px 0' }}
+              onClick={handlePrintNewEdition}
+              isLoading={printNftIsLoading}
             >
-              Archive NFT
+              Buy now
             </Button>
-          </div>
+          )}
+
+          {isAdminApp && (
+            <>
+              <h4>Printed token address:</h4>
+
+              {editionsPrintedListIsLoading && <p>Loading...</p>}
+
+              {!editionsPrintedListIsLoading && (
+                <>
+                  {printedAddresses.map((printedNftAddress, i) => (
+                    <SolScanLink
+                      href={`https://solscan.io/token/${printedNftAddress}?cluster=${CLUSTER_ENV}`}
+                      target="_blank"
+                      key={printedNftAddress}
+                      style={{ margin: '0 8px 4px 0' }}
+                    >
+                      <span>{formatShortAddress(printedNftAddress)}</span>
+                      <EditionNumber>
+                        (Edition #{i + 1}/{editionsPrintedList.length})
+                      </EditionNumber>
+
+                      <Icon name="launch" style={{ marginLeft: '8px' }} />
+                    </SolScanLink>
+                  ))}
+
+                  {!showAll && hasMorePrintedNfts && (
+                    <div>
+                      <Button
+                        onClick={() => setShowAll(true)}
+                        secondary
+                        style={{ padding: '4px' }}
+                      >
+                        Show more
+                      </Button>
+                    </div>
+                  )}
+
+                  {printedAddresses.length === 0 && (
+                    <p>No printed token yet.</p>
+                  )}
+
+                  <div style={{ marginTop: '20px' }}>
+                    <Button
+                      fullWidth
+                      danger
+                      onClick={() => alert('TODO: Archive NFT!')}
+                    >
+                      Archive NFT
+                    </Button>
+                  </div>
+                </>
+              )}
+            </>
+          )}
         </DetailsWrapper>
 
         <RightWrapper>
@@ -361,6 +433,7 @@ export const TokenGatingNft = () => {
             <ExclusivitiesCarousel
               productsUnlocked={currentNft?.findNftByAddress?.productsUnlocked}
               refetchNftByAddress={refetchNftByAddress}
+              isAdminApp={isAdminApp}
             />
           )}
         </RightWrapper>

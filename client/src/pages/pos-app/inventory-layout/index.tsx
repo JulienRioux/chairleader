@@ -129,6 +129,12 @@ const MobileCartBtn = () => {
 export const InventoryLayout = ({ children }: { children: ReactNode }) => {
   const isNotOnInventoryPage = !useMatch(routes.store.inventory);
 
+  const isOnNftsPage = useMatch(routes.store.nfts);
+
+  const isOnSingleNftPage = useMatch(`${routes.store.nfts}/:address`);
+
+  const showNftsLink = !isOnNftsPage && !isOnSingleNftPage;
+
   return (
     <div>
       <ContentWrapper>
@@ -143,6 +149,17 @@ export const InventoryLayout = ({ children }: { children: ReactNode }) => {
                   icon="arrow_back"
                   to={-1}
                 />
+              )}
+
+              {showNftsLink && (
+                <Button
+                  icon="grid_view"
+                  style={{ marginRight: '8px' }}
+                  to={routes.store.nfts}
+                  secondary
+                >
+                  NFTs
+                </Button>
               )}
 
               <ConnectWalletBtn />

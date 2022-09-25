@@ -7,7 +7,9 @@ import {
 import { CLUSTER_ENDPOINT } from 'utils/cluster';
 import {
   bundlrStorage,
+  JsonMetadata,
   keypairIdentity,
+  Metadata,
   Metaplex,
   Nft,
   NftOriginalEdition,
@@ -18,8 +20,7 @@ export const getNftMetadata = async (
   nftAddress: string,
   userMetaplex?: any
 ) => {
-  const connection = new Connection(CLUSTER_ENDPOINT);
-  const metaplex = userMetaplex ?? new Metaplex(connection);
+  const metaplex = userMetaplex ?? getUnauthenticatedMetaplex();
 
   // Get the nft edition data
   const mintAddress = new PublicKey(nftAddress);
@@ -29,11 +30,15 @@ export const getNftMetadata = async (
   return originalNft;
 };
 
+export const getUnauthenticatedMetaplex = () => {
+  const connection = new Connection(CLUSTER_ENDPOINT);
+  return new Metaplex(connection);
+};
+
 export const getPrintedVersionsFromMasterAddress = async (
   masterAddress: string
 ) => {
-  const connection = new Connection(CLUSTER_ENDPOINT);
-  const metaplex = new Metaplex(connection);
+  const metaplex = getUnauthenticatedMetaplex();
 
   const originalNft = await getNftMetadata(masterAddress, metaplex);
 
@@ -157,4 +162,35 @@ export const printNewNftEditionWithoutFees = async ({
     .run();
 
   return printedNft;
+};
+
+export const getNftDataFromAddressArr = async (nftAddressArr: string[]) => {
+  if (!nftAddressArr) {
+    return [];
+  }
+
+  const metaplex = getUnauthenticatedMetaplex();
+
+  const nfts = await metaplex
+    .nfts()
+    .findAllByMintList({
+      mints: nftAddressArr.map((nftAddress) => new PublicKey(nftAddress)),
+    })
+    .run();
+
+  const populatedNfts = await Promise.all(
+    nfts.map(async (nft) => {
+      if (!nft) {
+        return;
+      }
+      const populatedNft = await metaplex
+        .nfts()
+        .load({ metadata: nft as Metadata<JsonMetadata<string>> })
+        .run();
+
+      return populatedNft;
+    }, [])
+  );
+
+  return populatedNfts;
 };

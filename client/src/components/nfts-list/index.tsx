@@ -1,20 +1,10 @@
 import { Loader, UnstyledLink } from 'components-library';
 import { useCallback, useEffect, useState } from 'react';
-import { JsonMetadata, Metadata, Nft } from '@metaplex-foundation/js';
 import { useMetaplex } from 'hooks/metaplex';
-import { PublicKey } from '@solana/web3.js';
 import styled from 'styled-components';
-import { formatShortAddress, routes } from 'utils';
+import { formatShortAddress, getNftDataFromAddressArr, routes } from 'utils';
 import { useAuth } from 'hooks/auth';
-import { FIND_NFT_BY_STORE_ID } from 'queries';
-import { useQuery } from '@apollo/client';
-
-const TEST_NFT_ADDRESSES = [
-  'FPXX6oCHjDpRDLAqSYc9WDAACoPdixhBuWfqgLp5K336',
-  'FzYyQgf1uZGmW6ELqL6ofWY9pH2M1GKzvG3Jw6CJkGCg',
-  'FjwwrNsKxAQHodZ4fon7BorvQkxACfYAftxhrcJLm56b',
-  'zFJ4Za9VX7Tu9mxz8FVZgYJsSf2Qm5byXPjCtvWCwDp',
-];
+import { useNft } from 'hooks/nft';
 
 const NftDisplayWrapper = styled.div`
   width: 100%;
@@ -70,21 +60,37 @@ const NftDisplay = ({
   image,
   address,
   name,
+  isStoreApp,
 }: {
   image: string;
   address: string;
   name: string;
+  isStoreApp?: boolean;
 }) => {
+  const { nftAddressWithProductsLocked } = useNft();
+
+  const productsLocked = nftAddressWithProductsLocked[address];
+
+  const numOfProductsLocked = productsLocked?.length;
+
+  const exclusivitiesText = numOfProductsLocked
+    ? `${numOfProductsLocked} exclusivit${
+        numOfProductsLocked > 1 ? 'ies' : 'y'
+      }`
+    : 'No exclusivity yet.';
+
   return (
-    <UnstyledLink to={`${routes.admin.tokenGating}/${address}`}>
+    <UnstyledLink
+      to={`${
+        isStoreApp ? routes.store.nfts : routes.admin.tokenGating
+      }/${address}`}
+    >
       <NftDisplayWrapper>
         <NftImg {...(image && { src: image })} />
 
         <NftName>{name}</NftName>
 
-        <RewardsOrExclusivity>
-          No rewards or exclusivity yet.
-        </RewardsOrExclusivity>
+        <RewardsOrExclusivity>{exclusivitiesText}</RewardsOrExclusivity>
 
         <Address>{formatShortAddress(address)}</Address>
       </NftDisplayWrapper>
@@ -92,7 +98,7 @@ const NftDisplay = ({
   );
 };
 
-export const NftsList = () => {
+export const NftsList = ({ isStoreApp = false }: { isStoreApp?: boolean }) => {
   const { metaplex } = useMetaplex();
 
   const { isLoading: isLoadingUser } = useAuth();
@@ -100,44 +106,27 @@ export const NftsList = () => {
   const [storeNfts, setStoreNfts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { loading: nftsAreLoading, data: userNfts } =
-    useQuery(FIND_NFT_BY_STORE_ID);
+  const { storeNfts: storeNftsFromDb } = useNft();
 
   const findNftByAddress = useCallback(async () => {
     if (!metaplex) {
       return;
     }
-    if (!userNfts) {
+    if (!storeNftsFromDb) {
       return;
     }
 
     setIsLoading(true);
-    const nfts = await metaplex
-      .nfts()
-      .findAllByMintList({
-        mints: userNfts?.findNftsByStoreId.map(
-          ({ nftAddress }: { nftAddress: string }) => new PublicKey(nftAddress)
-        ),
-      })
-      .run();
 
-    const populatedNfts = await Promise.all(
-      nfts.map(async (nft) => {
-        if (!nft) {
-          return;
-        }
-        const populatedNft = await metaplex
-          .nfts()
-          .load({ metadata: nft as Metadata<JsonMetadata<string>> })
-          .run();
-
-        return populatedNft;
-      }, [])
+    const populatedNfts = await getNftDataFromAddressArr(
+      storeNftsFromDb?.findNftsByStoreId.map(
+        ({ nftAddress }: { nftAddress: string }) => nftAddress
+      )
     );
 
     setStoreNfts(populatedNfts);
     setIsLoading(false);
-  }, [metaplex, userNfts]);
+  }, [metaplex, storeNftsFromDb]);
 
   useEffect(() => {
     findNftByAddress();
@@ -151,6 +140,7 @@ export const NftsList = () => {
           image={image}
           address={address.toBase58()}
           name={name}
+          isStoreApp={isStoreApp}
         />
       ))}
 

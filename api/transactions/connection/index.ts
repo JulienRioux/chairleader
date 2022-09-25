@@ -1,6 +1,6 @@
 import { Connection } from '@solana/web3.js';
 
-const USE_QUICKNODE = true;
+const USE_QUICKNODE = false;
 
 const DEVNET_URI = USE_QUICKNODE
   ? 'https://distinguished-burned-violet.solana-devnet.discover.quiknode.pro/ecf3048415984c2959793a08516f0231ce193da2/'

@@ -10,7 +10,7 @@ import { AuthPage } from 'pages/auth-page';
 import { CompleteSignupPage } from 'pages/complete-signup-page';
 import { ErrorPage } from 'pages/error-page';
 import { Homepage } from 'pages/homepage';
-import { StoreApp } from 'pages/pos-app';
+import { NftApp, StoreApp } from 'pages/pos-app';
 import { VerifyCodePage } from 'pages/verify-code-page';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { routes } from 'utils';
@@ -49,7 +49,10 @@ export const AdminAppRouter = () => {
 
         <Route path={'/token-gating'} element={<TokenGating />} />
 
-        <Route path={'/token-gating/:address'} element={<TokenGatingNft />} />
+        <Route
+          path={'/token-gating/:address'}
+          element={<TokenGatingNft isAdminApp />}
+        />
 
         <Route
           path={'/token-gating/:address/rewards'}
@@ -75,6 +78,8 @@ export const StoreAppRouter = () => {
         <SolanaPayProviders>
           <Routes>
             <Route path={'/inventory/*'} element={<StoreApp />} />
+
+            <Route path={`${routes.store.nfts}/*`} element={<NftApp />} />
 
             <Route path={routes.store.cart} element={<CartPage />} />
 

@@ -31,5 +31,6 @@ export const routes = {
     cart: '/cart',
     payment: '/payment',
     confirmation: '/confirmation',
+    nfts: '/nfts',
   },
 };
