@@ -1,6 +1,12 @@
 import { useWallet } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
-import { Button, NumberInput, Icon, UnstyledLink } from 'components-library';
+import {
+  Button,
+  NumberInput,
+  Icon,
+  UnstyledLink,
+  Loader,
+} from 'components-library';
 import {
   BadgeWrapper,
   OutOfStockBadge,
@@ -13,7 +19,7 @@ import { useScrollTop } from 'hooks/scroll-top';
 import { useStore } from 'hooks/store';
 import { useWalletModal } from 'hooks/wallet-modal';
 import { useCallback, useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { formatShortAddress, getNftDataFromAddressArr, routes } from 'utils';
 
@@ -92,7 +98,12 @@ const InnerAddToCartWrapper = styled.div`
 `;
 
 const NftCardScroller = styled.div`
-  display: flex;
+  display: inline-flex;
+`;
+
+const NftCardScrollerWrapper = styled.div`
+  overflow: scroll;
+  padding: 8px 0;
 `;
 
 const NftImg = styled(Img)``;
@@ -101,6 +112,13 @@ const NftCardWrapper = styled(UnstyledLink)`
   margin-right: 12px;
   max-width: 140px;
   width: 140px;
+  padding: 8px;
+  border: 1px solid ${(p) => p.theme.color.text}22;
+  border-radius: ${(p) => p.theme.borderRadius.default};
+
+  :last-of-type {
+    margin-right: 0;
+  }
 `;
 
 const NftName = styled.div`
@@ -114,8 +132,18 @@ const NftName = styled.div`
 `;
 
 const NftAddress = styled.div`
-  font-size: 14px;
-  color: ${(p) => p.theme.color.lightText};
+  font-size: 12px;
+  color: ${(p) => p.theme.color.primary};
+  /* display: inline;
+  background: ${(p) => p.theme.color.primary}22;
+  border: 1px solid ${(p) => p.theme.color.primary}22;
+  border-radius: ${(p) => p.theme.borderRadius.input};
+  padding: 2px 4px; */
+`;
+
+const QualifyingNftsHeader = styled.h3`
+  font-size: 16px;
+  margin: 40px 0 8px;
 `;
 
 const NftCard = ({
@@ -160,6 +188,8 @@ export const ProductPage = () => {
   const [isUpdating, setIsUpdating] = useState(false);
 
   const [tokenGatedNftData, setTokenGatedNftData] = useState<any>([]);
+  const [tokenGatedNftDataIsLoading, setTokenGatedNftDataIsLoading] =
+    useState(false);
 
   const { productId } = useParams();
 
@@ -216,19 +246,21 @@ export const ProductPage = () => {
     isTokenGatedProduct && publicKey && !productIsUnlocked;
 
   const getNftMetadata = useCallback(async () => {
+    setTokenGatedNftDataIsLoading(true);
     const masterNftTokenGatingAddress =
       mapProductLockedToMaster[productId ?? ''];
 
     const nftData = await getNftDataFromAddressArr(masterNftTokenGatingAddress);
 
     setTokenGatedNftData(nftData);
+    setTokenGatedNftDataIsLoading(false);
   }, [productId, mapProductLockedToMaster]);
 
   useEffect(() => {
     getNftMetadata();
   }, [getNftMetadata]);
 
-  console.log('tokenGatedNftData', tokenGatedNftData);
+  console.log('tokenGatedNftData:', tokenGatedNftData);
 
   return (
     <ProductWrapper>
@@ -254,29 +286,39 @@ export const ProductPage = () => {
       </Price>
       <Description>{description}</Description>
 
-      <h3>Qualifying NFTs:</h3>
+      {tokenGatedNftDataIsLoading ? (
+        <Loader />
+      ) : (
+        !!tokenGatedNftData.length && (
+          <>
+            <QualifyingNftsHeader>Qualifying NFTs:</QualifyingNftsHeader>
 
-      <NftCardScroller>
-        {tokenGatedNftData.map(
-          ({
-            address,
-            json: { name, image },
-          }: {
-            address: PublicKey;
-            json: { name: string; image: string };
-          }) => {
-            const addressString = address.toBase58();
-            return (
-              <NftCard
-                key={addressString}
-                image={image}
-                name={name}
-                address={addressString}
-              />
-            );
-          }
-        )}
-      </NftCardScroller>
+            <NftCardScrollerWrapper>
+              <NftCardScroller>
+                {tokenGatedNftData.map(
+                  ({
+                    address,
+                    json: { name, image },
+                  }: {
+                    address: PublicKey;
+                    json: { name: string; image: string };
+                  }) => {
+                    const addressString = address.toBase58();
+                    return (
+                      <NftCard
+                        key={addressString}
+                        image={image}
+                        name={name}
+                        address={addressString}
+                      />
+                    );
+                  }
+                )}
+              </NftCardScroller>
+            </NftCardScrollerWrapper>
+          </>
+        )
+      )}
 
       <DummyDiv />
 

@@ -24,6 +24,7 @@ export interface INftContext {
   nftAddressWithProductsLocked: any;
   mapProductLockedToMaster: any;
   refreshUserNfts: () => void;
+  refetchStoreNfts: () => void;
 }
 
 export async function asyncForEach<T>(
@@ -52,8 +53,11 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
     {}
   );
 
-  const { loading: storeNftsAreLoading, data: storeNfts } =
-    useQuery(FIND_NFT_BY_STORE_ID);
+  const {
+    loading: storeNftsAreLoading,
+    data: storeNfts,
+    refetch: refetchStoreNfts,
+  } = useQuery(FIND_NFT_BY_STORE_ID);
 
   const getUserNfts = useCallback(async () => {
     if (!metaplex || !publicKey) {
@@ -174,6 +178,7 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
       nftAddressWithProductsLocked,
       mapProductLockedToMaster,
       refreshUserNfts: getUserNfts,
+      refetchStoreNfts,
     };
   }, [
     userNftsIsLoading,
@@ -185,6 +190,7 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
     nftAddressWithProductsLocked,
     mapProductLockedToMaster,
     getUserNfts,
+    refetchStoreNfts,
   ]);
 
   return <NftContext.Provider value={getCtx()}>{children}</NftContext.Provider>;

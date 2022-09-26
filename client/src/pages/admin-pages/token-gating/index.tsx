@@ -11,7 +11,6 @@ import {
 import { ChangeEvent, FormEvent, useCallback, useRef, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import {
-  keypairIdentity,
   toBigNumber,
   toMetaplexFileFromBrowser,
 } from '@metaplex-foundation/js';
@@ -20,11 +19,10 @@ import styled, { css } from 'styled-components';
 import { Label } from 'components-library/input/input.styles';
 import { ADMIN_PAYER_ADDRESS, CLUSTER_ENV, Logger, resizeFileImg } from 'utils';
 import { NftsList } from 'components/nfts-list';
-import { useAuth } from 'hooks/auth';
-import bs58 from 'bs58';
-import { Keypair, PublicKey } from '@solana/web3.js';
+import { PublicKey } from '@solana/web3.js';
 import { useMutation } from '@apollo/client';
 import { ADD_NFT } from 'queries';
+import { useNft } from 'hooks/nft';
 
 const ImageWrapper = styled.div`
   margin: 8px 0 24px;
@@ -63,7 +61,7 @@ export const TokenGating = () => {
   const { metaplex } = useMetaplex();
   const wallet = useWallet();
   const { openModal, Modal, closeModal } = useModal();
-  const { updateUser, user, refetchMe } = useAuth();
+  const { refetchStoreNfts } = useNft();
 
   const [addNft, { loading: addNftIsLoading }] = useMutation(ADD_NFT);
 
@@ -177,9 +175,9 @@ export const TokenGating = () => {
         // Add the NFT to our DB
         await addNft({ variables: { nftAddress: newNftAddress } });
 
-        message.success(`${name} has been created successfully!`);
+        await refetchStoreNfts();
 
-        refetchMe();
+        message.success(`${name} has been created successfully!`);
 
         setUploadingNft(false);
         closeModal();
@@ -198,7 +196,7 @@ export const TokenGating = () => {
       description,
       maxSupply,
       addNft,
-      refetchMe,
+      refetchStoreNfts,
       closeModal,
       resetForm,
     ]
