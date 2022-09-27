@@ -24,8 +24,11 @@ const CartItemsAndTotalWrapper = styled.div`
 `;
 
 const HeaderAndITems = styled.div`
-  padding: 8px 20px;
   overflow: scroll;
+`;
+
+const CartItemsWrapper = styled.div`
+  padding: 8px 20px;
 `;
 
 export const CartItems = ({ showHeaderText = true, enableUpdate = true }) => {
@@ -61,7 +64,9 @@ export const Cart = () => {
   return (
     <CartWrapper>
       <CartItemsAndTotalWrapper>
-        <CartItems />
+        <CartItemsWrapper>
+          <CartItems />
+        </CartItemsWrapper>
 
         <CartTotal />
       </CartItemsAndTotalWrapper>

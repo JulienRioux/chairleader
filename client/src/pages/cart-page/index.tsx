@@ -11,6 +11,7 @@ import { CURRENCY, useCurrency } from 'hooks/currency';
 import { useScrollTop } from 'hooks/scroll-top';
 import { PaymentOptions } from 'pages/cart-payment-page';
 import { useMediaQuery } from 'hooks/media-query';
+import { ShippingForm } from 'components/shipping-form';
 
 export const getTxExplorerUrl = ({ signature = '', isDev = false }) =>
   `https://explorer.solana.com/tx/${signature}${isDev && '?cluster=devnet'}`;
@@ -52,11 +53,13 @@ export const CartPageLayout = ({
   link?: string;
 }) => (
   <div>
-    <TopNav>
-      <PageTitle>{title}</PageTitle>
+    <TopNavWrapper>
+      <TopNav>
+        <PageTitle>{title}</PageTitle>
 
-      <Button icon="arrow_back" secondary to={link} />
-    </TopNav>
+        <Button icon="arrow_back" secondary to={link} />
+      </TopNav>
+    </TopNavWrapper>
 
     {children}
   </div>
@@ -94,19 +97,27 @@ export const ConfirmationPage = () => {
   );
 };
 
-const TopNav = styled.div`
-  padding: 8px 20px;
+const TopNavWrapper = styled.div`
+  padding: 8px;
   border-bottom: 1px solid ${(p) => p.theme.color.lightGrey};
   height: 44px;
+`;
+
+const TopNav = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  max-width: ${(p) => p.theme.layout.maxWidth};
+  margin: 0 auto;
 `;
 
 const CartPaymentLayout = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  margin-top: 80px;
+  gap: 40px 80px;
+  margin: 20px auto;
+  max-width: ${(p) => p.theme.layout.maxWidth};
+  padding: 0 12px;
 
   @media (max-width: 1000px) {
     grid-template-columns: 1fr;
@@ -117,10 +128,7 @@ const CartPaymentLayout = styled.div`
 const CartSummaryWrapper = styled.div``;
 
 const CartItemsWrapper = styled.div`
-  max-width: calc(100vw / 2 - 16px);
-  width: 600px;
   margin: 0 auto 20px;
-  border: 1px solid ${(p) => p.theme.color.lightGrey};
   border-radius: 8px;
   height: min-content;
 
@@ -149,7 +157,7 @@ const TotalAndContinueInner = styled.div`
 const DesktopSummaryWrapper = styled.div`
   border-top: 1px solid ${(p) => p.theme.color.lightGrey};
   margin-top: 20px;
-  padding: 40px 20px 8px;
+  padding: 40px 0 8px;
 `;
 
 const AlertMsgWrapper = styled.div`
@@ -204,7 +212,7 @@ export const CartPage = () => {
   const { totalWithSaleTax, cartItems, totalPrice, totalSaleTax } = useCart();
   const { status } = usePayment();
   const navigate = useNavigate();
-  const showPaymentOptions = useMediaQuery('(max-width: 1000px)');
+  const showShippingForm = useMediaQuery('(max-width: 1000px)');
 
   const [height, setHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
@@ -228,28 +236,14 @@ export const CartPage = () => {
     <CartPageLayout title="Current order">
       <CartPaymentLayout>
         <div>
-          <DevnetMsg />
+          {/* <DevnetMsg /> */}
+
+          <h3>Cart items</h3>
 
           <CartItemsWrapper style={{ marginBottom: `${height}px` }}>
             <CartItems showHeaderText={false} />
-            {!showPaymentOptions && (
-              <DesktopSummaryWrapper>
-                <CartSummaryWrapper>
-                  <CartSummary
-                    totalPrice={totalPrice}
-                    totalSaleTax={totalSaleTax}
-                    totalWithSaleTax={totalWithSaleTax}
-                    currency={currency}
-                  />
-                </CartSummaryWrapper>
-              </DesktopSummaryWrapper>
-            )}
-          </CartItemsWrapper>
-        </div>
 
-        {showPaymentOptions ? (
-          <TotalAndContinue ref={ref}>
-            <TotalAndContinueInner>
+            <DesktopSummaryWrapper>
               <CartSummaryWrapper>
                 <CartSummary
                   totalPrice={totalPrice}
@@ -258,19 +252,14 @@ export const CartPage = () => {
                   currency={currency}
                 />
               </CartSummaryWrapper>
+            </DesktopSummaryWrapper>
+          </CartItemsWrapper>
+        </div>
 
-              <Button
-                style={{ marginTop: '8px' }}
-                to={routes.store.payment}
-                fullWidth
-              >
-                Continue to payment
-              </Button>
-            </TotalAndContinueInner>
-          </TotalAndContinue>
-        ) : (
-          <PaymentOptions />
-        )}
+        <div>
+          <h3>Shipping information</h3>
+          <ShippingForm />
+        </div>
       </CartPaymentLayout>
     </CartPageLayout>
   );

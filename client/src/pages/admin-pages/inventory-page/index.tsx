@@ -1,5 +1,6 @@
 import { Button, Input, Loader, useModal } from 'components-library';
 import { ProductPreview } from 'components/product-preview';
+import { IS_POINT_OF_SALE } from 'configs';
 import { IInventoryItem, useCart } from 'hooks/cart';
 import { useCurrency } from 'hooks/currency';
 import { useInventory } from 'hooks/inventory';
@@ -227,10 +228,11 @@ export const StorePage = () => {
           />
         ))}
 
-        <AddCustomProductBtn onClick={openModal} secondary>
-          Add custom product
-        </AddCustomProductBtn>
-
+        {IS_POINT_OF_SALE && (
+          <AddCustomProductBtn onClick={openModal} secondary>
+            Add custom product
+          </AddCustomProductBtn>
+        )}
         {!inventory?.length && <p>No product yet.</p>}
 
         <Modal title="New custom product">

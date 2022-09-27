@@ -28,7 +28,7 @@ export const SolScanLink = styled(UnstyledExternalLink)`
   padding: 4px;
   color: ${(p) => p.theme.color.primary};
   border-radius: ${(p) => p.theme.borderRadius.default};
-  border: 2px solid ${(p) => p.theme.color.primary}22;
+  border: ${(p) => p.theme.borderWidth} solid ${(p) => p.theme.color.primary}22;
   display: inline-block;
 `;
 

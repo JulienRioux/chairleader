@@ -88,7 +88,7 @@ const SideNavLink = styled(Button)<{ isActive?: boolean }>`
 
 const SharedStyles = css`
   border-radius: ${(p) => p.theme.borderRadius.default};
-  border: 2px solid ${(p) => p.theme.color.lightGrey};
+  border: ${(p) => p.theme.borderWidth} solid ${(p) => p.theme.color.lightGrey};
   width: 40px;
   height: 40px;
   transition: 0.2s;

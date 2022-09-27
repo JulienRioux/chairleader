@@ -47,7 +47,7 @@ const ImgWrapper = styled(UnstyledButton)`
   object-fit: cover;
   aspect-ratio: ${(p) => p.theme.products.image.aspectRatio};
   border-radius: ${(p) => p.theme.borderRadius.default};
-  border: 2px solid ${(p) => p.theme.color.text};
+  border: ${(p) => p.theme.borderWidth} solid ${(p) => p.theme.color.text};
   font-size: 100px;
   display: flex;
   align-items: center;
@@ -71,7 +71,7 @@ const AddImgBtn = styled.div`
   right: 8px;
   padding: 8px 12px;
   border-radius: ${(p) => p.theme.borderRadius.default};
-  border: 2px solid ${(p) => p.theme.color.lightGrey};
+  border: ${(p) => p.theme.borderWidth} solid ${(p) => p.theme.color.lightGrey};
   color: ${(p) => p.theme.color.primary};
   background: ${(p) => p.theme.color.background};
   font-size: 16px;

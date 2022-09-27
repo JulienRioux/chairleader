@@ -13,7 +13,7 @@ const ButtonWrapper = styled.button<{
   align-items: center;
   border-radius: ${(p) => p.theme.borderRadius.default};
   border-style: solid;
-  border-width: 2px;
+  border-width: ${(p) => p.theme.borderWidth};
   border-color: ${(p) => p.theme.color.primary};
   cursor: pointer;
   display: inline-flex;

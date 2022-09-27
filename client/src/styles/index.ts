@@ -16,7 +16,7 @@ export const LightTheme: DefaultTheme = {
       bold: '600',
     },
   },
-  borderWidth: '2px',
+  borderWidth: '1px',
   color: {
     primary: '#6F00FF',
     white: primitives.white,

@@ -187,9 +187,9 @@ export const NftsList = ({ isStoreApp = false }: { isStoreApp?: boolean }) => {
         )}
       </NftsListWrapper>
 
-      {!isStoreApp && archivedNfts.length && (
+      {!isStoreApp && !!archivedNfts.length && (
         <div style={{ marginTop: '40px' }}>
-          <Collapsible title="Archived NFTs">
+          <Collapsible title={`Archived NFTs (${archivedNfts.length})`}>
             <NftsListWrapper>
               {archivedNfts.map((nft) => (
                 <NftDisplay
