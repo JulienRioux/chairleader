@@ -16,7 +16,7 @@ import {
 } from '@metaplex-foundation/js';
 import { useMetaplex } from 'hooks/metaplex';
 import styled, { css } from 'styled-components';
-import { Label } from 'components-library/input/input.styles';
+import { Label, RequiredWrapper } from 'components-library/input/input.styles';
 import { ADMIN_PAYER_ADDRESS, CLUSTER_ENV, Logger, resizeFileImg } from 'utils';
 import { NftsList } from 'components/nfts-list';
 import { PublicKey } from '@solana/web3.js';
@@ -57,6 +57,12 @@ const NoImageWrapper = styled.div`
   font-size: 48px;
 `;
 
+const ServiceFeesExplaination = styled.div`
+  margin-bottom: 20px;
+  color: ${(p) => p.theme.color.lightText};
+  font-size: 14px;
+`;
+
 export const TokenGating = () => {
   const { metaplex } = useMetaplex();
   const wallet = useWallet();
@@ -70,6 +76,7 @@ export const TokenGating = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [maxSupply, setMaxSupply] = useState('1000');
+  const [price, setPrice] = useState('');
 
   // Image
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -85,6 +92,10 @@ export const TokenGating = () => {
       }
       if (e.target.name === 'description') {
         setDescription(e.target.value);
+        return;
+      }
+      if (e.target.name === 'price') {
+        setPrice(e.target.value);
         return;
       }
       if (e.target.name === 'maxSupply') {
@@ -138,6 +149,7 @@ export const TokenGating = () => {
               name: 'Testing collections',
               family: 'Chairleader.xyz',
             },
+            initialPrice: price,
           })
           .run();
 
@@ -168,16 +180,15 @@ export const TokenGating = () => {
           `https://solscan.io/account/${newNftAddress}?cluster=${CLUSTER_ENV}`
         );
 
-        // const userNftArray = user?.nfts?.length
-        //   ? [newNftAddress, ...user.nfts]
-        //   : [newNftAddress];
-
         // Add the NFT to our DB
-        await addNft({ variables: { nftAddress: newNftAddress } });
-
-        await refetchStoreNfts();
+        await addNft({
+          variables: { nftAddress: newNftAddress, price: Number(price) },
+        });
 
         message.success(`${name} has been created successfully!`);
+
+        // TODO: This is not working properly...
+        refetchStoreNfts();
 
         setUploadingNft(false);
         closeModal();
@@ -199,6 +210,7 @@ export const TokenGating = () => {
       refetchStoreNfts,
       closeModal,
       resetForm,
+      price,
     ]
   );
 
@@ -223,14 +235,21 @@ export const TokenGating = () => {
     currentImageSrc = URL.createObjectURL(imageFile);
   }
 
+  const SELLING_SERVICE_FEE =
+    Number(process.env.REACT_APP_SELLING_NFT_SERVICE_FEE ?? 0) * 100;
+
+  const REVENUE_AFTER_FEES =
+    (1 - Number(process.env.REACT_APP_SELLING_NFT_SERVICE_FEE ?? 0)) *
+    Number(price);
+
   return (
     wallet.connected && (
       <div>
-        <Button onClick={openModal}>Create NFT</Button>
+        <Button onClick={openModal}>Create new NFT</Button>
 
         <NftsList />
 
-        <Modal title="Configure your NFT">
+        <Modal title="Create new NFT">
           <form onSubmit={uploadNFT}>
             <Input
               label="Name"
@@ -241,7 +260,6 @@ export const TokenGating = () => {
               placeholder="Crypto Punk"
               autoFocus
             />
-
             <Textarea
               label="Description"
               onChange={handleChange}
@@ -250,8 +268,9 @@ export const TokenGating = () => {
               name="description"
               placeholder="These NFT will unlocked exclusive products."
             />
-
-            <Label>NFT asset</Label>
+            <Label>
+              NFT asset <RequiredWrapper>*</RequiredWrapper>
+            </Label>
             <ImageWrapper>
               {currentImageSrc ? (
                 <Img src={currentImageSrc} onClick={handleUploadFileClick} />
@@ -270,7 +289,6 @@ export const TokenGating = () => {
                 {currentImageSrc ? 'Update image' : 'Add image'}
               </Button>
             </ImageWrapper>
-
             <VisuallyHiddenInput
               type="file"
               onChange={handleChange}
@@ -278,6 +296,25 @@ export const TokenGating = () => {
               accept="image/png, image/jpg, image/jpeg, image/webp"
               ref={fileInput}
             />
+            <Input
+              label="Price (USDC)"
+              type="number"
+              onChange={handleChange}
+              value={price}
+              required
+              name="price"
+              placeholder="10"
+              min={1}
+            />
+
+            {price && (
+              <ServiceFeesExplaination>
+                <div style={{ marginBottom: '4px' }}>
+                  Service fee: {SELLING_SERVICE_FEE} %
+                </div>
+                <div>You will receive: {REVENUE_AFTER_FEES} USDC</div>
+              </ServiceFeesExplaination>
+            )}
 
             <Input
               label="Maximum supply"
@@ -288,7 +325,6 @@ export const TokenGating = () => {
               name="maxSupply"
               placeholder="1000"
             />
-
             <div style={{ marginTop: '20px' }}>
               <Button type="submit" fullWidth isLoading={uploadingNft}>
                 Save and continue

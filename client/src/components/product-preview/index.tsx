@@ -94,12 +94,23 @@ export const BadgeWrapper = styled.div`
 
 export const TokenGatedBadge = ({
   isPositionAbsolute,
+  isUnlocked,
 }: {
   isPositionAbsolute?: boolean;
+  isUnlocked?: boolean;
 }) => (
   <TokenGatedBadgeWrapper isPositionAbsolute={isPositionAbsolute}>
-    <Icon name="lock" />
-    <TokenGatedText>Token gated</TokenGatedText>
+    {isUnlocked ? (
+      <>
+        <Icon name="lock_open" />
+        <TokenGatedText>Exclusivity</TokenGatedText>
+      </>
+    ) : (
+      <>
+        <Icon name="lock" />
+        <TokenGatedText>Token gated</TokenGatedText>
+      </>
+    )}
   </TokenGatedBadgeWrapper>
 );
 

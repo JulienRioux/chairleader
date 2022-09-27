@@ -1,4 +1,3 @@
-export * from './transactions';
 export * from './format-short-wallet-address';
 export * from './routes';
 export * from './logger';
@@ -9,3 +8,4 @@ export * from './resize-image';
 export * from './determine-platform';
 export * from './cluster';
 export * from './nfts';
+export * from './create-spl-token-instruction';

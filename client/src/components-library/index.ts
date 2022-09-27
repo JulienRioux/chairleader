@@ -10,3 +10,4 @@ export * from './visually-hidden';
 export * from './message';
 export * from './modal';
 export * from './loader';
+export * from './collapsible';

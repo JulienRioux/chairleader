@@ -62,9 +62,10 @@ export const schemaTypes = `
 
   type Nft {
     _id: String
-    storeId: String,
-    nftAddress: String,
-    productsUnlocked: [String],
+    storeId: String
+    nftAddress: String
+    productsUnlocked: [String]
+    isArchived: Boolean
   }
 
   scalar Upload

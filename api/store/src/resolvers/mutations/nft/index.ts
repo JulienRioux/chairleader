@@ -24,16 +24,15 @@ export const addNftMutation = async (_source: any, { nftAddress }, context) => {
 
 export const updateNftMutation = async (
   _source: any,
-  { productsUnlocked, id },
+  { productsUnlocked, id, isArchived },
   context
 ) => {
-  console.log('TO BE UPDATED:', { productsUnlocked, id });
   try {
     const nft = await NftModel.findByIdAndUpdate(id, {
       productsUnlocked,
+      isArchived,
       updatedAt: new Date(),
     });
-    console.log('nft', nft);
 
     return nft;
   } catch (err) {

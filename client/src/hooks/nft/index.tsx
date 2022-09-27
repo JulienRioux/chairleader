@@ -11,8 +11,8 @@ import { useMetaplex } from 'hooks/metaplex';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { getPrintedVersionsFromMasterAddress, Logger } from 'utils';
 import { JsonMetadata, Metadata } from '@metaplex-foundation/js';
-import { FIND_NFT_BY_STORE_ID } from 'queries';
-import { useQuery } from '@apollo/client';
+import { FIND_NFT_BY_STORE_ID, UPDATE_NFT } from 'queries';
+import { useMutation, useQuery } from '@apollo/client';
 
 export interface INftContext {
   userNftsIsLoading: boolean;
@@ -25,6 +25,11 @@ export interface INftContext {
   mapProductLockedToMaster: any;
   refreshUserNfts: () => void;
   refetchStoreNfts: () => void;
+  refreshProductLockedMap: () => void;
+  checkIfUserCanPurchaseTokenGatedProduct: (productId: string) => any;
+  checkIfUserHasPrintedVersion: any;
+  updateNft: (args: any) => void;
+  updateNftIsLoading: boolean;
 }
 
 export async function asyncForEach<T>(
@@ -53,11 +58,17 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
     {}
   );
 
+  const [mapMasterToPrintedEditions, setMapMasterToPrintedEditions] =
+    useState<any>({});
+
   const {
     loading: storeNftsAreLoading,
     data: storeNfts,
     refetch: refetchStoreNfts,
   } = useQuery(FIND_NFT_BY_STORE_ID);
+
+  const [updateNftMutation, { loading: updateNftIsLoading }] =
+    useMutation(UPDATE_NFT);
 
   const getUserNfts = useCallback(async () => {
     if (!metaplex || !publicKey) {
@@ -90,7 +101,6 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
       const nftsAddressList = walletNfts.map((nft) =>
         (nft as Metadata<JsonMetadata<string>>).mintAddress.toString()
       );
-
       setUserNfts(nftsAddressList);
       setUserNftsIsLoading(false);
     } catch (err) {
@@ -99,13 +109,39 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
     }
   }, [metaplex, publicKey]);
 
+  const updateNft = useCallback(
+    async ({
+      nftId,
+      productsUnlocked,
+      isArchived,
+    }: {
+      nftId: string;
+      productsUnlocked?: string[];
+      isArchived?: boolean;
+    }) => {
+      await updateNftMutation({
+        variables: {
+          productsUnlocked,
+          isArchived,
+          id: nftId,
+        },
+      });
+    },
+    [updateNftMutation]
+  );
+
   const getProductLockedMap = useCallback(async () => {
     const productsLockedMap: any = {};
     const nftLockMap: any = {};
     const productLockedMapToMaster: any = {};
+    const masterToPrintedEditionsMap: any = {};
+
+    const unarchivedNfts = storeNfts?.findNftsByStoreId?.filter(
+      ({ isArchived }: { isArchived: boolean }) => !isArchived
+    );
 
     await asyncForEach(
-      storeNfts?.findNftsByStoreId,
+      unarchivedNfts,
       async ({
         productsUnlocked,
         nftAddress,
@@ -117,6 +153,7 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
           const printedVersions = await getPrintedVersionsFromMasterAddress(
             nftAddress
           );
+
           if (!productsLockedMap[productId]) {
             productsLockedMap[productId] = [...printedVersions];
           } else {
@@ -125,6 +162,10 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
               ...printedVersions,
             ];
           }
+
+          // Creating the master mapping to the printed versions
+          masterToPrintedEditionsMap[nftAddress] = printedVersions;
+
           //   Creating the nft products unlocked mapping
           nftLockMap[nftAddress] = productsUnlocked;
 
@@ -141,6 +182,7 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
     setProductsLockedWithNftAddress(productsLockedMap);
     setNftAddressWithProductsLocked(nftLockMap);
     setMapProductLockedToMaster(productLockedMapToMaster);
+    setMapMasterToPrintedEditions(masterToPrintedEditionsMap);
   }, [storeNfts?.findNftsByStoreId]);
 
   useEffect(() => {
@@ -155,13 +197,38 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
     [productsLockedWithNftAddress]
   );
 
-  // // Generating a map of the product locked with the NFTs address that unlocks them.
-  // const productsLockedWithNftAddress = useMemo(
-  //   () => getProductsLockedWithNftAddress(storeNfts?.findNftsByStoreId),
-  //   [storeNfts?.findNftsByStoreId]
-  // );
+  const checkIfUserCanPurchaseTokenGatedProduct = useCallback(
+    (productId: string) => {
+      const tokenGated: string[] = productId
+        ? productsLockedWithNftAddress[productId]
+        : null;
 
-  // console.log('productsLockedWithNftAddress', productsLockedWithNftAddress);
+      const isTokenGatedProduct = tokenGated !== undefined;
+
+      // The product is unlocked if the user wallet is connected and the user has one token-gating NFT
+      const productIsUnlocked =
+        publicKey &&
+        tokenGated?.some((nftAddress) => userNfts.includes(nftAddress));
+
+      return {
+        isUnlocked: !!productIsUnlocked,
+        isTokenGated: isTokenGatedProduct,
+      };
+    },
+    [productsLockedWithNftAddress, publicKey, userNfts]
+  );
+
+  const checkIfUserHasPrintedVersion = useCallback(
+    (masterAddress: string) => {
+      const currentNftPrintedVestion =
+        mapMasterToPrintedEditions[masterAddress];
+      const hasPrintedVersion = currentNftPrintedVestion?.some(
+        (nftAddress: string) => userNfts.includes(nftAddress)
+      );
+      return hasPrintedVersion;
+    },
+    [mapMasterToPrintedEditions, userNfts]
+  );
 
   useEffect(() => {
     getUserNfts();
@@ -179,6 +246,11 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
       mapProductLockedToMaster,
       refreshUserNfts: getUserNfts,
       refetchStoreNfts,
+      refreshProductLockedMap: getProductLockedMap,
+      checkIfUserCanPurchaseTokenGatedProduct,
+      checkIfUserHasPrintedVersion,
+      updateNft,
+      updateNftIsLoading,
     };
   }, [
     userNftsIsLoading,
@@ -191,6 +263,11 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
     mapProductLockedToMaster,
     getUserNfts,
     refetchStoreNfts,
+    getProductLockedMap,
+    checkIfUserCanPurchaseTokenGatedProduct,
+    checkIfUserHasPrintedVersion,
+    updateNft,
+    updateNftIsLoading,
   ]);
 
   return <NftContext.Provider value={getCtx()}>{children}</NftContext.Provider>;

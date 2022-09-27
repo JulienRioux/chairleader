@@ -1,4 +1,4 @@
-import { ConnectWallet, StoreImgIcon } from 'components';
+import { StoreImgIcon } from 'components';
 import { Button, ChildWrapper, Icon, UnstyledLink } from 'components-library';
 import { Cart } from 'components/cart';
 import { ConnectWalletBtn } from 'components/connect-wallet-btn';

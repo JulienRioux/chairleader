@@ -2,6 +2,7 @@
 
 interface Window {
   solana: any;
+  solflare: any;
 }
 
 declare module '*.mp4' {

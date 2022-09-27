@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import {
   UnstyledButton,
   Loader,
@@ -9,7 +9,8 @@ import {
 import { ProductPreviewItem } from 'components/product-preview';
 import { useAuth } from 'hooks/auth';
 import { useInventory } from 'hooks/inventory';
-import { FIND_NFT_BY_ADDRESS, UPDATE_NFT } from 'queries';
+import { useNft } from 'hooks/nft';
+import { FIND_NFT_BY_ADDRESS } from 'queries';
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -74,7 +75,7 @@ export const ExclusivitiesSelection = ({
     notifyOnNetworkStatusChange: true,
   });
 
-  const [updateNft, { loading: updateNftIsLoading }] = useMutation(UPDATE_NFT);
+  const { updateNft, updateNftIsLoading } = useNft();
 
   const { inventory, isLoading } = useInventory();
 
@@ -99,11 +100,10 @@ export const ExclusivitiesSelection = ({
 
   const handleSave = useCallback(async () => {
     await updateNft({
-      variables: {
-        productsUnlocked: exclusivities,
-        id: currentNft?.findNftByAddress?._id,
-      },
+      productsUnlocked: exclusivities,
+      nftId: currentNft?.findNftByAddress?._id,
     });
+
     refetchNftByAddress();
     message.success('Exclusivities saved');
     closeModal();

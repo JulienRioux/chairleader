@@ -1,4 +1,4 @@
-import { Loader, UnstyledLink } from 'components-library';
+import { Collapsible, Loader, UnstyledLink } from 'components-library';
 import { useCallback, useEffect, useState } from 'react';
 import { useMetaplex } from 'hooks/metaplex';
 import styled from 'styled-components';
@@ -56,16 +56,29 @@ const Address = styled.div`
   color: ${(p) => p.theme.color.lightText};
 `;
 
+export const Price = styled.div`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  border: 1px solid ${(p) => p.theme.color.primary};
+  color: ${(p) => p.theme.color.primary};
+  background-color: ${(p) => p.theme.color.background};
+  padding: 2px 4px;
+  border-radius: ${(p) => p.theme.borderRadius.default};
+`;
+
 const NftDisplay = ({
   image,
   address,
   name,
   isStoreApp,
+  price,
 }: {
   image: string;
   address: string;
   name: string;
   isStoreApp?: boolean;
+  price: boolean;
 }) => {
   const { nftAddressWithProductsLocked } = useNft();
 
@@ -86,7 +99,10 @@ const NftDisplay = ({
       }/${address}`}
     >
       <NftDisplayWrapper>
-        <NftImg {...(image && { src: image })} />
+        <div style={{ position: 'relative' }}>
+          <NftImg {...(image && { src: image })} />
+          <Price>{price} USDC</Price>
+        </div>
 
         <NftName>{name}</NftName>
 
@@ -124,7 +140,15 @@ export const NftsList = ({ isStoreApp = false }: { isStoreApp?: boolean }) => {
       )
     );
 
-    setStoreNfts(populatedNfts);
+    const populatedNftsWithDbData = populatedNfts.map((nft) => {
+      const dataFromBd = storeNftsFromDb?.findNftsByStoreId.find(
+        ({ nftAddress }: { nftAddress: string }) =>
+          nftAddress === nft?.address?.toBase58()
+      );
+      return { ...nft, ...dataFromBd };
+    });
+
+    setStoreNfts(populatedNftsWithDbData);
     setIsLoading(false);
   }, [metaplex, storeNftsFromDb]);
 
@@ -132,19 +156,55 @@ export const NftsList = ({ isStoreApp = false }: { isStoreApp?: boolean }) => {
     findNftByAddress();
   }, [findNftByAddress]);
 
-  return (
-    <NftsListWrapper>
-      {storeNfts.map(({ address, json: { image, name } }) => (
-        <NftDisplay
-          key={address.toBase58()}
-          image={image}
-          address={address.toBase58()}
-          name={name}
-          isStoreApp={isStoreApp}
-        />
-      ))}
+  if (isLoading || isLoadingUser) {
+    return <Loader />;
+  }
 
-      {(isLoading || isLoadingUser) && <Loader />}
-    </NftsListWrapper>
+  const activeNfts = storeNfts?.filter(
+    ({ isArchived }: { isArchived: boolean }) => !isArchived
+  );
+
+  const archivedNfts = storeNfts?.filter(
+    ({ isArchived }: { isArchived: boolean }) => isArchived
+  );
+
+  return (
+    <div>
+      <NftsListWrapper>
+        {activeNfts.map((nft) => (
+          <NftDisplay
+            key={nft?.address?.toBase58()}
+            image={nft?.json?.image}
+            address={nft?.address?.toBase58()}
+            name={nft?.json?.name}
+            isStoreApp={isStoreApp}
+            price={nft?.json?.initialPrice}
+          />
+        ))}
+
+        {!storeNfts.length && !isLoading && !isLoadingUser && (
+          <p>No NFT yet.</p>
+        )}
+      </NftsListWrapper>
+
+      {!isStoreApp && archivedNfts.length && (
+        <div style={{ marginTop: '40px' }}>
+          <Collapsible title="Archived NFTs">
+            <NftsListWrapper>
+              {archivedNfts.map((nft) => (
+                <NftDisplay
+                  key={nft?.address?.toBase58()}
+                  image={nft?.json?.image}
+                  address={nft?.address?.toBase58()}
+                  name={nft?.json?.name}
+                  isStoreApp={isStoreApp}
+                  price={nft?.json?.initialPrice}
+                />
+              ))}
+            </NftsListWrapper>
+          </Collapsible>
+        </div>
+      )}
+    </div>
   );
 };

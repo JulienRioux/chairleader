@@ -115,6 +115,7 @@ const NftCardWrapper = styled(UnstyledLink)`
   padding: 8px;
   border: 1px solid ${(p) => p.theme.color.text}22;
   border-radius: ${(p) => p.theme.borderRadius.default};
+  position: relative;
 
   :last-of-type {
     margin-right: 0;
@@ -141,6 +142,18 @@ const NftAddress = styled.div`
   padding: 2px 4px; */
 `;
 
+const HasNftPrintedVersionBadge = styled.div`
+  display: flex;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: ${(p) => p.theme.color.background}88;
+  padding: 2px 4px;
+  font-size: 12px;
+  border-radius: ${(p) => p.theme.borderRadius.default};
+  border: 1px solid;
+`;
+
 const QualifyingNftsHeader = styled.h3`
   font-size: 16px;
   margin: 40px 0 8px;
@@ -154,14 +167,27 @@ const NftCard = ({
   image: string;
   name: string;
   address: string;
-}) => (
-  <NftCardWrapper to={`${routes.store.nfts}/${address}`}>
-    <NftImg src={image} />
-    <NftName>{name}</NftName>
+}) => {
+  const { checkIfUserHasPrintedVersion } = useNft();
 
-    <NftAddress>{formatShortAddress(address)}</NftAddress>
-  </NftCardWrapper>
-);
+  const hasNftPrintedVersion = checkIfUserHasPrintedVersion(address);
+
+  return (
+    <NftCardWrapper to={`${routes.store.nfts}/${address}`}>
+      <NftImg src={image} />
+      <NftName>{name}</NftName>
+
+      <NftAddress>{formatShortAddress(address)}</NftAddress>
+
+      {hasNftPrintedVersion && (
+        <HasNftPrintedVersionBadge>
+          <Icon style={{ marginRight: '4px' }} name="verified" />
+          <div>Owner</div>
+        </HasNftPrintedVersionBadge>
+      )}
+    </NftCardWrapper>
+  );
+};
 
 export const ProductPage = () => {
   useScrollTop();
@@ -172,7 +198,7 @@ export const ProductPage = () => {
 
   const { openConnectModal } = useWalletModal();
 
-  const { userNfts, productsLockedWithNftAddress, mapProductLockedToMaster } =
+  const { mapProductLockedToMaster, checkIfUserCanPurchaseTokenGatedProduct } =
     useNft();
 
   const { inventory } = useStore();
@@ -225,25 +251,15 @@ export const ProductPage = () => {
 
   const priceDisplay = Number(Number(price)?.toFixed(decimals));
 
-  // TODO: This will needs to be rewrite...
-  // const tokenGated: string[] = [];
-  const tokenGated: string[] = productId
-    ? productsLockedWithNftAddress[productId]
-    : null;
-
-  const isTokenGatedProduct = tokenGated !== undefined;
-
-  // The product is unlocked if the user wallet is connected and the user has one token-gating NFT
-  const productIsUnlocked =
-    publicKey &&
-    tokenGated?.some((nftAddress) => userNfts.includes(nftAddress));
+  const { isTokenGated, isUnlocked } = productId
+    ? checkIfUserCanPurchaseTokenGatedProduct(productId)
+    : { isTokenGated: false, isUnlocked: false };
 
   // Show the connect wallet button if the product is token-gated and the user wallet is not connected.
-  const SHOW_CONNECT_WALLET_BUTTON = isTokenGatedProduct && !publicKey;
+  const SHOW_CONNECT_WALLET_BUTTON = isTokenGated && !publicKey;
 
   // Show the missing token msg if the product it token-gated, the user wallet is connected and the user did not have the right token
-  const SHOW_MISSING_TOKEN_MSG =
-    isTokenGatedProduct && publicKey && !productIsUnlocked;
+  const SHOW_MISSING_TOKEN_MSG = isTokenGated && publicKey && !isUnlocked;
 
   const getNftMetadata = useCallback(async () => {
     setTokenGatedNftDataIsLoading(true);
@@ -260,8 +276,6 @@ export const ProductPage = () => {
     getNftMetadata();
   }, [getNftMetadata]);
 
-  console.log('tokenGatedNftData:', tokenGatedNftData);
-
   return (
     <ProductWrapper>
       <ImgWrapper>
@@ -274,7 +288,7 @@ export const ProductPage = () => {
         )}
 
         <BadgeWrapper>
-          {isTokenGatedProduct && <TokenGatedBadge />}
+          {isTokenGated && <TokenGatedBadge isUnlocked={true} />}
 
           {isOutOfStock && <OutOfStockBadge />}
         </BadgeWrapper>
@@ -325,7 +339,7 @@ export const ProductPage = () => {
       {!isOutOfStock && (
         <AddToCartWrapper>
           <InnerAddToCartWrapper>
-            {(!isTokenGatedProduct || productIsUnlocked) && (
+            {(!isTokenGated || isUnlocked) && (
               <>
                 <NumberInput value={qty} onChange={setQty} max={maxQuantity} />
 

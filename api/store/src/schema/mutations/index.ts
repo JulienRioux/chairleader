@@ -43,6 +43,6 @@ export const mutations = `
       """
       Update Nft by ID
       """
-      updateNft(id: String!, productsUnlocked: [String]): Nft
+      updateNft(id: String!, productsUnlocked: [String], isArchived: Boolean): Nft
   }
 `;

@@ -6,6 +6,7 @@ export interface INft {
   storeId: string;
   nftAddress: string;
   productsUnlocked: string[];
+  isArchived: boolean;
 }
 
 const NftSchema = new Schema<INft>({
@@ -13,6 +14,10 @@ const NftSchema = new Schema<INft>({
   storeId: String,
   nftAddress: String,
   productsUnlocked: [String],
+  isArchived: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 export const NftModel = model<INft>('Nft', NftSchema);

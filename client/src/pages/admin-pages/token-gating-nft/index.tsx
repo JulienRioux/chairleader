@@ -7,6 +7,13 @@ import {
   SystemProgram,
   Transaction,
 } from '@solana/web3.js';
+import BigNumber from 'bignumber.js';
+import {
+  getAssociatedTokenAddress,
+  getMint,
+  getAccount,
+  createTransferCheckedInstruction,
+} from '@solana/spl-token';
 import {
   Button,
   Icon,
@@ -32,6 +39,8 @@ import {
   getNftMetadata,
   Logger,
   routes,
+  DEVNET_DUMMY_MINT,
+  createSPLTokenInstruction,
 } from 'utils';
 import { ExclusivitiesSelection } from '../exclusitivies-selection';
 import { DetailItem } from '../invoice-page';
@@ -86,6 +95,58 @@ const DealItem = ({
       </DealPrice>
     </DealItemButton>
   );
+};
+
+const useSplTokenPayent = () => {
+  const { sendTransaction, publicKey } = useWallet();
+  const { connection } = useConnection();
+
+  const makePayment = useCallback(
+    async (amount: number) => {
+      try {
+        // Creating a new transaction
+        const transaction = new Transaction();
+
+        // Setting up the differents recipient amount
+        const totalAmount = Number(amount);
+
+        const payeePublicKey =
+          process.env.REACT_APP_TRANSACTION_PAYEE_PUBLIC_KEY;
+        if (!payeePublicKey || !publicKey) {
+          return;
+        }
+
+        const paymentInstructions = await createSPLTokenInstruction({
+          recipient: new PublicKey(payeePublicKey),
+          amount: new BigNumber(totalAmount),
+          splToken: DEVNET_DUMMY_MINT,
+          sender: publicKey,
+          connection,
+        });
+
+        // Adding the payment instruction to the current transaction
+        transaction.add(paymentInstructions);
+
+        // Getting the latest block hash
+        const blockhash = (await connection.getLatestBlockhash('finalized'))
+          .blockhash;
+        transaction.recentBlockhash = blockhash;
+
+        // Setting up the feePayer
+        transaction.feePayer = publicKey;
+
+        await sendTransaction(transaction, connection);
+      } catch (err) {
+        // err handle
+        Logger.error(err);
+        message.error();
+        throw err;
+      }
+    },
+    [connection, publicKey, sendTransaction]
+  );
+
+  return { makePayment };
 };
 
 const usePayment = () => {
@@ -209,9 +270,14 @@ export const TokenGatingNft = ({
     refreshEditionsPrintedList,
   } = usePrintedNftsEditions(address);
 
-  const { refreshUserNfts } = useNft();
+  const {
+    refreshUserNfts,
+    refreshProductLockedMap,
+    updateNft,
+    updateNftIsLoading,
+  } = useNft();
 
-  const { makePayment } = usePayment();
+  const { makePayment } = useSplTokenPayent();
 
   const [image, setImage] = useState('');
   const [name, setName] = useState('');
@@ -220,6 +286,7 @@ export const TokenGatingNft = ({
   const [currentSupply, setCurrentSupply] = useState<any>();
   const [maxSupply, setMaxSupply] = useState<any>();
   const [externalUrl, setExternalUrl] = useState('');
+  const [price, setPrice] = useState('');
 
   const [printNftIsLoading, setPrintNftIsLoading] = useState(false);
 
@@ -235,6 +302,7 @@ export const TokenGatingNft = ({
       setDescription(nft?.json?.description ?? '');
       setRoyalties(Number(nft?.sellerFeeBasisPoints) / 100 ?? null);
       setExternalUrl(nft?.json?.external_url ?? '');
+      setPrice(nft?.json?.initialPrice ?? '');
 
       if (nft.edition.isOriginal) {
         setMaxSupply(nft.edition.maxSupply);
@@ -258,29 +326,52 @@ export const TokenGatingNft = ({
       return;
     }
 
-    await makePayment(0.005);
+    try {
+      await makePayment(Number(price));
 
-    message.success('Payment succeed.');
+      message.success('Payment succeed.');
 
-    await printNewNftEditionWithoutFees({
-      originalNftAddress: address,
-      newOwnerPublicKey,
-    });
+      await printNewNftEditionWithoutFees({
+        originalNftAddress: address,
+        newOwnerPublicKey,
+      });
 
-    setPrintNftIsLoading(false);
+      setPrintNftIsLoading(false);
 
-    loadNftData();
-    refreshEditionsPrintedList();
-    refreshUserNfts();
+      loadNftData();
+      refreshEditionsPrintedList();
+      refreshUserNfts();
 
-    message.success('NFT generated successfully.');
+      refreshProductLockedMap();
+
+      message.success('NFT generated successfully.');
+    } catch (err) {
+      Logger.error(err);
+      setPrintNftIsLoading(false);
+    }
   }, [
     address,
-    loadNftData,
-    makePayment,
-    refreshEditionsPrintedList,
     metaplex,
+    makePayment,
+    price,
+    loadNftData,
+    refreshEditionsPrintedList,
     refreshUserNfts,
+    refreshProductLockedMap,
+  ]);
+
+  const handleIsArchiveChange = useCallback(async () => {
+    await updateNft({
+      nftId: currentNft?.findNftByAddress?._id,
+      isArchived: !currentNft?.findNftByAddress?.isArchived,
+    });
+    await refetchNftByAddress();
+    message.success('Archive status changed.');
+  }, [
+    currentNft?.findNftByAddress?._id,
+    currentNft?.findNftByAddress?.isArchived,
+    refetchNftByAddress,
+    updateNft,
   ]);
 
   useEffect(() => {
@@ -310,6 +401,8 @@ export const TokenGatingNft = ({
     : editionsPrintedList.slice(0, 5);
 
   const hasMorePrintedNfts = editionsPrintedList.length > 5;
+
+  const nftIsArchived = currentNft?.findNftByAddress?.isArchived;
 
   return (
     <div>
@@ -343,6 +436,8 @@ export const TokenGatingNft = ({
           </DetailItem>
 
           <DetailItem label="Royalty">{royalties}%</DetailItem>
+
+          <DetailItem label="Price">{price} USDC</DetailItem>
 
           {isAdminApp && (
             <UnstyledExternalLink
@@ -410,18 +505,19 @@ export const TokenGatingNft = ({
                   {printedAddresses.length === 0 && (
                     <p>No printed token yet.</p>
                   )}
-
-                  <div style={{ marginTop: '20px' }}>
-                    <Button
-                      fullWidth
-                      danger
-                      onClick={() => alert('TODO: Archive NFT!')}
-                    >
-                      Archive NFT
-                    </Button>
-                  </div>
                 </>
               )}
+
+              <div style={{ marginTop: '20px' }}>
+                <Button
+                  fullWidth
+                  danger
+                  onClick={handleIsArchiveChange}
+                  isLoading={updateNftIsLoading}
+                >
+                  {nftIsArchived ? 'Unarchive NFT' : 'Archive NFT'}
+                </Button>
+              </div>
             </>
           )}
         </DetailsWrapper>

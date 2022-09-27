@@ -272,6 +272,7 @@ const NFT = gql`
     nftAddress
     productsUnlocked
     _id
+    isArchived
   }
 `;
 
@@ -294,7 +295,7 @@ export const FIND_NFT_BY_STORE_ID = gql`
 `;
 
 export const UPDATE_NFT = gql`
-  mutation UpdateNft($id: String!, $productsUnlocked: [String]) {
-    updateNft(id: $id, productsUnlocked: $productsUnlocked) ${NFT}
+  mutation UpdateNft($id: String!, $productsUnlocked: [String], $isArchived: Boolean) {
+    updateNft(id: $id, productsUnlocked: $productsUnlocked, isArchived: $isArchived) ${NFT}
   }
 `;
