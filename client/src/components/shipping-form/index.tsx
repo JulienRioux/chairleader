@@ -1,5 +1,8 @@
+import { useWallet } from '@solana/wallet-adapter-react';
 import { Button, Icon, Input, message } from 'components-library';
+import { ConnectWalletBtn } from 'components/connect-wallet-btn';
 import { useCart } from 'hooks/cart';
+import { useWalletModal } from 'hooks/wallet-modal';
 import { useSplTokenPayent } from 'pages/admin-pages/token-gating-nft';
 import { ChangeEvent, FormEvent, useCallback, useState } from 'react';
 import styled from 'styled-components';
@@ -14,14 +17,52 @@ const IconWrapper = styled.div`
   right: 8px;
 `;
 
+const USE_DEV_SHIPPING_FORM = true;
+
+const shippingFormFilled = {
+  email: 'julien.rioux@toptal.com',
+  name: 'John Doe',
+  country: 'Canada',
+  address: '11042 Sainte-Gertrude',
+  city: 'Montreal',
+  state: 'Quebec',
+  postalCode: 'H1G5N9',
+};
+
+const shippingFormEmpty = {
+  email: '',
+  name: '',
+  country: '',
+  address: '',
+  city: '',
+  state: '',
+  postalCode: '',
+};
+
+const {
+  email: emailInitialState,
+  name: nameInitialState,
+  country: countryInitialState,
+  address: addressInitialState,
+  city: cityInitialState,
+  state: stateInitialState,
+  postalCode: postalCodeInitialState,
+} = USE_DEV_SHIPPING_FORM ? shippingFormFilled : shippingFormEmpty;
+
 export const ShippingForm = () => {
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [country, setCountry] = useState('');
-  const [address, setAddress] = useState('');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
-  const [postalCode, setPostalCode] = useState('');
+  const [email, setEmail] = useState(emailInitialState);
+  const [name, setName] = useState(nameInitialState);
+  const [country, setCountry] = useState(countryInitialState);
+  const [address, setAddress] = useState(addressInitialState);
+  const [city, setCity] = useState(cityInitialState);
+  const [state, setState] = useState(stateInitialState);
+  const [postalCode, setPostalCode] = useState(postalCodeInitialState);
+
+  const [paymentIsLoading, setPaymentIsLoading] = useState(false);
+
+  const { openConnectModal } = useWalletModal();
+
+  const { publicKey } = useWallet();
 
   const { makePayment } = useSplTokenPayent();
 
@@ -61,15 +102,6 @@ export const ShippingForm = () => {
   const handlePay = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
-
-      try {
-        console.log('Payment started');
-        await makePayment(Number(totalWithSaleTax));
-        message.success('Payment succeed');
-      } catch (err) {
-        Logger.error(err);
-      }
-
       console.log('Shipping information =>>>', {
         email,
         name,
@@ -79,7 +111,16 @@ export const ShippingForm = () => {
         state,
         postalCode,
       });
-      console.log('Payment processing...');
+
+      try {
+        setPaymentIsLoading(true);
+        console.log('Payment started');
+        await makePayment(Number(totalWithSaleTax));
+        message.success('Payment succeed');
+      } catch (err) {
+        Logger.error(err);
+      }
+      setPaymentIsLoading(false);
     },
     [
       address,
@@ -159,12 +200,18 @@ export const ShippingForm = () => {
       />
 
       <div style={{ margin: '12px 0' }}>
-        <PayButton fullWidth type="submit">
-          <span>Pay {totalWithSaleTax} USDC</span>
-          <IconWrapper>
-            <Icon name="lock" />
-          </IconWrapper>
-        </PayButton>
+        {publicKey ? (
+          <PayButton fullWidth type="submit" isLoading={paymentIsLoading}>
+            <span>Pay {totalWithSaleTax} USDC</span>
+            <IconWrapper>
+              <Icon name="lock" />
+            </IconWrapper>
+          </PayButton>
+        ) : (
+          <Button type="button" onClick={openConnectModal} fullWidth>
+            Connect wallet
+          </Button>
+        )}
       </div>
     </form>
   );

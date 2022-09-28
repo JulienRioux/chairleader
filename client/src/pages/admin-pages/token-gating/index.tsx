@@ -23,6 +23,7 @@ import { PublicKey } from '@solana/web3.js';
 import { useMutation } from '@apollo/client';
 import { ADD_NFT } from 'queries';
 import { useNft } from 'hooks/nft';
+import { SELLING_SERVICE_FEE } from 'configs';
 
 const ImageWrapper = styled.div`
   margin: 8px 0 24px;
@@ -234,9 +235,6 @@ export const TokenGating = () => {
   if (imageFile) {
     currentImageSrc = URL.createObjectURL(imageFile);
   }
-
-  const SELLING_SERVICE_FEE =
-    Number(process.env.REACT_APP_SELLING_NFT_SERVICE_FEE ?? 0) * 100;
 
   const REVENUE_AFTER_FEES =
     (1 - Number(process.env.REACT_APP_SELLING_NFT_SERVICE_FEE ?? 0)) *

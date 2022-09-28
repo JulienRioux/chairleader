@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import {
@@ -29,9 +29,9 @@ import { useMetaplex } from 'hooks/metaplex';
 import { useNft } from 'hooks/nft';
 import { usePrintedNftsEditions } from 'hooks/printed-nfts-editions';
 import { useStore } from 'hooks/store';
-import { FIND_NFT_BY_ADDRESS } from 'queries';
+import { FIND_NFT_BY_ADDRESS, SAVE_TRANSACTION_INVOICE } from 'queries';
 import { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   CLUSTER_ENV,
   formatShortAddress,
@@ -65,6 +65,8 @@ import {
   NftImg,
   RightWrapper,
 } from './token-gating.nft.styles';
+import { useCart } from 'hooks/cart';
+import { SELLING_SERVICE_FEE } from 'configs';
 
 const DealItem = ({
   productId,
@@ -100,6 +102,15 @@ const DealItem = ({
 export const useSplTokenPayent = () => {
   const { sendTransaction, publicKey } = useWallet();
   const { connection } = useConnection();
+  const navigate = useNavigate();
+
+  const { getCartSummaryForInvoice, resetCart } = useCart();
+
+  const [saveTransactionInvoice] = useMutation(SAVE_TRANSACTION_INVOICE);
+
+  const { currency, network } = useCurrency();
+
+  const { store, refetchInventory } = useStore();
 
   const makePayment = useCallback(
     async (amount: number) => {
@@ -112,6 +123,7 @@ export const useSplTokenPayent = () => {
 
         const payeePublicKey =
           process.env.REACT_APP_TRANSACTION_PAYEE_PUBLIC_KEY;
+
         if (!payeePublicKey || !publicKey) {
           return;
         }
@@ -128,14 +140,49 @@ export const useSplTokenPayent = () => {
         transaction.add(paymentInstructions);
 
         // Getting the latest block hash
-        const blockhash = (await connection.getLatestBlockhash('finalized'))
-          .blockhash;
+        const {
+          context: { slot: minContextSlot },
+          value: { blockhash, lastValidBlockHeight },
+        } = await connection.getLatestBlockhashAndContext();
+
         transaction.recentBlockhash = blockhash;
 
         // Setting up the feePayer
         transaction.feePayer = publicKey;
 
-        await sendTransaction(transaction, connection);
+        const signature = await sendTransaction(transaction, connection, {
+          minContextSlot,
+        });
+
+        await connection.confirmTransaction({
+          blockhash,
+          lastValidBlockHeight,
+          signature,
+        });
+
+        // Saving the invoice in out DB
+        const cartSummary = getCartSummaryForInvoice();
+
+        const newInvoice = await saveTransactionInvoice({
+          variables: {
+            ...cartSummary,
+            signature,
+            customerWalletAddress: publicKey.toString(),
+            storeId: store?._id,
+            currency,
+            network,
+            serviceFees: SELLING_SERVICE_FEE,
+          },
+        });
+
+        // Resetting the cart items and redirect to the confirmation page
+        resetCart();
+        // Make sure we're updating the qty after the purchase
+        refetchInventory();
+
+        navigate(
+          `${routes.store.confirmation}/${newInvoice?.data?.saveTransactionInvoice?._id}/tx/${newInvoice?.data?.saveTransactionInvoice?.signature}`
+        );
       } catch (err) {
         // err handle
         Logger.error(err);
@@ -143,7 +190,19 @@ export const useSplTokenPayent = () => {
         throw err;
       }
     },
-    [connection, publicKey, sendTransaction]
+    [
+      connection,
+      currency,
+      getCartSummaryForInvoice,
+      navigate,
+      network,
+      publicKey,
+      refetchInventory,
+      resetCart,
+      saveTransactionInvoice,
+      sendTransaction,
+      store?._id,
+    ]
   );
 
   return { makePayment };

@@ -216,7 +216,7 @@ export const ConnectedWalletModalContent = ({
   );
 };
 
-export const ConnectWalletBtn = () => {
+export const ConnectWalletBtn = ({ fullWidth = false }) => {
   const { publicKey, connecting } = useWallet();
 
   const { openConnectModal, openConnectedModal } = useWalletModal();
@@ -226,7 +226,12 @@ export const ConnectWalletBtn = () => {
   return (
     <ConnectWalletBtnWrapper>
       {!walletAddress && (
-        <Button isLoading={connecting} secondary onClick={openConnectModal}>
+        <Button
+          fullWidth={fullWidth}
+          isLoading={connecting}
+          secondary
+          onClick={openConnectModal}
+        >
           Connect wallet
         </Button>
       )}
