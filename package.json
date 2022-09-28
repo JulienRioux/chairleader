@@ -12,12 +12,24 @@
   "author": "Julien Rioux",
   "license": "ISC",
   "devDependencies": {
+    "@types/bs58": "^4.0.1",
     "@types/inquirer": "^8.2.1",
     "concurrently": "^7.3.0",
     "inquirer": "^9.0.2"
   },
   "dependencies": {
     "@solana/spl-token": "^0.2.0",
+    "@solana/wallet-adapter-base": "^0.9.17",
+    "bs58": "^5.0.0",
     "shelljs": "^0.8.5"
+  },
+  "browserslist": {
+    "production": [
+      "chrome >= 67",
+      "edge >= 79",
+      "firefox >= 68",
+      "opera >= 54",
+      "safari >= 14"
+    ]
   }
 }

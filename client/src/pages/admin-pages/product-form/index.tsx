@@ -9,10 +9,14 @@ import {
   VisuallyHiddenInput,
   message,
   Loader,
+  UnstyledLink,
 } from 'components-library';
+import { Label } from 'components-library/input/input.styles';
+import { TokenGatedBadge } from 'components/product-preview';
 import { USE_CATEGORY } from 'configs';
 import { useAuth } from 'hooks/auth';
 import { useInventory } from 'hooks/inventory';
+import { useNft } from 'hooks/nft';
 import { useScrollTop } from 'hooks/scroll-top';
 import {
   ADD_PRODUCT,
@@ -28,9 +32,9 @@ import {
   useEffect,
   useRef,
 } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { resizeFileImg, routes } from 'utils';
+import { formatShortAddress, resizeFileImg, routes } from 'utils';
 
 const FormWrapper = styled.form`
   max-width: ${(p) => p.theme.layout.mediumWidth};
@@ -43,7 +47,7 @@ const ImgWrapper = styled(UnstyledButton)`
   object-fit: cover;
   aspect-ratio: ${(p) => p.theme.products.image.aspectRatio};
   border-radius: ${(p) => p.theme.borderRadius.default};
-  border: 2px solid ${(p) => p.theme.color.text};
+  border: ${(p) => p.theme.borderWidth} solid ${(p) => p.theme.color.text};
   font-size: 100px;
   display: flex;
   align-items: center;
@@ -67,10 +71,18 @@ const AddImgBtn = styled.div`
   right: 8px;
   padding: 8px 12px;
   border-radius: ${(p) => p.theme.borderRadius.default};
-  border: 2px solid ${(p) => p.theme.color.lightGrey};
+  border: ${(p) => p.theme.borderWidth} solid ${(p) => p.theme.color.lightGrey};
   color: ${(p) => p.theme.color.primary};
   background: ${(p) => p.theme.color.background};
   font-size: 16px;
+  font-weight: bold;
+`;
+
+const TokenGatingMasterLink = styled(UnstyledLink)`
+  margin: 8px 12px 8px 0;
+  padding: 8px;
+  border: ${(p) => p.theme.borderWidth} solid;
+  border-radius: ${(p) => p.theme.borderRadius.input};
   font-weight: bold;
 `;
 
@@ -110,6 +122,8 @@ export const ProductForm = () => {
   const [totalSupply, setTotalSupply] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [resizeImgIsLoading, setResizeImgIsLoading] = useState(false);
+
+  const { mapProductLockedToMaster } = useNft();
 
   const [deleteProductById, { loading: deleteProductIsLoading }] =
     useMutation(DELETE_PRODUCT_BY_ID);
@@ -269,6 +283,10 @@ export const ProductForm = () => {
     return <Loader />;
   }
 
+  const masterNftLocks = mapProductLockedToMaster[productId ?? ''];
+
+  const isTokenGatedProduct = !!masterNftLocks;
+
   return (
     <FormWrapper onSubmit={handleSubmit}>
       <ImgWrapper type="button" onClick={handleUploadFileClick}>
@@ -289,6 +307,8 @@ export const ProductForm = () => {
             </AddImgBtn>
           </>
         )}
+
+        {isTokenGatedProduct && <TokenGatedBadge isPositionAbsolute />}
       </ImgWrapper>
 
       <VisuallyHiddenInput
@@ -351,6 +371,23 @@ export const ProductForm = () => {
         name="description"
         rows={8}
       />
+
+      {isTokenGatedProduct && (
+        <>
+          <Label>NFTs that unlocks this product:</Label>
+
+          <div style={{ display: 'flex' }}>
+            {masterNftLocks?.map((masterAddress: string) => (
+              <TokenGatingMasterLink
+                key={masterAddress}
+                to={`${routes.admin.tokenGating}/${masterAddress}`}
+              >
+                {formatShortAddress(masterAddress)}
+              </TokenGatingMasterLink>
+            ))}
+          </div>
+        </>
+      )}
 
       <FormBtnWrapper>
         {isEditting && (

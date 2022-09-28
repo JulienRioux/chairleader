@@ -60,5 +60,13 @@ export const schemaTypes = `
     products: [Product]
   }
 
-    scalar Upload
+  type Nft {
+    _id: String
+    storeId: String
+    nftAddress: String
+    productsUnlocked: [String]
+    isArchived: Boolean
+  }
+
+  scalar Upload
 `;

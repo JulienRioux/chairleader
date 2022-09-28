@@ -4,7 +4,7 @@ import styled from 'styled-components';
 export const NumberInputWrapper = styled.div``;
 
 export const NumberBtn = styled(UnstyledButton)`
-  border: 2px solid ${(p) => p.theme.color.primary};
+  border: ${(p) => p.theme.borderWidth} solid ${(p) => p.theme.color.primary};
   border-radius: 50%;
   padding: 4px;
   color: ${(p) => p.theme.color.primary};

@@ -1,6 +1,7 @@
 import { UnstyledLink, Icon } from 'components-library';
 import { useAuth } from 'hooks/auth';
 import { useCurrency } from 'hooks/currency';
+import { useNft } from 'hooks/nft';
 import styled, { css } from 'styled-components';
 import { routes } from 'utils';
 
@@ -16,7 +17,7 @@ const ProductWrapper = styled(UnstyledLink)<{ $isOutOfStock: boolean }>`
 `;
 
 const ProductTitle = styled.h3`
-  margin: 12px 0;
+  margin: 8px 0;
   font-size: 20px;
 `;
 
@@ -26,13 +27,11 @@ const Price = styled.div`
 `;
 
 const OutOfStockBadgeWrapper = styled.div`
-  position: absolute;
-  top: 8px;
-  right: 8px;
   background: ${(p) => p.theme.color.background};
   border: 1px solid;
   padding: 4px 8px;
   border-radius: ${(p) => p.theme.borderRadius.default};
+  text-align: center;
 `;
 const sharedStyles = css`
   width: 100%;
@@ -61,6 +60,60 @@ export const OutOfStockBadge = () => (
   <OutOfStockBadgeWrapper>Out of stock</OutOfStockBadgeWrapper>
 );
 
+const TokenGatedBadgeWrapper = styled.div<{ isPositionAbsolute?: boolean }>`
+  background: ${(p) => p.theme.color.background};
+  border: 1px solid;
+  padding: 4px 8px;
+  border-radius: ${(p) => p.theme.borderRadius.default};
+  display: flex;
+  color: ${(p) => p.theme.color.primary};
+  margin-bottom: 8px;
+  text-align: center;
+  font-size: 16px;
+
+  ${(p) =>
+    p.isPositionAbsolute &&
+    css`
+      position: absolute;
+      top: 8px;
+      right: 8px;
+    `}
+`;
+
+const TokenGatedText = styled.div`
+  margin-left: 4px;
+`;
+
+export const BadgeWrapper = styled.div`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const TokenGatedBadge = ({
+  isPositionAbsolute,
+  isUnlocked,
+}: {
+  isPositionAbsolute?: boolean;
+  isUnlocked?: boolean;
+}) => (
+  <TokenGatedBadgeWrapper isPositionAbsolute={isPositionAbsolute}>
+    {isUnlocked ? (
+      <>
+        <Icon name="lock_open" />
+        <TokenGatedText>Exclusivity</TokenGatedText>
+      </>
+    ) : (
+      <>
+        <Icon name="lock" />
+        <TokenGatedText>Token gated</TokenGatedText>
+      </>
+    )}
+  </TokenGatedBadgeWrapper>
+);
+
 interface ProductPreviewProps {
   image: string;
   title: string;
@@ -69,6 +122,27 @@ interface ProductPreviewProps {
   isPos?: boolean;
   totalSupply?: number;
 }
+
+export const ProductPreviewItem = ({
+  image,
+  title,
+  priceDisplay,
+  currency,
+}: any) => (
+  <>
+    {image ? (
+      <Img src={image} />
+    ) : (
+      <NoImageProduct>
+        <Icon name="image" />
+      </NoImageProduct>
+    )}
+    <ProductTitle>{title}</ProductTitle>
+    <Price>
+      {priceDisplay} {currency}
+    </Price>
+  </>
+);
 
 export const ProductPreview = ({
   image,
@@ -80,6 +154,7 @@ export const ProductPreview = ({
 }: ProductPreviewProps) => {
   const { user, currencyDecimals } = useAuth();
   const { currency, decimals } = useCurrency();
+  const { checkIfTokenGatedProduct } = useNft();
 
   const isOutOfStock = totalSupply === 0;
 
@@ -87,24 +162,25 @@ export const ProductPreview = ({
     Number(price)?.toFixed(isPos ? decimals : currencyDecimals)
   );
 
+  const isLockedProduct = checkIfTokenGatedProduct(id);
+
   return (
     <ProductWrapper
       to={`${isPos ? routes.store.inventory : routes.admin.inventory}/${id}`}
       $isOutOfStock={isOutOfStock}
     >
-      {image ? (
-        <Img src={image} />
-      ) : (
-        <NoImageProduct>
-          <Icon name="image" />
-        </NoImageProduct>
-      )}
-      <ProductTitle>{title}</ProductTitle>
-      <Price>
-        {priceDisplay} {isPos ? currency : user?.currency}
-      </Price>
+      <ProductPreviewItem
+        image={image}
+        title={title}
+        priceDisplay={priceDisplay}
+        currency={isPos ? currency : user?.currency}
+      />
 
-      {isOutOfStock && <OutOfStockBadge />}
+      <BadgeWrapper>
+        {isLockedProduct && <TokenGatedBadge />}
+
+        {isOutOfStock && <OutOfStockBadge />}
+      </BadgeWrapper>
     </ProductWrapper>
   );
 };

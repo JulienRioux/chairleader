@@ -7,12 +7,13 @@ const ButtonWrapper = styled.button<{
   secondary?: boolean;
   fullWidth?: boolean;
   isIconBtn?: boolean;
+  danger?: boolean;
 }>`
   position: relative;
   align-items: center;
   border-radius: ${(p) => p.theme.borderRadius.default};
   border-style: solid;
-  border-width: 2px;
+  border-width: ${(p) => p.theme.borderWidth};
   border-color: ${(p) => p.theme.color.primary};
   cursor: pointer;
   display: inline-flex;
@@ -45,14 +46,26 @@ const ButtonWrapper = styled.button<{
       background-color: ${(p) => p.theme.color.background};
     `}
 
+  ${(p) =>
+    p.danger &&
+    css`
+      border-color: ${(p) => p.theme.color.danger}00;
+      color: ${(p) => p.theme.color.danger};
+      background-color: ${(p) => p.theme.color.danger}22;
+    `}
+
   ${(p) => p.fullWidth && 'width: 100%;'}
 
+  :active {
+    transform: translateY(3px);
+  }
 
   :disabled {
     background-color: ${(p) => p.theme.color.text}55;
     border-color: ${(p) => p.theme.color.text}22;
     color: ${(p) => p.theme.color.buttonText};
     cursor: not-allowed;
+    transform: none;
   }
 `;
 
@@ -116,6 +129,7 @@ export const Button = ({
   to,
   icon,
   fullWidth,
+  danger,
   ...props
 }: any) => {
   const button = (
@@ -123,12 +137,15 @@ export const Button = ({
       secondary={secondary}
       isIconBtn={!children && icon}
       fullWidth={fullWidth}
+      danger={danger}
       {...props}
     >
       {isLoading && <BtnLoader />}
 
       <ChildWrapper $isLoading={isLoading}>
-        {icon && <Icon name={icon} />}
+        {icon && (
+          <Icon style={{ marginRight: children ? '8px' : '0' }} name={icon} />
+        )}
         {children}
       </ChildWrapper>
     </ButtonWrapper>

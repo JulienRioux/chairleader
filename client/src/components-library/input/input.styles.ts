@@ -33,7 +33,6 @@ export const InputWrapper = styled.input`
 `;
 
 export const Label = styled.label`
-  font-weight: bold;
   color: ${(p) => p.theme.color.text};
   display: inline-block;
   margin: 8px 0 4px 0;

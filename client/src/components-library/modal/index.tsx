@@ -29,6 +29,7 @@ const ModalComponent = ({
   isClosing,
   children,
   title,
+  isMaxWidth,
 }: IModalProps) => {
   const handleClose = useCallback(() => {
     onClose();
@@ -48,7 +49,7 @@ const ModalComponent = ({
     <ModalWrapper>
       <ModalWrapperBackground onClick={handleClose} isClosing={isClosing} />
 
-      <ModalContainer isClosing={isClosing}>
+      <ModalContainer isClosing={isClosing} isMaxWidth={isMaxWidth}>
         <ModalHeader>
           <ModalTitle>{title}</ModalTitle>
 
@@ -98,14 +99,16 @@ export const useModal = (useModalPropsObj?: IUseModal) => {
     title?: string;
     hasTitleBorder?: boolean;
     hasTitleBottomMargin?: boolean;
+    isMaxWidth?: boolean;
   }> = useCallback(
-    ({ children, title }) => (
+    ({ children, title, isMaxWidth }) => (
       <>
         {isOpen && (
           <ModalComponent
             title={title}
             onClose={closeModal}
             isClosing={isClosing}
+            isMaxWidth={isMaxWidth}
           >
             {children}
           </ModalComponent>

@@ -5,6 +5,7 @@ export interface IModalProps {
   isClosing: boolean;
   children?: ReactNode;
   title?: ReactNode;
+  isMaxWidth?: boolean;
 }
 
 export interface IFullPageImage {

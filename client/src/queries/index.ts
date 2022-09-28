@@ -265,3 +265,37 @@ export const CHECK_IF_SUBODMAIN_IS_AVAILABLE = gql`
     checkIfSubdomainIsAvailable(subdomain: $subdomain)
   }
 `;
+
+const NFT = gql`
+  {
+    storeId
+    nftAddress
+    productsUnlocked
+    _id
+    isArchived
+  }
+`;
+
+export const ADD_NFT = gql`
+  mutation AddNft($nftAddress: String!) {
+    addNft(nftAddress: $nftAddress) ${NFT}
+  }
+`;
+
+export const FIND_NFT_BY_ADDRESS = gql`
+  query FindNftByAddress($nftAddress: String!) {
+    findNftByAddress(nftAddress: $nftAddress) ${NFT}
+  }
+`;
+
+export const FIND_NFT_BY_STORE_ID = gql`
+  query FindNftsByStoreId {
+    findNftsByStoreId ${NFT}
+  }
+`;
+
+export const UPDATE_NFT = gql`
+  mutation UpdateNft($id: String!, $productsUnlocked: [String], $isArchived: Boolean) {
+    updateNft(id: $id, productsUnlocked: $productsUnlocked, isArchived: $isArchived) ${NFT}
+  }
+`;

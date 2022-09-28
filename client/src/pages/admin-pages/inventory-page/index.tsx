@@ -1,8 +1,10 @@
-import { Button, Input, Loader, useModal, Textarea } from 'components-library';
+import { Button, Input, Loader, useModal } from 'components-library';
 import { ProductPreview } from 'components/product-preview';
+import { IS_POINT_OF_SALE } from 'configs';
 import { IInventoryItem, useCart } from 'hooks/cart';
 import { useCurrency } from 'hooks/currency';
 import { useInventory } from 'hooks/inventory';
+import { useMediaQuery } from 'hooks/media-query';
 import { useStore } from 'hooks/store';
 import {
   useState,
@@ -12,6 +14,7 @@ import {
   useEffect,
 } from 'react';
 import styled, { css } from 'styled-components';
+import { routes } from 'utils';
 
 const PosStyles = css`
   grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -47,11 +50,15 @@ const AdminStyles = css`
 
 export const ProductGrid = styled.div<{ isPos?: boolean }>`
   display: grid;
-  grid-gap: 40px 20px;
-  max-width: 1600px;
+  grid-gap: 20px;
   margin: 0 auto;
 
   ${(p) => (p.isPos ? PosStyles : AdminStyles)}
+`;
+
+const TopBtnWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
 
 const AddCustomProductBtn = styled(Button)`
@@ -63,6 +70,7 @@ const Form = styled.form`
   align-items: flex-start;
   justify-content: flex-end;
   margin-bottom: 20px;
+  width: -webkit-fill-available;
 
   button {
     margin-left: 8px;
@@ -72,9 +80,14 @@ const Form = styled.form`
     max-width: 400px;
   }
 `;
+const InventoryPageWrapper = styled.div`
+  max-width: 1600px;
+  margin: 0 auto;
+`;
 
 export const InventoryPage = () => {
   const { inventory, isLoading } = useInventory();
+  const isMobileView = useMediaQuery('(max-width: 800px)');
 
   const [searchString, setSearchString] = useState('');
   const [result, setResult] = useState<IInventoryItem[]>(inventory);
@@ -103,15 +116,24 @@ export const InventoryPage = () => {
   }
 
   return (
-    <div>
-      <Form onSubmit={handleSubmit}>
-        <Input
-          value={searchString}
-          onChange={handleChange}
-          placeholder="Search for item name"
-        />
-        <Button icon="search" secondary />
-      </Form>
+    <InventoryPageWrapper>
+      <TopBtnWrapper>
+        <Button
+          to={routes.admin.newProduct}
+          icon={isMobileView ? 'add' : undefined}
+          style={{ marginRight: '8px' }}
+        >
+          {isMobileView ? '' : 'Add product'}
+        </Button>
+        <Form onSubmit={handleSubmit}>
+          <Input
+            value={searchString}
+            onChange={handleChange}
+            placeholder="Search for item name"
+          />
+          <Button icon="search" secondary />
+        </Form>
+      </TopBtnWrapper>
 
       <ProductGrid>
         {result?.map(({ image, title, price, _id }) => (
@@ -130,7 +152,7 @@ export const InventoryPage = () => {
           <p>No search result.</p>
         )}
       </ProductGrid>
-    </div>
+    </InventoryPageWrapper>
   );
 };
 
@@ -206,10 +228,11 @@ export const StorePage = () => {
           />
         ))}
 
-        <AddCustomProductBtn onClick={openModal} secondary>
-          Add custom product
-        </AddCustomProductBtn>
-
+        {IS_POINT_OF_SALE && (
+          <AddCustomProductBtn onClick={openModal} secondary>
+            Add custom product
+          </AddCustomProductBtn>
+        )}
         {!inventory?.length && <p>No product yet.</p>}
 
         <Modal title="New custom product">

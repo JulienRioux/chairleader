@@ -48,6 +48,7 @@ export const askIsRunningLocalApi = () =>
       name: 'isRunningLocalApi',
       type: 'confirm',
       message: 'Do you want to run the API locally?',
+      default: false,
     },
   ]);
 

@@ -21,6 +21,7 @@ export const routes = {
     newProduct: '/admin/new-product',
     newCategory: '/admin/new-category',
     dashboard: '/admin/dashboard',
+    tokenGating: '/admin/token-gating',
   },
 
   store: {
@@ -30,5 +31,7 @@ export const routes = {
     cart: '/cart',
     payment: '/payment',
     confirmation: '/confirmation',
+    nfts: '/nfts',
+    shipping: '/shipping',
   },
 };

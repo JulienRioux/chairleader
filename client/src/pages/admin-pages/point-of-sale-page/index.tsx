@@ -29,12 +29,16 @@ const CopyLinkBtn = styled(UnstyledButton)`
   padding: 2px 8px;
 `;
 
-export const PointOfSalePage = () => {
+export const useStoreLink = () => {
   const { user } = useAuth();
 
   const { protocol, host } = window.location;
 
-  const storeLink = `${protocol}//${user?.subDomain}.${host}`;
+  return `${protocol}//${user?.subDomain}.${host}`;
+};
+
+export const PointOfSalePage = () => {
+  const storeLink = useStoreLink();
 
   const handleCopyLink = useCallback(() => {
     navigator.clipboard.writeText(storeLink);

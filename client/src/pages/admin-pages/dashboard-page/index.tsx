@@ -53,7 +53,7 @@ export const DashboardPage = () => {
     typeof amount === 'number' ? Number(amount?.toFixed(decimals)) : 0;
 
   data?.getInvoicesByStoreId?.forEach((invoice: any) => {
-    if (invoice.network === network && invoice.currency === currency) {
+    if (invoice.network === network && invoice?.currency === currency) {
       totalWithSaleTax += invoice.totalWithSaleTax;
       totalTransactions++;
       totalSaleTax += invoice.totalSaleTax;

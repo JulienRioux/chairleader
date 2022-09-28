@@ -1,9 +1,11 @@
+import { DefaultTheme } from 'styled-components';
+
 const primitives = {
   white: '#ffffff',
   black: '#0e0e0e',
 };
 
-export const LightTheme = {
+export const LightTheme: DefaultTheme = {
   borderRadius: {
     default: '8px',
     input: '4px',
@@ -14,7 +16,7 @@ export const LightTheme = {
       bold: '600',
     },
   },
-  borderWidth: '2px',
+  borderWidth: '1px',
   color: {
     primary: '#6F00FF',
     white: primitives.white,
@@ -47,7 +49,7 @@ export const LightTheme = {
   },
 };
 
-export const DarkTheme = {
+export const DarkTheme: DefaultTheme = {
   borderRadius: {
     default: '0',
     input: '0',

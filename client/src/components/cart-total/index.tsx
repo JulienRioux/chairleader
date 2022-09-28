@@ -71,9 +71,7 @@ export const CartSummary = ({
 };
 
 export const CartTotal = () => {
-  const { cartItems } = useCart();
-
-  const { totalPrice, totalSaleTax, totalWithSaleTax } = useCart();
+  const { totalPrice, totalSaleTax, totalWithSaleTax, cartItems } = useCart();
 
   const { currency } = useCurrency();
 

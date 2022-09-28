@@ -1,12 +1,21 @@
 import { CartItem, CartTotal } from 'components';
-import { useCart } from 'hooks/cart';
+import { Button, Icon } from 'components-library';
+import { CloseBtn } from 'components-library/modal/styled';
+import { IInventoryItem, useCart } from 'hooks/cart';
 import { useCurrency } from 'hooks/currency';
+import { useState } from 'react';
 import styled from 'styled-components';
 
-const Header = styled.h3`
+const CartHeader = styled.div`
   font-weight: bold;
   font-size: 20px;
-  margin: 12px 0;
+  margin: 0;
+  border-bottom: 1px solid ${(p) => p.theme.color.lightGrey};
+  min-height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
 `;
 
 const CartWrapper = styled.div``;
@@ -21,23 +30,53 @@ const CartItemsAndTotalWrapper = styled.div`
   justify-content: space-between;
   flex-direction: column;
   height: 100vh;
+  max-height: 100vh;
 `;
 
 const HeaderAndITems = styled.div`
-  padding: 8px 20px;
   overflow: scroll;
 `;
 
-export const CartItems = ({ showHeaderText = true, enableUpdate = true }) => {
+const CartItemsWrapper = styled.div`
+  padding: 8px 12px;
+  overflow: scroll;
+  height: 100%;
+`;
+
+const FIRST_ITEMS_LENGTH = 2;
+
+export const CartItems = ({ enableUpdate = true, showMoreButton = false }) => {
   const { cartItems } = useCart();
   const { currency } = useCurrency();
 
+  const [showAllITems, setShowAllITems] = useState(false);
+
+  let firstCartITems = cartItems;
+  let restITems: IInventoryItem[] = [];
+
+  if (showMoreButton) {
+    firstCartITems = cartItems.slice(0, FIRST_ITEMS_LENGTH);
+    restITems = cartItems.slice(FIRST_ITEMS_LENGTH);
+  }
+
+  const hasMoreItems = FIRST_ITEMS_LENGTH < cartItems.length;
+
+  const ToggleBtn = ({ showLess = false }) => (
+    <div style={{ marginTop: '20px' }}>
+      <Button
+        fullWidth
+        onClick={() => setShowAllITems(!showAllITems)}
+        secondary
+      >
+        {showLess ? 'Show less' : `Show all items (${restITems.length} more)`}
+      </Button>
+    </div>
+  );
+
   return (
     <HeaderAndITems>
-      {showHeaderText && <Header>Current order</Header>}
-
       {cartItems.length ? (
-        cartItems.map(({ _id, qty, image, title, price, totalSupply }) => (
+        firstCartITems.map(({ _id, qty, image, title, price, totalSupply }) => (
           <CartItem
             key={_id}
             id={_id}
@@ -51,17 +90,45 @@ export const CartItems = ({ showHeaderText = true, enableUpdate = true }) => {
           />
         ))
       ) : (
-        <Par>No item in your cart yet.</Par>
+        <Par>You don't have anything in your cart yet!</Par>
       )}
+
+      {!showAllITems && showMoreButton && hasMoreItems && <ToggleBtn />}
+
+      {showAllITems &&
+        restITems.map(({ _id, qty, image, title, price, totalSupply }) => (
+          <CartItem
+            key={_id}
+            id={_id}
+            qty={qty}
+            image={image}
+            title={title}
+            price={price}
+            totalSupply={totalSupply}
+            enableUpdate={enableUpdate}
+            currency={currency}
+          />
+        ))}
+
+      {showAllITems && showMoreButton && hasMoreItems && <ToggleBtn showLess />}
     </HeaderAndITems>
   );
 };
 
-export const Cart = () => {
+export const Cart = ({ onCloseClick }: { onCloseClick: () => void }) => {
   return (
     <CartWrapper>
       <CartItemsAndTotalWrapper>
-        <CartItems />
+        <CartHeader>
+          <div>Cart items</div>
+
+          <CloseBtn onClick={onCloseClick}>
+            <Icon name="close" />
+          </CloseBtn>
+        </CartHeader>
+        <CartItemsWrapper>
+          <CartItems />
+        </CartItemsWrapper>
 
         <CartTotal />
       </CartItemsAndTotalWrapper>

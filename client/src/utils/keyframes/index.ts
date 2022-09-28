@@ -21,6 +21,34 @@ export const modalIn = keyframes`
   }
 `;
 
+export const drawerIn = keyframes`
+  0% { 
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% { 
+    transform: translateY(0); 
+    opacity: 1;
+  }
+`;
+
+export const drawerOut = keyframes`
+  0% { 
+    transform: translateX(0);
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% { 
+    transform: translateX(400px);
+    opacity: 0;
+  }
+`;
+
 export const slideIn = keyframes`
   0% { 
     opacity: 0; 
