@@ -20,6 +20,8 @@ import { useMediaQuery } from 'hooks/media-query';
 import { useTheme } from 'hooks/theme';
 import { drawerIn, fadeIn, fadeOut, drawerOut } from 'utils/keyframes';
 
+const AMINATION_DURATION = 300;
+
 const TopNavWrapper = styled.div`
   padding: 8px 20px;
   border-bottom: 1px solid ${(p) => p.theme.color.lightGrey};
@@ -73,12 +75,12 @@ const CartWrapper = styled.div<{ isClosing: boolean }>`
   z-index: 12;
   background: ${(p) => p.theme.color.background};
 
-  animation: 0.2s ${drawerIn};
+  animation: ${AMINATION_DURATION}ms ${drawerIn};
 
   ${(p) =>
     p.isClosing &&
     css`
-      animation: 0.2s ${drawerOut};
+      animation: ${AMINATION_DURATION}ms ${drawerOut};
     `}
 `;
 
@@ -91,12 +93,12 @@ const CartBackdrop = styled.div<{ isClosing: boolean }>`
   z-index: 10;
   background: ${(p) => p.theme.color.backdrop};
 
-  animation: 0.2s ${fadeIn};
+  animation: ${AMINATION_DURATION}ms ${fadeIn};
 
   ${(p) =>
     p.isClosing &&
     css`
-      animation: 0.2s ${fadeOut};
+      animation: ${AMINATION_DURATION}ms ${fadeOut};
     `}
 `;
 
@@ -206,7 +208,7 @@ const MobileMenuLabel = styled.div`
   margin-top: 2px;
 `;
 
-const MenuBtn = styled(UnstyledButton)`
+const MenuBtn = styled(UnstyledButton)<{ isActive?: boolean }>`
   padding: 4px;
   font-size: 20px;
   width: 40px;
@@ -215,6 +217,14 @@ const MenuBtn = styled(UnstyledButton)`
   justify-content: center;
   flex-direction: column;
   position: relative;
+  border-radius: ${(p) => p.theme.borderRadius.default};
+
+  ${(p) =>
+    p.isActive &&
+    css`
+      color: ${p.theme.color.primary};
+      background: ${p.theme.color.primary}11;
+    `}
 `;
 
 const MobileMenu = ({
@@ -225,17 +235,27 @@ const MobileMenu = ({
   const { cartItemsNumber } = useCart();
   const { toggleTheme, isDarkTheme } = useTheme();
 
+  const isOnInventoryPage = useMatch(routes.store.inventory);
+  const isOnProductPage = useMatch(`${routes.store.inventory}/:productId`);
+
+  const homeBtnIsActive = !!(isOnInventoryPage || isOnProductPage);
+
+  const isOnNftsPage = useMatch(routes.store.nfts);
+  const isOnSingleNftPage = useMatch(`${routes.store.nfts}/:address`);
+
+  const nftsBtnIsActive = !!(isOnNftsPage || isOnSingleNftPage);
+
   return (
     <MobileBottomMenu>
       <UnstyledLink to={routes.store.inventory}>
-        <MenuBtn>
+        <MenuBtn isActive={homeBtnIsActive}>
           <Icon name="house" />
           <MobileMenuLabel>Home</MobileMenuLabel>
         </MenuBtn>
       </UnstyledLink>
 
       <UnstyledLink to={routes.store.nfts}>
-        <MenuBtn>
+        <MenuBtn isActive={nftsBtnIsActive}>
           <Icon name="grid_view" />
           <MobileMenuLabel>NFTs</MobileMenuLabel>
         </MenuBtn>
@@ -257,8 +277,6 @@ const MobileMenu = ({
     </MobileBottomMenu>
   );
 };
-
-const AMINATION_DURATION = 200;
 
 const CartPreview = ({
   handleToggleModal,

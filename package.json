@@ -12,6 +12,7 @@
   "author": "Julien Rioux",
   "license": "ISC",
   "devDependencies": {
+    "@types/bs58": "^4.0.1",
     "@types/inquirer": "^8.2.1",
     "concurrently": "^7.3.0",
     "inquirer": "^9.0.2"

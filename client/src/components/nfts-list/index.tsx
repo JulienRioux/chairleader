@@ -37,33 +37,23 @@ const NftsListWrapper = styled.div`
 `;
 
 const RewardsOrExclusivity = styled.div`
-  color: ${(p) => p.theme.color.primary};
+  color: ${(p) => p.theme.color.lightText};
   margin: 8px 0 8px;
+  font-size: 14px;
 `;
 
 const NftName = styled.div`
   font-weight: bold;
-  margin: 4px 0;
+  margin: 8px 0;
   font-size: 20px;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 `;
 
-const Address = styled.div`
-  font-size: 14px;
-  color: ${(p) => p.theme.color.lightText};
-`;
-
 export const Price = styled.div`
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  border: 1px solid ${(p) => p.theme.color.primary};
   color: ${(p) => p.theme.color.primary};
-  background-color: ${(p) => p.theme.color.background};
-  padding: 2px 4px;
-  border-radius: ${(p) => p.theme.borderRadius.default};
+  font-size: 18px;
 `;
 
 const NftDisplay = ({
@@ -98,16 +88,13 @@ const NftDisplay = ({
       }/${address}`}
     >
       <NftDisplayWrapper>
-        <div style={{ position: 'relative' }}>
-          <NftImg {...(image && { src: image })} />
-          <Price>{price} USDC</Price>
-        </div>
+        <NftImg {...(image && { src: image })} />
 
         <NftName>{name}</NftName>
 
-        <RewardsOrExclusivity>{exclusivitiesText}</RewardsOrExclusivity>
+        <Price>{price} USDC</Price>
 
-        <Address>{formatShortAddress(address)}</Address>
+        <RewardsOrExclusivity>{exclusivitiesText}</RewardsOrExclusivity>
       </NftDisplayWrapper>
     </UnstyledLink>
   );

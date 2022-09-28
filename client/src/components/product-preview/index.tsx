@@ -17,7 +17,7 @@ const ProductWrapper = styled(UnstyledLink)<{ $isOutOfStock: boolean }>`
 `;
 
 const ProductTitle = styled.h3`
-  margin: 12px 0;
+  margin: 8px 0;
   font-size: 20px;
 `;
 

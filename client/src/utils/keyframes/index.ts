@@ -23,8 +23,11 @@ export const modalIn = keyframes`
 
 export const drawerIn = keyframes`
   0% { 
-    transform: translateX(200px);
+    transform: translateX(400px);
     opacity: 0;
+  }
+  20% {
+    opacity: 1;
   }
   100% { 
     transform: translateY(0); 
@@ -37,8 +40,11 @@ export const drawerOut = keyframes`
     transform: translateX(0);
     opacity: 1;
   }
+  80% {
+    opacity: 1;
+  }
   100% { 
-    transform: translateX(200px);
+    transform: translateX(400px);
     opacity: 0;
   }
 `;
