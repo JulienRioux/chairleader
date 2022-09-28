@@ -1,7 +1,9 @@
-import { Button, Icon, Input } from 'components-library';
+import { Button, Icon, Input, message } from 'components-library';
 import { useCart } from 'hooks/cart';
+import { useSplTokenPayent } from 'pages/admin-pages/token-gating-nft';
 import { ChangeEvent, FormEvent, useCallback, useState } from 'react';
 import styled from 'styled-components';
+import { Logger } from 'utils';
 
 const PayButton = styled(Button)`
   position: relative;
@@ -20,6 +22,8 @@ export const ShippingForm = () => {
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [postalCode, setPostalCode] = useState('');
+
+  const { makePayment } = useSplTokenPayent();
 
   const { totalWithSaleTax } = useCart();
 
@@ -55,8 +59,16 @@ export const ShippingForm = () => {
   }, []);
 
   const handlePay = useCallback(
-    (e: FormEvent) => {
+    async (e: FormEvent) => {
       e.preventDefault();
+
+      try {
+        console.log('Payment started');
+        await makePayment(Number(totalWithSaleTax));
+        message.success('Payment succeed');
+      } catch (err) {
+        Logger.error(err);
+      }
 
       console.log('Shipping information =>>>', {
         email,
@@ -69,7 +81,17 @@ export const ShippingForm = () => {
       });
       console.log('Payment processing...');
     },
-    [address, city, country, email, name, postalCode, state]
+    [
+      address,
+      city,
+      country,
+      email,
+      makePayment,
+      name,
+      postalCode,
+      state,
+      totalWithSaleTax,
+    ]
   );
 
   return (

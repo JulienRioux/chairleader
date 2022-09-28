@@ -18,7 +18,6 @@ const NftImg = styled.img`
 `;
 
 const NftsListWrapper = styled.div`
-  margin: 20px 0;
   display: grid;
   gap: 20px;
 

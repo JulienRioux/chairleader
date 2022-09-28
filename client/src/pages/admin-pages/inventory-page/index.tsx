@@ -50,7 +50,7 @@ const AdminStyles = css`
 
 export const ProductGrid = styled.div<{ isPos?: boolean }>`
   display: grid;
-  grid-gap: 40px 20px;
+  grid-gap: 20px;
   margin: 0 auto;
 
   ${(p) => (p.isPos ? PosStyles : AdminStyles)}

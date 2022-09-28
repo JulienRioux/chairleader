@@ -56,12 +56,16 @@ const ButtonWrapper = styled.button<{
 
   ${(p) => p.fullWidth && 'width: 100%;'}
 
+  :active {
+    transform: translateY(3px);
+  }
 
   :disabled {
     background-color: ${(p) => p.theme.color.text}55;
     border-color: ${(p) => p.theme.color.text}22;
     color: ${(p) => p.theme.color.buttonText};
     cursor: not-allowed;
+    transform: none;
   }
 `;
 

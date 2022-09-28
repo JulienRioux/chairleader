@@ -6,6 +6,7 @@ import {
   Icon,
   UnstyledLink,
   Loader,
+  message,
 } from 'components-library';
 import {
   BadgeWrapper,
@@ -77,12 +78,13 @@ const DummyDiv = styled.div`
 
 const AddToCartWrapper = styled.div`
   border-top: 1px solid ${(p) => p.theme.color.lightGrey};
-  padding: 8px;
+  padding: 9px;
   position: fixed;
   bottom: 0;
   left: 0;
-  right: 480px;
+  right: 0;
   background: ${(p) => p.theme.color.background};
+  z-index: 9;
 
   @media (max-width: 1000px) {
     right: 0;
@@ -244,8 +246,9 @@ export const ProductPage = () => {
 
   const handleAddToCart = useCallback(() => {
     productId && updateQuantity({ id: productId, qty });
+    message.success(`${qty} x ${name} added to the cart.`);
     navigate(routes.store.inventory);
-  }, [navigate, productId, qty, updateQuantity]);
+  }, [name, navigate, productId, qty, updateQuantity]);
 
   const isOutOfStock = maxQuantity === 0;
 

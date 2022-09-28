@@ -1,20 +1,34 @@
 import { StoreImgIcon } from 'components';
-import { Button, ChildWrapper, Icon, UnstyledLink } from 'components-library';
+import {
+  Button,
+  ChildWrapper,
+  Icon,
+  UnstyledButton,
+  UnstyledLink,
+} from 'components-library';
 import { Cart } from 'components/cart';
 import { ConnectWalletBtn } from 'components/connect-wallet-btn';
 import { useCart } from 'hooks/cart';
 import { useCurrency } from 'hooks/currency';
 import { useStore } from 'hooks/store';
 import { ToggleTheme } from 'pages/homepage';
-import { ReactNode } from 'react';
+import { ReactNode, useCallback, useState, useEffect } from 'react';
 import { useMatch } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { routes } from 'utils';
+import { useMediaQuery } from 'hooks/media-query';
+import { useTheme } from 'hooks/theme';
+import { drawerIn, fadeIn, fadeOut, drawerOut } from 'utils/keyframes';
 
-const TopNav = styled.div`
+const TopNavWrapper = styled.div`
   padding: 8px 20px;
   border-bottom: 1px solid ${(p) => p.theme.color.lightGrey};
   height: 44px;
+`;
+
+const TopNav = styled.div`
+  max-width: ${(p) => p.theme.layout.maxWidth};
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -34,7 +48,9 @@ const PageTitle = styled.div`
 `;
 
 const ChildrenWrapper = styled.div`
-  margin: 20px;
+  max-width: ${(p) => p.theme.layout.maxWidth};
+  margin: 0 auto;
+  padding: 20px;
 `;
 
 const StoreImgAndName = styled(UnstyledLink)`
@@ -43,24 +59,45 @@ const StoreImgAndName = styled(UnstyledLink)`
   overflow: hidden;
 `;
 
-const ContentWrapper = styled.div`
-  display: grid;
-  grid-template-columns: auto 480px;
+const ContentWrapper = styled.div``;
 
-  @media (max-width: 1000px) {
-    display: flex;
-  }
-`;
-
-const CartWrapper = styled.div`
-  position: sticky;
+const CartWrapper = styled.div<{ isClosing: boolean }>`
+  position: fixed;
   top: 0;
+  right: 0;
+  bottom: 0;
   border-left: 1px solid ${(p) => p.theme.color.lightGrey};
   height: 100vh;
+  width: 480px;
+  max-width: 100%;
+  z-index: 12;
+  background: ${(p) => p.theme.color.background};
 
-  @media (max-width: 1000px) {
-    display: none;
-  }
+  animation: 0.2s ${drawerIn};
+
+  ${(p) =>
+    p.isClosing &&
+    css`
+      animation: 0.2s ${drawerOut};
+    `}
+`;
+
+const CartBackdrop = styled.div<{ isClosing: boolean }>`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: ${(p) => p.theme.color.backdrop};
+
+  animation: 0.2s ${fadeIn};
+
+  ${(p) =>
+    p.isClosing &&
+    css`
+      animation: 0.2s ${fadeOut};
+    `}
 `;
 
 const LeftSideWrapper = styled.div`
@@ -96,6 +133,26 @@ const ButtonsWrapper = styled.div`
   align-items: center;
 `;
 
+const CartButtonWrapper = styled.div`
+  position: relative;
+`;
+
+const CartItemsNumberBadge = styled.div`
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: ${(p) => p.theme.color.primary};
+  color: ${(p) => p.theme.color.buttonText};
+  min-width: 18px;
+  min-height: 18px;
+  border-radius: 50%;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+`;
+
 export const StoreLogo = () => {
   const { store } = useStore();
 
@@ -126,8 +183,128 @@ const MobileCartBtn = () => {
   );
 };
 
+const MobileBottomMenu = styled.div`
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  min-height: 60px;
+  background: ${(p) => p.theme.color.background};
+  border-top: 1px solid ${(p) => p.theme.color.lightGrey};
+  padding: 0 16px;
+
+  display: none;
+  @media (max-width: 1000px) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+`;
+
+const MobileMenuLabel = styled.div`
+  font-size: 12px;
+  margin-top: 2px;
+`;
+
+const MenuBtn = styled(UnstyledButton)`
+  padding: 4px;
+  font-size: 20px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+`;
+
+const MobileMenu = ({
+  handleToggleModal,
+}: {
+  handleToggleModal: () => void;
+}) => {
+  const { cartItemsNumber } = useCart();
+  const { toggleTheme, isDarkTheme } = useTheme();
+
+  return (
+    <MobileBottomMenu>
+      <UnstyledLink to={routes.store.inventory}>
+        <MenuBtn>
+          <Icon name="house" />
+          <MobileMenuLabel>Home</MobileMenuLabel>
+        </MenuBtn>
+      </UnstyledLink>
+
+      <UnstyledLink to={routes.store.nfts}>
+        <MenuBtn>
+          <Icon name="grid_view" />
+          <MobileMenuLabel>NFTs</MobileMenuLabel>
+        </MenuBtn>
+      </UnstyledLink>
+
+      <MenuBtn onClick={toggleTheme}>
+        <Icon name={isDarkTheme ? 'light_mode' : 'dark_mode'} />
+        <MobileMenuLabel>Switch</MobileMenuLabel>
+      </MenuBtn>
+
+      <MenuBtn onClick={handleToggleModal}>
+        <Icon name="shopping_bag" />
+        <MobileMenuLabel>Cart</MobileMenuLabel>
+
+        {!!cartItemsNumber && (
+          <CartItemsNumberBadge>{cartItemsNumber}</CartItemsNumberBadge>
+        )}
+      </MenuBtn>
+    </MobileBottomMenu>
+  );
+};
+
+const AMINATION_DURATION = 200;
+
+const CartPreview = ({
+  handleToggleModal,
+}: {
+  handleToggleModal: () => void;
+}) => {
+  const [isClosing, setIsClosing] = useState(false);
+
+  const handleToggleCartPreview = useCallback(() => {
+    setTimeout(() => {
+      setIsClosing(false);
+      handleToggleModal();
+    }, AMINATION_DURATION);
+    document.body.style.overflow = 'unset';
+    setIsClosing(true);
+  }, [handleToggleModal]);
+
+  useEffect(() => {
+    // Stop scrolling when the modal open
+    document.body.style.overflow = 'hidden';
+
+    // Cleanup the body overflow style on unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
+
+  return (
+    <>
+      <CartWrapper isClosing={isClosing}>
+        <Cart onCloseClick={handleToggleCartPreview} />
+      </CartWrapper>
+      <CartBackdrop isClosing={isClosing} onClick={handleToggleCartPreview} />
+    </>
+  );
+};
+
 export const InventoryLayout = ({ children }: { children: ReactNode }) => {
+  const hasMobileNavBar = useMediaQuery('(max-width: 1000px)');
+
+  const { cartItemsNumber } = useCart();
+
+  const [showCartPreview, setShowCartPreview] = useState(false);
+
   const isNotOnInventoryPage = !useMatch(routes.store.inventory);
+  const isNotOnNftsPage = !useMatch(routes.store.nfts);
 
   const isOnNftsPage = useMatch(routes.store.nfts);
 
@@ -135,46 +312,71 @@ export const InventoryLayout = ({ children }: { children: ReactNode }) => {
 
   const showNftsLink = !isOnNftsPage && !isOnSingleNftPage;
 
+  const handleToggleModal = useCallback(() => {
+    setShowCartPreview(!showCartPreview);
+  }, [showCartPreview]);
+
   return (
     <div>
       <ContentWrapper>
         <LeftSideWrapper>
-          <TopNav>
-            <StoreLogo />
-            <ButtonsWrapper>
-              {isNotOnInventoryPage && (
-                <Button
-                  style={{ marginRight: '8px' }}
-                  secondary
-                  icon="arrow_back"
-                  to={-1}
-                />
-              )}
+          <TopNavWrapper>
+            <TopNav>
+              <StoreLogo />
+              <ButtonsWrapper>
+                {isNotOnInventoryPage && isNotOnNftsPage && (
+                  <Button
+                    style={{ marginRight: '8px' }}
+                    secondary
+                    icon="arrow_back"
+                    to={-1}
+                  />
+                )}
 
-              {showNftsLink && (
-                <Button
-                  icon="grid_view"
-                  style={{ marginRight: '8px' }}
-                  to={routes.store.nfts}
-                  secondary
-                >
-                  NFTs
-                </Button>
-              )}
+                {showNftsLink && !hasMobileNavBar && (
+                  <Button
+                    icon="grid_view"
+                    style={{ marginRight: '8px' }}
+                    to={routes.store.nfts}
+                    secondary
+                  >
+                    NFTs
+                  </Button>
+                )}
 
-              <ConnectWalletBtn />
-              <ToggleTheme />
-            </ButtonsWrapper>
-          </TopNav>
+                <ConnectWalletBtn />
+
+                {!hasMobileNavBar && (
+                  <>
+                    <ToggleTheme />
+
+                    <CartButtonWrapper>
+                      <Button
+                        secondary
+                        style={{ marginLeft: '8px' }}
+                        icon="shopping_bag"
+                        onClick={handleToggleModal}
+                      />
+                      {!!cartItemsNumber && (
+                        <CartItemsNumberBadge>
+                          {cartItemsNumber}
+                        </CartItemsNumberBadge>
+                      )}
+                    </CartButtonWrapper>
+                  </>
+                )}
+              </ButtonsWrapper>
+            </TopNav>
+          </TopNavWrapper>
           <ChildrenWrapper>{children}</ChildrenWrapper>
         </LeftSideWrapper>
 
-        <CartWrapper>
-          <Cart />
-        </CartWrapper>
+        {showCartPreview && (
+          <CartPreview handleToggleModal={handleToggleModal} />
+        )}
       </ContentWrapper>
 
-      <MobileCartBtn />
+      <MobileMenu handleToggleModal={handleToggleModal} />
     </div>
   );
 };

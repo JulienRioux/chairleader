@@ -43,6 +43,11 @@ const PageTitle = styled.div`
   text-transform: capitalize;
 `;
 
+const CartTitle = styled.h3`
+  padding: 20px 0;
+  margin: 0;
+`;
+
 export const CartPageLayout = ({
   title,
   link = routes.store.inventory,
@@ -186,6 +191,26 @@ const AlertMsg = styled.div`
   }
 `;
 
+const ShippingFormWrapper = styled.div`
+  position: sticky;
+  top: 0;
+  @media (max-width: 1000px) {
+    position: static;
+  }
+`;
+
+const CartItemsTitle = styled(CartTitle)`
+  position: sticky;
+  top: 0;
+  background: ${(p) => p.theme.color.background}88;
+  backdrop-filter: blur(4px);
+  z-index: 9;
+
+  @media (max-width: 1000px) {
+    display: none;
+  }
+`;
+
 const DevnetMsg = () => {
   const { currency } = useCurrency();
 
@@ -238,10 +263,10 @@ export const CartPage = () => {
         <div>
           {/* <DevnetMsg /> */}
 
-          <h3>Cart items</h3>
+          <CartItemsTitle>Cart items</CartItemsTitle>
 
           <CartItemsWrapper style={{ marginBottom: `${height}px` }}>
-            <CartItems showHeaderText={false} />
+            <CartItems showMoreButton />
 
             <DesktopSummaryWrapper>
               <CartSummaryWrapper>
@@ -257,8 +282,10 @@ export const CartPage = () => {
         </div>
 
         <div>
-          <h3>Shipping information</h3>
-          <ShippingForm />
+          <ShippingFormWrapper>
+            <CartTitle>Shipping information</CartTitle>
+            <ShippingForm />
+          </ShippingFormWrapper>
         </div>
       </CartPaymentLayout>
     </CartPageLayout>

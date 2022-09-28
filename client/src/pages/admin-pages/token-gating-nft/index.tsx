@@ -97,7 +97,7 @@ const DealItem = ({
   );
 };
 
-const useSplTokenPayent = () => {
+export const useSplTokenPayent = () => {
   const { sendTransaction, publicKey } = useWallet();
   const { connection } = useConnection();
 

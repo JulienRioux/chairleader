@@ -1,11 +1,6 @@
 import { Wallet } from '@solana/wallet-adapter-react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import {
-  Button,
-  ChildWrapper,
-  UnstyledExternalLink,
-  useModal,
-} from 'components-library';
+import { Button, ChildWrapper, UnstyledExternalLink } from 'components-library';
 import { useCallback, useMemo, useEffect } from 'react';
 import styled from 'styled-components';
 import { WalletName, WalletReadyState } from '@solana/wallet-adapter-base';
@@ -14,6 +9,10 @@ import { useWalletModal } from 'hooks/wallet-modal';
 
 const ConnectWalletBtnWrapper = styled.span`
   margin-right: 12px;
+
+  @media (max-width: 1000px) {
+    margin-right: 0;
+  }
 `;
 
 const LoginDisclaimer = styled.p`
@@ -233,11 +232,7 @@ export const ConnectWalletBtn = () => {
       )}
 
       {walletAddress && (
-        <Button
-          style={{ marginRight: '12px' }}
-          secondary
-          onClick={openConnectedModal}
-        >
+        <Button secondary onClick={openConnectedModal}>
           {formatShortAddress(walletAddress)}
         </Button>
       )}

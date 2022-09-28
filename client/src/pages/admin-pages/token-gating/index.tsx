@@ -247,7 +247,9 @@ export const TokenGating = () => {
       <div>
         <Button onClick={openModal}>Create new NFT</Button>
 
-        <NftsList />
+        <div style={{ margin: '20px 0' }}>
+          <NftsList />
+        </div>
 
         <Modal title="Create new NFT">
           <form onSubmit={uploadNFT}>
