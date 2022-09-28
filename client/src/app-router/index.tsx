@@ -1,5 +1,5 @@
 import { AdminLayout } from 'components';
-import { USE_CATEGORY } from 'configs';
+import { HIDE_APP, USE_CATEGORY } from 'configs';
 import { CategoryForm } from 'pages/admin-pages/category-form';
 import { InventoryPage } from 'pages/admin-pages/inventory-page';
 import { PaymentsPage } from 'pages/admin-pages/payments-page';
@@ -135,8 +135,24 @@ const MainAppRouter = () => {
   );
 };
 
+const HideAppRouter = () => (
+  <Routes>
+    <Route path={routes.base} element={<Homepage />} />
+    <Route path={routes.pricing} element={<PricingPage />} />
+    <Route path="*" element={<Navigate to={routes.base} />} />
+    <Route
+      path={routes.static.base + '/:staticPage'}
+      element={<StaticPage />}
+    />
+  </Routes>
+);
+
 export const AppRouter = () => {
   const { store, isLoading } = useStore();
+
+  if (HIDE_APP) {
+    return <HideAppRouter />;
+  }
 
   if (isLoading) {
     return <Loader />;

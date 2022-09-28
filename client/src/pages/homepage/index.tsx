@@ -7,7 +7,7 @@ import {
 import styled, { keyframes } from 'styled-components';
 import { routes } from 'utils';
 import { Footer } from 'components';
-import { APP_NAME, APP_LOGO } from 'configs';
+import { APP_NAME, APP_LOGO, HIDE_APP } from 'configs';
 import { useTheme } from 'hooks/theme';
 import { useAuth } from 'hooks/auth';
 import { useMediaQuery } from 'hooks/media-query';
@@ -23,35 +23,6 @@ const HeroWrapper = styled.div`
   align-items: center;
   justify-content: center;
   text-align: center;
-`;
-
-const GradientWrapper = styled.div`
-  position: absolute;
-  z-index: -1;
-  overflow: hidden;
-  width: 100%;
-  height: calc(100vh - 61px);
-`;
-
-const Gadient1 = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  /* background: url(${GranyFilter}); */
-  opacity: 0.3;
-`;
-
-const Gadient2 = styled.div`
-  position: absolute;
-  top: -200px;
-  left: -200px;
-  width: 826px;
-  height: 1026px;
-  background: radial-gradient(
-    50% 50% at 50% 50%,
-    #dcc1e4 0,
-    rgba(220, 193, 228, 0) 100%
-  );
 `;
 
 export const backgroundTextAnim = keyframes`
@@ -396,10 +367,10 @@ export const HomepageTopNav = () => {
         </Logo>
 
         <BtnWrapper>
-          {!isLoading && (
-            <>
-              <ToggleTheme style={{ marginRight: '8px' }} />
+          <ToggleTheme style={{ marginRight: '8px' }} />
 
+          {!HIDE_APP && !isLoading && (
+            <>
               {isAuthenticated() ? (
                 <Button to={routes.admin.inventory} secondary icon="home" />
               ) : (
@@ -424,111 +395,139 @@ export const Homepage = () => {
       <HomepageTopNav />
       <HomepageWrapper>
         <HeroWrapper>
-          <GradientWrapper>
-            <Gadient1 />
-          </GradientWrapper>
-
           <LeftHero>
-            <Header>Web3 e-commerce platform build for the future</Header>
+            <Header>Web3 e-commerce platform builds for the future</Header>
             <HeroPar>
-              Unlock your online stores potential to the moon with our retailers
-              a suite of web3 services including crypto payments, NFT marketin
-              and engagement tools.
+              We are building the next-generation e-commerce platform offering
+              online retailers a suite of web3 services including payments,
+              marketing, and engagement tools.
             </HeroPar>
 
-            <div>
-              {!isLoading &&
-                (isAuthenticated() ? (
-                  <Button to={routes.admin.inventory} fullWidth={isMobileView}>
-                    Go to my store
-                  </Button>
-                ) : (
-                  <>
-                    <Button to={routes.auth} fullWidth={isMobileView}>
-                      Register now
-                    </Button>
+            {HIDE_APP && (
+              <div>
+                <UnstyledExternalLink
+                  href="https://www.producthunt.com/upcoming/chairleader"
+                  target="_blank"
+                >
+                  <Button icon="launch">Get early access</Button>
+                </UnstyledExternalLink>
+              </div>
+            )}
 
-                    <SecondHeroBtn
-                      to={routes.auth}
-                      secondary
+            {!HIDE_APP && (
+              <div>
+                {!isLoading &&
+                  (isAuthenticated() ? (
+                    <Button
+                      to={routes.admin.inventory}
                       fullWidth={isMobileView}
                     >
-                      Log in
-                    </SecondHeroBtn>
-                  </>
-                ))}
+                      Go to my store
+                    </Button>
+                  ) : (
+                    <>
+                      <Button to={routes.auth} fullWidth={isMobileView}>
+                        Register now
+                      </Button>
 
-              {isLoading && (
-                <div>
-                  <Button fullWidth={isMobileView} isLoading={isLoading}>
-                    Go to my store
-                  </Button>
-                </div>
-              )}
-            </div>
+                      <SecondHeroBtn
+                        to={routes.auth}
+                        secondary
+                        fullWidth={isMobileView}
+                      >
+                        Log in
+                      </SecondHeroBtn>
+                    </>
+                  ))}
+
+                {isLoading && (
+                  <div>
+                    <Button fullWidth={isMobileView} isLoading={isLoading}>
+                      Go to my store
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
           </LeftHero>
         </HeroWrapper>
 
-        <BannerWrapper>
-          <Banner>
-            <BannerHeader>Make Solana payments easy</BannerHeader>
-            <Par>
-              {`Optimize conversion by offering seamless crypto payments. Learn
+        {!HIDE_APP && (
+          <>
+            <BannerWrapper>
+              <Banner>
+                <BannerHeader>Make Solana payments easy</BannerHeader>
+                <Par>
+                  {`Optimize conversion by offering seamless crypto payments. Learn
             where and how to expand your business next, supported by insights. ${APP_NAME}’s unique data ecosystem reveals opportunities where your business can grow with the `}
-              <a href="https://solana.com/" target="_blank" rel="noreferrer">
-                Solana network
-              </a>
-              .
-            </Par>
-          </Banner>
-        </BannerWrapper>
+                  <a
+                    href="https://solana.com/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Solana network
+                  </a>
+                  .
+                </Par>
+              </Banner>
+            </BannerWrapper>
 
-        <FeaturedStores />
+            <FeaturedStores />
 
-        <PresentationItem
-          title="Solutions built for your business model"
-          content={
-            <>
-              Unlock superior financial experiences through our single platform.
-              Simplify cash management, receive payments faster, and gain full
-              visibility of your funds leveraged by{' '}
-              <a href="https://solanapay.com/" target="_blank" rel="noreferrer">
-                Solana Pay
-              </a>
-              .
-            </>
-          }
-          btnText={
-            <>
-              Start now{' '}
-              <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
-            </>
-          }
-          img="https://images.unsplash.com/photo-1462392246754-28dfa2df8e6b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2400&q=80"
-          isLeftImg
-        />
+            <PresentationItem
+              title="Solutions built for your business model"
+              content={
+                <>
+                  Unlock superior financial experiences through our single
+                  platform. Simplify cash management, receive payments faster,
+                  and gain full visibility of your funds leveraged by{' '}
+                  <a
+                    href="https://solanapay.com/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Solana Pay
+                  </a>
+                  .
+                </>
+              }
+              btnText={
+                <>
+                  Start now{' '}
+                  <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
+                </>
+              }
+              img="https://images.unsplash.com/photo-1462392246754-28dfa2df8e6b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2400&q=80"
+              isLeftImg
+            />
 
-        <PresentationItem
-          title="Another title"
-          content={
-            <>
-              Unlock superior financial experiences through our single platform.
-              Simplify cash management, receive payments faster, and gain full
-              visibility of your funds leveraged by{' '}
-              <a href="https://solanapay.com/" target="_blank" rel="noreferrer">
-                Solana Pay
-              </a>
-              .
-            </>
-          }
-          btnText={
-            <>
-              Start now{' '}
-              <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
-            </>
-          }
-          img="https://images.unsplash.com/photo-1442512595331-e89e73853f31?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80"
-        />
+            <PresentationItem
+              title="Another title"
+              content={
+                <>
+                  Unlock superior financial experiences through our single
+                  platform. Simplify cash management, receive payments faster,
+                  and gain full visibility of your funds leveraged by{' '}
+                  <a
+                    href="https://solanapay.com/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Solana Pay
+                  </a>
+                  .
+                </>
+              }
+              btnText={
+                <>
+                  Start now{' '}
+                  <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
+                </>
+              }
+              img="https://images.unsplash.com/photo-1442512595331-e89e73853f31?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80"
+            />
+          </>
+        )}
 
         <Footer />
       </HomepageWrapper>
