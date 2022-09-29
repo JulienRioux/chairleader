@@ -1,4 +1,9 @@
 import { Button } from 'components-library';
+import {
+  NFT_ROYALTY,
+  PAYMENT_SERVICE_FEE,
+  SELLING_NFT_SERVICE_FEE,
+} from 'configs';
 import { HalfImagePageLayout } from 'pages/auth-page';
 import styled from 'styled-components';
 import { routes } from 'utils';
@@ -43,8 +48,15 @@ export const PricingPage = () => {
           </Par>
 
           <PrecentPricing>
-            1%<PerTransaction>Per transaction</PerTransaction>
+            {PAYMENT_SERVICE_FEE}%
+            <PerTransaction>Per transaction</PerTransaction>
           </PrecentPricing>
+
+          <p>0% on NFT creation</p>
+
+          <p>{SELLING_NFT_SERVICE_FEE * 100}% on NFT sales</p>
+
+          <p>{NFT_ROYALTY * 100}% royalty on NFT created</p>
         </TextWrapper>
 
         <Button fullWidth to={routes.auth}>

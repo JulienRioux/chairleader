@@ -66,7 +66,7 @@ import {
   RightWrapper,
 } from './token-gating.nft.styles';
 import { useCart } from 'hooks/cart';
-import { SELLING_SERVICE_FEE } from 'configs';
+import { PAYMENT_SERVICE_FEE } from 'configs';
 
 const DealItem = ({
   productId,
@@ -128,9 +128,17 @@ export const useSplTokenPayent = () => {
           return;
         }
 
+        const mint = await getMint(connection, DEVNET_DUMMY_MINT);
+
+        const servicePayout = Number(
+          (totalAmount * (PAYMENT_SERVICE_FEE / 100))?.toFixed(mint.decimals)
+        );
+
+        const recipientPayout = totalAmount - servicePayout;
+
         const paymentInstructions = await createSPLTokenInstruction({
           recipient: new PublicKey(payeePublicKey),
-          amount: new BigNumber(totalAmount),
+          amount: new BigNumber(recipientPayout),
           splToken: DEVNET_DUMMY_MINT,
           sender: publicKey,
           connection,
@@ -138,6 +146,21 @@ export const useSplTokenPayent = () => {
 
         // Adding the payment instruction to the current transaction
         transaction.add(paymentInstructions);
+
+        const intermediaryAccount =
+          process.env.REACT_APP_TRANSACTION_PAYEE_PUBLIC_KEY ?? '';
+
+        // Fees instructions
+        const feesInstructions = await createSPLTokenInstruction({
+          recipient: new PublicKey(intermediaryAccount),
+          amount: new BigNumber(servicePayout),
+          splToken: DEVNET_DUMMY_MINT,
+          sender: publicKey,
+          connection,
+        });
+
+        // Adding the instruction to the current transaction
+        transaction.add(feesInstructions);
 
         // Getting the latest block hash
         const {
@@ -171,7 +194,7 @@ export const useSplTokenPayent = () => {
             storeId: store?._id,
             currency,
             network,
-            serviceFees: SELLING_SERVICE_FEE,
+            serviceFees: servicePayout,
           },
         });
 
@@ -203,53 +226,6 @@ export const useSplTokenPayent = () => {
       sendTransaction,
       store?._id,
     ]
-  );
-
-  return { makePayment };
-};
-
-const usePayment = () => {
-  const { connection } = useConnection();
-  const { publicKey, sendTransaction } = useWallet();
-
-  const makePayment = useCallback(
-    async (amount: number) => {
-      if (!publicKey) throw new WalletNotConnectedError();
-
-      const payeePublicKey = process.env.REACT_APP_TRANSACTION_PAYEE_PUBLIC_KEY;
-      if (!payeePublicKey) {
-        return;
-      }
-
-      try {
-        const transaction = new Transaction().add(
-          SystemProgram.transfer({
-            fromPubkey: publicKey,
-            toPubkey: new PublicKey(payeePublicKey),
-            // Converting the amount of SOL in LAMPORTS
-            lamports: LAMPORTS_PER_SOL * amount,
-          })
-        );
-
-        const {
-          context: { slot: minContextSlot },
-          value: { blockhash, lastValidBlockHeight },
-        } = await connection.getLatestBlockhashAndContext();
-
-        const signature = await sendTransaction(transaction, connection, {
-          minContextSlot,
-        });
-
-        await connection.confirmTransaction({
-          blockhash,
-          lastValidBlockHeight,
-          signature,
-        });
-      } catch (err) {
-        Logger.error(err);
-      }
-    },
-    [publicKey, sendTransaction, connection]
   );
 
   return { makePayment };
@@ -583,7 +559,10 @@ export const TokenGatingNft = ({
 
         <RightWrapper>
           {currentNftIsLoading ? (
-            <Loader />
+            <div>
+              <Loader />
+              <div>Loading exclusivities</div>
+            </div>
           ) : (
             <ExclusivitiesCarousel
               productsUnlocked={currentNft?.findNftByAddress?.productsUnlocked}

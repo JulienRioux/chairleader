@@ -1,4 +1,5 @@
 import { Button } from 'components-library';
+import { useAuth } from 'hooks/auth';
 import { useCart } from 'hooks/cart';
 import { useCurrency } from 'hooks/currency';
 import { useStore } from 'hooks/store';
@@ -37,8 +38,9 @@ export const CartSummary = ({
   isAdminApp?: boolean;
 }) => {
   const { store } = useStore();
+  const { user } = useAuth();
 
-  const saleTax = isAdminApp ? 1 : store?.saleTax;
+  const saleTax = isAdminApp ? user?.saleTax : store?.saleTax;
 
   return (
     <>

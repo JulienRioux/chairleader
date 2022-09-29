@@ -23,7 +23,7 @@ import { PublicKey } from '@solana/web3.js';
 import { useMutation } from '@apollo/client';
 import { ADD_NFT } from 'queries';
 import { useNft } from 'hooks/nft';
-import { SELLING_SERVICE_FEE } from 'configs';
+import { NFT_ROYALTY, SELLING_NFT_SERVICE_FEE } from 'configs';
 
 const ImageWrapper = styled.div`
   margin: 8px 0 24px;
@@ -160,7 +160,7 @@ export const TokenGating = () => {
             uri,
             name,
             maxSupply: toBigNumber(maxSupply),
-            sellerFeeBasisPoints: 500, // Represents 5.00%.
+            sellerFeeBasisPoints: NFT_ROYALTY * 10000, // Represents 1.00%.
             // isCollection: true,
             // collection: new PublicKey(
             //   'H6ywXv7vqimtRcpHREX3nP78MiHTWQpEC4Rxb7gGHwUW'
@@ -236,9 +236,7 @@ export const TokenGating = () => {
     currentImageSrc = URL.createObjectURL(imageFile);
   }
 
-  const REVENUE_AFTER_FEES =
-    (1 - Number(process.env.REACT_APP_SELLING_NFT_SERVICE_FEE ?? 0)) *
-    Number(price);
+  const REVENUE_AFTER_FEES = (1 - SELLING_NFT_SERVICE_FEE) * Number(price);
 
   return (
     wallet.connected && (
@@ -310,7 +308,7 @@ export const TokenGating = () => {
             {price && (
               <ServiceFeesExplaination>
                 <div style={{ marginBottom: '4px' }}>
-                  Service fee: {SELLING_SERVICE_FEE} %
+                  Service fee: {SELLING_NFT_SERVICE_FEE} %
                 </div>
                 <div>You will receive: {REVENUE_AFTER_FEES} USDC</div>
               </ServiceFeesExplaination>
