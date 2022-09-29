@@ -26,7 +26,7 @@ export const LightTheme: DefaultTheme = {
     background: primitives.white,
     danger: '#ff2626',
     lightText: `${primitives.black}cc`,
-    backdrop: `${primitives.black}44`,
+    backdrop: `${primitives.black}66`,
     buttonText: primitives.white,
   },
   layout: {

@@ -1,8 +1,8 @@
 import { useWallet } from '@solana/wallet-adapter-react';
 import { Button, Icon, Input, message } from 'components-library';
 import { useCart } from 'hooks/cart';
+import { useSplTokenPayent } from 'hooks/spl-token-payment';
 import { useWalletModal } from 'hooks/wallet-modal';
-import { useSplTokenPayent } from 'pages/admin-pages/token-gating-nft';
 import { ChangeEvent, FormEvent, useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { Logger } from 'utils';

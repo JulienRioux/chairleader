@@ -1,10 +1,17 @@
-import { Button, Input, Loader, useModal } from 'components-library';
+import {
+  Button,
+  CartItemSkeleton,
+  Input,
+  Loader,
+  useModal,
+} from 'components-library';
 import { ProductPreview } from 'components/product-preview';
 import { IS_POINT_OF_SALE } from 'configs';
 import { IInventoryItem, useCart } from 'hooks/cart';
 import { useCurrency } from 'hooks/currency';
 import { useInventory } from 'hooks/inventory';
 import { useMediaQuery } from 'hooks/media-query';
+import { useNft } from 'hooks/nft';
 import { useStore } from 'hooks/store';
 import {
   useState,
@@ -206,11 +213,16 @@ const AddCustomItem = ({ closeModal }: { closeModal: () => void }) => {
 
 export const StorePage = () => {
   const { inventory, isLoading } = useStore();
+  const { getProductLockedMapIsLoading } = useNft();
 
   const { openModal, Modal, closeModal } = useModal();
 
-  if (isLoading) {
-    return <Loader />;
+  if (isLoading || getProductLockedMapIsLoading) {
+    return (
+      <ProductGrid isPos>
+        <CartItemSkeleton />
+      </ProductGrid>
+    );
   }
 
   return (

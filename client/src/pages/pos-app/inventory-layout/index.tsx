@@ -340,7 +340,9 @@ export const InventoryLayout = ({ children }: { children: ReactNode }) => {
         <LeftSideWrapper>
           <TopNavWrapper>
             <TopNav>
-              <StoreLogo />
+              <div>
+                <StoreLogo />
+              </div>
               <ButtonsWrapper>
                 {isNotOnInventoryPage && isNotOnNftsPage && (
                   <Button

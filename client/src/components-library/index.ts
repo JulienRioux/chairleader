@@ -11,3 +11,4 @@ export * from './message';
 export * from './modal';
 export * from './loader';
 export * from './collapsible';
+export * from './skeleton';

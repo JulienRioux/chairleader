@@ -85,6 +85,7 @@ const AddToCartWrapper = styled.div`
   right: 0;
   background: ${(p) => p.theme.color.background};
   z-index: 9;
+  min-height: 42px;
 
   @media (max-width: 1000px) {
     right: 0;
@@ -111,12 +112,9 @@ const NftCardScrollerWrapper = styled.div`
 const NftImg = styled(Img)``;
 
 const NftCardWrapper = styled(UnstyledLink)`
-  margin-right: 12px;
+  margin-right: 20px;
   max-width: 140px;
   width: 140px;
-  padding: 8px;
-  border: 1px solid ${(p) => p.theme.color.text}22;
-  border-radius: ${(p) => p.theme.borderRadius.default};
   position: relative;
 
   :last-of-type {
@@ -125,7 +123,8 @@ const NftCardWrapper = styled(UnstyledLink)`
 `;
 
 const NftName = styled.div`
-  margin: 8px 0;
+  margin: 4px 0 8px;
+  font-weight: bold;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: initial;
@@ -144,14 +143,13 @@ const NftAddress = styled.div`
   padding: 2px 4px; */
 `;
 
-const HasNftPrintedVersionBadge = styled.div`
+export const HasNftPrintedVersionBadge = styled.div`
   display: flex;
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 4px;
+  right: 4px;
   background: ${(p) => p.theme.color.background}88;
   padding: 2px 4px;
-  font-size: 12px;
   border-radius: ${(p) => p.theme.borderRadius.default};
   border: 1px solid;
 `;
@@ -160,6 +158,13 @@ const QualifyingNftsHeader = styled.h3`
   font-size: 16px;
   margin: 40px 0 8px;
 `;
+
+export const NftOwnerBadge = () => (
+  <HasNftPrintedVersionBadge>
+    <Icon style={{ marginRight: '4px' }} name="verified" />
+    <div>Owner</div>
+  </HasNftPrintedVersionBadge>
+);
 
 const NftCard = ({
   image,
@@ -181,12 +186,7 @@ const NftCard = ({
 
       <NftAddress>{formatShortAddress(address)}</NftAddress>
 
-      {hasNftPrintedVersion && (
-        <HasNftPrintedVersionBadge>
-          <Icon style={{ marginRight: '4px' }} name="verified" />
-          <div>Owner</div>
-        </HasNftPrintedVersionBadge>
-      )}
+      {hasNftPrintedVersion && <NftOwnerBadge />}
     </NftCardWrapper>
   );
 };
@@ -214,6 +214,8 @@ export const ProductPage = () => {
   const [maxQuantity, setMaxQuantity] = useState<number | undefined>();
   const [qty, setQty] = useState(1);
   const [isUpdating, setIsUpdating] = useState(false);
+
+  const { getProductLockedMapIsLoading } = useNft();
 
   const [tokenGatedNftData, setTokenGatedNftData] = useState<any>([]);
   const [tokenGatedNftDataIsLoading, setTokenGatedNftDataIsLoading] =
@@ -279,6 +281,10 @@ export const ProductPage = () => {
     getNftMetadata();
   }, [getNftMetadata]);
 
+  if (getProductLockedMapIsLoading) {
+    return <Loader />;
+  }
+
   return (
     <ProductWrapper>
       <ImgWrapper>
@@ -308,7 +314,9 @@ export const ProductPage = () => {
       ) : (
         !!tokenGatedNftData.length && (
           <>
-            <QualifyingNftsHeader>Qualifying NFTs:</QualifyingNftsHeader>
+            <QualifyingNftsHeader>
+              NFTs that unlocks this product:
+            </QualifyingNftsHeader>
 
             <NftCardScrollerWrapper>
               <NftCardScroller>

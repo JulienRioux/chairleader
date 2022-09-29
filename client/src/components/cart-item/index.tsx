@@ -41,7 +41,7 @@ const Price = styled.div`
   }
 `;
 
-const sharedStyles = css`
+export const cartItemImgSharedStyles = css`
   width: 120px;
   aspect-ratio: ${(p) => p.theme.products.image.aspectRatio};
   border-radius: ${(p) => p.theme.borderRadius.default};
@@ -52,7 +52,7 @@ const sharedStyles = css`
 const Img = styled.img`
   object-position: center;
   object-fit: cover;
-  ${sharedStyles}
+  ${cartItemImgSharedStyles}
 `;
 
 const NoImageProduct = styled.div<{ isCustomProduct: boolean }>`
@@ -62,7 +62,7 @@ const NoImageProduct = styled.div<{ isCustomProduct: boolean }>`
   justify-content: center;
   color: ${(p) => p.theme.color.text}44;
   background: ${(p) => p.theme.color.lightGrey};
-  ${sharedStyles}
+  ${cartItemImgSharedStyles}
   min-width: 120px;
   ${(p) => p.isCustomProduct && `background: transparent;`}
 `;

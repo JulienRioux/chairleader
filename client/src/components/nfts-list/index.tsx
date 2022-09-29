@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import { formatShortAddress, getNftDataFromAddressArr, routes } from 'utils';
 import { useAuth } from 'hooks/auth';
 import { useNft } from 'hooks/nft';
+import { NftOwnerBadge } from 'pages/pos-app/product-page';
+import { NftImgWrapper } from 'pages/admin-pages/token-gating-nft';
 
 const NftDisplayWrapper = styled.div`
   width: 100%;
@@ -69,7 +71,8 @@ const NftDisplay = ({
   isStoreApp?: boolean;
   price: boolean;
 }) => {
-  const { nftAddressWithProductsLocked } = useNft();
+  const { nftAddressWithProductsLocked, checkIfUserHasPrintedVersion } =
+    useNft();
 
   const productsLocked = nftAddressWithProductsLocked[address];
 
@@ -81,6 +84,8 @@ const NftDisplay = ({
       }`
     : 'No exclusivity yet.';
 
+  const hasNftPrintedVersion = checkIfUserHasPrintedVersion(address);
+
   return (
     <UnstyledLink
       to={`${
@@ -88,7 +93,10 @@ const NftDisplay = ({
       }/${address}`}
     >
       <NftDisplayWrapper>
-        <NftImg {...(image && { src: image })} />
+        <NftImgWrapper>
+          <NftImg {...(image && { src: image })} />
+          {hasNftPrintedVersion && <NftOwnerBadge />}
+        </NftImgWrapper>
 
         <NftName>{name}</NftName>
 

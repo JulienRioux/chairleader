@@ -1,8 +1,4 @@
-import {
-  Button,
-  UnstyledButton,
-  UnstyledExternalLink,
-} from 'components-library';
+import { Button, UnstyledExternalLink, UnstyledLink } from 'components-library';
 import styled from 'styled-components';
 
 export const NftImg = styled.img`
@@ -105,7 +101,7 @@ export const DealPrice = styled.div`
   color: ${(p) => p.theme.color.primary};
 `;
 
-export const DealItemButton = styled.div`
+export const DealItemButton = styled(UnstyledLink)`
   min-width: 200px;
   width: 200px;
   text-align: left;

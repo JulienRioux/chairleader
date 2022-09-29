@@ -1,19 +1,5 @@
-import { useMutation, useQuery } from '@apollo/client';
-import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
-import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import {
-  LAMPORTS_PER_SOL,
-  PublicKey,
-  SystemProgram,
-  Transaction,
-} from '@solana/web3.js';
-import BigNumber from 'bignumber.js';
-import {
-  getAssociatedTokenAddress,
-  getMint,
-  getAccount,
-  createTransferCheckedInstruction,
-} from '@solana/spl-token';
+import { useQuery } from '@apollo/client';
+import { useWallet } from '@solana/wallet-adapter-react';
 import {
   Button,
   Icon,
@@ -29,9 +15,9 @@ import { useMetaplex } from 'hooks/metaplex';
 import { useNft } from 'hooks/nft';
 import { usePrintedNftsEditions } from 'hooks/printed-nfts-editions';
 import { useStore } from 'hooks/store';
-import { FIND_NFT_BY_ADDRESS, SAVE_TRANSACTION_INVOICE } from 'queries';
+import { FIND_NFT_BY_ADDRESS } from 'queries';
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import {
   CLUSTER_ENV,
   formatShortAddress,
@@ -39,8 +25,6 @@ import {
   getNftMetadata,
   Logger,
   routes,
-  DEVNET_DUMMY_MINT,
-  createSPLTokenInstruction,
 } from 'utils';
 import { ExclusivitiesSelection } from '../exclusitivies-selection';
 import { DetailItem } from '../invoice-page';
@@ -65,8 +49,13 @@ import {
   NftImg,
   RightWrapper,
 } from './token-gating.nft.styles';
-import { useCart } from 'hooks/cart';
-import { PAYMENT_SERVICE_FEE, SELLING_NFT_SERVICE_FEE } from 'configs';
+import { NftOwnerBadge } from 'pages/pos-app/product-page';
+import styled from 'styled-components';
+import { useSplTokenPayent } from 'hooks/spl-token-payment';
+
+export const NftImgWrapper = styled.div`
+  position: relative;
+`;
 
 const DealItem = ({
   productId,
@@ -81,14 +70,15 @@ const DealItem = ({
   const { inventory: storeApp } = useStore();
   const { currency: storeAppCurrency } = useCurrency();
 
-  const [inventory, currency] = isAdminApp
-    ? [adminApp, user?.currency]
-    : [storeApp, storeAppCurrency];
+  const [inventory, currency, linkPath] = isAdminApp
+    ? [adminApp, user?.currency, routes.admin.inventory]
+    : [storeApp, storeAppCurrency, routes.store.inventory];
 
   const currentProduct = inventory.find(({ _id }) => _id === productId);
 
+  console.log(`${linkPath}/${productId}`);
   return (
-    <DealItemButton>
+    <DealItemButton to={`${linkPath}/${productId}`}>
       <ProductImg src={currentProduct?.image} />
       <DealTitle>{currentProduct?.title}</DealTitle>
 
@@ -97,147 +87,6 @@ const DealItem = ({
       </DealPrice>
     </DealItemButton>
   );
-};
-
-export const useSplTokenPayent = () => {
-  const { sendTransaction, publicKey } = useWallet();
-  const { connection } = useConnection();
-  const navigate = useNavigate();
-
-  const { getCartSummaryForInvoice, resetCart } = useCart();
-
-  const [saveTransactionInvoice] = useMutation(SAVE_TRANSACTION_INVOICE);
-
-  const { currency, network } = useCurrency();
-
-  const { store, refetchInventory } = useStore();
-
-  const makePayment = useCallback(
-    async ({ amount, isNft }: { amount: number; isNft?: boolean }) => {
-      try {
-        // Creating a new transaction
-        const transaction = new Transaction();
-
-        // Setting up the differents recipient amount
-        const totalAmount = Number(amount);
-
-        const payeePublicKey =
-          process.env.REACT_APP_TRANSACTION_PAYEE_PUBLIC_KEY;
-
-        if (!payeePublicKey || !publicKey) {
-          return;
-        }
-
-        const mint = await getMint(connection, DEVNET_DUMMY_MINT);
-
-        const SERVICE_FEE = isNft
-          ? SELLING_NFT_SERVICE_FEE
-          : PAYMENT_SERVICE_FEE;
-
-        const servicePayout = Number(
-          (totalAmount * (SERVICE_FEE / 100))?.toFixed(mint.decimals)
-        );
-
-        const recipientPayout = totalAmount - servicePayout;
-
-        const paymentInstructions = await createSPLTokenInstruction({
-          recipient: new PublicKey(payeePublicKey),
-          amount: new BigNumber(recipientPayout),
-          splToken: DEVNET_DUMMY_MINT,
-          sender: publicKey,
-          connection,
-        });
-
-        // Adding the payment instruction to the current transaction
-        transaction.add(paymentInstructions);
-
-        const intermediaryAccount =
-          process.env.REACT_APP_TRANSACTION_PAYEE_PUBLIC_KEY ?? '';
-
-        // Fees instructions
-        const feesInstructions = await createSPLTokenInstruction({
-          recipient: new PublicKey(intermediaryAccount),
-          amount: new BigNumber(servicePayout),
-          splToken: DEVNET_DUMMY_MINT,
-          sender: publicKey,
-          connection,
-        });
-
-        // Adding the instruction to the current transaction
-        transaction.add(feesInstructions);
-
-        // Getting the latest block hash
-        const {
-          context: { slot: minContextSlot },
-          value: { blockhash, lastValidBlockHeight },
-        } = await connection.getLatestBlockhashAndContext();
-
-        transaction.recentBlockhash = blockhash;
-
-        // Setting up the feePayer
-        transaction.feePayer = publicKey;
-
-        const signature = await sendTransaction(transaction, connection, {
-          minContextSlot,
-        });
-
-        await connection.confirmTransaction({
-          blockhash,
-          lastValidBlockHeight,
-          signature,
-        });
-
-        if (isNft) {
-          // Do something here to save the Invoice
-          return;
-        }
-
-        // Saving the invoice in out DB
-        const cartSummary = getCartSummaryForInvoice();
-
-        const newInvoice = await saveTransactionInvoice({
-          variables: {
-            ...cartSummary,
-            signature,
-            customerWalletAddress: publicKey.toString(),
-            storeId: store?._id,
-            currency,
-            network,
-            serviceFees: servicePayout,
-          },
-        });
-
-        // Resetting the cart items and redirect to the confirmation page
-        resetCart();
-        // Make sure we're updating the qty after the purchase
-        refetchInventory();
-
-        navigate(
-          `${routes.store.confirmation}/${newInvoice?.data?.saveTransactionInvoice?._id}/tx/${newInvoice?.data?.saveTransactionInvoice?.signature}`
-        );
-      } catch (err) {
-        // err handle
-        Logger.error(err);
-        message.error();
-        throw err;
-      }
-    },
-    [
-      connection,
-      currency,
-      getCartSummaryForInvoice,
-      navigate,
-      network,
-      publicKey,
-      refetchInventory,
-      resetCart,
-      saveTransactionInvoice,
-      sendTransaction,
-      store?._id,
-    ]
-  );
-
-  return { makePayment };
 };
 
 const ExclusivitiesCarousel = ({
@@ -319,6 +168,7 @@ export const TokenGatingNft = ({
     refreshProductLockedMap,
     updateNft,
     updateNftIsLoading,
+    checkIfUserHasPrintedVersion,
   } = useNft();
 
   const { makePayment } = useSplTokenPayent();
@@ -448,6 +298,8 @@ export const TokenGatingNft = ({
 
   const nftIsArchived = currentNft?.findNftByAddress?.isArchived;
 
+  const hasNftPrintedVersion = checkIfUserHasPrintedVersion(address);
+
   return (
     <div>
       <div>
@@ -461,8 +313,11 @@ export const TokenGatingNft = ({
       </div>
       <TokenGatingNftWrapper>
         <DetailsWrapper>
-          <NftImg {...(image && { src: image })} />
+          <NftImgWrapper>
+            <NftImg {...(image && { src: image })} />
 
+            {hasNftPrintedVersion && <NftOwnerBadge />}
+          </NftImgWrapper>
           <NftName>{name}</NftName>
 
           <Description>{description}</Description>
@@ -505,8 +360,9 @@ export const TokenGatingNft = ({
               style={{ margin: '20px 0' }}
               onClick={handlePrintNewEdition}
               isLoading={printNftIsLoading}
+              disabled={hasNftPrintedVersion}
             >
-              Buy now
+              {hasNftPrintedVersion ? 'You own this NFT' : 'Buy now'}
             </Button>
           )}
 

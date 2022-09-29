@@ -30,6 +30,7 @@ export interface INftContext {
   checkIfUserHasPrintedVersion: any;
   updateNft: (args: any) => void;
   updateNftIsLoading: boolean;
+  getProductLockedMapIsLoading: boolean;
 }
 
 export async function asyncForEach<T>(
@@ -60,6 +61,9 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
 
   const [mapMasterToPrintedEditions, setMapMasterToPrintedEditions] =
     useState<any>({});
+
+  const [getProductLockedMapIsLoading, setGetProductLockedMapIsLoading] =
+    useState(true);
 
   const {
     loading: storeNftsAreLoading,
@@ -140,6 +144,13 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
       ({ isArchived }: { isArchived: boolean }) => !isArchived
     );
 
+    // Do not run this if there is no data to fetch
+    if (!unarchivedNfts?.length) {
+      return;
+    }
+
+    setGetProductLockedMapIsLoading(true);
+
     await asyncForEach(
       unarchivedNfts,
       async ({
@@ -183,6 +194,8 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
     setNftAddressWithProductsLocked(nftLockMap);
     setMapProductLockedToMaster(productLockedMapToMaster);
     setMapMasterToPrintedEditions(masterToPrintedEditionsMap);
+
+    setGetProductLockedMapIsLoading(false);
   }, [storeNfts?.findNftsByStoreId]);
 
   useEffect(() => {
@@ -251,6 +264,7 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
       checkIfUserHasPrintedVersion,
       updateNft,
       updateNftIsLoading,
+      getProductLockedMapIsLoading,
     };
   }, [
     userNftsIsLoading,
@@ -268,6 +282,7 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
     checkIfUserHasPrintedVersion,
     updateNft,
     updateNftIsLoading,
+    getProductLockedMapIsLoading,
   ]);
 
   return <NftContext.Provider value={getCtx()}>{children}</NftContext.Provider>;

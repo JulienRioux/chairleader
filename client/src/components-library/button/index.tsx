@@ -8,6 +8,7 @@ const ButtonWrapper = styled.button<{
   fullWidth?: boolean;
   isIconBtn?: boolean;
   danger?: boolean;
+  isLoading?: boolean;
 }>`
   position: relative;
   align-items: center;
@@ -67,6 +68,13 @@ const ButtonWrapper = styled.button<{
     cursor: not-allowed;
     transform: none;
   }
+
+  ${(p) =>
+    p.isLoading &&
+    css`
+      pointer-events: none;
+      cursor: default;
+    `}
 `;
 
 export const UnstyledButton = styled.button<{ hasAnimation?: boolean }>`
@@ -138,6 +146,7 @@ export const Button = ({
       isIconBtn={!children && icon}
       fullWidth={fullWidth}
       danger={danger}
+      isLoading={isLoading}
       {...props}
     >
       {isLoading && <BtnLoader />}
