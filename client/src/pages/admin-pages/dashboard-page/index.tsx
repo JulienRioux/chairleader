@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { Button, Loader } from 'components-library';
+import { IS_DEV } from 'configs';
 import { useAuth } from 'hooks/auth';
 import {
   CURRENCY,
@@ -66,43 +67,47 @@ export const DashboardPage = () => {
 
   return (
     <DashboardPageWrapper>
-      <DetailItem label="Currency:">
-        {
-          <>
-            <NetworkTab
-              secondary={network !== NETWORK.DEVNET}
-              onClick={() => setNetwork(NETWORK.DEVNET)}
-            >
-              {NETWORK.DEVNET}
-            </NetworkTab>
-            <NetworkTab
-              secondary={network !== NETWORK.MAINNET}
-              onClick={() => setNetwork(NETWORK.MAINNET)}
-            >
-              {NETWORK.MAINNET}
-            </NetworkTab>
-          </>
-        }
-      </DetailItem>
+      {IS_DEV && (
+        <>
+          <DetailItem label="Network:">
+            {
+              <>
+                <NetworkTab
+                  secondary={network !== NETWORK.DEVNET}
+                  onClick={() => setNetwork(NETWORK.DEVNET)}
+                >
+                  {NETWORK.DEVNET}
+                </NetworkTab>
+                <NetworkTab
+                  secondary={network !== NETWORK.MAINNET}
+                  onClick={() => setNetwork(NETWORK.MAINNET)}
+                >
+                  {NETWORK.MAINNET}
+                </NetworkTab>
+              </>
+            }
+          </DetailItem>
 
-      <DetailItem label="Network:">
-        {
-          <>
-            <NetworkTab
-              secondary={currency !== CURRENCY.USDC}
-              onClick={() => setCurrency(CURRENCY.USDC)}
-            >
-              {CURRENCY.USDC}
-            </NetworkTab>
-            <NetworkTab
-              secondary={currency !== CURRENCY.SOL}
-              onClick={() => setCurrency(CURRENCY.SOL)}
-            >
-              {CURRENCY.SOL}
-            </NetworkTab>
-          </>
-        }
-      </DetailItem>
+          <DetailItem label="Currency:">
+            {
+              <>
+                <NetworkTab
+                  secondary={currency !== CURRENCY.USDC}
+                  onClick={() => setCurrency(CURRENCY.USDC)}
+                >
+                  {CURRENCY.USDC}
+                </NetworkTab>
+                <NetworkTab
+                  secondary={currency !== CURRENCY.SOL}
+                  onClick={() => setCurrency(CURRENCY.SOL)}
+                >
+                  {CURRENCY.SOL}
+                </NetworkTab>
+              </>
+            }
+          </DetailItem>
+        </>
+      )}
 
       <DetailItem label="Total sale before tax:">
         {fixDecimal(totalPrice)} <CurrencyWrapper>{currency}</CurrencyWrapper>
@@ -122,7 +127,7 @@ export const DashboardPage = () => {
         <CurrencyWrapper>{currency}</CurrencyWrapper>
       </DetailItem>
 
-      <DetailItem label="Number of transactions:">
+      <DetailItem label="Number of sales transactions:">
         {totalTransactions}
       </DetailItem>
     </DashboardPageWrapper>

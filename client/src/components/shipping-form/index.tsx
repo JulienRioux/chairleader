@@ -114,7 +114,7 @@ export const ShippingForm = () => {
       try {
         setPaymentIsLoading(true);
         console.log('Payment started');
-        await makePayment(Number(totalWithSaleTax));
+        await makePayment({ amount: Number(totalWithSaleTax) });
         message.success('Payment succeed');
       } catch (err) {
         Logger.error(err);

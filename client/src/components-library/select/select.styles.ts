@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Styles } from 'styles';
 
 export const SelectWrapper = styled.div`
   margin-bottom: 12px;
@@ -18,7 +17,7 @@ export const SelectInput = styled.select`
   width: 100%;
   color: ${(p) => p.theme.color.text};
   min-width: 220px;
-  border: ${(p) => p.theme.borderWidth} solid ${(p) => p.theme.color.text};
+  border: ${(p) => p.theme.borderWidth} solid ${(p) => p.theme.color.text}66;
 
   &:focus,
   &:active {

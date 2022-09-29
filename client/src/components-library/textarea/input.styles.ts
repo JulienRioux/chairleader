@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const TextareaWrapper = styled.textarea`
-  border: ${(p) => p.theme.borderWidth} solid ${(p) => p.theme.color.text};
+  border: ${(p) => p.theme.borderWidth} solid ${(p) => p.theme.color.text}66;
   color: ${(p) => p.theme.color.text};
   background: transparent;
   font-size: 16px;

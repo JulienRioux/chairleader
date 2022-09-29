@@ -19,7 +19,7 @@ import { routes } from 'utils';
 const PosStyles = css`
   grid-template-columns: 1fr 1fr 1fr 1fr;
 
-  @media (max-width: 1400px) {
+  @media (max-width: 920px) {
     grid-template-columns: 1fr 1fr 1fr;
   }
 

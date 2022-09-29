@@ -239,6 +239,7 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  /** Return the cartItems as an array of object in a JSON string, the total price before and after tax + the sale tax. */
   const getCartSummaryForInvoice = useCallback(() => {
     return {
       cartItems: JSON.stringify(populatedCartItems),

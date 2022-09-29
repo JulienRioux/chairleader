@@ -66,7 +66,7 @@ import {
   RightWrapper,
 } from './token-gating.nft.styles';
 import { useCart } from 'hooks/cart';
-import { PAYMENT_SERVICE_FEE } from 'configs';
+import { PAYMENT_SERVICE_FEE, SELLING_NFT_SERVICE_FEE } from 'configs';
 
 const DealItem = ({
   productId,
@@ -113,7 +113,7 @@ export const useSplTokenPayent = () => {
   const { store, refetchInventory } = useStore();
 
   const makePayment = useCallback(
-    async (amount: number) => {
+    async ({ amount, isNft }: { amount: number; isNft?: boolean }) => {
       try {
         // Creating a new transaction
         const transaction = new Transaction();
@@ -130,8 +130,12 @@ export const useSplTokenPayent = () => {
 
         const mint = await getMint(connection, DEVNET_DUMMY_MINT);
 
+        const SERVICE_FEE = isNft
+          ? SELLING_NFT_SERVICE_FEE
+          : PAYMENT_SERVICE_FEE;
+
         const servicePayout = Number(
-          (totalAmount * (PAYMENT_SERVICE_FEE / 100))?.toFixed(mint.decimals)
+          (totalAmount * (SERVICE_FEE / 100))?.toFixed(mint.decimals)
         );
 
         const recipientPayout = totalAmount - servicePayout;
@@ -182,6 +186,11 @@ export const useSplTokenPayent = () => {
           lastValidBlockHeight,
           signature,
         });
+
+        if (isNft) {
+          // Do something here to save the Invoice
+          return;
+        }
 
         // Saving the invoice in out DB
         const cartSummary = getCartSummaryForInvoice();
@@ -362,7 +371,7 @@ export const TokenGatingNft = ({
     }
 
     try {
-      await makePayment(Number(price));
+      await makePayment({ amount: Number(price), isNft: true });
 
       message.success('Payment succeed.');
 
@@ -379,7 +388,7 @@ export const TokenGatingNft = ({
 
       refreshProductLockedMap();
 
-      message.success('NFT generated successfully.');
+      message.success('NFT added successfully.');
     } catch (err) {
       Logger.error(err);
       setPrintNftIsLoading(false);

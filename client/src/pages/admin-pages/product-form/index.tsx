@@ -32,7 +32,7 @@ import {
   useEffect,
   useRef,
 } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { formatShortAddress, resizeFileImg, routes } from 'utils';
 
@@ -47,7 +47,7 @@ const ImgWrapper = styled(UnstyledButton)`
   object-fit: cover;
   aspect-ratio: ${(p) => p.theme.products.image.aspectRatio};
   border-radius: ${(p) => p.theme.borderRadius.default};
-  border: ${(p) => p.theme.borderWidth} solid ${(p) => p.theme.color.text};
+  border: ${(p) => p.theme.borderWidth} solid ${(p) => p.theme.color.text}66;
   font-size: 100px;
   display: flex;
   align-items: center;
