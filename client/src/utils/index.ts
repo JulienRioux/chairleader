@@ -9,3 +9,4 @@ export * from './determine-platform';
 export * from './cluster';
 export * from './nfts';
 export * from './create-spl-token-instruction';
+export * from './override-hide-app-from-url-params';
