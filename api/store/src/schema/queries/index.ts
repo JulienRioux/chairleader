@@ -1,7 +1,9 @@
-export const queries = `
+import { gql } from 'apollo-server-lambda';
+
+export const queries = gql`
   type Query {
     getMe: Store
-    
+
     getProductsByUserId: [CartItem]
 
     getInvoicesByStoreId: [Invoice]

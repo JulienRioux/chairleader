@@ -216,6 +216,23 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
         ? productsLockedWithNftAddress[productId]
         : null;
 
+      // If we did not fetch all the NFT copies, show the products that are token gated
+      if (getProductLockedMapIsLoading) {
+        const lockedProductsMap = new Set<string>();
+        storeNfts?.findNftsByStoreId?.forEach(
+          ({ productsUnlocked }: { productsUnlocked: string[] }) => {
+            productsUnlocked.forEach((item) => lockedProductsMap.add(item));
+          }
+        );
+        const isTokenGatedProductWhileLoading =
+          lockedProductsMap.has(productId);
+
+        return {
+          isUnlocked: false,
+          isTokenGated: isTokenGatedProductWhileLoading,
+        };
+      }
+
       const isTokenGatedProduct = tokenGated !== undefined;
 
       // The product is unlocked if the user wallet is connected and the user has one token-gating NFT
@@ -228,7 +245,13 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
         isTokenGated: isTokenGatedProduct,
       };
     },
-    [productsLockedWithNftAddress, publicKey, userNfts]
+    [
+      getProductLockedMapIsLoading,
+      productsLockedWithNftAddress,
+      publicKey,
+      storeNfts?.findNftsByStoreId,
+      userNfts,
+    ]
   );
 
   const checkIfUserHasPrintedVersion = useCallback(

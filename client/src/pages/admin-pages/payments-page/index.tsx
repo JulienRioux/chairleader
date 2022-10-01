@@ -37,7 +37,14 @@ const SearchWrapper = styled.form`
   }
 `;
 
+const camel2title = (camelCase: string) =>
+  camelCase
+    .replace(/([A-Z])/g, (match) => ` ${match}`)
+    .replace(/^./, (match) => match.toUpperCase())
+    .trim();
+
 const COLUMNS = [
+  'Status',
   'Order ID',
   'Date',
   'Customer wallet ID',
@@ -57,7 +64,9 @@ const formatTableData = (invoices: any) => {
       _id,
       customerWalletAddress,
       currency,
+      fulfillmentStatus,
     }: any) => ({
+      Status: camel2title(fulfillmentStatus),
       'Order ID': _id,
       Date: format(new Date(Number(createdAt)), 'MMMM dd yyyy, h:mm:ss'),
       'Customer wallet ID': formatShortAddress(customerWalletAddress),
@@ -136,7 +145,7 @@ export const PaymentsPage = () => {
       {loading ? (
         <Loader />
       ) : noSearchData ? (
-        <p>No result for your searchFilter...</p>
+        <p>No result for your search...</p>
       ) : (
         <Table columns={COLUMNS} rows={filteredTableData} />
       )}

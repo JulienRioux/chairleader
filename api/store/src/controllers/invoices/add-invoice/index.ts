@@ -13,6 +13,14 @@ export const addInvoice = async ({
   currency,
   network,
   serviceFees,
+  shippingFees,
+  email,
+  name,
+  country,
+  address,
+  city,
+  state,
+  postalCode,
 }: {
   signature: string;
   totalPrice: number;
@@ -24,6 +32,14 @@ export const addInvoice = async ({
   currency: string;
   network: string;
   serviceFees: number;
+  shippingFees: number;
+  email: string;
+  name: string;
+  country: string;
+  address: string;
+  city: string;
+  state?: string;
+  postalCode: string;
 }) => {
   try {
     const doc = new InvoiceModel({
@@ -37,6 +53,14 @@ export const addInvoice = async ({
       currency,
       network,
       serviceFees,
+      shippingFees,
+      email,
+      name,
+      country,
+      address,
+      city,
+      state,
+      postalCode,
     });
 
     // Updating the product quantity
@@ -53,6 +77,24 @@ export const addInvoice = async ({
     await doc.save();
 
     return doc;
+  } catch (err) {
+    Logger.error(err);
+    return null;
+  }
+};
+
+export const updateInvoice = async ({
+  fulfillmentStatus,
+  invoiceId,
+}: {
+  fulfillmentStatus: string;
+  invoiceId: string;
+}) => {
+  try {
+    const undatedInvoice = await InvoiceModel.findByIdAndUpdate(invoiceId, {
+      fulfillmentStatus,
+    });
+    return undatedInvoice;
   } catch (err) {
     Logger.error(err);
     return null;

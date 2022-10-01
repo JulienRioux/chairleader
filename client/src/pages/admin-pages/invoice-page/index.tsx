@@ -1,13 +1,13 @@
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { CartItem, CartSummary } from 'components';
-import { Icon, Loader } from 'components-library';
+import { Icon, Loader, message, Select } from 'components-library';
 import { CURRENCY, NETWORK } from 'hooks/currency';
 import { getTxExplorerUrl } from 'pages/cart-page';
-import { GET_INVOICE_BY_ID } from 'queries';
-import { ReactNode } from 'react';
+import { GET_INVOICE_BY_ID, UPDATE_INVOICE } from 'queries';
+import { ReactNode, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { formatShortAddress } from 'utils';
+import { formatShortAddress, Logger } from 'utils';
 import { format } from 'date-fns';
 
 const InvoicePageWrapper = styled.div`
@@ -52,17 +52,67 @@ export const DetailItem = ({
   </Detail>
 );
 
+const FULFILLMENT_OPTIONS = [
+  {
+    value: 'unfulfilled',
+    label: 'Unfulfilled',
+  },
+  {
+    value: 'fulfilled',
+    label: 'Fulfilled',
+  },
+  {
+    value: 'partiallyFulfilled',
+    label: 'Partially fulfilled',
+  },
+  {
+    value: 'scheduled',
+    label: 'Scheduled',
+  },
+  {
+    value: 'onHold',
+    label: 'On hold',
+  },
+];
+
 export const InvoicePage = () => {
   const { invoiceId } = useParams();
-  const { data, loading } = useQuery(GET_INVOICE_BY_ID, {
+  const {
+    data,
+    loading,
+    refetch: refetchGetInvoiceById,
+  } = useQuery(GET_INVOICE_BY_ID, {
     variables: {
       id: invoiceId,
     },
+    notifyOnNetworkStatusChange: true,
   });
+
+  const [updateInvoice, { loading: updateInvoiceIsLoading }] =
+    useMutation(UPDATE_INVOICE);
 
   const cartItems = data?.getInvoiceById?.cartItems;
 
   const invoiceData = data?.getInvoiceById;
+
+  const handleFulfillmentStatusChange = useCallback(
+    async (e: any) => {
+      try {
+        await updateInvoice({
+          variables: {
+            invoiceId,
+            fulfillmentStatus: e.target.value,
+          },
+        });
+        await refetchGetInvoiceById();
+        message.success(`Fulfillment status updated.`);
+      } catch (err) {
+        Logger.error(err);
+        message.error();
+      }
+    },
+    [updateInvoice, refetchGetInvoiceById, invoiceId]
+  );
 
   if (loading) {
     return <Loader />;
@@ -74,6 +124,37 @@ export const InvoicePage = () => {
 
   return (
     <InvoicePageWrapper>
+      <InvoiceDiv>
+        <Header>Cart summary:</Header>
+
+        {cartItems?.map(
+          ({ _id, qty, image, title, price, totalSupply }: any) => (
+            <CartItem
+              key={_id}
+              id={_id}
+              qty={qty}
+              image={image}
+              title={title}
+              price={price}
+              totalSupply={totalSupply}
+              enableUpdate={false}
+              currency={invoiceData?.currency}
+              isAdmin
+            />
+          )
+        )}
+
+        <div style={{ margin: '40px 0' }}>
+          <CartSummary
+            totalPrice={invoiceData?.totalPrice}
+            totalSaleTax={invoiceData?.totalSaleTax}
+            totalWithSaleTax={invoiceData?.totalWithSaleTax}
+            currency={invoiceData?.currency}
+            isAdminApp
+          />
+        </div>
+      </InvoiceDiv>
+
       <InvoiceDiv>
         <Header>Invoice details:</Header>
 
@@ -122,34 +203,45 @@ export const InvoicePage = () => {
       </InvoiceDiv>
 
       <InvoiceDiv>
-        <Header>Cart summary:</Header>
+        <Header>Shipping details:</Header>
 
-        {cartItems?.map(
-          ({ _id, qty, image, title, price, totalSupply }: any) => (
-            <CartItem
-              key={_id}
-              id={_id}
-              qty={qty}
-              image={image}
-              title={title}
-              price={price}
-              totalSupply={totalSupply}
-              enableUpdate={false}
-              currency={invoiceData?.currency}
-              isAdmin
-            />
-          )
-        )}
+        <DetailItem label="Email:">{invoiceData?.email}</DetailItem>
+        <DetailItem label="Shipping fees:">
+          {invoiceData?.shippingFees} USDC
+        </DetailItem>
 
-        <div style={{ margin: '40px 0' }}>
-          <CartSummary
-            totalPrice={invoiceData?.totalPrice}
-            totalSaleTax={invoiceData?.totalSaleTax}
-            totalWithSaleTax={invoiceData?.totalWithSaleTax}
-            currency={invoiceData?.currency}
-            isAdminApp
+        <DetailItem label="Name:">{invoiceData?.name}</DetailItem>
+
+        <DetailItem label="Country:">{invoiceData?.country}</DetailItem>
+
+        <DetailItem label="Address:">{invoiceData?.address}</DetailItem>
+
+        <DetailItem label="City:">{invoiceData?.city}</DetailItem>
+
+        <DetailItem label="State/Province:">{invoiceData?.state}</DetailItem>
+
+        <DetailItem label="Postal code/ZIP:">
+          {invoiceData?.postalCode}
+        </DetailItem>
+      </InvoiceDiv>
+
+      <InvoiceDiv>
+        <Header>Fulfillment status:</Header>
+
+        {updateInvoiceIsLoading ? (
+          <p>Loading...</p>
+        ) : (
+          <Select
+            label="Update fulfillment status"
+            value={invoiceData?.fulfillmentStatus}
+            onChange={handleFulfillmentStatusChange}
+            options={FULFILLMENT_OPTIONS}
+            name="fulfillmentStatus"
+            id="fulfillmentStatus"
+            placeholder="Fulfillment status"
+            required
           />
-        </div>
+        )}
       </InvoiceDiv>
     </InvoicePageWrapper>
   );

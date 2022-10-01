@@ -353,6 +353,17 @@ export const InventoryLayout = ({ children }: { children: ReactNode }) => {
                   />
                 )}
 
+                {isOnNftsPage && !hasMobileNavBar && (
+                  <Button
+                    icon="house"
+                    style={{ marginRight: '8px' }}
+                    to={routes.store.inventory}
+                    secondary
+                  >
+                    Home
+                  </Button>
+                )}
+
                 {showNftsLink && !hasMobileNavBar && (
                   <Button
                     icon="grid_view"

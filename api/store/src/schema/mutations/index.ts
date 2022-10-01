@@ -1,48 +1,94 @@
-export const mutations = `
+import { gql } from 'apollo-server-lambda';
+
+export const mutations = gql`
   type Mutation {
-      """
-      Authenticate mutation
-      """
-      authenticate(email: String, hostname: String): AuthenticateResponse
-      
-      """
-      Validate OTP
-      """
-      validateOtp(email: String, validationCode: String): ValidateOtpResponse
+    """
+    Authenticate mutation
+    """
+    authenticate(email: String, hostname: String): AuthenticateResponse
 
-      """
-      Update user
-      """
-      updateUser(storeName: String, walletAddress: String, subDomain: String, currency: String, image: Upload, saleTax: Float): Store
+    """
+    Validate OTP
+    """
+    validateOtp(email: String, validationCode: String): ValidateOtpResponse
 
-      """
-      Add Product
-      """
-      addProduct(title: String!, image: Upload, description: String, price: String!, totalSupply: String!): Product
+    """
+    Update user
+    """
+    updateUser(
+      storeName: String
+      walletAddress: String
+      subDomain: String
+      currency: String
+      image: Upload
+      saleTax: Float
+    ): Store
 
-      """
-      Delete product by ID
-      """
-      deleteProductById(id: String!): Product
+    """
+    Add Product
+    """
+    addProduct(
+      title: String!
+      image: Upload
+      description: String
+      price: String!
+      totalSupply: String!
+    ): Product
 
-      """
-      Edit Product by ID
-      """
-      editProduct(title: String, image: Upload, description: String, price: String, totalSupply: String, productId: String!): Product
+    """
+    Delete product by ID
+    """
+    deleteProductById(id: String!): Product
 
-      """
-      Save transaction invoice
-      """
-      saveTransactionInvoice(cartItems: String!, signature: String!, totalPrice: Float!, totalSaleTax: Float!, totalWithSaleTax: Float!, customerWalletAddress: String!, storeId: String!, currency: String!, network: String!, serviceFees: Float!): Invoice
+    """
+    Edit Product by ID
+    """
+    editProduct(
+      title: String
+      image: Upload
+      description: String
+      price: String
+      totalSupply: String
+      productId: String!
+    ): Product
 
-      """
-      Add Nft by address
-      """
-      addNft(nftAddress: String!): Nft
+    """
+    Save transaction invoice
+    """
+    saveTransactionInvoice(
+      cartItems: String!
+      signature: String!
+      totalPrice: Float!
+      totalSaleTax: Float!
+      totalWithSaleTax: Float!
+      customerWalletAddress: String!
+      storeId: String!
+      currency: String!
+      network: String!
+      serviceFees: Float!
+      shippingFees: Float
+      email: String!
+      name: String!
+      country: String!
+      address: String!
+      city: String!
+      state: String
+      postalCode: String!
+    ): Invoice
 
-      """
-      Update Nft by ID
-      """
-      updateNft(id: String!, productsUnlocked: [String], isArchived: Boolean): Nft
+    """
+    Add Nft by address
+    """
+    addNft(nftAddress: String!): Nft
+
+    """
+    Update Nft by ID
+    """
+    updateNft(id: String!, productsUnlocked: [String], isArchived: Boolean): Nft
+
+    """
+    Update Invoice by ID
+    """
+    updateInvoice(fulfillmentStatus: String!, invoiceId: String!): Invoice
   }
 `;

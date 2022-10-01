@@ -76,7 +76,6 @@ const DealItem = ({
 
   const currentProduct = inventory.find(({ _id }) => _id === productId);
 
-  console.log(`${linkPath}/${productId}`);
   return (
     <DealItemButton to={`${linkPath}/${productId}`}>
       <ProductImg src={currentProduct?.image} />
@@ -426,7 +425,7 @@ export const TokenGatingNft = ({
           {currentNftIsLoading ? (
             <div>
               <Loader />
-              <div>Loading exclusivities</div>
+              <div style={{ textAlign: 'center' }}>Loading exclusivities</div>
             </div>
           ) : (
             <ExclusivitiesCarousel

@@ -18,6 +18,16 @@ import { useCart } from 'hooks/cart';
 import { useCurrency } from 'hooks/currency';
 import { useStore } from 'hooks/store';
 
+export interface IShippingInfo {
+  email: string;
+  name: string;
+  country: string;
+  address: string;
+  city: string;
+  state?: string;
+  postalCode: string;
+}
+
 export const useSplTokenPayent = () => {
   const { sendTransaction, publicKey } = useWallet();
   const { connection } = useConnection();
@@ -32,7 +42,15 @@ export const useSplTokenPayent = () => {
   const { store, refetchInventory } = useStore();
 
   const makePayment = useCallback(
-    async ({ amount, isNft }: { amount: number; isNft?: boolean }) => {
+    async ({
+      amount,
+      isNft,
+      shippingInfo,
+    }: {
+      amount: number;
+      isNft?: boolean;
+      shippingInfo?: IShippingInfo;
+    }) => {
       try {
         // Creating a new transaction
         const transaction = new Transaction();
@@ -50,7 +68,7 @@ export const useSplTokenPayent = () => {
         const mint = await getMint(connection, DEVNET_DUMMY_MINT);
 
         const SERVICE_FEE = isNft
-          ? SELLING_NFT_SERVICE_FEE
+          ? SELLING_NFT_SERVICE_FEE * 100
           : PAYMENT_SERVICE_FEE;
 
         const servicePayout = Number(
@@ -123,6 +141,8 @@ export const useSplTokenPayent = () => {
             currency,
             network,
             serviceFees: servicePayout,
+            shippingFees: 10,
+            ...shippingInfo,
           },
         });
 

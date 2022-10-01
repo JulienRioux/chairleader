@@ -8,6 +8,7 @@ export const NftImg = styled.img`
   width: 100%;
   max-width: 400px;
   background: ${(p) => p.theme.color.black}11;
+  object-fit: cover;
 `;
 
 export const NftName = styled.div`

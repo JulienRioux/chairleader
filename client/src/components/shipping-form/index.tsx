@@ -101,7 +101,7 @@ export const ShippingForm = () => {
   const handlePay = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
-      console.log('Shipping information =>>>', {
+      const shippingInfo = {
         email,
         name,
         country,
@@ -109,13 +109,17 @@ export const ShippingForm = () => {
         city,
         state,
         postalCode,
-      });
+      };
 
       try {
         setPaymentIsLoading(true);
-        console.log('Payment started');
-        await makePayment({ amount: Number(totalWithSaleTax) });
-        message.success('Payment succeed');
+
+        await makePayment({
+          amount: Number(totalWithSaleTax),
+          shippingInfo,
+        });
+
+        message.success('Thank you for you purchase!');
       } catch (err) {
         Logger.error(err);
       }

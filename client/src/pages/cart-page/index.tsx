@@ -263,7 +263,7 @@ export const CartPage = () => {
         <div>
           {/* <DevnetMsg /> */}
 
-          <CartItemsTitle>Cart items</CartItemsTitle>
+          <CartItemsTitle>Cart summary</CartItemsTitle>
 
           <CartItemsWrapper style={{ marginBottom: `${height}px` }}>
             <CartItems showMoreButton />

@@ -1,4 +1,6 @@
-export const schemaTypes = `
+import { gql } from 'apollo-server-lambda';
+
+export const schemaTypes = gql`
   type Store {
     email: String!
     _id: ID
@@ -23,9 +25,9 @@ export const schemaTypes = `
 
   type Product {
     _id: String
-    title: String! 
+    title: String!
     storeId: String!
-    image: String 
+    image: String
     description: String
     price: Float
     totalSupply: Int
@@ -53,6 +55,15 @@ export const schemaTypes = `
     currency: String
     network: String
     serviceFees: Float
+    shippingFees: Float
+    email: String
+    name: String
+    country: String
+    address: String
+    city: String
+    state: String
+    postalCode: String
+    fulfillmentStatus: String
   }
 
   type StoreData {

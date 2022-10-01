@@ -155,6 +155,14 @@ export const SAVE_TRANSACTION_INVOICE = gql`
     $currency: String!
     $network: String!
     $serviceFees: Float!
+    $shippingFees: Float
+    $email: String!
+    $name: String!
+    $country: String!
+    $address: String!
+    $city: String!
+    $state: String
+    $postalCode: String!
   ) {
     saveTransactionInvoice(
       cartItems: $cartItems
@@ -167,6 +175,14 @@ export const SAVE_TRANSACTION_INVOICE = gql`
       currency: $currency
       network: $network
       serviceFees: $serviceFees
+      shippingFees: $shippingFees
+      email: $email
+      name: $name
+      country: $country
+      address: $address
+      city: $city
+      state: $state
+      postalCode: $postalCode
     ) {
       _id
       signature
@@ -178,30 +194,43 @@ export const SAVE_TRANSACTION_INVOICE = gql`
 //   Invoices
 // ============
 
+const INVOICE = gql`
+  {
+    createdAt
+    _id
+    signature
+    totalPrice
+    totalSaleTax
+    totalWithSaleTax
+    customerWalletAddress
+    currency
+    network
+    serviceFees
+    cartItems {
+      title
+      _id
+      image
+      title
+      price
+      description
+      totalSupply
+      qty
+    }
+    shippingFees
+    email
+    name
+    country
+    address
+    city
+    state
+    postalCode
+    fulfillmentStatus
+  }
+`;
+
 export const GET_INVOICES_BY_STORE_ID = gql`
   query GetInvoicesByStoreId {
-    getInvoicesByStoreId {
-      createdAt
-      _id
-      signature
-      totalPrice
-      totalSaleTax
-      totalWithSaleTax
-      customerWalletAddress
-      currency
-      network
-      serviceFees
-      cartItems {
-        title
-        _id
-        image
-        title
-        price
-        description
-        totalSupply
-        qty
-      }
-    }
+    getInvoicesByStoreId  ${INVOICE}
   }
 `;
 
@@ -235,28 +264,7 @@ export const GET_STORE_DATA = gql`
 
 export const GET_INVOICE_BY_ID = gql`
   query GetInvoiceById($id: String!) {
-    getInvoiceById(id: $id) {
-      createdAt
-      _id
-      signature
-      totalPrice
-      totalSaleTax
-      totalWithSaleTax
-      customerWalletAddress
-      currency
-      network
-      serviceFees
-      cartItems {
-        title
-        _id
-        image
-        title
-        price
-        description
-        totalSupply
-        qty
-      }
-    }
+    getInvoiceById(id: $id) ${INVOICE}
   }
 `;
 
@@ -297,5 +305,11 @@ export const FIND_NFT_BY_STORE_ID = gql`
 export const UPDATE_NFT = gql`
   mutation UpdateNft($id: String!, $productsUnlocked: [String], $isArchived: Boolean) {
     updateNft(id: $id, productsUnlocked: $productsUnlocked, isArchived: $isArchived) ${NFT}
+  }
+`;
+
+export const UPDATE_INVOICE = gql`
+  mutation UpdateInvoice($fulfillmentStatus: String!, $invoiceId: String!) {
+    updateInvoice(fulfillmentStatus: $fulfillmentStatus, invoiceId: $invoiceId) ${INVOICE}
   }
 `;

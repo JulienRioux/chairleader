@@ -108,7 +108,7 @@ export const TokenGatedBadge = ({
     ) : (
       <>
         <Icon name="lock" />
-        <TokenGatedText>Token gated</TokenGatedText>
+        <TokenGatedText>Exclusivity</TokenGatedText>
       </>
     )}
   </TokenGatedBadgeWrapper>
@@ -154,7 +154,10 @@ export const ProductPreview = ({
 }: ProductPreviewProps) => {
   const { user, currencyDecimals } = useAuth();
   const { currency, decimals } = useCurrency();
-  const { checkIfTokenGatedProduct } = useNft();
+  const {
+    checkIfUserCanPurchaseTokenGatedProduct,
+    getProductLockedMapIsLoading,
+  } = useNft();
 
   const isOutOfStock = totalSupply === 0;
 
@@ -162,7 +165,8 @@ export const ProductPreview = ({
     Number(price)?.toFixed(isPos ? decimals : currencyDecimals)
   );
 
-  const isLockedProduct = checkIfTokenGatedProduct(id);
+  const { isTokenGated, isUnlocked } =
+    checkIfUserCanPurchaseTokenGatedProduct(id);
 
   return (
     <ProductWrapper
@@ -177,7 +181,7 @@ export const ProductPreview = ({
       />
 
       <BadgeWrapper>
-        {isLockedProduct && <TokenGatedBadge />}
+        {isTokenGated && <TokenGatedBadge isUnlocked={isUnlocked} />}
 
         {isOutOfStock && <OutOfStockBadge />}
       </BadgeWrapper>

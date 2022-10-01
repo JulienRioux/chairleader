@@ -8,7 +8,10 @@ import {
   validateOtpMutation,
   updateUserMutation,
 } from './user';
-import { saveTransactionInvoiceMutation } from './invoice';
+import {
+  saveTransactionInvoiceMutation,
+  updateInvoiceMutation,
+} from './invoice';
 import { addNftMutation, updateNftMutation } from './nft';
 
 export const Mutation = {
@@ -21,4 +24,5 @@ export const Mutation = {
   saveTransactionInvoice: saveTransactionInvoiceMutation,
   addNft: addNftMutation,
   updateNft: updateNftMutation,
+  updateInvoice: updateInvoiceMutation,
 };

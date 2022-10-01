@@ -147,7 +147,7 @@ export const CartItem = ({
 
   const isCustomProduct = id?.startsWith('CUSTOM_ITEM_');
 
-  const priceDisplay = Number((price * qty)?.toFixed(decimals));
+  const priceDisplay = Number((price * qty)?.toFixed(decimals ?? 6));
 
   return (
     <CartItemWrapper>
@@ -193,9 +193,7 @@ export const CartItem = ({
 
       <PriceAndTotal>
         <Price>
-          <span style={{ color: Styles.color.text }}>
-            {!enableUpdate && `${qty} x `}
-          </span>
+          <span>{!enableUpdate && `${qty} x `}</span>
           {priceDisplay} {currency} {enableUpdate && <span>each</span>}
         </Price>
 

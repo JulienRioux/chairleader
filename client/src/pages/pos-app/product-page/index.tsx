@@ -281,10 +281,6 @@ export const ProductPage = () => {
     getNftMetadata();
   }, [getNftMetadata]);
 
-  if (getProductLockedMapIsLoading) {
-    return <Loader />;
-  }
-
   return (
     <ProductWrapper>
       <ImgWrapper>
@@ -297,7 +293,7 @@ export const ProductPage = () => {
         )}
 
         <BadgeWrapper>
-          {isTokenGated && <TokenGatedBadge isUnlocked={true} />}
+          {isTokenGated && <TokenGatedBadge isUnlocked={isUnlocked} />}
 
           {isOutOfStock && <OutOfStockBadge />}
         </BadgeWrapper>
@@ -369,9 +365,17 @@ export const ProductPage = () => {
 
             {SHOW_MISSING_TOKEN_MSG && (
               <>
-                <p>You don't own qualifying NFT.</p>
-                <Button to={`${routes.store.nfts}?productId=${productId}`}>
-                  Shop qualifying NFTs
+                {getProductLockedMapIsLoading ? (
+                  <p>Checking NFT ownership...</p>
+                ) : (
+                  <p>You don't own qualifying NFT.</p>
+                )}
+                <Button
+                  icon="grid_view"
+                  to={routes.store.nfts}
+                  isLoading={getProductLockedMapIsLoading}
+                >
+                  Shop all NFTs
                 </Button>
               </>
             )}

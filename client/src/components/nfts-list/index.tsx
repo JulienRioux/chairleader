@@ -17,6 +17,7 @@ const NftImg = styled.img`
   border: 1px solid ${(p) => p.theme.color.text}22;
   width: 100%;
   aspect-ratio: 1 / 1;
+  object-fit: cover;
 `;
 
 const NftsListWrapper = styled.div`

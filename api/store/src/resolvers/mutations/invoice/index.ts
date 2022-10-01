@@ -1,4 +1,7 @@
-import { addInvoice } from '../../../controllers/invoices/add-invoice';
+import {
+  addInvoice,
+  updateInvoice,
+} from '../../../controllers/invoices/add-invoice';
 
 export const saveTransactionInvoiceMutation = async (
   _source: any,
@@ -13,6 +16,14 @@ export const saveTransactionInvoiceMutation = async (
     currency,
     network,
     serviceFees,
+    shippingFees,
+    email,
+    name,
+    country,
+    address,
+    city,
+    state,
+    postalCode,
   },
   context
 ) => {
@@ -27,5 +38,24 @@ export const saveTransactionInvoiceMutation = async (
     currency,
     network,
     serviceFees,
+    shippingFees,
+    email,
+    name,
+    country,
+    address,
+    city,
+    state,
+    postalCode,
+  });
+};
+
+export const updateInvoiceMutation = async (
+  _source: any,
+  { fulfillmentStatus, invoiceId },
+  context
+) => {
+  return updateInvoice({
+    fulfillmentStatus,
+    invoiceId,
   });
 };
