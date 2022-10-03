@@ -27,6 +27,10 @@ export const SelectInput = styled.select`
   :focus {
     border-color: ${(p) => p.theme.color.primary};
   }
+
+  :invalid {
+    color: #757575;
+  }
 `;
 
 export const SelectInnerWrapper = styled.div`

@@ -25,6 +25,9 @@ const InnerSideNav = styled.div`
   padding: 8px;
   display: flex;
   flex-direction: column;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 
   @media (max-width: 800px) {
     flex-direction: row;
@@ -39,6 +42,7 @@ const SideNav = styled.div`
   border-right: 1px solid ${(p) => p.theme.color.lightGrey};
   position: sticky;
   top: 0;
+  width: 220px;
 
   @media (max-width: 800px) {
     height: auto;
@@ -51,6 +55,18 @@ const SideNav = styled.div`
     right: 0;
     background: ${(p) => p.theme.color.background};
     z-index: 9;
+    width: 100%;
+  }
+`;
+
+const SideNavLabel = styled.div`
+  margin-left: 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+
+  @media (max-width: 800px) {
+    display: none;
   }
 `;
 
@@ -65,25 +81,45 @@ const ChildrenWrapper = styled.div`
   }
 `;
 
-const SideNavWrapper = styled.div`
+const SideNavWrapper = styled(UnstyledLink)<{ isActive?: boolean }>`
   margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  border-radius: ${(p) => p.theme.borderRadius.default};
 
-  @media (max-width: 800px) {
-    margin: 0;
-  }
-`;
-
-const SideNavLink = styled(Button)<{ isActive?: boolean }>`
-  background: ${(p) => p.theme.color.background};
-  color: ${(p) => p.theme.color.text};
-  border: none;
-  font-size: 20px;
   ${(p) =>
     p.isActive &&
     css`
       color: ${(p) => p.theme.color.primary};
-      background: ${(p) => p.theme.color.primary}18;
+      background: ${(p) => p.theme.color.primary}18 !important;
     `}
+  @media (max-width: 800px) {
+    margin: 0;
+  }
+
+  :hover {
+    background: ${(p) => p.theme.color.black}11;
+  }
+`;
+
+const StoreImageWapper = styled.div`
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  height: 44px;
+
+  @media (max-width: 800px) {
+    display: none;
+  }
+`;
+
+const SideNavIconWrapper = styled.div`
+  font-size: 20px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const SharedStyles = css`
@@ -98,6 +134,9 @@ const StoreImg = styled.img`
   object-fit: cover;
 
   ${SharedStyles}
+
+  width: 38px;
+  height: 38px;
 `;
 
 const NoImgStore = styled.div`
@@ -110,8 +149,6 @@ const NoImgStore = styled.div`
 
   ${SharedStyles};
 `;
-
-const StoreImgLink = styled(UnstyledLink)``;
 
 const TopNav = styled.div`
   padding: 8px 12px;
@@ -152,6 +189,27 @@ const SendFeedbackLink = styled(UnstyledExternalLink)`
   }
 `;
 
+const StoreImgIconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+
+  span {
+    margin-left: 8px;
+    font-weight: bold;
+    font-size: 18px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    @media (max-width: 800px) {
+      display: none;
+    }
+  }
+`;
+
 export const StoreImgIcon = ({
   image,
   storeName,
@@ -162,12 +220,24 @@ export const StoreImgIcon = ({
 }) => (
   <>
     {image ? (
-      <StoreImg src={image} {...props} />
+      <StoreImgIconWrapper>
+        <StoreImg src={image} {...props} />
+        {storeName && <span>{storeName}</span>}
+      </StoreImgIconWrapper>
     ) : (
       <NoImgStore {...props}>{storeName ? storeName[0] : ''}</NoImgStore>
     )}
   </>
 );
+
+const SIDE_NAV_ROUTE = [
+  { route: routes.admin.inventory, icon: 'local_offer', label: 'Products' },
+  { route: routes.admin.tokenGating, icon: 'loyalty', label: 'NFTs' },
+  { route: routes.admin.payments, icon: 'receipt_long', label: 'Orders' },
+  { route: routes.admin.dashboard, icon: 'equalizer', label: 'Dashboard' },
+  { route: routes.admin.myStore, icon: 'settings', label: 'Settings' },
+  { route: routes.admin.pos, icon: 'shopping_bag', label: 'Open store' },
+];
 
 export const AdminLayout = ({ children }: { children: ReactNode }) => {
   const { pathname } = useLocation();
@@ -199,51 +269,23 @@ export const AdminLayout = ({ children }: { children: ReactNode }) => {
     <AdminLayoutWrapper>
       <SideNav>
         <InnerSideNav>
-          <SideNavWrapper>
-            <StoreImgLink to={routes.admin.myStore}>
-              <StoreImgIcon image={user?.image} storeName={user?.storeName} />
-            </StoreImgLink>
-          </SideNavWrapper>
+          <StoreImageWapper>
+            <StoreImgIcon image={user?.image} storeName={user?.storeName} />
+          </StoreImageWapper>
 
-          <SideNavWrapper>
-            <SideNavLink
-              to={routes.admin.inventory}
-              isActive={pathname === routes.admin.inventory}
-              icon="local_offer"
-            />
-          </SideNavWrapper>
+          {SIDE_NAV_ROUTE.map(({ icon, route, label }) => (
+            <SideNavWrapper
+              key={label}
+              isActive={pathname === route}
+              to={route}
+            >
+              <SideNavIconWrapper>
+                <Icon name={icon} />
+              </SideNavIconWrapper>
 
-          <SideNavWrapper>
-            <SideNavLink
-              to={routes.admin.tokenGating}
-              icon="loyalty"
-              isActive={pathname === routes.admin.tokenGating}
-            />
-          </SideNavWrapper>
-
-          <SideNavWrapper>
-            <SideNavLink
-              to={routes.admin.payments}
-              icon="receipt_long"
-              isActive={pathname === routes.admin.payments}
-            />
-          </SideNavWrapper>
-
-          <SideNavWrapper>
-            <SideNavLink
-              to={routes.admin.dashboard}
-              icon="equalizer"
-              isActive={pathname === routes.admin.dashboard}
-            />
-          </SideNavWrapper>
-
-          <SideNavWrapper>
-            <SideNavLink
-              to={routes.admin.pos}
-              icon="point_of_sale"
-              isActive={pathname === routes.admin.pos}
-            />
-          </SideNavWrapper>
+              <SideNavLabel>{label}</SideNavLabel>
+            </SideNavWrapper>
+          ))}
         </InnerSideNav>
       </SideNav>
       <RightLayoutWrapper>

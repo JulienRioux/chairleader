@@ -155,12 +155,16 @@ const CartItemsNumberBadge = styled.div`
   font-weight: bold;
 `;
 
-export const StoreLogo = () => {
+export const StoreLogo = ({ ...rest }) => {
   const { store } = useStore();
 
   return (
     <StoreImgAndName to={routes.store.inventory}>
-      <StyledStoreImgIcon image={store?.image} storeName={store?.storeName} />
+      <StyledStoreImgIcon
+        image={store?.image}
+        storeName={store?.storeName}
+        {...rest}
+      />
       <PageTitle>{store?.storeName}</PageTitle>
     </StoreImgAndName>
   );

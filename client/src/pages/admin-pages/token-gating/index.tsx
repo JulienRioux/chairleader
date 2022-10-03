@@ -64,6 +64,11 @@ const ServiceFeesExplaination = styled.div`
   font-size: 14px;
 `;
 
+const TokenGatingWrapper = styled.div`
+  max-width: 1600px;
+  margin: 0 auto;
+`;
+
 export const TokenGating = () => {
   const { metaplex } = useMetaplex();
   const wallet = useWallet();
@@ -240,7 +245,7 @@ export const TokenGating = () => {
 
   return (
     wallet.connected && (
-      <div>
+      <TokenGatingWrapper>
         <Button onClick={openModal}>Create new NFT</Button>
 
         <div style={{ margin: '20px 0' }}>
@@ -330,7 +335,7 @@ export const TokenGating = () => {
             </div>
           </form>
         </Modal>
-      </div>
+      </TokenGatingWrapper>
     )
   );
 };

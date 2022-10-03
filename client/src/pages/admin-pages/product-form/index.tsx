@@ -31,6 +31,7 @@ import {
   FormEvent,
   useEffect,
   useRef,
+  ReactNode,
 } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -43,6 +44,7 @@ const FormWrapper = styled.form`
 
 const ImgWrapper = styled(UnstyledButton)`
   width: 100%;
+  max-width: 200px;
   object-position: center;
   object-fit: cover;
   aspect-ratio: ${(p) => p.theme.products.image.aspectRatio};
@@ -65,17 +67,14 @@ const Img = styled.img`
   position: relative;
 `;
 
-const AddImgBtn = styled.div`
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  padding: 8px 12px;
-  border-radius: ${(p) => p.theme.borderRadius.default};
-  border: ${(p) => p.theme.borderWidth} solid ${(p) => p.theme.color.lightGrey};
-  color: ${(p) => p.theme.color.primary};
-  background: ${(p) => p.theme.color.background};
-  font-size: 16px;
-  font-weight: bold;
+const AddImgBtn = styled(Button)`
+  margin-left: 12px;
+`;
+
+const ImgAndBtnWrapper = styled.div`
+  display: flex;
+  align-items: flex-end;
+  margin: 8px 0 12px;
 `;
 
 const TokenGatingMasterLink = styled(UnstyledLink)`
@@ -90,6 +89,46 @@ const FormBtnWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
 `;
+
+const ProductFormCardWrapper = styled.div`
+  border-radius: ${(p) => p.theme.borderRadius.default};
+  border: 1px solid ${(p) => p.theme.color.lightGrey};
+  margin-bottom: 20px;
+`;
+
+const ProductFormCardTitle = styled.h3`
+  margin: 0 0 16px;
+  padding: 12px;
+  font-size: 20px;
+  border-bottom: 1px solid ${(p) => p.theme.color.lightGrey};
+`;
+
+const ProductFormCardText = styled.p`
+  color: ${(p) => p.theme.color.lightText};
+  padding: 0 12px;
+  font-size: 14px;
+  margin-top: 4px;
+`;
+
+const ProductFormCardContent = styled.div`
+  padding: 0 12px;
+`;
+
+const ProductFormCard = ({
+  title,
+  text,
+  children,
+}: {
+  title: ReactNode;
+  text: ReactNode;
+  children: ReactNode;
+}) => (
+  <ProductFormCardWrapper>
+    <ProductFormCardTitle>{title}</ProductFormCardTitle>
+    <ProductFormCardText>{text}</ProductFormCardText>
+    <ProductFormCardContent>{children}</ProductFormCardContent>
+  </ProductFormCardWrapper>
+);
 
 const CATECORY_OPTIONS = [
   {
@@ -110,14 +149,13 @@ const QTY_OPTIONS = [
 ];
 
 const STATUS_OPTIONS = [
-  {
-    value: 'published',
-    label: 'Published',
-  },
-  {
-    value: 'draft',
-    label: 'Draft',
-  },
+  { value: 'draft', label: 'Draft' },
+  { value: 'published', label: 'Published' },
+];
+
+const PRODUCT_TYPE_OPTIONS = [
+  { value: 'simpleProduct', label: 'Simple product' },
+  { value: 'productWithVariants', label: 'Product with variants' },
 ];
 
 export const ProductForm = () => {
@@ -135,6 +173,8 @@ export const ProductForm = () => {
   const [resizeImgIsLoading, setResizeImgIsLoading] = useState(false);
 
   const [status, setStatus] = useState(STATUS_OPTIONS[0].value);
+
+  const [productType, setProductType] = useState(PRODUCT_TYPE_OPTIONS[0].value);
 
   const { mapProductLockedToMaster } = useNft();
 
@@ -212,6 +252,9 @@ export const ProductForm = () => {
       }
       if (e.target.name === 'status') {
         setStatus(e.target.value);
+      }
+      if (e.target.name === 'productType') {
+        setProductType(e.target.value);
       }
       if (e.target.name === 'image') {
         const files = (e.target as HTMLInputElement)?.files as FileList;
@@ -307,117 +350,185 @@ export const ProductForm = () => {
 
   const isTokenGatedProduct = !!masterNftLocks;
 
+  // Show different form if it's a product with variant or simple product.
+  const IS_PRODUCT_WITH_VARIANTS = productType === 'simpleProduct';
+
   return (
     <FormWrapper onSubmit={handleSubmit}>
-      <ImgWrapper type="button" onClick={handleUploadFileClick}>
-        {currentImageSrc ? (
-          <>
-            <Img src={currentImageSrc} />
+      <ProductFormCard
+        title="General"
+        text="To start selling, all you need is a name, description, price, and image."
+      >
+        <Input
+          label="Product name"
+          value={title}
+          onChange={handleChange}
+          placeholder="Enter the product name"
+          required
+          name="title"
+        />
 
-            <AddImgBtn>
-              {resizeImgIsLoading ? 'Loading...' : 'Change image'}
-            </AddImgBtn>
-          </>
-        ) : (
-          <>
-            <Icon name="image" />
-
-            <AddImgBtn>
-              {resizeImgIsLoading ? 'Loading...' : 'Add image'}
-            </AddImgBtn>
-          </>
+        {USE_CATEGORY && (
+          <Select
+            label="Category"
+            value={category}
+            onChange={handleChange}
+            options={CATECORY_OPTIONS}
+            name="category"
+            id="category"
+            placeholder="Select a product category"
+          />
         )}
 
-        {isTokenGatedProduct && <TokenGatedBadge isPositionAbsolute />}
-      </ImgWrapper>
-
-      <VisuallyHiddenInput
-        type="file"
-        onChange={handleChange}
-        name="image"
-        accept="image/png, image/jpg, image/jpeg, image/webp"
-        ref={fileInput}
-      />
-
-      <Input
-        label="Product name"
-        value={title}
-        onChange={handleChange}
-        placeholder="Enter the product name"
-        required
-        name="title"
-      />
-
-      <Select
-        label="Total supply"
-        value={totalSupply}
-        onChange={handleChange}
-        options={QTY_OPTIONS}
-        name="totalSupply"
-        id="totalSupply"
-        placeholder="Select a total supply"
-        required
-      />
-
-      <Input
-        label={`Product price (${user?.currency})`}
-        value={price}
-        onChange={handleChange}
-        placeholder={`Enter the product price in ${user?.currency}`}
-        required
-        name="price"
-        type="number"
-        step={0.00000000001}
-        min={0}
-      />
-
-      {USE_CATEGORY && (
-        <Select
-          label="Category"
-          value={category}
+        <Textarea
+          label="Product description"
+          value={description}
           onChange={handleChange}
-          options={CATECORY_OPTIONS}
-          name="category"
-          id="category"
-          placeholder="Select a product category"
+          placeholder="Enter the product description"
+          name="description"
+          rows={8}
         />
+      </ProductFormCard>
+
+      <ProductFormCard title="Image" text="Add an image to your product.">
+        <ImgAndBtnWrapper>
+          <ImgWrapper type="button" onClick={handleUploadFileClick}>
+            {currentImageSrc ? (
+              <Img src={currentImageSrc} />
+            ) : (
+              <Icon name="image" />
+            )}
+
+            {isTokenGatedProduct && <TokenGatedBadge isPositionAbsolute />}
+
+            <VisuallyHiddenInput
+              type="file"
+              onChange={handleChange}
+              name="image"
+              accept="image/png, image/jpg, image/jpeg, image/webp"
+              ref={fileInput}
+            />
+          </ImgWrapper>
+
+          <AddImgBtn type="button" secondary onClick={handleUploadFileClick}>
+            {resizeImgIsLoading && 'Loading...'}
+            {!resizeImgIsLoading && currentImageSrc
+              ? 'Change image'
+              : 'Add image'}
+          </AddImgBtn>
+        </ImgAndBtnWrapper>
+      </ProductFormCard>
+
+      <ProductFormCard
+        title="Product type"
+        text="Product with variants are products are used to offer product variations like sizes, colors, etc."
+      >
+        <Select
+          label="Product type"
+          value={productType}
+          onChange={handleChange}
+          options={PRODUCT_TYPE_OPTIONS}
+          name="productType"
+          id="productType"
+          placeholder="Select a product type"
+          required
+        />
+      </ProductFormCard>
+
+      {IS_PRODUCT_WITH_VARIANTS && (
+        <ProductFormCard title="Pricing" text="Give products a price.">
+          <Input
+            label="Product price"
+            value={price}
+            onChange={handleChange}
+            placeholder={`Enter the product price in ${user?.currency}`}
+            required
+            name="price"
+            type="number"
+            step={0.00000000001}
+            min={0}
+          />
+
+          <Select
+            label="Total supply"
+            value={totalSupply}
+            onChange={handleChange}
+            options={QTY_OPTIONS}
+            name="totalSupply"
+            id="totalSupply"
+            placeholder="Select a total supply"
+            required
+          />
+        </ProductFormCard>
       )}
 
-      <Textarea
-        label="Product description"
-        value={description}
-        onChange={handleChange}
-        placeholder="Enter the product description"
-        name="description"
-        rows={8}
-      />
+      {!IS_PRODUCT_WITH_VARIANTS && (
+        <ProductFormCard
+          title="Variants"
+          text="Add variations of this product. Offer your customers different options for color, format, size, shape, etc.
+"
+        >
+          <Input
+            label="Product price"
+            value={price}
+            onChange={handleChange}
+            placeholder={`Enter the product price in ${user?.currency}`}
+            required
+            name="price"
+            type="number"
+            step={0.00000000001}
+            min={0}
+          />
+
+          <Select
+            label="Total supply"
+            value={totalSupply}
+            onChange={handleChange}
+            options={QTY_OPTIONS}
+            name="totalSupply"
+            id="totalSupply"
+            placeholder="Select a total supply"
+            required
+          />
+        </ProductFormCard>
+      )}
 
       {isTokenGatedProduct && (
-        <>
-          <Label>NFTs that unlocks this product:</Label>
+        <ProductFormCard
+          title="Exclusivities (NFTs gating)"
+          text="NFT gating is used to create value for your community members."
+        >
+          <>
+            <Label>NFTs unlocking this product</Label>
 
-          <div style={{ display: 'flex' }}>
-            {masterNftLocks?.map((masterAddress: string) => (
-              <TokenGatingMasterLink
-                key={masterAddress}
-                to={`${routes.admin.tokenGating}/${masterAddress}`}
-              >
-                {formatShortAddress(masterAddress)}
-              </TokenGatingMasterLink>
-            ))}
-          </div>
-        </>
+            <div style={{ display: 'flex' }}>
+              {masterNftLocks?.map((masterAddress: string) => (
+                <TokenGatingMasterLink
+                  key={masterAddress}
+                  to={`${routes.admin.tokenGating}/${masterAddress}`}
+                >
+                  {formatShortAddress(masterAddress)}
+                </TokenGatingMasterLink>
+              ))}
+            </div>
+          </>
+        </ProductFormCard>
       )}
 
-      <Select
-        label="Status"
-        value={status}
-        onChange={handleChange}
-        options={STATUS_OPTIONS}
-        name="status"
-        id="status"
-        placeholder="Select a product status"
-      />
+      <ProductFormCard
+        title="Product status"
+        text="Only published products are visible in your store."
+      >
+        <Select
+          label="Status"
+          value={status}
+          onChange={handleChange}
+          options={STATUS_OPTIONS}
+          name="status"
+          id="status"
+          placeholder="Select a product status"
+        />
+      </ProductFormCard>
 
       <FormBtnWrapper>
         {isEditting && (
@@ -435,7 +546,7 @@ export const ProductForm = () => {
           isLoading={addProductIsLoading || editProductIsLoading}
           type="submit"
         >
-          {isEditting ? 'Edit product' : 'Add product'}
+          {`Save ${status === 'draft' ? 'as draft' : 'and publish'}`}
         </Button>
       </FormBtnWrapper>
     </FormWrapper>
