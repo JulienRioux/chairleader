@@ -22,4 +22,5 @@ export const Label = styled.label`
   color: ${(p) => p.theme.color.text};
   display: inline-block;
   margin: 8px 0 4px 0;
+  font-size: 14px;
 `;

@@ -15,3 +15,4 @@ export const NFT_ROYALTY = Number(process.env.REACT_APP_NFT_ROYALTY);
 export const IS_DEV = process.env.REACT_APP_ENVIRONMENT === 'development';
 export const SHOW_MULTIPLE_CURRENCY = false;
 export const USE_PAYMENT_LINK = false;
+export const MAX_PRODUCTS = 50;

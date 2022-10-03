@@ -60,6 +60,10 @@ export const OutOfStockBadge = () => (
   <OutOfStockBadgeWrapper>Out of stock</OutOfStockBadgeWrapper>
 );
 
+export const DraftBadge = () => (
+  <OutOfStockBadgeWrapper>Draft</OutOfStockBadgeWrapper>
+);
+
 const TokenGatedBadgeWrapper = styled.div<{ isPositionAbsolute?: boolean }>`
   background: ${(p) => p.theme.color.background};
   border: 1px solid;
@@ -121,6 +125,7 @@ interface ProductPreviewProps {
   id: string;
   isPos?: boolean;
   totalSupply?: number;
+  status?: string;
 }
 
 export const ProductPreviewItem = ({
@@ -151,6 +156,7 @@ export const ProductPreview = ({
   id,
   isPos,
   totalSupply,
+  status,
 }: ProductPreviewProps) => {
   const { user, currencyDecimals } = useAuth();
   const { currency, decimals } = useCurrency();
@@ -184,6 +190,8 @@ export const ProductPreview = ({
         {isTokenGated && <TokenGatedBadge isUnlocked={isUnlocked} />}
 
         {isOutOfStock && <OutOfStockBadge />}
+
+        {status === 'draft' && <DraftBadge />}
       </BadgeWrapper>
     </ProductWrapper>
   );

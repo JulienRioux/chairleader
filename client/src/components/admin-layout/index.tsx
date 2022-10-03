@@ -114,7 +114,7 @@ const NoImgStore = styled.div`
 const StoreImgLink = styled(UnstyledLink)``;
 
 const TopNav = styled.div`
-  padding: 8px 20px;
+  padding: 8px 12px;
   border-bottom: 1px solid ${(p) => p.theme.color.lightGrey};
   height: 44px;
   display: flex;

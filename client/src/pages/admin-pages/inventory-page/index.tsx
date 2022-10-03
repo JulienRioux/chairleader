@@ -6,7 +6,7 @@ import {
   useModal,
 } from 'components-library';
 import { ProductPreview } from 'components/product-preview';
-import { IS_POINT_OF_SALE } from 'configs';
+import { IS_POINT_OF_SALE, MAX_PRODUCTS } from 'configs';
 import { IInventoryItem, useCart } from 'hooks/cart';
 import { useCurrency } from 'hooks/currency';
 import { useInventory } from 'hooks/inventory';
@@ -136,7 +136,7 @@ export const InventoryPage = () => {
           to={routes.admin.newProduct}
           icon={isMobileView ? 'add' : undefined}
           style={{ marginRight: '8px' }}
-          disabled={inventory.length <= 10}
+          disabled={inventory.length >= MAX_PRODUCTS}
         >
           {isMobileView ? '' : 'Add product'}
         </Button>
@@ -152,13 +152,14 @@ export const InventoryPage = () => {
       </TopBtnWrapper>
 
       <ProductGrid>
-        {result?.map(({ image, title, price, _id }) => (
+        {result?.map(({ image, title, price, _id, status }) => (
           <ProductPreview
             key={_id}
             image={image}
             title={title}
             price={price?.toString()}
             id={_id}
+            status={status}
           />
         ))}
 
@@ -237,27 +238,33 @@ export const StorePage = () => {
     );
   }
 
+  const publishedInventory = inventory.filter(
+    ({ status }) => status !== 'draft'
+  );
+
   return (
     <div>
       <ProductGrid isPos>
-        {inventory?.map(({ image, title, price, _id, totalSupply }) => (
-          <ProductPreview
-            key={_id}
-            image={image}
-            title={title}
-            price={price?.toString()}
-            id={_id}
-            isPos
-            totalSupply={totalSupply}
-          />
-        ))}
+        {publishedInventory?.map(
+          ({ image, title, price, _id, totalSupply }) => (
+            <ProductPreview
+              key={_id}
+              image={image}
+              title={title}
+              price={price?.toString()}
+              id={_id}
+              isPos
+              totalSupply={totalSupply}
+            />
+          )
+        )}
 
         {IS_POINT_OF_SALE && (
           <AddCustomProductBtn onClick={openModal} secondary>
             Add custom product
           </AddCustomProductBtn>
         )}
-        {!inventory?.length && <p>No product yet.</p>}
+        {!publishedInventory?.length && <p>No product yet.</p>}
 
         <Modal title="New custom product">
           <AddCustomItem closeModal={closeModal} />

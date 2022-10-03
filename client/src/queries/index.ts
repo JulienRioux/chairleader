@@ -250,14 +250,7 @@ export const GET_STORE_DATA = gql`
         image
         shippingFee
       }
-      products {
-        _id
-        image
-        title
-        price
-        description
-        totalSupply
-      }
+      products ${PRODUCT}
     }
   }
 `;

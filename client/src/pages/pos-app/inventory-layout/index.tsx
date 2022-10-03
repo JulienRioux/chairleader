@@ -23,7 +23,7 @@ import { drawerIn, fadeIn, fadeOut, drawerOut } from 'utils/keyframes';
 const AMINATION_DURATION = 300;
 
 const TopNavWrapper = styled.div`
-  padding: 8px 20px;
+  padding: 8px 12px;
   border-bottom: 1px solid ${(p) => p.theme.color.lightGrey};
   height: 44px;
 `;
@@ -52,7 +52,7 @@ const PageTitle = styled.div`
 const ChildrenWrapper = styled.div`
   max-width: ${(p) => p.theme.layout.maxWidth};
   margin: 0 auto;
-  padding: 20px;
+  padding: 12px;
 `;
 
 const StoreImgAndName = styled(UnstyledLink)`

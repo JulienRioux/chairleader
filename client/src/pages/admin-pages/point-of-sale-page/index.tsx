@@ -50,7 +50,7 @@ export const PointOfSalePage = () => {
       <Img src="https://craftwork-images.b-cdn.net/wp-content/uploads/flow-lava-02-cyborg-and-woman.png" />
 
       <Par>
-        Your point-of-sale is located at:{' '}
+        Your store is located at:{' '}
         <CopyLinkBtn onClick={handleCopyLink}>
           {storeLink} <Icon name="copy" />
         </CopyLinkBtn>
@@ -59,7 +59,7 @@ export const PointOfSalePage = () => {
       <div style={{ margin: '20px 0' }}>
         <a href={storeLink} target="_blank" rel="noreferrer">
           <Button fullWidth>
-            <span>Open point-of-sale</span>
+            <span>Open store</span>
 
             <span style={{ marginLeft: '8px' }}>
               <Icon name="launch" />

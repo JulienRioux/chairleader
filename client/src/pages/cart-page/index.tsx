@@ -9,9 +9,8 @@ import { useCart } from 'hooks/cart';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CURRENCY, useCurrency } from 'hooks/currency';
 import { useScrollTop } from 'hooks/scroll-top';
-import { PaymentOptions } from 'pages/cart-payment-page';
-import { useMediaQuery } from 'hooks/media-query';
 import { ShippingForm } from 'components/shipping-form';
+import { StoreLogo } from 'pages/pos-app/inventory-layout';
 
 export const getTxExplorerUrl = ({ signature = '', isDev = false }) =>
   `https://explorer.solana.com/tx/${signature}${isDev && '?cluster=devnet'}`;
@@ -50,10 +49,9 @@ const CartTitle = styled.h3`
 
 export const CartPageLayout = ({
   title,
-  link = routes.store.inventory,
   children,
 }: {
-  title: string;
+  title: ReactNode;
   children: ReactNode;
   link?: string;
 }) => (
@@ -61,8 +59,6 @@ export const CartPageLayout = ({
     <TopNavWrapper>
       <TopNav>
         <PageTitle>{title}</PageTitle>
-
-        <Button icon="arrow_back" secondary to={link} />
       </TopNav>
     </TopNavWrapper>
 
@@ -103,7 +99,7 @@ export const ConfirmationPage = () => {
 };
 
 const TopNavWrapper = styled.div`
-  padding: 8px;
+  padding: 8px 12px;
   border-bottom: 1px solid ${(p) => p.theme.color.lightGrey};
   height: 44px;
 `;
@@ -143,20 +139,6 @@ const CartItemsWrapper = styled.div`
     width: auto;
     border: none;
   }
-`;
-
-const TotalAndContinue = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: ${(p) => p.theme.color.background};
-  border-top: 1px solid ${(p) => p.theme.color.lightGrey};
-  border-top: 1px solid ${(p) => p.theme.color.lightGrey};
-`;
-
-const TotalAndContinueInner = styled.div`
-  margin: 20px 8px 8px;
 `;
 
 const DesktopSummaryWrapper = styled.div`
@@ -258,7 +240,7 @@ export const CartPage = () => {
   }, []);
 
   return (
-    <CartPageLayout title="Current order">
+    <CartPageLayout title={<StoreLogo />}>
       <CartPaymentLayout>
         <div>
           {/* <DevnetMsg /> */}
