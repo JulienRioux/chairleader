@@ -141,7 +141,6 @@ export const useSplTokenPayent = () => {
             currency,
             network,
             serviceFees: servicePayout,
-            shippingFees: 10,
             ...shippingInfo,
           },
         });

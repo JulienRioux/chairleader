@@ -42,7 +42,7 @@ const Price = styled.div`
 `;
 
 export const cartItemImgSharedStyles = css`
-  width: 120px;
+  width: 80px;
   aspect-ratio: ${(p) => p.theme.products.image.aspectRatio};
   border-radius: ${(p) => p.theme.borderRadius.default};
   margin-right: 12px;
@@ -63,7 +63,7 @@ const NoImageProduct = styled.div<{ isCustomProduct: boolean }>`
   color: ${(p) => p.theme.color.text}44;
   background: ${(p) => p.theme.color.lightGrey};
   ${cartItemImgSharedStyles}
-  min-width: 120px;
+  min-width: 80px;
   ${(p) => p.isCustomProduct && `background: transparent;`}
 `;
 

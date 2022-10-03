@@ -13,7 +13,7 @@ export const addInvoice = async ({
   currency,
   network,
   serviceFees,
-  shippingFees,
+  shippingFee,
   email,
   name,
   country,
@@ -32,7 +32,7 @@ export const addInvoice = async ({
   currency: string;
   network: string;
   serviceFees: number;
-  shippingFees: number;
+  shippingFee: number;
   email: string;
   name: string;
   country: string;
@@ -53,7 +53,7 @@ export const addInvoice = async ({
       currency,
       network,
       serviceFees,
-      shippingFees,
+      shippingFee,
       email,
       name,
       country,

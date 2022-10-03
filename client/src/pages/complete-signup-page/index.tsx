@@ -8,6 +8,7 @@ import {
   VisuallyHiddenInput,
 } from 'components-library';
 import { Label } from 'components-library/input/input.styles';
+import { SHOW_MULTIPLE_CURRENCY } from 'configs';
 import { useAuth } from 'hooks/auth';
 import { CURRENCY } from 'hooks/currency';
 import { HalfImagePageLayout } from 'pages/auth-page';
@@ -47,7 +48,7 @@ const ShareStyles = css`
   height: 120px;
   width: 120px;
   border: ${(p) => p.theme.borderWidth} solid ${(p) => p.theme.color.lightGrey};
-  border-radius: ${(p) => p.theme.borderRadius.input};
+  border-radius: ${(p) => p.theme.borderRadius.default};
 `;
 
 const Img = styled.img`
@@ -97,6 +98,7 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
   const [walletAddressError, setWalletAddressError] = useState('');
   const [currency, setCurrency] = useState(user?.currency ?? CURRENCY.USDC);
   const [saleTax, setSaleTax] = useState(user?.saleTax ?? '0');
+  const [shippingFee, setShippingFee] = useState(user?.shippingFee ?? '0');
 
   // Image
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -153,6 +155,9 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
     if (e.target.name === 'saleTax') {
       setSaleTax(e.target.value);
     }
+    if (e.target.name === 'shippingFee') {
+      setShippingFee(e.target.value);
+    }
     if (e.target.name === 'image') {
       const files = (e.target as HTMLInputElement)?.files as FileList;
       if (files[0]) {
@@ -200,6 +205,7 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
           currency,
           saleTax: Number(saleTax),
           image: imageFile,
+          shippingFee,
         });
 
         message.success('Your informations have been updated.');
@@ -225,6 +231,7 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
       isCompletingSignup,
       checkIfSubdomainIsAvailable,
       navigate,
+      shippingFee,
     ]
   );
 
@@ -281,16 +288,18 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
         error={walletAddressError}
       />
 
-      <Select
-        label="Currency"
-        value={currency}
-        onChange={handleChange}
-        options={CURRENCY_OPTIONS}
-        name="currency"
-        id="currency"
-        placeholder="Select a currency"
-        required
-      />
+      {SHOW_MULTIPLE_CURRENCY && (
+        <Select
+          label="Currency"
+          value={currency}
+          onChange={handleChange}
+          options={CURRENCY_OPTIONS}
+          name="currency"
+          id="currency"
+          placeholder="Select a currency"
+          required
+        />
+      )}
 
       <SaleTaxWrapper>
         <Input
@@ -307,6 +316,23 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
         />
         <PercentIconWrapper>
           <Icon name="percent" />
+        </PercentIconWrapper>
+      </SaleTaxWrapper>
+
+      <SaleTaxWrapper>
+        <Input
+          label="Shipping fee (Fixed price per order)"
+          value={shippingFee}
+          onChange={handleChange}
+          placeholder="Enter your shipping fee"
+          required
+          name="shippingFee"
+          type="number"
+          min={0}
+          step={0.01}
+        />
+        <PercentIconWrapper>
+          <span style={{ fontWeight: 'bold' }}>USDC</span>
         </PercentIconWrapper>
       </SaleTaxWrapper>
 

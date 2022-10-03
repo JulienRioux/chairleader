@@ -15,7 +15,7 @@ import {
 } from 'react';
 import { message } from 'components-library';
 import { useSearchParams } from 'react-router-dom';
-import { encodeURL } from '@solana/pay';
+import { USE_PAYMENT_LINK } from 'configs';
 
 export interface IInventoryItem {
   _id: string;
@@ -45,6 +45,7 @@ interface ICartContext {
     price: number;
   }) => void;
   getPaymentLink: () => any;
+  shippingFee: number;
 }
 
 export interface ICartItem {
@@ -196,8 +197,10 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
     (totalPrice * SALE_TAX_PERCENT)?.toFixed(decimals)
   );
 
+  const shippingFee = store.shippingFee;
+
   const totalWithSaleTax = Number(
-    (totalPrice + totalSaleTax)?.toFixed(decimals)
+    (totalPrice + totalSaleTax + shippingFee)?.toFixed(decimals)
   );
 
   const cartItemsNumber = cartItems.reduce((acc, curr) => acc + curr.qty, 0);
@@ -217,6 +220,9 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
   }, [cartItems, customItems]);
 
   useEffect(() => {
+    if (!USE_PAYMENT_LINK) {
+      return;
+    }
     try {
       const customItemsFromUrl = searchParams.get('custom_items');
       // Get the custom items
@@ -246,8 +252,15 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
       totalPrice,
       totalSaleTax,
       totalWithSaleTax,
+      shippingFee,
     };
-  }, [populatedCartItems, totalPrice, totalSaleTax, totalWithSaleTax]);
+  }, [
+    populatedCartItems,
+    totalPrice,
+    totalSaleTax,
+    totalWithSaleTax,
+    shippingFee,
+  ]);
 
   const getCtx = useCallback(() => {
     return {
@@ -262,6 +275,7 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
       cartItemsNumber,
       handleAddCustomItems,
       getPaymentLink,
+      shippingFee,
     };
   }, [
     populatedCartItems,
@@ -275,6 +289,7 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
     cartItemsNumber,
     handleAddCustomItems,
     getPaymentLink,
+    shippingFee,
   ]);
 
   return (

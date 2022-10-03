@@ -14,7 +14,7 @@ export const updateUser = async ({
   currency,
   saleTax,
   image,
-  nfts,
+  shippingFee,
 }: any) => {
   let imgSrc = '';
 
@@ -51,7 +51,7 @@ export const updateUser = async ({
       ...(currency && { currency }),
       ...(!isNaN(saleTax) && { saleTax }),
       ...(imgSrc && { image: imgSrc }),
-      ...(nfts && { nfts }),
+      ...(shippingFee && { shippingFee }),
       updatedAt: new Date(),
     },
     { upsert: true }

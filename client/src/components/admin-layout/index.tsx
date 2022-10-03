@@ -209,7 +209,7 @@ export const AdminLayout = ({ children }: { children: ReactNode }) => {
             <SideNavLink
               to={routes.admin.inventory}
               isActive={pathname === routes.admin.inventory}
-              icon="inventory_2"
+              icon="local_offer"
             />
           </SideNavWrapper>
 

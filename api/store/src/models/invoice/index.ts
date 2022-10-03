@@ -13,7 +13,7 @@ export interface IInvoice {
   currency: string;
   network: string;
   serviceFees: number;
-  shippingFees: number;
+  shippingFee: number;
   email: string;
   name: string;
   country: string;
@@ -36,7 +36,7 @@ const InvoiceSchema = new Schema<IInvoice>({
   currency: String,
   network: String,
   serviceFees: Number,
-  shippingFees: Number,
+  shippingFee: Number,
   email: String,
   name: String,
   country: String,

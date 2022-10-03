@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { Button, Loader } from 'components-library';
-import { IS_DEV } from 'configs';
+import { IS_DEV, SHOW_MULTIPLE_CURRENCY } from 'configs';
 import { useAuth } from 'hooks/auth';
 import {
   CURRENCY,
@@ -88,24 +88,26 @@ export const DashboardPage = () => {
             }
           </DetailItem>
 
-          <DetailItem label="Currency:">
-            {
-              <>
-                <NetworkTab
-                  secondary={currency !== CURRENCY.USDC}
-                  onClick={() => setCurrency(CURRENCY.USDC)}
-                >
-                  {CURRENCY.USDC}
-                </NetworkTab>
-                <NetworkTab
-                  secondary={currency !== CURRENCY.SOL}
-                  onClick={() => setCurrency(CURRENCY.SOL)}
-                >
-                  {CURRENCY.SOL}
-                </NetworkTab>
-              </>
-            }
-          </DetailItem>
+          {SHOW_MULTIPLE_CURRENCY && (
+            <DetailItem label="Currency:">
+              {
+                <>
+                  <NetworkTab
+                    secondary={currency !== CURRENCY.USDC}
+                    onClick={() => setCurrency(CURRENCY.USDC)}
+                  >
+                    {CURRENCY.USDC}
+                  </NetworkTab>
+                  <NetworkTab
+                    secondary={currency !== CURRENCY.SOL}
+                    onClick={() => setCurrency(CURRENCY.SOL)}
+                  >
+                    {CURRENCY.SOL}
+                  </NetworkTab>
+                </>
+              }
+            </DetailItem>
+          )}
         </>
       )}
 
@@ -127,9 +129,7 @@ export const DashboardPage = () => {
         <CurrencyWrapper>{currency}</CurrencyWrapper>
       </DetailItem>
 
-      <DetailItem label="Number of sales transactions:">
-        {totalTransactions}
-      </DetailItem>
+      <DetailItem label="Number of orders:">{totalTransactions}</DetailItem>
     </DashboardPageWrapper>
   );
 };

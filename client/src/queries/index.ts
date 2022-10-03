@@ -15,6 +15,7 @@ export const GET_ME = gql`
       currency
       saleTax
       image
+      shippingFee
     }
   }
 `;
@@ -46,6 +47,7 @@ export const UPDATE_USER = gql`
     $currency: String
     $saleTax: Float
     $image: Upload
+    $shippingFee: String
   ) {
     updateUser(
       storeName: $storeName
@@ -54,6 +56,7 @@ export const UPDATE_USER = gql`
       currency: $currency
       saleTax: $saleTax
       image: $image
+      shippingFee: $shippingFee
     ) {
       storeName
       walletAddress
@@ -61,6 +64,7 @@ export const UPDATE_USER = gql`
       currency
       saleTax
       image
+      shippingFee
     }
   }
 `;
@@ -148,6 +152,7 @@ export const SAVE_TRANSACTION_INVOICE = gql`
     $cartItems: String!
     $signature: String!
     $totalPrice: Float!
+    $shippingFee: Float!
     $totalSaleTax: Float!
     $totalWithSaleTax: Float!
     $customerWalletAddress: String!
@@ -155,7 +160,6 @@ export const SAVE_TRANSACTION_INVOICE = gql`
     $currency: String!
     $network: String!
     $serviceFees: Float!
-    $shippingFees: Float
     $email: String!
     $name: String!
     $country: String!
@@ -168,6 +172,7 @@ export const SAVE_TRANSACTION_INVOICE = gql`
       cartItems: $cartItems
       signature: $signature
       totalPrice: $totalPrice
+      shippingFee: $shippingFee
       totalSaleTax: $totalSaleTax
       totalWithSaleTax: $totalWithSaleTax
       customerWalletAddress: $customerWalletAddress
@@ -175,7 +180,6 @@ export const SAVE_TRANSACTION_INVOICE = gql`
       currency: $currency
       network: $network
       serviceFees: $serviceFees
-      shippingFees: $shippingFees
       email: $email
       name: $name
       country: $country
@@ -216,7 +220,7 @@ const INVOICE = gql`
       totalSupply
       qty
     }
-    shippingFees
+    shippingFee
     email
     name
     country
@@ -249,6 +253,7 @@ export const GET_STORE_DATA = gql`
         currency
         saleTax
         image
+        shippingFee
       }
       products {
         _id

@@ -30,12 +30,14 @@ export const CartSummary = ({
   totalWithSaleTax,
   currency,
   isAdminApp,
+  shippingFee,
 }: {
   totalPrice: number;
   totalSaleTax: number;
   totalWithSaleTax: number;
   currency: string;
   isAdminApp?: boolean;
+  shippingFee?: number;
 }) => {
   const { store } = useStore();
   const { user } = useAuth();
@@ -48,17 +50,20 @@ export const CartSummary = ({
         <>
           <SubTotalItem>
             <span>Subtotal:</span>
-            <strong>
-              {totalPrice} {currency}
-            </strong>
+            {totalPrice} {currency}
           </SubTotalItem>
 
           <SubTotalItem>
             <span>Total sale tax ({saleTax}%):</span>
-            <strong>
-              {totalSaleTax} {currency}
-            </strong>
+            {totalSaleTax} {currency}
           </SubTotalItem>
+
+          {shippingFee && (
+            <SubTotalItem>
+              <span>Shipping fee:</span>
+              {shippingFee} {currency}
+            </SubTotalItem>
+          )}
         </>
       )}
 
@@ -73,7 +78,8 @@ export const CartSummary = ({
 };
 
 export const CartTotal = () => {
-  const { totalPrice, totalSaleTax, totalWithSaleTax, cartItems } = useCart();
+  const { totalPrice, totalSaleTax, totalWithSaleTax, cartItems, shippingFee } =
+    useCart();
 
   const { currency } = useCurrency();
 
@@ -88,6 +94,7 @@ export const CartTotal = () => {
         totalSaleTax={totalSaleTax}
         totalWithSaleTax={totalWithSaleTax}
         currency={currency}
+        shippingFee={shippingFee}
       />
 
       <Button fullWidth to={routes.store.cart}>

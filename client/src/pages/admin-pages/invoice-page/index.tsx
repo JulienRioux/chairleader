@@ -170,6 +170,7 @@ export const InvoicePage = () => {
             totalWithSaleTax={invoiceData?.totalWithSaleTax}
             currency={invoiceData?.currency}
             isAdminApp
+            shippingFee={invoiceData?.shippingFee}
           />
         </div>
       </InvoiceCard>
@@ -221,9 +222,6 @@ export const InvoicePage = () => {
 
       <InvoiceCard title="Shipping details">
         <DetailItem label="Email:">{invoiceData?.email}</DetailItem>
-        <DetailItem label="Shipping fees:">
-          {invoiceData?.shippingFees} USDC
-        </DetailItem>
 
         <DetailItem label="Name:">{invoiceData?.name}</DetailItem>
 

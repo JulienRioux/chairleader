@@ -10,6 +10,7 @@ export const schemaTypes = gql`
     currency: String
     image: String
     saleTax: Float
+    shippingFee: Float
   }
 
   type AuthenticateResponse {
@@ -55,7 +56,7 @@ export const schemaTypes = gql`
     currency: String
     network: String
     serviceFees: Float
-    shippingFees: Float
+    shippingFee: Float
     email: String
     name: String
     country: String

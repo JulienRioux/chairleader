@@ -80,7 +80,7 @@ export const ConfirmationPage = () => {
           <Icon name="check" />
         </CheckIconWrapper>
 
-        <h3>Payment successfull 🎉</h3>
+        <h3>Thank you for you purchase 🎉</h3>
         <p>Order ID: {orderId}</p>
         <div style={{ margin: '20px 0 40px' }}>
           <a
@@ -234,10 +234,10 @@ const DevnetMsg = () => {
 
 export const CartPage = () => {
   useScrollTop();
-  const { totalWithSaleTax, cartItems, totalPrice, totalSaleTax } = useCart();
+  const { totalWithSaleTax, cartItems, totalPrice, totalSaleTax, shippingFee } =
+    useCart();
   const { status } = usePayment();
   const navigate = useNavigate();
-  const showShippingForm = useMediaQuery('(max-width: 1000px)');
 
   const [height, setHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
@@ -275,6 +275,7 @@ export const CartPage = () => {
                   totalSaleTax={totalSaleTax}
                   totalWithSaleTax={totalWithSaleTax}
                   currency={currency}
+                  shippingFee={shippingFee}
                 />
               </CartSummaryWrapper>
             </DesktopSummaryWrapper>

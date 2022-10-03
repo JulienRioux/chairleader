@@ -13,3 +13,5 @@ export const SELLING_NFT_SERVICE_FEE =
   Number(process.env.REACT_APP_SELLING_NFT_SERVICE_FEE) ?? 0;
 export const NFT_ROYALTY = Number(process.env.REACT_APP_NFT_ROYALTY);
 export const IS_DEV = process.env.REACT_APP_ENVIRONMENT === 'development';
+export const SHOW_MULTIPLE_CURRENCY = false;
+export const USE_PAYMENT_LINK = false;

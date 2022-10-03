@@ -118,8 +118,6 @@ export const ShippingForm = () => {
           amount: Number(totalWithSaleTax),
           shippingInfo,
         });
-
-        message.success('Thank you for you purchase!');
       } catch (err) {
         Logger.error(err);
       }

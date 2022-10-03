@@ -22,6 +22,7 @@ export const mutations = gql`
       currency: String
       image: Upload
       saleTax: Float
+      shippingFee: String
     ): Store
 
     """
@@ -66,7 +67,7 @@ export const mutations = gql`
       currency: String!
       network: String!
       serviceFees: Float!
-      shippingFees: Float
+      shippingFee: Float
       email: String!
       name: String!
       country: String!

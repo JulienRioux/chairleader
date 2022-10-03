@@ -37,6 +37,7 @@ const footerData = [
     content: [
       { title: 'Pricing', to: routes.pricing },
       { title: 'Authenticate', to: routes.auth },
+      { title: 'Changelog', href: 'https://chairleader.canny.io/changelog' },
     ],
     title: 'Product',
   },
