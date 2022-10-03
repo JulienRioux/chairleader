@@ -65,6 +65,7 @@ export const ProductGrid = styled.div<{ isPos?: boolean }>`
 const TopBtnWrapper = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
 `;
 
 const AddCustomProductBtn = styled(Button)`
@@ -135,9 +136,11 @@ export const InventoryPage = () => {
           to={routes.admin.newProduct}
           icon={isMobileView ? 'add' : undefined}
           style={{ marginRight: '8px' }}
+          disabled={inventory.length <= 10}
         >
           {isMobileView ? '' : 'Add product'}
         </Button>
+
         <Form onSubmit={handleSubmit}>
           <Input
             value={searchString}

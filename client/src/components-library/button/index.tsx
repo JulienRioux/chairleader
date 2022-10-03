@@ -159,5 +159,9 @@ export const Button = ({
       </ChildWrapper>
     </ButtonWrapper>
   );
-  return to ? <UnstyledLink to={to}>{button}</UnstyledLink> : button;
+  return to && !props.disabled ? (
+    <UnstyledLink to={to}>{button}</UnstyledLink>
+  ) : (
+    button
+  );
 };

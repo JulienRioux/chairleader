@@ -58,12 +58,10 @@ export const CartSummary = ({
             {totalSaleTax} {currency}
           </SubTotalItem>
 
-          {shippingFee && (
-            <SubTotalItem>
-              <span>Shipping fee:</span>
-              {shippingFee} {currency}
-            </SubTotalItem>
-          )}
+          <SubTotalItem>
+            <span>Shipping fee:</span>
+            {shippingFee ? `${shippingFee} ${currency}` : 'Free'}
+          </SubTotalItem>
         </>
       )}
 
