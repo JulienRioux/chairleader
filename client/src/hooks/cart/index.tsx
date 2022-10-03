@@ -25,6 +25,7 @@ export interface IInventoryItem {
   price: number;
   title: string;
   totalSupply: number;
+  status: string;
 }
 
 interface ICartContext {
@@ -116,6 +117,7 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
         price,
         title,
         totalSupply: 1,
+        status: 'published',
       };
       // Add the custom item to the custom item array
       setCustomItems([...customItems, newCustomItem]);

@@ -73,16 +73,21 @@ export const UPDATE_USER = gql`
 //   Products
 // ============
 
+const PRODUCT = gql`
+  {
+    _id
+    image
+    title
+    price
+    description
+    totalSupply
+    status
+  }
+`;
+
 export const GET_PRODUCTS_BY_USER_ID = gql`
   query GetProductsByUserId {
-    getProductsByUserId {
-      _id
-      image
-      title
-      price
-      description
-      totalSupply
-    }
+    getProductsByUserId ${PRODUCT}
   }
 `;
 
@@ -93,6 +98,7 @@ export const ADD_PRODUCT = gql`
     $description: String
     $price: String!
     $totalSupply: String!
+    $status: String!
   ) {
     addProduct(
       title: $title
@@ -100,14 +106,8 @@ export const ADD_PRODUCT = gql`
       description: $description
       price: $price
       totalSupply: $totalSupply
-    ) {
-      title
-      storeId
-      image
-      description
-      price
-      totalSupply
-    }
+      status: $status
+    ) ${PRODUCT}
   }
 `;
 
@@ -128,6 +128,7 @@ export const EDIT_PRODUCT = gql`
     $price: String
     $totalSupply: String
     $productId: String!
+    $status: String!
   ) {
     editProduct(
       title: $title
@@ -136,14 +137,8 @@ export const EDIT_PRODUCT = gql`
       price: $price
       totalSupply: $totalSupply
       productId: $productId
-    ) {
-      title
-      storeId
-      image
-      description
-      price
-      totalSupply
-    }
+      status: $status
+    ) ${PRODUCT}
   }
 `;
 

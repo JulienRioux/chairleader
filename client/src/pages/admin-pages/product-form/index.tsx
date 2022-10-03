@@ -109,6 +109,17 @@ const QTY_OPTIONS = [
   })),
 ];
 
+const STATUS_OPTIONS = [
+  {
+    value: 'published',
+    label: 'Published',
+  },
+  {
+    value: 'draft',
+    label: 'Draft',
+  },
+];
+
 export const ProductForm = () => {
   useScrollTop();
 
@@ -122,6 +133,8 @@ export const ProductForm = () => {
   const [totalSupply, setTotalSupply] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [resizeImgIsLoading, setResizeImgIsLoading] = useState(false);
+
+  const [status, setStatus] = useState(STATUS_OPTIONS[0].value);
 
   const { mapProductLockedToMaster } = useNft();
 
@@ -165,6 +178,7 @@ export const ProductForm = () => {
         setPrice(priceDisplay.toString());
         setTotalSupply(currentProduct.totalSupply?.toString());
         setImageSrc(currentProduct.image);
+        setStatus(currentProduct.status);
       }
     }
   }, [currencyDecimals, inventory, productId]);
@@ -196,6 +210,9 @@ export const ProductForm = () => {
       if (e.target.name === 'totalSupply') {
         setTotalSupply(e.target.value);
       }
+      if (e.target.name === 'status') {
+        setStatus(e.target.value);
+      }
       if (e.target.name === 'image') {
         const files = (e.target as HTMLInputElement)?.files as FileList;
         if (files[0]) {
@@ -225,6 +242,7 @@ export const ProductForm = () => {
             description,
             price,
             totalSupply,
+            status,
           },
         });
 
@@ -239,6 +257,7 @@ export const ProductForm = () => {
             description,
             price,
             totalSupply,
+            status,
           },
         });
 
@@ -260,6 +279,7 @@ export const ProductForm = () => {
       price,
       totalSupply,
       addProduct,
+      status,
     ]
   );
 
@@ -388,6 +408,16 @@ export const ProductForm = () => {
           </div>
         </>
       )}
+
+      <Select
+        label="Status"
+        value={status}
+        onChange={handleChange}
+        options={STATUS_OPTIONS}
+        name="status"
+        id="status"
+        placeholder="Select a product status"
+      />
 
       <FormBtnWrapper>
         {isEditting && (
