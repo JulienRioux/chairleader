@@ -32,6 +32,7 @@ export const schemaTypes = gql`
     description: String
     price: Float
     totalSupply: Int
+    status: String
   }
 
   type CartItem {
@@ -42,6 +43,7 @@ export const schemaTypes = gql`
     price: Float
     title: String
     totalSupply: Int
+    status: String
   }
 
   type Invoice {

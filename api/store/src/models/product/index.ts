@@ -9,6 +9,7 @@ export interface IProduct {
   price: number;
   totalSupply: number;
   storeId: string;
+  status: string;
 }
 
 const ProductSchema = new Schema<IProduct>({
@@ -19,6 +20,7 @@ const ProductSchema = new Schema<IProduct>({
   price: Number,
   totalSupply: Number,
   storeId: String,
+  status: { type: String, default: 'published' },
 });
 
 export const ProductModel = model<IProduct>('Product', ProductSchema);
