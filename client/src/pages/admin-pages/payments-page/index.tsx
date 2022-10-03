@@ -44,13 +44,13 @@ const camel2title = (camelCase: string) =>
     .trim();
 
 const COLUMNS = [
-  'Status',
   'Order ID',
   'Date',
   'Customer wallet ID',
-  'Currency',
   'Total',
+  'Currency',
   'Items',
+  'Status',
   'Details',
 ];
 

@@ -13,20 +13,24 @@ import { format } from 'date-fns';
 const InvoicePageWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-gap: 100px;
+  grid-gap: 40px;
+  align-items: flex-start;
 
   @media (max-width: 800px) {
     grid-template-columns: 1fr;
   }
 `;
 
-const InvoiceDiv = styled.div``;
+const InvoiceDiv = styled.div`
+  border: 1px solid ${(p) => p.theme.color.lightGrey};
+  border-radius: ${(p) => p.theme.borderRadius.default};
+`;
 
 const Header = styled.h3`
-  margin: 20px 0 20px;
-  padding-bottom: 8px;
+  margin: 0;
   border-bottom: 1px solid ${(p) => p.theme.color.lightGrey};
   font-size: 20px;
+  padding: 12px;
 `;
 
 const Detail = styled.p`
@@ -37,6 +41,10 @@ const Detail = styled.p`
   justify-content: space-between;
   align-items: center;
   word-break: break-all;
+`;
+
+const InvoiceCardContent = styled.div`
+  padding: 12px;
 `;
 
 export const DetailItem = ({
@@ -74,6 +82,19 @@ const FULFILLMENT_OPTIONS = [
     label: 'On hold',
   },
 ];
+
+const InvoiceCard = ({
+  title,
+  children,
+}: {
+  title: ReactNode;
+  children: ReactNode;
+}) => (
+  <InvoiceDiv>
+    <Header>{title}</Header>
+    <InvoiceCardContent>{children}</InvoiceCardContent>
+  </InvoiceDiv>
+);
 
 export const InvoicePage = () => {
   const { invoiceId } = useParams();
@@ -124,9 +145,7 @@ export const InvoicePage = () => {
 
   return (
     <InvoicePageWrapper>
-      <InvoiceDiv>
-        <Header>Cart summary:</Header>
-
+      <InvoiceCard title="Summary">
         {cartItems?.map(
           ({ _id, qty, image, title, price, totalSupply }: any) => (
             <CartItem
@@ -153,11 +172,9 @@ export const InvoicePage = () => {
             isAdminApp
           />
         </div>
-      </InvoiceDiv>
+      </InvoiceCard>
 
-      <InvoiceDiv>
-        <Header>Invoice details:</Header>
-
+      <InvoiceCard title="Invoice details">
         <DetailItem label="Invoice ID:">{invoiceId}</DetailItem>
 
         <DetailItem label="Date:">
@@ -200,11 +217,9 @@ export const InvoicePage = () => {
             {formatShortAddress(invoiceData?.signature)} <Icon name="launch" />
           </a>
         </DetailItem>
-      </InvoiceDiv>
+      </InvoiceCard>
 
-      <InvoiceDiv>
-        <Header>Shipping details:</Header>
-
+      <InvoiceCard title="Shipping details">
         <DetailItem label="Email:">{invoiceData?.email}</DetailItem>
         <DetailItem label="Shipping fees:">
           {invoiceData?.shippingFees} USDC
@@ -223,13 +238,11 @@ export const InvoicePage = () => {
         <DetailItem label="Postal code/ZIP:">
           {invoiceData?.postalCode}
         </DetailItem>
-      </InvoiceDiv>
+      </InvoiceCard>
 
-      <InvoiceDiv>
-        <Header>Fulfillment status:</Header>
-
+      <InvoiceCard title="Fulfillment">
         {updateInvoiceIsLoading ? (
-          <p>Loading...</p>
+          <Loader />
         ) : (
           <Select
             label="Update fulfillment status"
@@ -242,7 +255,7 @@ export const InvoicePage = () => {
             required
           />
         )}
-      </InvoiceDiv>
+      </InvoiceCard>
     </InvoicePageWrapper>
   );
 };

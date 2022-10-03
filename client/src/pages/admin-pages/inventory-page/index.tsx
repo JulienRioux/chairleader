@@ -91,6 +91,13 @@ const InventoryPageWrapper = styled.div`
   margin: 0 auto;
 `;
 
+const ProductNum = styled.p`
+  color: ${(p) => p.theme.color.lightText};
+  /* font-size: 14px; */
+  margin-top: 20px;
+  text-align: right;
+`;
+
 export const InventoryPage = () => {
   const { inventory, isLoading } = useInventory();
   const isMobileView = useMediaQuery('(max-width: 800px)');
@@ -158,6 +165,10 @@ export const InventoryPage = () => {
           <p>No search result.</p>
         )}
       </ProductGrid>
+
+      {inventory?.length && (
+        <ProductNum>{inventory?.length} products</ProductNum>
+      )}
     </InventoryPageWrapper>
   );
 };

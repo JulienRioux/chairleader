@@ -230,6 +230,26 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
 
   return (
     <form onSubmit={handleSubmit}>
+      <Label>Store image</Label>
+      <ImageWrapper>
+        {currentImageSrc ? (
+          <Img src={currentImageSrc} />
+        ) : (
+          <NoImageWrapper>
+            <Icon name="image" />
+          </NoImageWrapper>
+        )}
+
+        <Button
+          type="button"
+          secondary
+          onClick={handleUploadFileClick}
+          isLoading={resizeImgIsLoading}
+        >
+          {currentImageSrc ? 'Update image' : 'Add image'}
+        </Button>
+      </ImageWrapper>
+
       <Input
         label="Store Name"
         value={storeName}
@@ -248,6 +268,8 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
         name="domainName"
         error={domainNameError}
       />
+
+      <Input label="Email" value={user?.email} onChange={() => null} disabled />
 
       <Input
         label="Wallet address"
@@ -287,26 +309,6 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
           <Icon name="percent" />
         </PercentIconWrapper>
       </SaleTaxWrapper>
-
-      <Label>Store image</Label>
-      <ImageWrapper>
-        {currentImageSrc ? (
-          <Img src={currentImageSrc} />
-        ) : (
-          <NoImageWrapper>
-            <Icon name="image" />
-          </NoImageWrapper>
-        )}
-
-        <Button
-          type="button"
-          secondary
-          onClick={handleUploadFileClick}
-          isLoading={resizeImgIsLoading}
-        >
-          {currentImageSrc ? 'Update image' : 'Add image'}
-        </Button>
-      </ImageWrapper>
 
       <VisuallyHiddenInput
         type="file"

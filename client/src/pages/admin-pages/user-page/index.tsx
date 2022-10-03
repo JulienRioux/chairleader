@@ -9,7 +9,7 @@ const UserPageWrapper = styled.div`
 `;
 
 export const UserPage = () => {
-  const { logoutUser, isLoading, user } = useAuth();
+  const { logoutUser, isLoading } = useAuth();
 
   if (isLoading) {
     return <Loader />;
@@ -18,7 +18,6 @@ export const UserPage = () => {
   return (
     <UserPageWrapper>
       <h1>Update store</h1>
-      <Input label="Email" value={user?.email} onChange={() => null} disabled />
       <UpdateUserForm />
       <Button
         style={{ marginTop: '12px' }}
