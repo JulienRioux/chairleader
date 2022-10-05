@@ -1,7 +1,7 @@
 import { UnstyledButton, Button } from 'components-library/button';
 import { Icon } from 'components-library/icon';
 import { Label } from 'components-library/input/input.styles';
-import { ReactNode, useCallback, useState } from 'react';
+import { ReactNode, useCallback, useState, useRef } from 'react';
 import styled from 'styled-components';
 
 const TagsInputWrapper = styled.div`
@@ -15,6 +15,7 @@ const TagsInputWrapper = styled.div`
   padding: 12px;
   margin-bottom: 12px;
   gap: 4px;
+  cursor: text;
 `;
 
 const TagItem = styled.div`
@@ -27,6 +28,7 @@ const TagItem = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: default;
 `;
 
 const TagItemCloseBtn = styled(UnstyledButton)`
@@ -91,6 +93,8 @@ export const TagInput = ({
 }) => {
   const [inputValue, setInputValue] = useState('');
 
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
   const handleKeyDown = useCallback(
     (e: any) => {
       if (e.target.value[e.target.value.length - 1] === ',') {
@@ -126,7 +130,7 @@ export const TagInput = ({
       <TagInputAndLabel>
         <Label>{label}</Label>
 
-        <TagsInputWrapper>
+        <TagsInputWrapper onClick={() => inputRef?.current?.focus()}>
           {value.map((tag, index) => (
             <TagItem key={tag}>
               <TagText>{tag}</TagText>
@@ -145,6 +149,7 @@ export const TagInput = ({
             className="tags-input"
             placeholder={placeholder}
             value={inputValue}
+            ref={inputRef}
           />
         </TagsInputWrapper>
       </TagInputAndLabel>
