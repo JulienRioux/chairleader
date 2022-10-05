@@ -10,6 +10,7 @@ import {
   message,
   Loader,
   UnstyledLink,
+  TagInput,
 } from 'components-library';
 import { Label } from 'components-library/input/input.styles';
 import { TokenGatedBadge } from 'components/product-preview';
@@ -38,7 +39,8 @@ import styled from 'styled-components';
 import { formatShortAddress, resizeFileImg, routes } from 'utils';
 
 const FormWrapper = styled.form`
-  max-width: ${(p) => p.theme.layout.mediumWidth};
+  /* max-width: ${(p) => p.theme.layout.maxWidth}; */
+  max-width: 800px;
   margin: 40px auto;
 `;
 
@@ -114,6 +116,81 @@ const ProductFormCardContent = styled.div`
   padding: 0 12px;
 `;
 
+const AddAnOptionBtnWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+`;
+
+const AddAnButton = styled(Button)``;
+
+const VariationInputsWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+`;
+
+const VariantTableTitleWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  padding: 12px 0;
+  border-top: 1px solid ${(p) => p.theme.color.lightGrey};
+  border-bottom: 1px solid ${(p) => p.theme.color.lightGrey};
+  font-weight: bold;
+`;
+
+const VariationWrapper = styled.div`
+  margin-top: 12px;
+  border-bottom: 1px solid ${(p) => p.theme.color.lightGrey};
+
+  :last-of-type {
+    border-bottom: none;
+  }
+`;
+
+const VariantsContentWrapper = styled.div`
+  border-top: 1px solid ${(p) => p.theme.color.lightGrey};
+  padding-top: 8px;
+  margin-top: 40px;
+`;
+
+const VariationName = styled.div`
+  white-space: nowrap;
+  padding: 12px 0;
+`;
+
+const OptionInputs = styled.div`
+  display: grid;
+  grid-template-columns: 30% 70%;
+  gap: 8px;
+  border-bottom: 1px solid ${(p) => p.theme.color.lightGrey};
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+`;
+
+const OptionTitle = styled.div`
+  font-weight: bold;
+`;
+
+const AlertWrapper = styled.div`
+  padding: 8px;
+  color: ${(p) => p.theme.color.danger};
+  border: 1px solid ${(p) => p.theme.color.danger};
+  background-color: ${(p) => p.theme.color.danger}11;
+  border-radius: ${(p) => p.theme.borderRadius.default};
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+`;
+
+const Alert = ({ children }: { children: ReactNode }) => (
+  <AlertWrapper>
+    <Icon style={{ marginRight: '8px' }} name="warning_amber" />
+    <span>{children}</span>
+  </AlertWrapper>
+);
+
 const ProductFormCard = ({
   title,
   text,
@@ -138,11 +215,7 @@ const CATECORY_OPTIONS = [
 ];
 
 const QTY_OPTIONS = [
-  // {
-  //   value: 'unlimited',
-  //   label: 'Unlimited',
-  // },
-  ...Array.from({ length: 100 }, (_, i) => ({
+  ...Array.from({ length: 101 }, (_, i) => ({
     value: i.toString(),
     label: i.toString(),
   })),
@@ -174,7 +247,7 @@ export const ProductForm = () => {
 
   const [status, setStatus] = useState(STATUS_OPTIONS[0].value);
 
-  const [productType, setProductType] = useState(PRODUCT_TYPE_OPTIONS[0].value);
+  const [productType, setProductType] = useState(PRODUCT_TYPE_OPTIONS[1].value);
 
   const { mapProductLockedToMaster } = useNft();
 
@@ -272,9 +345,196 @@ export const ProductForm = () => {
     []
   );
 
+  const [variantNames, setVariantNames] = useState<string[]>(['Color', 'Size']);
+  const [variantNamesError, setVariantNamesError] = useState(false);
+
+  const [variants, setVariants] = useState<any[]>([
+    ['Green', 'Blue'],
+    ['Small', 'Medium'],
+  ]);
+  const [variantsValuesError, setVariantsValuesError] = useState(false);
+
+  const handleVariantsChange = useCallback(
+    ({
+      variantTags,
+      variantIndex,
+    }: {
+      variantTags: string[];
+      variantIndex: number;
+    }) => {
+      setVariantsValuesError(false);
+      const variantsCopy = [...variants];
+      variantsCopy[variantIndex] = variantTags;
+      setVariants(variantsCopy);
+    },
+    [variants]
+  );
+
+  const handleVariantNameChange = useCallback(
+    (e: any, index: number) => {
+      setVariantNamesError(false);
+      const variantNameCopy = [...variantNames];
+      variantNameCopy[index] = e.target.value;
+      setVariantNames(variantNameCopy);
+    },
+    [variantNames]
+  );
+
+  const handleRemoveTag = useCallback(
+    ({ variantIndex, tagIndex }: any) => {
+      // Remove the variants values
+      const variantsCopy = [...variants];
+      const updatedCurrentVariant = variantsCopy[variantIndex].filter(
+        (el: string, i: number) => i !== tagIndex
+      );
+      variantsCopy[variantIndex] = updatedCurrentVariant;
+      setVariants(variantsCopy);
+    },
+    [variants]
+  );
+
+  const handleAddVariantOption = useCallback(() => {
+    // TODO: Prevent variant name dulication.
+    setVariants([...variants, []]);
+    setVariantNames([...variantNames, '']);
+  }, [variantNames, variants]);
+
+  const handleRemoveOption = useCallback(
+    (variantIndex: number) => {
+      // Remove the variants values
+      const variantsCopy = [...variants];
+      variantsCopy.splice(variantIndex, 1);
+      setVariants(variantsCopy);
+
+      // Remove the variants name
+      const variantNamesCopy = [...variantNames];
+      variantNamesCopy.splice(variantIndex, 1);
+      setVariantNames(variantNamesCopy);
+    },
+    [variantNames, variants]
+  );
+
+  const [allPossibleVariants, setAllPossibleVariants] = useState<string[]>([]);
+  const [allPossibleVariantsObject, setAllPossibleVariantsObject] =
+    useState<any>({});
+  const [variantPriceAndInventoryError, setVariantPriceAndInventoryError] =
+    useState(false);
+
+  useEffect(() => {
+    const currentPossibleVariants = variants.reduce(
+      (a, b) =>
+        a.flatMap((x: string) =>
+          b.map((y: string) => {
+            if (x === '') return y;
+            return x + ' / ' + y;
+          })
+        ),
+      ['']
+    );
+
+    // Prevent infinite loop (new array is not the same)
+    if (
+      JSON.stringify(allPossibleVariants) ===
+      JSON.stringify(currentPossibleVariants)
+    ) {
+      return;
+    }
+
+    const variantsObject: any = {};
+
+    // Set the current variation value if it exists
+    currentPossibleVariants.forEach((varOption: string) => {
+      variantsObject[varOption] = {
+        price: allPossibleVariantsObject[varOption]?.price,
+        qty: allPossibleVariantsObject[varOption]?.qty,
+      };
+    });
+    setAllPossibleVariants(currentPossibleVariants);
+    setAllPossibleVariantsObject(variantsObject);
+  }, [allPossibleVariants, allPossibleVariantsObject, variants]);
+
+  const handleVariationObjectChange = useCallback(
+    ({
+      event,
+      variation,
+      type,
+    }: {
+      event: any;
+      variation: string;
+      type: 'price' | 'qty';
+    }) => {
+      setVariantPriceAndInventoryError(false);
+      const allPossibleVariantsObjectCopy = structuredClone(
+        allPossibleVariantsObject
+      );
+      allPossibleVariantsObjectCopy[variation][type] = event.target.value;
+
+      setAllPossibleVariantsObject(allPossibleVariantsObjectCopy);
+    },
+    [allPossibleVariantsObject]
+  );
+
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
+
+      // Init the error values
+      let variantNamesErrorVal = false;
+      let variantsValuesError = false;
+      let variantPriceAndInventoryError = false;
+
+      // Check the product type first
+      if (productType === 'productWithVariants') {
+        // Check if there are errors in the variants form
+        // Check if there is error for the variant names
+        variantNamesErrorVal = variantNames.includes('');
+
+        // Check if there is error for the variants values
+        variantsValuesError = variants.some((varVal) => varVal.length === 0);
+
+        // Check if there is error in the pricing and inventory of variants
+
+        // Checking if there is variant errors
+        for (const optionKey in allPossibleVariantsObject) {
+          const currentVariant = allPossibleVariantsObject[optionKey];
+          for (const variantKey in currentVariant) {
+            if (
+              currentVariant[variantKey] === undefined ||
+              currentVariant[variantKey] === ''
+            ) {
+              variantPriceAndInventoryError = true;
+            }
+          }
+        }
+
+        if (variantNamesErrorVal) {
+          setVariantNamesError(true);
+        }
+        if (variantsValuesError) {
+          setVariantsValuesError(true);
+        }
+        if (variantPriceAndInventoryError) {
+          setVariantPriceAndInventoryError(true);
+        }
+      }
+
+      if (
+        variantNamesErrorVal ||
+        variantsValuesError ||
+        variantPriceAndInventoryError
+      ) {
+        message.error('There are errors in your product form.');
+        return;
+      }
+
+      // TODO: Send this data to the DB
+      // Some fields won't be required and some other will depending on the productType!
+
+      console.log('DATA TO ADD TO THE DB:', {
+        variantNames,
+        variants,
+        allPossibleVariantsObject,
+      });
 
       if (isEditting) {
         const product = await editProduct({
@@ -310,20 +570,7 @@ export const ProductForm = () => {
       refetch();
       navigate(routes.admin.inventory);
     },
-    [
-      isEditting,
-      refetch,
-      navigate,
-      editProduct,
-      productId,
-      title,
-      imageFile,
-      description,
-      price,
-      totalSupply,
-      addProduct,
-      status,
-    ]
+    [productType, variantNames, variants, allPossibleVariantsObject]
   );
 
   const handleDeleteProductById = useCallback(async () => {
@@ -351,7 +598,7 @@ export const ProductForm = () => {
   const isTokenGatedProduct = !!masterNftLocks;
 
   // Show different form if it's a product with variant or simple product.
-  const IS_PRODUCT_WITH_VARIANTS = productType === 'simpleProduct';
+  const IS_PRODUCT_WITH_VARIANTS = productType === 'productWithVariants';
 
   return (
     <FormWrapper onSubmit={handleSubmit}>
@@ -387,6 +634,7 @@ export const ProductForm = () => {
           placeholder="Enter the product description"
           name="description"
           rows={8}
+          required
         />
       </ProductFormCard>
 
@@ -435,8 +683,11 @@ export const ProductForm = () => {
         />
       </ProductFormCard>
 
-      {IS_PRODUCT_WITH_VARIANTS && (
-        <ProductFormCard title="Pricing" text="Give products a price.">
+      {!IS_PRODUCT_WITH_VARIANTS && (
+        <ProductFormCard
+          title="Pricing and inventory"
+          text="Give your product a price."
+        >
           <Input
             label="Product price"
             value={price}
@@ -462,35 +713,124 @@ export const ProductForm = () => {
         </ProductFormCard>
       )}
 
-      {!IS_PRODUCT_WITH_VARIANTS && (
-        <ProductFormCard
-          title="Variants"
-          text="Add variations of this product. Offer your customers different options for color, format, size, shape, etc.
-"
-        >
-          <Input
-            label="Product price"
-            value={price}
-            onChange={handleChange}
-            placeholder={`Enter the product price in ${user?.currency}`}
-            required
-            name="price"
-            type="number"
-            step={0.00000000001}
-            min={0}
-          />
+      {IS_PRODUCT_WITH_VARIANTS && (
+        <>
+          <ProductFormCard
+            title="Variants"
+            text="Add variations of this product. Offer your customers different options for color, format, size, shape, etc."
+          >
+            {variantNamesError && (
+              <Alert>Please fill all the option names.</Alert>
+            )}
 
-          <Select
-            label="Total supply"
-            value={totalSupply}
-            onChange={handleChange}
-            options={QTY_OPTIONS}
-            name="totalSupply"
-            id="totalSupply"
-            placeholder="Select a total supply"
-            required
-          />
-        </ProductFormCard>
+            {variantsValuesError && (
+              <Alert>Please add at least one values per option.</Alert>
+            )}
+
+            <VariantsContentWrapper>
+              {variants.map((options, index) => (
+                <div key={`option_${index}`}>
+                  <OptionTitle>Option {index + 1}</OptionTitle>
+                  <OptionInputs>
+                    <div>
+                      <Input
+                        label="Name"
+                        placeholder="Enter the option name"
+                        value={variantNames[index]}
+                        onChange={(event) =>
+                          handleVariantNameChange(event, index)
+                        }
+                      />
+                    </div>
+                    <div>
+                      <TagInput
+                        label="Values (Comma separated)"
+                        onChange={handleVariantsChange}
+                        value={variants[index]}
+                        removeTag={handleRemoveTag}
+                        variantIndex={index}
+                        placeholder="Red, Green, Blue"
+                        removeOption={handleRemoveOption}
+                      />
+                    </div>
+                  </OptionInputs>
+                </div>
+              ))}
+
+              <AddAnOptionBtnWrapper>
+                <AddAnButton
+                  secondary
+                  type="button"
+                  icon="add"
+                  onClick={handleAddVariantOption}
+                >
+                  Add an option
+                </AddAnButton>
+              </AddAnOptionBtnWrapper>
+            </VariantsContentWrapper>
+          </ProductFormCard>
+
+          <ProductFormCard
+            title="Pricing and inventory"
+            text="Give your products variants prices and inventory stocks."
+          >
+            {!!allPossibleVariants.length && (
+              <>
+                {variantPriceAndInventoryError && (
+                  <Alert>
+                    Please fill all the price and quantity for all variants.
+                  </Alert>
+                )}
+
+                <VariantTableTitleWrapper>
+                  <div>Variant</div>
+                  <div>Price</div>
+                  <div>Inventory</div>
+                </VariantTableTitleWrapper>
+
+                {allPossibleVariants.map((variation: string) => (
+                  <VariationWrapper key={variation}>
+                    <VariationInputsWrapper>
+                      <VariationName>{variation}</VariationName>
+                      <div style={{ width: '100%' }}>
+                        <Input
+                          value={allPossibleVariantsObject[variation]?.price}
+                          onChange={(event) =>
+                            handleVariationObjectChange({
+                              event,
+                              variation,
+                              type: 'price',
+                            })
+                          }
+                          type="number"
+                          placeholder="Enter the price"
+                          step={0.00000000001}
+                          min={0}
+                        />
+                      </div>
+
+                      <div style={{ width: '100%' }}>
+                        <Input
+                          value={allPossibleVariantsObject[variation]?.qty}
+                          onChange={(event) =>
+                            handleVariationObjectChange({
+                              event,
+                              variation,
+                              type: 'qty',
+                            })
+                          }
+                          type="number"
+                          placeholder="Enter the inventory"
+                          min={0}
+                        />
+                      </div>
+                    </VariationInputsWrapper>
+                  </VariationWrapper>
+                ))}
+              </>
+            )}
+          </ProductFormCard>
+        </>
       )}
 
       {isTokenGatedProduct && (

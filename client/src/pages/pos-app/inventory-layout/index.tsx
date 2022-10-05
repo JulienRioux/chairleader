@@ -126,10 +126,6 @@ const MobileCartFixedBtn = styled(Button)`
   }
 `;
 
-const StyledStoreImgIcon = styled(StoreImgIcon)`
-  margin-right: 12px;
-`;
-
 const ButtonsWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -160,12 +156,11 @@ export const StoreLogo = ({ ...rest }) => {
 
   return (
     <StoreImgAndName to={routes.store.inventory}>
-      <StyledStoreImgIcon
+      <StoreImgIcon
         image={store?.image}
         storeName={store?.storeName}
         {...rest}
       />
-      <PageTitle>{store?.storeName}</PageTitle>
     </StoreImgAndName>
   );
 };
@@ -212,7 +207,7 @@ const MobileMenuLabel = styled.div`
   margin-top: 2px;
 `;
 
-const MenuBtn = styled(UnstyledButton)<{ isActive?: boolean }>`
+const MenuBtn = styled(UnstyledButton)<{ $isActive?: boolean }>`
   padding: 4px;
   font-size: 20px;
   width: 40px;
@@ -224,7 +219,7 @@ const MenuBtn = styled(UnstyledButton)<{ isActive?: boolean }>`
   border-radius: ${(p) => p.theme.borderRadius.default};
 
   ${(p) =>
-    p.isActive &&
+    p.$isActive &&
     css`
       color: ${p.theme.color.primary};
       background: ${p.theme.color.primary}11;
@@ -252,14 +247,14 @@ const MobileMenu = ({
   return (
     <MobileBottomMenu>
       <UnstyledLink to={routes.store.inventory}>
-        <MenuBtn isActive={homeBtnIsActive}>
+        <MenuBtn $isActive={homeBtnIsActive}>
           <Icon name="house" />
           <MobileMenuLabel>Home</MobileMenuLabel>
         </MenuBtn>
       </UnstyledLink>
 
       <UnstyledLink to={routes.store.nfts}>
-        <MenuBtn isActive={nftsBtnIsActive}>
+        <MenuBtn $isActive={nftsBtnIsActive}>
           <Icon name="grid_view" />
           <MobileMenuLabel>NFTs</MobileMenuLabel>
         </MenuBtn>

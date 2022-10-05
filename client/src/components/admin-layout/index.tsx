@@ -81,14 +81,14 @@ const ChildrenWrapper = styled.div`
   }
 `;
 
-const SideNavWrapper = styled(UnstyledLink)<{ isActive?: boolean }>`
+const SideNavWrapper = styled(UnstyledLink)<{ $isActive?: boolean }>`
   margin-bottom: 12px;
   display: flex;
   align-items: center;
   border-radius: ${(p) => p.theme.borderRadius.default};
 
   ${(p) =>
-    p.isActive &&
+    p.$isActive &&
     css`
       color: ${(p) => p.theme.color.primary};
       background: ${(p) => p.theme.color.primary}18 !important;
@@ -276,7 +276,7 @@ export const AdminLayout = ({ children }: { children: ReactNode }) => {
           {SIDE_NAV_ROUTE.map(({ icon, route, label }) => (
             <SideNavWrapper
               key={label}
-              isActive={pathname === route}
+              $isActive={pathname === route}
               to={route}
             >
               <SideNavIconWrapper>

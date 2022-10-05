@@ -127,7 +127,7 @@ const BannerHeader = styled.h3`
 
 const ICON_SIZE = '32px';
 
-const IconWrapper = styled.span<{ isActive: boolean }>`
+const IconWrapper = styled.span<{ $isActive: boolean }>`
   height: ${ICON_SIZE};
   min-height: ${ICON_SIZE};
   width: ${ICON_SIZE};
@@ -136,7 +136,7 @@ const IconWrapper = styled.span<{ isActive: boolean }>`
   align-items: center;
   justify-content: center;
   color: ${(p) =>
-    p.isActive ? (p) => p.theme.color.background : (p) => p.theme.color.text};
+    p.$isActive ? (p) => p.theme.color.background : (p) => p.theme.color.text};
   z-index: 1;
   transition: 0.2s;
 `;
@@ -175,11 +175,11 @@ export const ToggleTheme = (props: any) => {
   const { toggleTheme, isDarkTheme } = useTheme();
   return (
     <ModeBtn secondary onClick={toggleTheme} {...props}>
-      <IconWrapper isActive={isDarkTheme}>
+      <IconWrapper $isActive={isDarkTheme}>
         <Icon name="dark_mode" />
       </IconWrapper>
 
-      <IconWrapper isActive={!isDarkTheme}>
+      <IconWrapper $isActive={!isDarkTheme}>
         <Icon name="light_mode" />
       </IconWrapper>
 
