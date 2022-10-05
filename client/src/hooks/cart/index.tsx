@@ -26,6 +26,7 @@ export interface IInventoryItem {
   title: string;
   totalSupply: number;
   status: string;
+  productType: string;
 }
 
 interface ICartContext {
@@ -108,23 +109,25 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   const handleAddCustomItems = useCallback(
     ({ title, price }: { title: string; price: number }) => {
-      const customItemId = `CUSTOM_ITEM_${uuid()}`;
-      const newCustomItem = {
-        _id: customItemId,
-        qty: 1,
-        description: '',
-        image: '',
-        price,
-        title,
-        totalSupply: 1,
-        status: 'published',
-      };
-      // Add the custom item to the custom item array
-      setCustomItems([...customItems, newCustomItem]);
-      // Add the item to the cart item
-      setCartItems([{ _id: customItemId, qty: 1 }, ...cartItems]);
+      console.log('TODO');
+      // TODO: Uncomment this and fix the type issues
+      // const customItemId = `CUSTOM_ITEM_${uuid()}`;
+      // const newCustomItem = {
+      //   _id: customItemId,
+      //   qty: 1,
+      //   description: '',
+      //   image: '',
+      //   price,
+      //   title,
+      //   totalSupply: 1,
+      //   status: 'published',
+      // };
+      // // Add the custom item to the custom item array
+      // setCustomItems([...customItems, newCustomItem]);
+      // // Add the item to the cart item
+      // setCartItems([{ _id: customItemId, qty: 1 }, ...cartItems]);
     },
-    [cartItems, customItems]
+    []
   );
 
   const removeItemFromCart = useCallback(

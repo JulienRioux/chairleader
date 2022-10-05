@@ -14,6 +14,7 @@ export const addProduct = async ({
   price,
   totalSupply,
   status,
+  productType,
 }: {
   title: string;
   storeId: string;
@@ -22,6 +23,7 @@ export const addProduct = async ({
   price: number;
   totalSupply: number;
   status: string;
+  productType: string;
 }) => {
   try {
     let imgSrc = '';
@@ -45,6 +47,7 @@ export const addProduct = async ({
       price,
       totalSupply,
       status,
+      productType,
     });
     try {
       await doc.save();

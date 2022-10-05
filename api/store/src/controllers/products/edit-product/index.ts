@@ -16,6 +16,7 @@ export const editProduct = async ({
   price,
   totalSupply,
   status,
+  productType,
 }: {
   title: string;
   storeId: string;
@@ -25,6 +26,7 @@ export const editProduct = async ({
   price: number;
   totalSupply: number;
   status: string;
+  productType: string;
 }) => {
   try {
     // Find the product to check if we need to delete the image in S3
@@ -50,6 +52,7 @@ export const editProduct = async ({
       ...(price && { price }),
       ...(totalSupply && { totalSupply }),
       ...(status && { status }),
+      ...(productType && { productType }),
     });
 
     // Delete the image from S3 if there was one before and we're replacing it

@@ -170,7 +170,7 @@ export const InventoryPage = () => {
         )}
       </ProductGrid>
 
-      {inventory?.length && (
+      {!!inventory?.length && (
         <ProductNum>{inventory?.length} products</ProductNum>
       )}
     </InventoryPageWrapper>

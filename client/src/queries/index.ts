@@ -82,6 +82,7 @@ const PRODUCT = gql`
     description
     totalSupply
     status
+    productType
   }
 `;
 
@@ -99,6 +100,7 @@ export const ADD_PRODUCT = gql`
     $price: String!
     $totalSupply: String!
     $status: String!
+    $productType: String!
   ) {
     addProduct(
       title: $title
@@ -107,6 +109,7 @@ export const ADD_PRODUCT = gql`
       price: $price
       totalSupply: $totalSupply
       status: $status
+      productType: $productType
     ) ${PRODUCT}
   }
 `;
@@ -129,6 +132,7 @@ export const EDIT_PRODUCT = gql`
     $totalSupply: String
     $productId: String!
     $status: String!
+    $productType: String!
   ) {
     editProduct(
       title: $title
@@ -138,6 +142,7 @@ export const EDIT_PRODUCT = gql`
       totalSupply: $totalSupply
       productId: $productId
       status: $status
+      productType: $productType
     ) ${PRODUCT}
   }
 `;
@@ -214,6 +219,7 @@ const INVOICE = gql`
       description
       totalSupply
       qty
+      productType
     }
     shippingFee
     email

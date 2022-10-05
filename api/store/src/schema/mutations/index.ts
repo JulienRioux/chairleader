@@ -35,6 +35,7 @@ export const mutations = gql`
       price: String!
       totalSupply: String!
       status: String!
+      productType: String!
     ): Product
 
     """
@@ -53,6 +54,7 @@ export const mutations = gql`
       totalSupply: String
       productId: String!
       status: String!
+      productType: String!
     ): Product
 
     """

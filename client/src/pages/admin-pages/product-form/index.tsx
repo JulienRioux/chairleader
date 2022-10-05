@@ -247,7 +247,7 @@ export const ProductForm = () => {
 
   const [status, setStatus] = useState(STATUS_OPTIONS[0].value);
 
-  const [productType, setProductType] = useState(PRODUCT_TYPE_OPTIONS[1].value);
+  const [productType, setProductType] = useState(PRODUCT_TYPE_OPTIONS[0].value);
 
   const { mapProductLockedToMaster } = useNft();
 
@@ -292,6 +292,7 @@ export const ProductForm = () => {
         setTotalSupply(currentProduct.totalSupply?.toString());
         setImageSrc(currentProduct.image);
         setStatus(currentProduct.status);
+        setProductType(currentProduct.productType);
       }
     }
   }, [currencyDecimals, inventory, productId]);
@@ -523,7 +524,7 @@ export const ProductForm = () => {
         variantsValuesError ||
         variantPriceAndInventoryError
       ) {
-        message.error('There are errors in your product form.');
+        message.error('You need to fix the errors below in order to save.');
         return;
       }
 
@@ -531,9 +532,10 @@ export const ProductForm = () => {
       // Some fields won't be required and some other will depending on the productType!
 
       console.log('DATA TO ADD TO THE DB:', {
-        variantNames,
-        variants,
-        allPossibleVariantsObject,
+        productType, // string
+        variantNames, // string[]
+        variants, // string[]
+        allPossibleVariantsObject, // Object
       });
 
       if (isEditting) {
@@ -546,6 +548,7 @@ export const ProductForm = () => {
             price,
             totalSupply,
             status,
+            productType,
           },
         });
 
@@ -561,6 +564,7 @@ export const ProductForm = () => {
             price,
             totalSupply,
             status,
+            productType,
           },
         });
 
@@ -570,7 +574,24 @@ export const ProductForm = () => {
       refetch();
       navigate(routes.admin.inventory);
     },
-    [productType, variantNames, variants, allPossibleVariantsObject]
+    [
+      productType,
+      variantNames,
+      variants,
+      allPossibleVariantsObject,
+      isEditting,
+      refetch,
+      navigate,
+      editProduct,
+      productId,
+      title,
+      imageFile,
+      description,
+      price,
+      totalSupply,
+      status,
+      addProduct,
+    ]
   );
 
   const handleDeleteProductById = useCallback(async () => {
