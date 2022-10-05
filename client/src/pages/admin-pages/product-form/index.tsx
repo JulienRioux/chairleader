@@ -95,9 +95,14 @@ const STATUS_OPTIONS = [
   { value: 'published', label: 'Published' },
 ];
 
+export enum PRODUCT_TYPE {
+  SIMPLE_PRODUCT = 'simpleProduct',
+  PRODUCT_WITH_VARIANT = 'productWithVariants',
+}
+
 const PRODUCT_TYPE_OPTIONS = [
-  { value: 'simpleProduct', label: 'Simple product' },
-  { value: 'productWithVariants', label: 'Product with variants' },
+  { value: PRODUCT_TYPE.SIMPLE_PRODUCT, label: 'Simple product' },
+  { value: PRODUCT_TYPE.PRODUCT_WITH_VARIANT, label: 'Product with variants' },
 ];
 
 export const ProductForm = () => {
@@ -117,6 +122,18 @@ export const ProductForm = () => {
   const [status, setStatus] = useState(STATUS_OPTIONS[0].value);
 
   const [productType, setProductType] = useState(PRODUCT_TYPE_OPTIONS[0].value);
+
+  const [variantNames, setVariantNames] = useState<string[]>([]);
+  const [variantNamesError, setVariantNamesError] = useState(false);
+
+  const [variantsValues, setVariantsValues] = useState<any[]>([[]]);
+  const [variantsValuesError, setVariantsValuesError] = useState(false);
+
+  const [allPossibleVariants, setAllPossibleVariants] = useState<string[]>([]);
+  const [allPossibleVariantsObject, setAllPossibleVariantsObject] =
+    useState<any>({});
+  const [variantPriceAndInventoryError, setVariantPriceAndInventoryError] =
+    useState(false);
 
   const { mapProductLockedToMaster } = useNft();
 
@@ -154,14 +171,21 @@ export const ProductForm = () => {
       if (currentProduct) {
         setTitle(currentProduct.title);
         setDescription(currentProduct.description);
-        const priceDisplay = Number(
-          currentProduct.price?.toFixed(currencyDecimals)
-        );
-        setPrice(priceDisplay.toString());
+        if (currentProduct.price) {
+          const priceDisplay = Number(
+            currentProduct.price?.toFixed(currencyDecimals)
+          );
+          setPrice(priceDisplay.toString());
+        }
         setTotalSupply(currentProduct.totalSupply?.toString());
         setImageSrc(currentProduct.image);
         setStatus(currentProduct.status);
-        setProductType(currentProduct.productType);
+        setProductType(currentProduct.productType as PRODUCT_TYPE);
+        setVariantNames(currentProduct.variantNames ?? []);
+        setVariantsValues(currentProduct.variantsValues ?? [[]]);
+        setAllPossibleVariantsObject(
+          currentProduct.allPossibleVariantsObject ?? {}
+        );
       }
     }
   }, [currencyDecimals, inventory, productId]);
@@ -197,7 +221,7 @@ export const ProductForm = () => {
         setStatus(e.target.value);
       }
       if (e.target.name === 'productType') {
-        setProductType(e.target.value);
+        setProductType(e.target.value as PRODUCT_TYPE);
       }
       if (e.target.name === 'image') {
         const files = (e.target as HTMLInputElement)?.files as FileList;
@@ -215,15 +239,6 @@ export const ProductForm = () => {
     []
   );
 
-  const [variantNames, setVariantNames] = useState<string[]>(['Color', 'Size']);
-  const [variantNamesError, setVariantNamesError] = useState(false);
-
-  const [variants, setVariants] = useState<any[]>([
-    ['Green', 'Blue'],
-    ['Small', 'Medium'],
-  ]);
-  const [variantsValuesError, setVariantsValuesError] = useState(false);
-
   const handleVariantsChange = useCallback(
     ({
       variantTags,
@@ -233,11 +248,11 @@ export const ProductForm = () => {
       variantIndex: number;
     }) => {
       setVariantsValuesError(false);
-      const variantsCopy = [...variants];
+      const variantsCopy = [...variantsValues];
       variantsCopy[variantIndex] = variantTags;
-      setVariants(variantsCopy);
+      setVariantsValues(variantsCopy);
     },
-    [variants]
+    [variantsValues]
   );
 
   const handleVariantNameChange = useCallback(
@@ -253,45 +268,39 @@ export const ProductForm = () => {
   const handleRemoveTag = useCallback(
     ({ variantIndex, tagIndex }: any) => {
       // Remove the variants values
-      const variantsCopy = [...variants];
+      const variantsCopy = [...variantsValues];
       const updatedCurrentVariant = variantsCopy[variantIndex].filter(
         (el: string, i: number) => i !== tagIndex
       );
       variantsCopy[variantIndex] = updatedCurrentVariant;
-      setVariants(variantsCopy);
+      setVariantsValues(variantsCopy);
     },
-    [variants]
+    [variantsValues]
   );
 
   const handleAddVariantOption = useCallback(() => {
     // TODO: Prevent variant name dulication.
-    setVariants([...variants, []]);
+    setVariantsValues([...variantsValues, []]);
     setVariantNames([...variantNames, '']);
-  }, [variantNames, variants]);
+  }, [variantNames, variantsValues]);
 
   const handleRemoveOption = useCallback(
     (variantIndex: number) => {
       // Remove the variants values
-      const variantsCopy = [...variants];
+      const variantsCopy = [...variantsValues];
       variantsCopy.splice(variantIndex, 1);
-      setVariants(variantsCopy);
+      setVariantsValues(variantsCopy);
 
       // Remove the variants name
       const variantNamesCopy = [...variantNames];
       variantNamesCopy.splice(variantIndex, 1);
       setVariantNames(variantNamesCopy);
     },
-    [variantNames, variants]
+    [variantNames, variantsValues]
   );
 
-  const [allPossibleVariants, setAllPossibleVariants] = useState<string[]>([]);
-  const [allPossibleVariantsObject, setAllPossibleVariantsObject] =
-    useState<any>({});
-  const [variantPriceAndInventoryError, setVariantPriceAndInventoryError] =
-    useState(false);
-
   useEffect(() => {
-    const currentPossibleVariants = variants.reduce(
+    const currentPossibleVariants = variantsValues.reduce(
       (a, b) =>
         a.flatMap((x: string) =>
           b.map((y: string) => {
@@ -321,7 +330,7 @@ export const ProductForm = () => {
     });
     setAllPossibleVariants(currentPossibleVariants);
     setAllPossibleVariantsObject(variantsObject);
-  }, [allPossibleVariants, allPossibleVariantsObject, variants]);
+  }, [allPossibleVariants, allPossibleVariantsObject, variantsValues]);
 
   const handleVariationObjectChange = useCallback(
     ({
@@ -354,17 +363,18 @@ export const ProductForm = () => {
       let variantPriceAndInventoryError = false;
 
       // Check the product type first
-      if (productType === 'productWithVariants') {
+      if (productType === PRODUCT_TYPE.PRODUCT_WITH_VARIANT) {
         // Check if there are errors in the variants form
+
         // Check if there is error for the variant names
         variantNamesErrorVal = variantNames.includes('');
 
         // Check if there is error for the variants values
-        variantsValuesError = variants.some((varVal) => varVal.length === 0);
+        variantsValuesError = variantsValues.some(
+          (varVal) => varVal.length === 0
+        );
 
-        // Check if there is error in the pricing and inventory of variants
-
-        // Checking if there is variant errors
+        // Check if there is error in the pricing and inventory of variants (i.e. no empty key value)
         for (const optionKey in allPossibleVariantsObject) {
           const currentVariant = allPossibleVariantsObject[optionKey];
           for (const variantKey in currentVariant) {
@@ -393,19 +403,9 @@ export const ProductForm = () => {
         variantsValuesError ||
         variantPriceAndInventoryError
       ) {
-        message.error('You need to fix the errors below in order to save.');
+        message.error('Please fix the errors below in order to save.');
         return;
       }
-
-      // TODO: Send this data to the DB
-      // Some fields won't be required and some other will depending on the productType!
-
-      console.log('DATA TO ADD TO THE DB:', {
-        productType, // string
-        variantNames, // string[]
-        variants, // string[]
-        allPossibleVariantsObject, // Object
-      });
 
       if (isEditting) {
         const product = await editProduct({
@@ -418,6 +418,9 @@ export const ProductForm = () => {
             totalSupply,
             status,
             productType,
+            variantNames,
+            variantsValues,
+            allPossibleVariantsObject,
           },
         });
 
@@ -434,6 +437,9 @@ export const ProductForm = () => {
             totalSupply,
             status,
             productType,
+            variantNames,
+            variantsValues,
+            allPossibleVariantsObject,
           },
         });
 
@@ -446,7 +452,7 @@ export const ProductForm = () => {
     [
       productType,
       variantNames,
-      variants,
+      variantsValues,
       allPossibleVariantsObject,
       isEditting,
       refetch,
@@ -488,7 +494,8 @@ export const ProductForm = () => {
   const isTokenGatedProduct = !!masterNftLocks;
 
   // Show different form if it's a product with variant or simple product.
-  const IS_PRODUCT_WITH_VARIANTS = productType === 'productWithVariants';
+  const IS_PRODUCT_WITH_VARIANTS =
+    productType === PRODUCT_TYPE.PRODUCT_WITH_VARIANT;
 
   return (
     <FormWrapper onSubmit={handleSubmit}>
@@ -618,7 +625,7 @@ export const ProductForm = () => {
             )}
 
             <VariantsContentWrapper>
-              {variants.map((options, index) => (
+              {variantsValues.map((options, index) => (
                 <div key={`option_${index}`}>
                   <OptionTitle>Option {index + 1}</OptionTitle>
                   <OptionInputs>
@@ -636,7 +643,7 @@ export const ProductForm = () => {
                       <TagInput
                         label="Values (Comma separated)"
                         onChange={handleVariantsChange}
-                        value={variants[index]}
+                        value={variantsValues[index]}
                         removeTag={handleRemoveTag}
                         variantIndex={index}
                         placeholder="Red, Green, Blue"
@@ -761,23 +768,29 @@ export const ProductForm = () => {
       </ProductFormCard>
 
       <FormBtnWrapper>
-        {isEditting && (
-          <Button
-            style={{ marginRight: '8px' }}
-            secondary
-            isLoading={deleteProductIsLoading}
-            type="button"
-            onClick={handleDeleteProductById}
-          >
-            Delete product
-          </Button>
-        )}
-        <Button
-          isLoading={addProductIsLoading || editProductIsLoading}
-          type="submit"
-        >
-          {`Save ${status === 'draft' ? 'as draft' : 'and publish'}`}
+        <Button secondary to={-1}>
+          Cancel
         </Button>
+
+        <div>
+          {isEditting && (
+            <Button
+              style={{ marginRight: '8px' }}
+              secondary
+              isLoading={deleteProductIsLoading}
+              type="button"
+              onClick={handleDeleteProductById}
+            >
+              Delete product
+            </Button>
+          )}
+          <Button
+            isLoading={addProductIsLoading || editProductIsLoading}
+            type="submit"
+          >
+            {`Save ${status === 'draft' ? 'as draft' : 'and publish'}`}
+          </Button>
+        </div>
       </FormBtnWrapper>
     </FormWrapper>
   );

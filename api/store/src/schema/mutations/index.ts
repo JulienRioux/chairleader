@@ -36,6 +36,9 @@ export const mutations = gql`
       totalSupply: String!
       status: String!
       productType: String!
+      variantNames: [String]
+      variantsValues: [[String]]
+      allPossibleVariantsObject: Object
     ): Product
 
     """
@@ -55,6 +58,9 @@ export const mutations = gql`
       productId: String!
       status: String!
       productType: String!
+      variantNames: [String]
+      variantsValues: [[String]]
+      allPossibleVariantsObject: Object
     ): Product
 
     """

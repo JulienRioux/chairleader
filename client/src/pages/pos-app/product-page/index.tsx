@@ -214,6 +214,7 @@ export const ProductPage = () => {
   const [maxQuantity, setMaxQuantity] = useState<number | undefined>();
   const [qty, setQty] = useState(1);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [productType, setProductType] = useState('');
 
   const { getProductLockedMapIsLoading } = useNft();
 
@@ -234,13 +235,13 @@ export const ProductPage = () => {
       setIsUpdating(!!cartQuantity);
 
       if (currentProduct) {
-        const { title, description, price, totalSupply, image } =
-          currentProduct;
-        setName(title);
-        setDescription(description);
-        setPrice(price.toString());
-        setMaxQuantity(totalSupply);
-        setImageSrc(image);
+        setName(currentProduct?.title);
+        setDescription(currentProduct?.description);
+        setPrice(currentProduct?.price?.toString());
+        setMaxQuantity(currentProduct?.totalSupply);
+        setImageSrc(currentProduct?.image);
+        setProductType(currentProduct.productType);
+
         setQty(cartQuantity ?? 1);
       }
     }
@@ -283,6 +284,7 @@ export const ProductPage = () => {
 
   return (
     <ProductWrapper>
+      <h1>{productType}</h1>
       <ImgWrapper>
         {imageSrc ? (
           <Img src={imageSrc} />

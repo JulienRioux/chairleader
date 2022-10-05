@@ -27,6 +27,9 @@ export interface IInventoryItem {
   totalSupply: number;
   status: string;
   productType: string;
+  variantNames?: string[];
+  variantsValues?: [[string]];
+  allPossibleVariantsObject?: any;
 }
 
 interface ICartContext {

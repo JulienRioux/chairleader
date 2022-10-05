@@ -34,6 +34,9 @@ export const schemaTypes = gql`
     totalSupply: Int
     status: String
     productType: String
+    variantNames: [String]
+    variantsValues: [[String]]
+    allPossibleVariantsObject: Object
   }
 
   type CartItem {
@@ -85,4 +88,6 @@ export const schemaTypes = gql`
   }
 
   scalar Upload
+
+  scalar Object
 `;

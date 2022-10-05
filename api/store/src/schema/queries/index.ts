@@ -4,7 +4,7 @@ export const queries = gql`
   type Query {
     getMe: Store
 
-    getProductsByUserId: [CartItem]
+    getProductsByUserId: [Product]
 
     getInvoicesByStoreId: [Invoice]
 

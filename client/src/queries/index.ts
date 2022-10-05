@@ -83,6 +83,9 @@ const PRODUCT = gql`
     totalSupply
     status
     productType
+    variantNames
+    variantsValues
+    allPossibleVariantsObject
   }
 `;
 
@@ -101,6 +104,9 @@ export const ADD_PRODUCT = gql`
     $totalSupply: String!
     $status: String!
     $productType: String!
+    $variantNames: [String]
+    $variantsValues: [[String]]
+    $allPossibleVariantsObject: Object
   ) {
     addProduct(
       title: $title
@@ -110,6 +116,9 @@ export const ADD_PRODUCT = gql`
       totalSupply: $totalSupply
       status: $status
       productType: $productType
+      variantNames: $variantNames
+      variantsValues: $variantsValues
+      allPossibleVariantsObject: $allPossibleVariantsObject
     ) ${PRODUCT}
   }
 `;
@@ -133,6 +142,9 @@ export const EDIT_PRODUCT = gql`
     $productId: String!
     $status: String!
     $productType: String!
+    $variantNames: [String]
+    $variantsValues: [[String]]
+    $allPossibleVariantsObject: Object
   ) {
     editProduct(
       title: $title
@@ -143,6 +155,9 @@ export const EDIT_PRODUCT = gql`
       productId: $productId
       status: $status
       productType: $productType
+      variantNames: $variantNames
+      variantsValues: $variantsValues
+      allPossibleVariantsObject: $allPossibleVariantsObject
     ) ${PRODUCT}
   }
 `;

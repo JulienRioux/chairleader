@@ -51,7 +51,7 @@ export const TokenGatingMasterLink = styled(UnstyledLink)`
 
 export const FormBtnWrapper = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 `;
 
 export const ProductFormCardWrapper = styled.div`

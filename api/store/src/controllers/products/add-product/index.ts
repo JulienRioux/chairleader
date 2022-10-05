@@ -15,6 +15,9 @@ export const addProduct = async ({
   totalSupply,
   status,
   productType,
+  variantNames,
+  variantsValues,
+  allPossibleVariantsObject,
 }: {
   title: string;
   storeId: string;
@@ -24,6 +27,9 @@ export const addProduct = async ({
   totalSupply: number;
   status: string;
   productType: string;
+  variantNames: string[];
+  variantsValues: [[string]];
+  allPossibleVariantsObject: string;
 }) => {
   try {
     let imgSrc = '';
@@ -44,10 +50,13 @@ export const addProduct = async ({
       storeId,
       image: imgSrc,
       description,
-      price,
-      totalSupply,
+      ...(price && { price }),
+      ...(totalSupply && { totalSupply }),
       status,
       productType,
+      ...(variantNames && { variantNames }),
+      ...(variantsValues && { variantsValues }),
+      ...(allPossibleVariantsObject && { allPossibleVariantsObject }),
     });
     try {
       await doc.save();

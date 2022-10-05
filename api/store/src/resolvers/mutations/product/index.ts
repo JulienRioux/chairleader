@@ -4,7 +4,18 @@ import { editProduct } from '../../../controllers/products/edit-product';
 
 export const addProductMutation = async (
   _source: any,
-  { title, image, description, price, totalSupply, status, productType },
+  {
+    title,
+    image,
+    description,
+    price,
+    totalSupply,
+    status,
+    productType,
+    variantNames,
+    variantsValues,
+    allPossibleVariantsObject,
+  },
   context
 ) => {
   return await addProduct({
@@ -16,6 +27,9 @@ export const addProductMutation = async (
     storeId: context.user._id,
     status,
     productType,
+    variantNames,
+    variantsValues,
+    allPossibleVariantsObject,
   });
 };
 
@@ -38,6 +52,9 @@ export const editProductMutation = async (
     productId,
     status,
     productType,
+    variantNames,
+    variantsValues,
+    allPossibleVariantsObject,
   },
   context
 ) => {
@@ -51,5 +68,8 @@ export const editProductMutation = async (
     productId,
     status,
     productType,
+    variantNames,
+    variantsValues,
+    allPossibleVariantsObject,
   });
 };
