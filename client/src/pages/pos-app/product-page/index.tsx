@@ -7,6 +7,7 @@ import {
   UnstyledLink,
   Loader,
   message,
+  SelectButtons,
 } from 'components-library';
 import {
   BadgeWrapper,
@@ -19,14 +20,28 @@ import { useNft } from 'hooks/nft';
 import { useScrollTop } from 'hooks/scroll-top';
 import { useStore } from 'hooks/store';
 import { useWalletModal } from 'hooks/wallet-modal';
+import { PRODUCT_TYPE } from 'pages/admin-pages/product-form';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { formatShortAddress, getNftDataFromAddressArr, routes } from 'utils';
 
+const formatVariantOptions = (options: string[]) =>
+  options.reduce((acc, option) => {
+    if (acc === '') return option;
+    return acc + ' / ' + option;
+  }, '');
+
 const ProductWrapper = styled.div`
   max-width: ${(p) => p.theme.layout.mediumWidth};
   margin: 0 auto;
+`;
+
+const TitleAndPrice = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 `;
 
 const ProductTitle = styled.h3`
@@ -215,6 +230,12 @@ export const ProductPage = () => {
   const [qty, setQty] = useState(1);
   const [isUpdating, setIsUpdating] = useState(false);
   const [productType, setProductType] = useState('');
+  const [variantNames, setVariantNames] = useState<string[]>([]);
+  const [variantsValues, setVariantsValues] = useState<[[string]]>();
+  const [allPossibleVariantsObject, setAllPossibleVariantsObject] =
+    useState<any>({});
+
+  const [productVariants, setProductVariants] = useState<string[]>([]);
 
   const { getProductLockedMapIsLoading } = useNft();
 
@@ -235,25 +256,61 @@ export const ProductPage = () => {
       setIsUpdating(!!cartQuantity);
 
       if (currentProduct) {
+        // Fields for all product types
         setName(currentProduct?.title);
         setDescription(currentProduct?.description);
-        setPrice(currentProduct?.price?.toString());
-        setMaxQuantity(currentProduct?.totalSupply);
         setImageSrc(currentProduct?.image);
         setProductType(currentProduct.productType);
-
         setQty(cartQuantity ?? 1);
+
+        if (currentProduct.productType === PRODUCT_TYPE.SIMPLE_PRODUCT) {
+          setPrice(currentProduct?.price?.toString());
+          setMaxQuantity(currentProduct?.totalSupply);
+        }
+
+        if (currentProduct.productType === PRODUCT_TYPE.PRODUCT_WITH_VARIANT) {
+          setVariantNames(currentProduct.variantNames ?? []);
+          setVariantsValues(currentProduct.variantsValues);
+          const initProductVariantsValues: string[] =
+            currentProduct.variantsValues?.map((option) => option[0], []) ?? [];
+
+          setProductVariants(initProductVariantsValues);
+
+          setAllPossibleVariantsObject(
+            currentProduct.allPossibleVariantsObject
+          );
+
+          // Set the price and max quantity
+          const formattedOptions = formatVariantOptions(
+            initProductVariantsValues
+          );
+
+          const currentOptionPriceAndQty =
+            currentProduct.allPossibleVariantsObject[formattedOptions];
+
+          setPrice(currentOptionPriceAndQty?.price?.toString());
+          setMaxQuantity(currentOptionPriceAndQty?.qty);
+        }
       }
     }
-  }, [inventory, productId, cartItems]);
+    // Only run this on product mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleAddToCart = useCallback(() => {
-    productId && updateQuantity({ id: productId, qty });
+    if (productId) {
+      updateQuantity({
+        id: productId,
+        qty,
+        productVariants: formatVariantOptions(productVariants),
+        price,
+      });
+    }
     message.success(`${qty} x ${name} added to the cart.`);
     navigate(routes.store.inventory);
-  }, [name, navigate, productId, qty, updateQuantity]);
+  }, [name, navigate, price, productId, productVariants, qty, updateQuantity]);
 
-  const isOutOfStock = maxQuantity === 0;
+  const isOutOfStock = Number(maxQuantity) === 0;
 
   const priceDisplay = Number(Number(price)?.toFixed(decimals));
 
@@ -282,9 +339,45 @@ export const ProductPage = () => {
     getNftMetadata();
   }, [getNftMetadata]);
 
+  const handleProductVariantsChange = useCallback(
+    (option: string, index: number) => {
+      const productVariantsCopy = [...productVariants];
+      productVariantsCopy[index] = option;
+
+      setProductVariants(productVariantsCopy);
+      // Set the price and max quantity
+      const formattedOptions = formatVariantOptions(productVariantsCopy);
+
+      const currentOptionPriceAndQty =
+        allPossibleVariantsObject[formattedOptions];
+
+      setPrice(currentOptionPriceAndQty?.price?.toString());
+      setMaxQuantity(currentOptionPriceAndQty?.qty);
+      // Simple solution: Reset the quantity to fix some issue that could happens if the next selection did not have the qty as maxQty
+      setQty(1);
+    },
+    [allPossibleVariantsObject, productVariants]
+  );
+
+  const checkIfOptionIsOutOfStock = useCallback(
+    ({ index, option }: { index: number; option: string }) => {
+      const isLastOptionsGroup = variantNames.length - 1 === index;
+      if (!isLastOptionsGroup) {
+        return false;
+      }
+      const productVariantsCopy = [...productVariants];
+      productVariantsCopy[index] = option;
+      const formattedOptions = formatVariantOptions(productVariantsCopy);
+      return Number(allPossibleVariantsObject[formattedOptions].qty) === 0;
+    },
+    [allPossibleVariantsObject, productVariants, variantNames.length]
+  );
+
+  const IS_PRODUCT_WITH_VARIANTS =
+    productType === PRODUCT_TYPE.PRODUCT_WITH_VARIANT;
+
   return (
     <ProductWrapper>
-      <h1>{productType}</h1>
       <ImgWrapper>
         {imageSrc ? (
           <Img src={imageSrc} />
@@ -301,10 +394,29 @@ export const ProductPage = () => {
         </BadgeWrapper>
       </ImgWrapper>
 
-      <ProductTitle>{name}</ProductTitle>
-      <Price>
-        {priceDisplay} {currency}
-      </Price>
+      <TitleAndPrice>
+        <ProductTitle>{name}</ProductTitle>
+        <Price>
+          {priceDisplay} {currency}
+        </Price>
+      </TitleAndPrice>
+
+      {IS_PRODUCT_WITH_VARIANTS &&
+        variantNames?.map((variantName, index) => (
+          <SelectButtons
+            key={variantName}
+            label={variantName}
+            options={variantsValues ? variantsValues[index] : []}
+            value={productVariants[index]}
+            onChange={(option: string) =>
+              handleProductVariantsChange(option, index)
+            }
+            checkIfOptionIsOutOfStock={(option: string) =>
+              checkIfOptionIsOutOfStock({ index, option })
+            }
+          />
+        ))}
+
       <Description>{description}</Description>
 
       {tokenGatedNftDataIsLoading ? (
@@ -345,47 +457,54 @@ export const ProductPage = () => {
 
       <DummyDiv />
 
-      {!isOutOfStock && (
-        <AddToCartWrapper>
-          <InnerAddToCartWrapper>
-            {(!isTokenGated || isUnlocked) && (
-              <>
+      <AddToCartWrapper>
+        <InnerAddToCartWrapper>
+          {(!isTokenGated || isUnlocked) && (
+            <>
+              {isOutOfStock ? (
+                <span />
+              ) : (
                 <NumberInput value={qty} onChange={setQty} max={maxQuantity} />
+              )}
 
-                <Button onClick={handleAddToCart} disabled={maxQuantity === 0}>
-                  {isUpdating ? 'Update cart' : 'Add to cart'}{' '}
-                  {Number((Number(price) * qty)?.toFixed(decimals))} {currency}
-                </Button>
-              </>
-            )}
-
-            {SHOW_CONNECT_WALLET_BUTTON && (
-              <Button fullWidth icon="lock" onClick={openConnectModal}>
-                Connect your wallet to unlock
-              </Button>
-            )}
-
-            {SHOW_MISSING_TOKEN_MSG && (
-              <>
-                {getProductLockedMapIsLoading ? (
-                  <p>Checking NFT ownership...</p>
+              <Button onClick={handleAddToCart} disabled={isOutOfStock}>
+                {isOutOfStock ? (
+                  'Unavailable'
                 ) : (
-                  <p>You don't own qualifying NFT.</p>
+                  <>
+                    {isUpdating ? 'Update cart' : 'Add to cart'}{' '}
+                    {Number((Number(price) * qty)?.toFixed(decimals))}{' '}
+                    {currency}
+                  </>
                 )}
-                <Button
-                  icon="grid_view"
-                  to={routes.store.nfts}
-                  isLoading={getProductLockedMapIsLoading}
-                >
-                  Shop all NFTs
-                </Button>
-              </>
-            )}
-          </InnerAddToCartWrapper>
-        </AddToCartWrapper>
-      )}
+              </Button>
+            </>
+          )}
 
-      {isOutOfStock && <p>Out of stock</p>}
+          {SHOW_CONNECT_WALLET_BUTTON && (
+            <Button fullWidth icon="lock" onClick={openConnectModal}>
+              Connect your wallet to unlock
+            </Button>
+          )}
+
+          {SHOW_MISSING_TOKEN_MSG && (
+            <>
+              {getProductLockedMapIsLoading ? (
+                <p>Checking NFT ownership...</p>
+              ) : (
+                <p>You don't own qualifying NFT.</p>
+              )}
+              <Button
+                icon="grid_view"
+                to={routes.store.nfts}
+                isLoading={getProductLockedMapIsLoading}
+              >
+                Shop all NFTs
+              </Button>
+            </>
+          )}
+        </InnerAddToCartWrapper>
+      </AddToCartWrapper>
     </ProductWrapper>
   );
 };

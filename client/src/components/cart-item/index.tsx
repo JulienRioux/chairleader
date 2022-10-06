@@ -8,7 +8,6 @@ import { useCart } from 'hooks/cart';
 import { useCurrency } from 'hooks/currency';
 import { useCallback } from 'react';
 import styled, { css } from 'styled-components';
-import { Styles } from 'styles';
 import { routes } from 'utils';
 
 const CartItemWrapper = styled.div`
@@ -25,11 +24,16 @@ const ImgAndName = styled.div`
 `;
 
 const ProductTitle = styled(UnstyledLink)`
-  margin: 0 0 12px;
+  margin: 0 0 8px;
   font-size: 16px;
   font-weight: bold;
-  margin-bottom: 20px;
   display: block;
+`;
+
+const ProductVariants = styled.div`
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: ${(p) => p.theme.color.text}bb;
 `;
 
 const Price = styled.div`
@@ -104,6 +108,7 @@ const TitleAndDeleteBtn = styled.div`
 const TextAndBtns = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   width: 100%;
 `;
 
@@ -123,6 +128,7 @@ export const CartItem = ({
   enableUpdate,
   currency,
   isAdmin,
+  productVariants,
 }: {
   id: string;
   qty: number;
@@ -133,6 +139,7 @@ export const CartItem = ({
   enableUpdate: boolean;
   currency: string;
   isAdmin?: boolean;
+  productVariants?: string;
 }) => {
   const { decimals } = useCurrency();
 
@@ -166,13 +173,18 @@ export const CartItem = ({
 
         <TextAndBtns>
           <TitleAndDeleteBtn>
-            <ProductTitle
-              to={`${
-                isAdmin ? routes.admin.inventory : routes.store.inventory
-              }/${id}`}
-            >
-              {title}
-            </ProductTitle>
+            <div>
+              <ProductTitle
+                to={`${
+                  isAdmin ? routes.admin.inventory : routes.store.inventory
+                }/${id}`}
+              >
+                {title}
+              </ProductTitle>
+              {productVariants && (
+                <ProductVariants>{productVariants}</ProductVariants>
+              )}
+            </div>
 
             {enableUpdate && (
               <DeleteButton onClick={() => removeItemFromCart(id)}>

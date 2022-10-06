@@ -61,6 +61,8 @@ export const CartItems = ({ enableUpdate = true, showMoreButton = false }) => {
 
   const hasMoreItems = FIRST_ITEMS_LENGTH < cartItems.length;
 
+  console.log(cartItems);
+
   const ToggleBtn = ({ showLess = false }) => (
     <div style={{ marginTop: '20px' }}>
       <Button
@@ -76,19 +78,24 @@ export const CartItems = ({ enableUpdate = true, showMoreButton = false }) => {
   return (
     <HeaderAndITems>
       {cartItems.length ? (
-        firstCartITems.map(({ _id, qty, image, title, price, totalSupply }) => (
-          <CartItem
-            key={_id}
-            id={_id}
-            qty={qty}
-            image={image}
-            title={title}
-            price={price}
-            totalSupply={totalSupply}
-            enableUpdate={enableUpdate}
-            currency={currency}
-          />
-        ))
+        firstCartITems.map(
+          ({ _id, qty, image, title, price, totalSupply, productVariants }) => {
+            return (
+              <CartItem
+                key={_id}
+                id={_id}
+                qty={qty}
+                image={image}
+                title={title}
+                price={price}
+                totalSupply={totalSupply}
+                enableUpdate={enableUpdate}
+                currency={currency}
+                productVariants={productVariants}
+              />
+            );
+          }
+        )
       ) : (
         <Par>You don't have anything in your cart yet!</Par>
       )}
@@ -96,19 +103,22 @@ export const CartItems = ({ enableUpdate = true, showMoreButton = false }) => {
       {!showAllITems && showMoreButton && hasMoreItems && <ToggleBtn />}
 
       {showAllITems &&
-        restITems.map(({ _id, qty, image, title, price, totalSupply }) => (
-          <CartItem
-            key={_id}
-            id={_id}
-            qty={qty}
-            image={image}
-            title={title}
-            price={price}
-            totalSupply={totalSupply}
-            enableUpdate={enableUpdate}
-            currency={currency}
-          />
-        ))}
+        restITems.map(
+          ({ _id, qty, image, title, price, totalSupply, productVariants }) => (
+            <CartItem
+              key={_id}
+              id={_id}
+              qty={qty}
+              image={image}
+              title={title}
+              price={price}
+              totalSupply={totalSupply}
+              enableUpdate={enableUpdate}
+              currency={currency}
+              productVariants={productVariants}
+            />
+          )
+        )}
 
       {showAllITems && showMoreButton && hasMoreItems && <ToggleBtn showLess />}
     </HeaderAndITems>

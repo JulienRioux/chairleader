@@ -30,11 +30,12 @@ export interface IInventoryItem {
   variantNames?: string[];
   variantsValues?: [[string]];
   allPossibleVariantsObject?: any;
+  productVariants?: string;
 }
 
 interface ICartContext {
   cartItems: IInventoryItem[];
-  updateQuantity: ({ id, qty }: { id: string; qty: number }) => void;
+  updateQuantity: (args: any) => void;
   removeItemFromCart: (id: string) => void;
   totalPrice: number;
   totalSaleTax: number;
@@ -56,6 +57,8 @@ interface ICartContext {
 export interface ICartItem {
   _id: string;
   qty: number;
+  productVariants?: string;
+  price: number;
 }
 
 export const CartContext = createContext<ICartContext>({} as ICartContext);
@@ -96,16 +99,27 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const SALE_TAX_PERCENT = store?.saleTax / 100 ?? 0;
 
   const updateQuantity = useCallback(
-    ({ id, qty }: { id: string; qty: number }) => {
+    ({
+      id,
+      qty,
+      productVariants,
+      price,
+    }: {
+      id: string;
+      qty: number;
+      productVariants?: string;
+      price: number;
+    }) => {
       const itemIsInCart = cartItems.find((item) => item._id === id);
       if (itemIsInCart) {
+        // TODO: Make it work for the products with variants
         const updatedCartITems = cartItems.map((item) =>
-          item._id === id ? { ...item, qty } : item
+          item._id === id ? { ...item, qty, productVariants, price } : item
         );
         setCartItems(updatedCartITems);
         return;
       }
-      setCartItems([{ _id: id, qty }, ...cartItems]);
+      setCartItems([{ _id: id, qty, productVariants, price }, ...cartItems]);
     },
     [cartItems]
   );
@@ -146,44 +160,44 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
     localStorage.setItem(StorageKeys.CART_ITEMS, JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // Make sure we're on a good quantity state (i.e. if unavailable, remove from cart)
-  useEffect(() => {
-    // Don'T run this if we did not add the items from URL yet
-    const gettingCartFromUrl =
-      searchParams.get('payment_link_items') ||
-      searchParams.get('custom_items');
-    if (gettingCartFromUrl) {
-      return;
-    }
-    // TODO: We'll need to make sure we're not changing the qty when someone is making a payment
-    let cartItemsChanged = false;
-    const itemRelativeToTotalSupply = cartItems.reduce(
-      (acc: ICartItem[], currItem: ICartItem) => {
-        const item = inventoryAndCustomItems?.find(
-          (product) => currItem._id === product._id
-        );
+  // // Make sure we're on a good quantity state (i.e. if unavailable, remove from cart)
+  // useEffect(() => {
+  //   // Don'T run this if we did not add the items from URL yet
+  //   const gettingCartFromUrl =
+  //     searchParams.get('payment_link_items') ||
+  //     searchParams.get('custom_items');
+  //   if (gettingCartFromUrl) {
+  //     return;
+  //   }
+  //   // TODO: We'll need to make sure we're not changing the qty when someone is making a payment
+  //   let cartItemsChanged = false;
+  //   const itemRelativeToTotalSupply = cartItems.reduce(
+  //     (acc: ICartItem[], currItem: ICartItem) => {
+  //       const item = inventoryAndCustomItems?.find(
+  //         (product) => currItem._id === product._id
+  //       );
 
-        // If the item did not exists anymore or has a supply of 0, remove it from the cart
-        if (!item?.totalSupply) {
-          message.info('Some of the items are not available anymore.');
-          cartItemsChanged = true;
-          return acc;
-        }
-        if (item?.totalSupply && item?.totalSupply < currItem.qty) {
-          // otherwise, set the qty to the totalSypply
-          currItem.qty = item.totalSupply;
-          message.info('Item quantity changed due to remaining supply.');
-          cartItemsChanged = true;
-        }
-        return [...acc, currItem] as ICartItem[];
-      },
-      []
-    );
+  //       // If the item did not exists anymore or has a supply of 0, remove it from the cart
+  //       if (!item?.totalSupply) {
+  //         message.info('Some of the items are not available anymore.');
+  //         cartItemsChanged = true;
+  //         return acc;
+  //       }
+  //       if (item?.totalSupply && item?.totalSupply < currItem.qty) {
+  //         // otherwise, set the qty to the totalSypply
+  //         currItem.qty = item.totalSupply;
+  //         message.info('Item quantity changed due to remaining supply.');
+  //         cartItemsChanged = true;
+  //       }
+  //       return [...acc, currItem] as ICartItem[];
+  //     },
+  //     []
+  //   );
 
-    if (cartItemsChanged) {
-      setCartItems(itemRelativeToTotalSupply);
-    }
-  }, [cartItems, inventoryAndCustomItems, searchParams]);
+  //   if (cartItemsChanged) {
+  //     setCartItems(itemRelativeToTotalSupply);
+  //   }
+  // }, [cartItems, inventoryAndCustomItems, searchParams]);
 
   const resetCart = useCallback(() => {
     setCartItems([]);
@@ -193,6 +207,8 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const populatedCartItems = cartItems.map((cartItem) => ({
     ...inventoryAndCustomItems?.find((product) => cartItem._id === product._id),
     qty: cartItem.qty,
+    productVariants: cartItem.productVariants,
+    price: cartItem.price,
   })) as IInventoryItem[];
 
   const totalPrice = Number(

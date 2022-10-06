@@ -62,9 +62,9 @@ const ButtonWrapper = styled.button<{
   }
 
   :disabled {
-    background-color: ${(p) => p.theme.color.text}55;
-    border-color: ${(p) => p.theme.color.text}22;
-    color: ${(p) => p.theme.color.buttonText};
+    background-color: ${(p) => p.theme.color.lightGrey};
+    border-color: ${(p) => p.theme.color.lightGrey};
+    color: ${(p) => p.theme.color.text}cc;
     cursor: not-allowed;
     transform: none;
   }
