@@ -13,6 +13,7 @@ import { ChangeEvent, FormEvent, useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { formatShortAddress, routes } from 'utils';
 import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 const ShowMoreBtn = styled(Button)`
   padding: 4px 8px;
@@ -51,7 +52,6 @@ const COLUMNS = [
   'Currency',
   'Items',
   'Status',
-  'Details',
 ];
 
 const formatTableData = (invoices: any) => {
@@ -73,11 +73,6 @@ const formatTableData = (invoices: any) => {
       Currency: currency,
       Total: totalWithSaleTax,
       Items: `${cartItems.length} items`,
-      Details: (
-        <ShowMoreBtn secondary to={routes.admin.payments + '/' + _id}>
-          Show details
-        </ShowMoreBtn>
-      ),
     })
   );
   return tableData;
@@ -87,6 +82,7 @@ export const PaymentsPage = () => {
   const [searchString, setSearchString] = useState('');
   const [searchFilter, setSearchFilter] = useState('');
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const { data, loading, refetch } = useQuery(GET_INVOICES_BY_STORE_ID, {
     notifyOnNetworkStatusChange: true,
@@ -104,6 +100,13 @@ export const PaymentsPage = () => {
       setSearchFilter(searchString);
     },
     [searchString]
+  );
+
+  const handleRowClick = useCallback(
+    (row: any) => {
+      navigate(`${routes.admin.payments}/${row['Order ID']}`);
+    },
+    [navigate]
   );
 
   const filteredTableData = tableData.filter(
@@ -147,7 +150,11 @@ export const PaymentsPage = () => {
       ) : noSearchData ? (
         <p>No result for your search...</p>
       ) : (
-        <Table columns={COLUMNS} rows={filteredTableData} />
+        <Table
+          columns={COLUMNS}
+          rows={filteredTableData}
+          handleRowClick={handleRowClick}
+        />
       )}
     </div>
   );

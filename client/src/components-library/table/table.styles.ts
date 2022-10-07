@@ -40,3 +40,7 @@ export const TableWrapper = styled.table`
     }
   }
 `;
+
+export const TR = styled.tr<{ handleRowClick?: boolean }>`
+  ${(p) => p.handleRowClick && 'cursor: pointer;'}
+`;

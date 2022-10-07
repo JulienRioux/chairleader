@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { TableWrapper, TableWithBorder } from './table.styles';
+import { TableWrapper, TableWithBorder, TR } from './table.styles';
 
 interface Comlumn {
   [key: string]: ReactNode;
@@ -8,9 +8,10 @@ interface Comlumn {
 interface TableProps {
   columns: string[];
   rows: Comlumn[];
+  handleRowClick?: any;
 }
 
-export const Table = ({ columns, rows }: TableProps) => {
+export const Table = ({ columns, rows, handleRowClick }: TableProps) => {
   return (
     <TableWithBorder>
       <TableWrapper>
@@ -24,11 +25,15 @@ export const Table = ({ columns, rows }: TableProps) => {
 
         <tbody>
           {rows.map((row, i) => (
-            <tr key={i}>
+            <TR
+              key={i}
+              onClick={() => handleRowClick(row)}
+              handleRowClick={!!handleRowClick}
+            >
               {columns.map((column, j) => (
                 <td key={j}>{row[column as keyof typeof row]}</td>
               ))}
-            </tr>
+            </TR>
           ))}
         </tbody>
       </TableWrapper>
