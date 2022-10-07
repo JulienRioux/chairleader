@@ -202,22 +202,8 @@ export const ConnectedWalletModalContent = ({
         to={routes.store.profile}
         onClick={closeModal}
       >
-        My profile
+        My account
       </Button>
-
-      <UnstyledExternalLink
-        href={`https://solscan.io/account/${walletAddress}?cluster=${cluster}`}
-        target="_blank"
-      >
-        <Button
-          secondary
-          fullWidth
-          icon="launch"
-          style={{ marginBottom: '12px' }}
-        >
-          View on Explorer
-        </Button>
-      </UnstyledExternalLink>
 
       <Button secondary fullWidth onClick={handleDisconnect}>
         Disconnect
@@ -229,7 +215,7 @@ export const ConnectedWalletModalContent = ({
 export const ConnectWalletBtn = ({ fullWidth = false }) => {
   const { publicKey, connecting } = useWallet();
 
-  const { openConnectModal, openConnectedModal } = useWalletModal();
+  const { openConnectModal } = useWalletModal();
 
   const walletAddress = useMemo(() => publicKey?.toBase58(), [publicKey]);
 
@@ -247,7 +233,7 @@ export const ConnectWalletBtn = ({ fullWidth = false }) => {
       )}
 
       {walletAddress && (
-        <Button secondary onClick={openConnectedModal}>
+        <Button secondary to={routes.store.profile}>
           {formatShortAddress(walletAddress)}
         </Button>
       )}

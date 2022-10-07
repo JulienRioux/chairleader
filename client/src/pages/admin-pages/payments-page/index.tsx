@@ -15,11 +15,6 @@ import { formatShortAddress, routes } from 'utils';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 
-const ShowMoreBtn = styled(Button)`
-  padding: 4px 8px;
-  min-width: fit-content;
-`;
-
 const RefetchBtnWrapper = styled.div`
   display: flex;
   justify-content: space-between;

@@ -15,7 +15,7 @@ export const NftsPage = () => {
   }
 
   return (
-    <div>
+    <div style={{ marginBottom: '80px' }}>
       <NftsList isStoreApp />
     </div>
   );

@@ -205,9 +205,9 @@ const StoreImgIconWrapper = styled.div`
     text-overflow: ellipsis;
     overflow: hidden;
 
-    @media (max-width: 800px) {
+    /* @media (max-width: 800px) {
       display: none;
-    }
+    } */
   }
 `;
 

@@ -20,7 +20,7 @@ import {
   useEffect,
 } from 'react';
 import styled, { css } from 'styled-components';
-import { getProductVariantsLowestPrice, routes } from 'utils';
+import { routes } from 'utils';
 
 const PosStyles = css`
   grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -287,15 +287,12 @@ export const StorePage = () => {
           </AddCustomProductBtn>
         )}
 
+        {!publishedInventory?.length && <p>No product yet.</p>}
+
         <Modal title="New custom product">
           <AddCustomItem closeModal={closeModal} />
         </Modal>
       </ProductGrid>
-      {!publishedInventory?.length && <p>No product yet.</p>}
-
-      {!!publishedInventory?.length && (
-        <ProductNum>{publishedInventory?.length} products</ProductNum>
-      )}
     </div>
   );
 };

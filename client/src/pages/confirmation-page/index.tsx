@@ -15,7 +15,7 @@ export const getTxExplorerUrl = ({ signature = '', isDev = false }) =>
   `https://explorer.solana.com/tx/${signature}${isDev && '?cluster=devnet'}`;
 
 const ConfirmationPageWrapper = styled.div`
-  margin: 40px auto;
+  margin: 40px auto 80px;
 `;
 
 const SummaryWrapper = styled.div`
