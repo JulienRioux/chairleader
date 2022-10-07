@@ -1,6 +1,6 @@
 import { InvoiceModel } from '../../../models/invoice';
 import { ProductModel } from '../../../models/product';
-import { Logger } from '../../../utils';
+import { asyncForEach, Logger } from '../../../utils';
 
 export const addInvoice = async ({
   signature,
@@ -64,16 +64,58 @@ export const addInvoice = async ({
     });
 
     // Updating the product quantity
-    cartItems.forEach(async ({ _id, qty }: { _id: string; qty: number }) => {
-      // Do not change the qty for custom items
-      if (_id.startsWith('CUSTOM_ITEM_')) {
-        return;
+    await asyncForEach(
+      cartItems,
+      async ({
+        _id,
+        qty,
+        productType,
+        productVariants,
+      }: {
+        _id: string;
+        qty: number;
+        productType: string;
+        productVariants: string;
+      }) => {
+        // Do not change the qty for custom items
+        if (_id.startsWith('CUSTOM_ITEM_')) {
+          return;
+        }
+        // SIMPLE_PRODUCT inventory management
+        if (productType === 'simpleProduct') {
+          await ProductModel.findByIdAndUpdate(
+            { _id },
+            { $inc: { totalSupply: -qty } }
+          );
+        }
+        // SIMPLE_PRODUCT inventory management
+        if (productType === 'productWithVariants') {
+          const productToUpdate = await ProductModel.findById(_id);
+          const allPossibleVariantsObjectToUpdate = Object.assign(
+            {},
+            productToUpdate?.allPossibleVariantsObject
+          );
+          const updatedQuantity =
+            Number(allPossibleVariantsObjectToUpdate[productVariants].qty) -
+            qty;
+
+          allPossibleVariantsObjectToUpdate[productVariants].qty =
+            updatedQuantity.toString();
+
+          console.log(
+            'allPossibleVariantsObjectToUpdate',
+            allPossibleVariantsObjectToUpdate
+          );
+
+          // Update the product inventory
+          const wtf = await ProductModel.findByIdAndUpdate(
+            { _id },
+            { allPossibleVariantsObject: allPossibleVariantsObjectToUpdate }
+          );
+          console.log('wtf???', wtf);
+        }
       }
-      await ProductModel.findByIdAndUpdate(
-        { _id },
-        { $inc: { totalSupply: -qty } }
-      );
-    });
+    );
 
     await doc.save();
 

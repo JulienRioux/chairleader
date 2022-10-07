@@ -5,3 +5,4 @@ export * from './get-20-minutes-from-now';
 export * from './email';
 export * from './generate-jwt';
 export * from './aws-s3';
+export * from './async-for-each';

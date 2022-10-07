@@ -110,6 +110,7 @@ const TopNav = styled.div`
   justify-content: space-between;
   max-width: ${(p) => p.theme.layout.maxWidth};
   margin: 0 auto;
+  height: 100%;
 `;
 
 const CartPaymentLayout = styled.div`
