@@ -190,7 +190,7 @@ const CartItemsTitle = styled(CartTitle)`
   z-index: 9;
 
   @media (max-width: 1000px) {
-    display: none;
+    position: static;
   }
 `;
 

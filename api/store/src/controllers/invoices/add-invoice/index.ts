@@ -102,17 +102,11 @@ export const addInvoice = async ({
           allPossibleVariantsObjectToUpdate[productVariants].qty =
             updatedQuantity.toString();
 
-          console.log(
-            'allPossibleVariantsObjectToUpdate',
-            allPossibleVariantsObjectToUpdate
-          );
-
           // Update the product inventory
           const wtf = await ProductModel.findByIdAndUpdate(
             { _id },
             { allPossibleVariantsObject: allPossibleVariantsObjectToUpdate }
           );
-          console.log('wtf???', wtf);
         }
       }
     );

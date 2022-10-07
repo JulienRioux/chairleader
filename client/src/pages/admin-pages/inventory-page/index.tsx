@@ -286,12 +286,16 @@ export const StorePage = () => {
             Add custom product
           </AddCustomProductBtn>
         )}
-        {!publishedInventory?.length && <p>No product yet.</p>}
 
         <Modal title="New custom product">
           <AddCustomItem closeModal={closeModal} />
         </Modal>
       </ProductGrid>
+      {!publishedInventory?.length && <p>No product yet.</p>}
+
+      {!!publishedInventory?.length && (
+        <ProductNum>{publishedInventory?.length} products</ProductNum>
+      )}
     </div>
   );
 };

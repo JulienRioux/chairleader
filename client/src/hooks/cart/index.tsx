@@ -244,8 +244,6 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
       JSON.stringify(cartItems)
     )}&custom_items=${encodeURIComponent(JSON.stringify(customItems))}`;
 
-    console.log(encodeURIComponent(params));
-
     const paymentLink = `${window.location.origin}${routes.store.cart}${params}`;
 
     navigator.clipboard.writeText(paymentLink);
@@ -261,7 +259,6 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
       // Get the custom items
       if (customItemsFromUrl) {
         const parsedCustomItemsFromUrl = JSON.parse(customItemsFromUrl);
-        console.log('parsedCustomItemsFromUrl', parsedCustomItemsFromUrl);
         setCustomItems(parsedCustomItemsFromUrl);
       }
       // Get the cart items

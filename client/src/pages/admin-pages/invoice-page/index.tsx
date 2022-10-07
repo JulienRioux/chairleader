@@ -143,8 +143,6 @@ export const InvoicePage = () => {
 
   const isDevNetwork = invoiceData?.network === NETWORK.DEVNET;
 
-  console.log(cartItems);
-
   return (
     <InvoicePageWrapper>
       <InvoiceCard title="Summary">

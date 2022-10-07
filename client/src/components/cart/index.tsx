@@ -70,8 +70,6 @@ export const CartItems = ({
 
   const hasMoreItems = FIRST_ITEMS_LENGTH < cartItems.length;
 
-  console.log(cartItems);
-
   const ToggleBtn = ({ showLess = false }) => (
     <div style={{ marginTop: '20px' }}>
       <Button
