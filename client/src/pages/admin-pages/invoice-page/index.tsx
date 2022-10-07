@@ -143,13 +143,24 @@ export const InvoicePage = () => {
 
   const isDevNetwork = invoiceData?.network === NETWORK.DEVNET;
 
+  console.log(cartItems);
+
   return (
     <InvoicePageWrapper>
       <InvoiceCard title="Summary">
         {cartItems?.map(
-          ({ _id, qty, image, title, price, totalSupply }: any) => (
+          ({
+            _id,
+            qty,
+            image,
+            title,
+            price,
+            totalSupply,
+            productVariants,
+            variantNames,
+          }: any) => (
             <CartItem
-              key={_id}
+              key={`${_id}_${productVariants}`}
               id={_id}
               qty={qty}
               image={image}
@@ -158,7 +169,9 @@ export const InvoicePage = () => {
               totalSupply={totalSupply}
               enableUpdate={false}
               currency={invoiceData?.currency}
+              productVariants={productVariants}
               isAdmin
+              variantNames={variantNames}
             />
           )
         )}

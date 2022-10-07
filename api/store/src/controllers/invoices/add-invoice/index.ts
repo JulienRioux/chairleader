@@ -65,6 +65,7 @@ export const addInvoice = async ({
 
     // Updating the product quantity
     cartItems.forEach(async ({ _id, qty }: { _id: string; qty: number }) => {
+      // Do not change the qty for custom items
       if (_id.startsWith('CUSTOM_ITEM_')) {
         return;
       }

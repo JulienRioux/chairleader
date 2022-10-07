@@ -13,7 +13,7 @@ RCNotification.newInstance(
     maxCount: 5,
     style: {
       position: 'fixed',
-      right: '8px',
+      left: '8px',
       top: '8px',
       transition: '2s',
       pointerEvents: 'none',

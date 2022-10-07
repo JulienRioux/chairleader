@@ -24,13 +24,12 @@ import { PRODUCT_TYPE } from 'pages/admin-pages/product-form';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled, { css } from 'styled-components';
-import { formatShortAddress, getNftDataFromAddressArr, routes } from 'utils';
-
-const formatVariantOptions = (options: string[]) =>
-  options.reduce((acc, option) => {
-    if (acc === '') return option;
-    return acc + ' / ' + option;
-  }, '');
+import {
+  formatShortAddress,
+  formatVariantsOptions,
+  getNftDataFromAddressArr,
+  routes,
+} from 'utils';
 
 const ProductWrapper = styled.div`
   max-width: ${(p) => p.theme.layout.mediumWidth};
@@ -281,7 +280,7 @@ export const ProductPage = () => {
           );
 
           // Set the price and max quantity
-          const formattedOptions = formatVariantOptions(
+          const formattedOptions = formatVariantsOptions(
             initProductVariantsValues
           );
 
@@ -302,7 +301,7 @@ export const ProductPage = () => {
       updateQuantity({
         id: productId,
         qty,
-        productVariants: formatVariantOptions(productVariants),
+        productVariants: formatVariantsOptions(productVariants),
         price,
       });
     }
@@ -346,7 +345,7 @@ export const ProductPage = () => {
 
       setProductVariants(productVariantsCopy);
       // Set the price and max quantity
-      const formattedOptions = formatVariantOptions(productVariantsCopy);
+      const formattedOptions = formatVariantsOptions(productVariantsCopy);
 
       const currentOptionPriceAndQty =
         allPossibleVariantsObject[formattedOptions];
@@ -367,7 +366,7 @@ export const ProductPage = () => {
       }
       const productVariantsCopy = [...productVariants];
       productVariantsCopy[index] = option;
-      const formattedOptions = formatVariantOptions(productVariantsCopy);
+      const formattedOptions = formatVariantsOptions(productVariantsCopy);
       return Number(allPossibleVariantsObject[formattedOptions].qty) === 0;
     },
     [allPossibleVariantsObject, productVariants, variantNames.length]
@@ -472,7 +471,9 @@ export const ProductPage = () => {
                   'Unavailable'
                 ) : (
                   <>
-                    {isUpdating ? 'Update cart' : 'Add to cart'}{' '}
+                    {isUpdating && productType === PRODUCT_TYPE.SIMPLE_PRODUCT
+                      ? 'Update cart'
+                      : 'Add to cart'}{' '}
                     {Number((Number(price) * qty)?.toFixed(decimals))}{' '}
                     {currency}
                   </>

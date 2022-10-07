@@ -31,7 +31,7 @@ const ProductTitle = styled(UnstyledLink)`
 `;
 
 const ProductVariants = styled.div`
-  margin-bottom: 12px;
+  margin-bottom: 4px;
   font-size: 13px;
   color: ${(p) => p.theme.color.text}bb;
 `;
@@ -45,8 +45,15 @@ const Price = styled.div`
   }
 `;
 
+const ProductVariantsWrapper = styled.div`
+  margin-bottom: 12px;
+`;
+
 export const cartItemImgSharedStyles = css`
   width: 80px;
+  max-width: 80px;
+  height: 80px;
+  max-height: 80px;
   aspect-ratio: ${(p) => p.theme.products.image.aspectRatio};
   border-radius: ${(p) => p.theme.borderRadius.default};
   margin-right: 12px;
@@ -129,6 +136,7 @@ export const CartItem = ({
   currency,
   isAdmin,
   productVariants,
+  variantNames,
 }: {
   id: string;
   qty: number;
@@ -140,6 +148,7 @@ export const CartItem = ({
   currency: string;
   isAdmin?: boolean;
   productVariants?: string;
+  variantNames?: string[];
 }) => {
   const { decimals } = useCurrency();
 
@@ -147,14 +156,23 @@ export const CartItem = ({
 
   const handleUpdateQuantity = useCallback(
     (qty: number) => {
-      updateQuantity({ id, qty });
+      updateQuantity({
+        id,
+        qty,
+        productVariants,
+        price,
+      });
     },
-    [id, updateQuantity]
+    [id, price, productVariants, updateQuantity]
   );
 
   const isCustomProduct = id?.startsWith('CUSTOM_ITEM_');
 
   const priceDisplay = Number((price * qty)?.toFixed(decimals ?? 6));
+
+  const variantsArr = productVariants?.split('/');
+
+  const showDetailledOptions = variantNames && variantsArr;
 
   return (
     <CartItemWrapper>
@@ -181,13 +199,20 @@ export const CartItem = ({
               >
                 {title}
               </ProductTitle>
-              {productVariants && (
-                <ProductVariants>{productVariants}</ProductVariants>
-              )}
+              <ProductVariantsWrapper>
+                {showDetailledOptions &&
+                  variantNames?.map((variantName, index) => (
+                    <ProductVariants key={variantName}>
+                      {variantName}: {variantsArr[index]}
+                    </ProductVariants>
+                  ))}
+              </ProductVariantsWrapper>
             </div>
 
             {enableUpdate && (
-              <DeleteButton onClick={() => removeItemFromCart(id)}>
+              <DeleteButton
+                onClick={() => removeItemFromCart({ id, productVariants })}
+              >
                 <Icon name="delete_outline" />
               </DeleteButton>
             )}
@@ -206,7 +231,7 @@ export const CartItem = ({
       <PriceAndTotal>
         <Price>
           <span>{!enableUpdate && `${qty} x `}</span>
-          {priceDisplay} {currency} {enableUpdate && <span>each</span>}
+          {price} {currency} {enableUpdate && <span>each</span>}
         </Price>
 
         {price && (

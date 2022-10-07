@@ -16,6 +16,7 @@ import {
 import { message } from 'components-library';
 import { useSearchParams } from 'react-router-dom';
 import { USE_PAYMENT_LINK } from 'configs';
+import { PRODUCT_TYPE } from 'pages/admin-pages/product-form';
 
 export interface IInventoryItem {
   _id: string;
@@ -36,7 +37,7 @@ export interface IInventoryItem {
 interface ICartContext {
   cartItems: IInventoryItem[];
   updateQuantity: (args: any) => void;
-  removeItemFromCart: (id: string) => void;
+  removeItemFromCart: (args: any) => void;
   totalPrice: number;
   totalSaleTax: number;
   totalWithSaleTax: number;
@@ -110,11 +111,15 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
       productVariants?: string;
       price: number;
     }) => {
-      const itemIsInCart = cartItems.find((item) => item._id === id);
+      const itemIsInCart = cartItems.find(
+        (item) => item._id === id && item.productVariants === productVariants
+      );
       if (itemIsInCart) {
         // TODO: Make it work for the products with variants
         const updatedCartITems = cartItems.map((item) =>
-          item._id === id ? { ...item, qty, productVariants, price } : item
+          item._id === id && item.productVariants === productVariants
+            ? { ...item, qty, productVariants, price }
+            : item
         );
         setCartItems(updatedCartITems);
         return;
@@ -148,8 +153,12 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
   );
 
   const removeItemFromCart = useCallback(
-    (id: string) => {
-      const updatedCartITems = cartItems.filter((item) => item._id !== id);
+    ({ id, productVariants }: { id: string; productVariants?: string }) => {
+      // Make sure we're deleting the right product if it's a product with variant using productVariants field
+      const updatedCartITems = cartItems.filter(
+        (item) => item.productVariants !== productVariants || item._id !== id
+      );
+
       setCartItems(updatedCartITems);
     },
     [cartItems]

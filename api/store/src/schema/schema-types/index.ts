@@ -49,6 +49,8 @@ export const schemaTypes = gql`
     totalSupply: Int
     status: String
     productType: String
+    productVariants: String
+    variantNames: [String]
   }
 
   type Invoice {

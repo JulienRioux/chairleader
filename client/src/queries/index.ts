@@ -235,6 +235,8 @@ const INVOICE = gql`
       totalSupply
       qty
       productType
+      productVariants
+      variantNames
     }
     shippingFee
     email

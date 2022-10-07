@@ -3,6 +3,7 @@ import { Button, Icon } from 'components-library';
 import { CloseBtn } from 'components-library/modal/styled';
 import { IInventoryItem, useCart } from 'hooks/cart';
 import { useCurrency } from 'hooks/currency';
+import { PRODUCT_TYPE } from 'pages/admin-pages/product-form';
 import { useState } from 'react';
 import styled from 'styled-components';
 
@@ -75,23 +76,52 @@ export const CartItems = ({ enableUpdate = true, showMoreButton = false }) => {
     </div>
   );
 
+  const getTotalSupply = ({
+    totalSupply,
+    productVariants,
+    productType,
+    allPossibleVariantsObject,
+  }: any) => {
+    if (productType === PRODUCT_TYPE.SIMPLE_PRODUCT) {
+      return totalSupply;
+    }
+    return allPossibleVariantsObject[productVariants].qty;
+  };
+
   return (
     <HeaderAndITems>
       {cartItems.length ? (
         firstCartITems.map(
-          ({ _id, qty, image, title, price, totalSupply, productVariants }) => {
+          ({
+            _id,
+            qty,
+            image,
+            title,
+            price,
+            totalSupply,
+            productVariants,
+            productType,
+            allPossibleVariantsObject,
+            variantNames,
+          }) => {
             return (
               <CartItem
-                key={_id}
+                key={`${_id}_${productVariants}`}
                 id={_id}
                 qty={qty}
                 image={image}
                 title={title}
                 price={price}
-                totalSupply={totalSupply}
+                totalSupply={getTotalSupply({
+                  totalSupply,
+                  productVariants,
+                  productType,
+                  allPossibleVariantsObject,
+                })}
                 enableUpdate={enableUpdate}
                 currency={currency}
                 productVariants={productVariants}
+                variantNames={variantNames}
               />
             );
           }
@@ -104,9 +134,18 @@ export const CartItems = ({ enableUpdate = true, showMoreButton = false }) => {
 
       {showAllITems &&
         restITems.map(
-          ({ _id, qty, image, title, price, totalSupply, productVariants }) => (
+          ({
+            _id,
+            qty,
+            image,
+            title,
+            price,
+            totalSupply,
+            productVariants,
+            variantNames,
+          }) => (
             <CartItem
-              key={_id}
+              key={`${_id}_${productVariants}`}
               id={_id}
               qty={qty}
               image={image}
@@ -116,6 +155,7 @@ export const CartItems = ({ enableUpdate = true, showMoreButton = false }) => {
               enableUpdate={enableUpdate}
               currency={currency}
               productVariants={productVariants}
+              variantNames={variantNames}
             />
           )
         )}

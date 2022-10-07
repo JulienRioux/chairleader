@@ -30,14 +30,14 @@ export async function createSPLTokenInstruction({
   if (!mint.isInitialized)
     throw new CreateTransferError('mint not initialized');
 
-  // Check that the amount provided doesn't have greater precision than the mint
-  if (amount.decimalPlaces() > mint.decimals)
-    throw new CreateTransferError('amount decimals invalid');
-
   // Convert input decimal amount to integer tokens according to the mint decimals
   amount = amount
     .times(new BigNumber(10).pow(mint.decimals))
     .integerValue(BigNumber.ROUND_FLOOR);
+
+  // Check that the amount provided doesn't have greater precision than the mint
+  if (amount.decimalPlaces() > mint.decimals)
+    throw new CreateTransferError('amount decimals invalid');
 
   // Get the sender's ATA and check that the account exists and can send tokens
   const senderATA = await getAssociatedTokenAddress(splToken, sender);
