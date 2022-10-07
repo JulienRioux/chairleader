@@ -11,3 +11,4 @@ export * from './nfts';
 export * from './create-spl-token-instruction';
 export * from './override-hide-app-from-url-params';
 export * from './format-variants-options';
+export * from './get-product-variants-lowest-price';

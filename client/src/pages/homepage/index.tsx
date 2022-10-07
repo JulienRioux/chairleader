@@ -22,7 +22,7 @@ const HeroWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
+  /* text-align: center; */
 `;
 
 export const backgroundTextAnim = keyframes`
@@ -32,15 +32,15 @@ export const backgroundTextAnim = keyframes`
 `;
 
 const Header = styled.h1`
-  font-size: 100px;
+  font-size: 70px;
   margin-bottom: 40px;
   margin-top: 0;
-  background-clip: text;
+  /* background-clip: text;
   -webkit-background-clip: text;
   background-image: url(${GranyFilter});
   color: transparent;
   mix-blend-mode: exclusion;
-  animation: 3s ${backgroundTextAnim} linear infinite;
+  animation: 3s ${backgroundTextAnim} linear infinite; */
 
   @media (max-width: 800px) {
     font-size: 48px;
@@ -52,7 +52,6 @@ const HeroPar = styled.p`
   font-size: 18px;
   margin: 0 0 24px;
   line-height: 1.6;
-  max-width: 700px;
   margin: 0 auto 24px;
 `;
 
@@ -396,11 +395,11 @@ export const Homepage = () => {
       <HomepageWrapper>
         <HeroWrapper>
           <LeftHero>
-            <Header>Web3 e-commerce platform builds for the future</Header>
+            <Header>No-code web3 e-commerce platform</Header>
             <HeroPar>
               We are building the next-generation e-commerce platform offering
               online retailers a suite of web3 services including payments,
-              marketing, and engagement tools.
+              marketing, and engagement tools built on top of Solana.
             </HeroPar>
 
             {HIDE_APP && (

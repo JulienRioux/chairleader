@@ -24,6 +24,7 @@ import { useMutation } from '@apollo/client';
 import { ADD_NFT } from 'queries';
 import { useNft } from 'hooks/nft';
 import { NFT_ROYALTY, SELLING_NFT_SERVICE_FEE } from 'configs';
+import { useWalletModal } from 'hooks/wallet-modal';
 
 const ImageWrapper = styled.div`
   margin: 8px 0 24px;
@@ -74,6 +75,7 @@ export const TokenGating = () => {
   const wallet = useWallet();
   const { openModal, Modal, closeModal } = useModal();
   const { refetchStoreNfts } = useNft();
+  const { openConnectModal } = useWalletModal();
 
   const [addNft, { loading: addNftIsLoading }] = useMutation(ADD_NFT);
 
@@ -232,7 +234,14 @@ export const TokenGating = () => {
   }
 
   if (!wallet.connected) {
-    return <p>Connect your wallet in order to create NFTs.</p>;
+    return (
+      <div>
+        <p>Connect your wallet in order to create NFTs.</p>
+        <Button secondary onClick={openConnectModal}>
+          Connect wallet
+        </Button>
+      </div>
+    );
   }
 
   let currentImageSrc = '';

@@ -3,6 +3,7 @@ import {
   Icon,
   UnstyledExternalLink,
   UnstyledLink,
+  Loader,
 } from 'components-library';
 import { ReactNode } from 'react';
 import { useLocation, useMatch } from 'react-router-dom';
@@ -241,7 +242,7 @@ const SIDE_NAV_ROUTE = [
 
 export const AdminLayout = ({ children }: { children: ReactNode }) => {
   const { pathname } = useLocation();
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
 
   const isOnProductPage = useMatch(`${routes.admin.inventory}/:productId`);
   const isOnInvoicePage = useMatch(`${routes.admin.payments}/:invoiceId`);
@@ -264,6 +265,10 @@ export const AdminLayout = ({ children }: { children: ReactNode }) => {
     .replace('/admin/', '')
     .replaceAll('-', ' ')
     .replaceAll('/', ' / ');
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <AdminLayoutWrapper>

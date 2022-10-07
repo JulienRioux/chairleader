@@ -20,7 +20,7 @@ import {
   useEffect,
 } from 'react';
 import styled, { css } from 'styled-components';
-import { routes } from 'utils';
+import { getProductVariantsLowestPrice, routes } from 'utils';
 
 const PosStyles = css`
   grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -152,16 +152,28 @@ export const InventoryPage = () => {
       </TopBtnWrapper>
 
       <ProductGrid>
-        {result?.map(({ image, title, price, _id, status }) => (
-          <ProductPreview
-            key={_id}
-            image={image}
-            title={title}
-            price={price?.toString()}
-            id={_id}
-            status={status}
-          />
-        ))}
+        {result?.map(
+          ({
+            image,
+            title,
+            price,
+            _id,
+            status,
+            allPossibleVariantsObject,
+            productType,
+          }) => (
+            <ProductPreview
+              key={_id}
+              image={image}
+              title={title}
+              price={price?.toString()}
+              id={_id}
+              status={status}
+              allPossibleVariantsObject={allPossibleVariantsObject}
+              productType={productType}
+            />
+          )
+        )}
 
         {!inventory?.length && <p>No product yet.</p>}
 
@@ -246,7 +258,15 @@ export const StorePage = () => {
     <div>
       <ProductGrid isPos>
         {publishedInventory?.map(
-          ({ image, title, price, _id, totalSupply }) => (
+          ({
+            image,
+            title,
+            price,
+            _id,
+            totalSupply,
+            allPossibleVariantsObject,
+            productType,
+          }) => (
             <ProductPreview
               key={_id}
               image={image}
@@ -255,6 +275,8 @@ export const StorePage = () => {
               id={_id}
               isPos
               totalSupply={totalSupply}
+              allPossibleVariantsObject={allPossibleVariantsObject}
+              productType={productType}
             />
           )
         )}

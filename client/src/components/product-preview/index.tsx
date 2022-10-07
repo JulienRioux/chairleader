@@ -2,8 +2,9 @@ import { UnstyledLink, Icon } from 'components-library';
 import { useAuth } from 'hooks/auth';
 import { useCurrency } from 'hooks/currency';
 import { useNft } from 'hooks/nft';
+import { PRODUCT_TYPE } from 'pages/admin-pages/product-form';
 import styled, { css } from 'styled-components';
-import { routes } from 'utils';
+import { getProductVariantsLowestPrice, routes } from 'utils';
 
 const ProductWrapper = styled(UnstyledLink)<{ $isOutOfStock: boolean }>`
   position: relative;
@@ -126,6 +127,8 @@ interface ProductPreviewProps {
   isPos?: boolean;
   totalSupply?: number;
   status?: string;
+  allPossibleVariantsObject?: any;
+  productType: string;
 }
 
 export const ProductPreviewItem = ({
@@ -157,6 +160,8 @@ export const ProductPreview = ({
   isPos,
   totalSupply,
   status,
+  productType,
+  allPossibleVariantsObject,
 }: ProductPreviewProps) => {
   const { user, currencyDecimals } = useAuth();
   const { currency, decimals } = useCurrency();
@@ -167,8 +172,14 @@ export const ProductPreview = ({
 
   const isOutOfStock = totalSupply === 0;
 
+  const { productPrice, hasMultiplePrice } = getProductVariantsLowestPrice({
+    allPossibleVariantsObject,
+    price,
+    productType,
+  });
+
   const priceDisplay = Number(
-    Number(price)?.toFixed(isPos ? decimals : currencyDecimals)
+    Number(productPrice)?.toFixed(isPos ? decimals : currencyDecimals)
   );
 
   const { isTokenGated, isUnlocked } =
@@ -182,7 +193,7 @@ export const ProductPreview = ({
       <ProductPreviewItem
         image={image}
         title={title}
-        priceDisplay={priceDisplay}
+        priceDisplay={`${hasMultiplePrice ? 'From ' : ''} ${priceDisplay}`}
         currency={isPos ? currency : user?.currency}
       />
 
