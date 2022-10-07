@@ -76,9 +76,17 @@ export const ConfirmationPage = ({ isConfirmation = false }) => {
               </a>
             </div>
 
-            <Button style={{ marginTop: '20px' }} to={routes.store.inventory}>
-              Start a new order
-            </Button>
+            <div style={{ marginTop: '20px' }}>
+              <Button to={routes.store.inventory}>Start a new order</Button>
+
+              <Button
+                secondary
+                style={{ marginLeft: '8px' }}
+                to={routes.store.profile}
+              >
+                Go to my profile
+              </Button>
+            </div>
           </FinalizedTransactionWrapper>
         )}
 

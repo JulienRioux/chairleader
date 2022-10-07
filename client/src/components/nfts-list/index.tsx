@@ -2,7 +2,7 @@ import { Collapsible, Loader, UnstyledLink } from 'components-library';
 import { useCallback, useEffect, useState } from 'react';
 import { useMetaplex } from 'hooks/metaplex';
 import styled from 'styled-components';
-import { formatShortAddress, getNftDataFromAddressArr, routes } from 'utils';
+import { getNftDataFromAddressArr, routes } from 'utils';
 import { useAuth } from 'hooks/auth';
 import { useNft } from 'hooks/nft';
 import { NftOwnerBadge } from 'pages/pos-app/product-page';

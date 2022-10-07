@@ -4,7 +4,7 @@ import { Button, ChildWrapper, UnstyledExternalLink } from 'components-library';
 import { useCallback, useMemo, useEffect } from 'react';
 import styled from 'styled-components';
 import { WalletName, WalletReadyState } from '@solana/wallet-adapter-base';
-import { formatShortAddress } from 'utils';
+import { formatShortAddress, routes } from 'utils';
 import { useWalletModal } from 'hooks/wallet-modal';
 
 const ConnectWalletBtnWrapper = styled.span`
@@ -194,6 +194,16 @@ export const ConnectedWalletModalContent = ({
       <p style={{ margin: '4px 0 24px' }}>
         Connected with {wallet?.adapter.name}.
       </p>
+
+      <Button
+        secondary
+        fullWidth
+        style={{ marginBottom: '12px' }}
+        to={routes.store.profile}
+        onClick={closeModal}
+      >
+        My profile
+      </Button>
 
       <UnstyledExternalLink
         href={`https://solscan.io/account/${walletAddress}?cluster=${cluster}`}

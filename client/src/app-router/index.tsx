@@ -29,6 +29,7 @@ import { SolanaPayProviders } from 'contexts/solana-pay';
 import { TokenGating } from 'pages/admin-pages/token-gating';
 import { TokenGatingNft } from 'pages/admin-pages/token-gating-nft';
 import { ConfirmationPage } from 'pages/confirmation-page';
+import { ProfilePage } from 'pages/profile-page';
 
 export const AdminAppRouter = () => {
   return (
@@ -95,6 +96,8 @@ export const StoreAppRouter = () => {
               path={'/confirmation/:orderId'}
               element={<ConfirmationPage />}
             />
+
+            <Route path={'/profile'} element={<ProfilePage />} />
 
             <Route
               path={routes.base}

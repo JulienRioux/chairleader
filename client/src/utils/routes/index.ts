@@ -33,5 +33,6 @@ export const routes = {
     confirmation: '/confirmation',
     nfts: '/nfts',
     shipping: '/shipping',
+    profile: '/profile',
   },
 };
