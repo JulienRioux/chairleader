@@ -245,7 +245,7 @@ export const AdminLayout = ({ children }: { children: ReactNode }) => {
   const { user, isLoading } = useAuth();
 
   const isOnProductPage = useMatch(`${routes.admin.inventory}/:productId`);
-  const isOnInvoicePage = useMatch(`${routes.admin.payments}/:invoiceId`);
+  const isOnInvoicePage = useMatch(`${routes.admin.payments}/:orderId`);
   const isOnNftPage = useMatch(`${routes.admin.tokenGating}/:address`);
   const isOnSelectRewardsPage = useMatch(
     `${routes.admin.tokenGating}/:address/rewards`

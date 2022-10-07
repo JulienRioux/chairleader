@@ -14,7 +14,7 @@ import { NftApp, StoreApp } from 'pages/pos-app';
 import { VerifyCodePage } from 'pages/verify-code-page';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { routes } from 'utils';
-import { CartPage, ConfirmationPage } from 'pages/cart-page';
+import { CartPage } from 'pages/cart-page';
 import { CartProvider } from 'hooks/cart';
 import { CurrencyProvider } from 'hooks/currency';
 import { InvoicePage } from 'pages/admin-pages/invoice-page';
@@ -28,6 +28,7 @@ import { PricingPage } from 'pages/pricing-page';
 import { SolanaPayProviders } from 'contexts/solana-pay';
 import { TokenGating } from 'pages/admin-pages/token-gating';
 import { TokenGatingNft } from 'pages/admin-pages/token-gating-nft';
+import { ConfirmationPage } from 'pages/confirmation-page';
 
 export const AdminAppRouter = () => {
   return (
@@ -39,7 +40,7 @@ export const AdminAppRouter = () => {
 
         <Route path={'/payments'} element={<PaymentsPage />} />
 
-        <Route path={'/payments/:invoiceId'} element={<InvoicePage />} />
+        <Route path={'/payments/:orderId'} element={<InvoicePage />} />
 
         <Route path={'/point-of-sale'} element={<PointOfSalePage />} />
 
@@ -87,6 +88,11 @@ export const StoreAppRouter = () => {
 
             <Route
               path={'/confirmation/:orderId/tx/:signatureId'}
+              element={<ConfirmationPage isConfirmation />}
+            />
+
+            <Route
+              path={'/confirmation/:orderId'}
               element={<ConfirmationPage />}
             />
 

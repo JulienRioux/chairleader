@@ -83,7 +83,7 @@ const FULFILLMENT_OPTIONS = [
   },
 ];
 
-const InvoiceCard = ({
+export const InvoiceCard = ({
   title,
   children,
 }: {
@@ -97,14 +97,14 @@ const InvoiceCard = ({
 );
 
 export const InvoicePage = () => {
-  const { invoiceId } = useParams();
+  const { orderId } = useParams();
   const {
     data,
     loading,
     refetch: refetchGetInvoiceById,
   } = useQuery(GET_INVOICE_BY_ID, {
     variables: {
-      id: invoiceId,
+      id: orderId,
     },
     notifyOnNetworkStatusChange: true,
   });
@@ -121,7 +121,7 @@ export const InvoicePage = () => {
       try {
         await updateInvoice({
           variables: {
-            invoiceId,
+            invoiceId: orderId,
             fulfillmentStatus: e.target.value,
           },
         });
@@ -132,7 +132,7 @@ export const InvoicePage = () => {
         message.error();
       }
     },
-    [updateInvoice, refetchGetInvoiceById, invoiceId]
+    [updateInvoice, refetchGetInvoiceById, orderId]
   );
 
   if (loading) {
@@ -187,12 +187,12 @@ export const InvoicePage = () => {
       </InvoiceCard>
 
       <InvoiceCard title="Invoice details">
-        <DetailItem label="Invoice ID:">{invoiceId}</DetailItem>
+        <DetailItem label="Invoice ID:">{orderId}</DetailItem>
 
         <DetailItem label="Date:">
           {format(
             new Date(Number(invoiceData?.createdAt)),
-            'MMMM dd yyyy, hh:mm:ss'
+            'MMMM dd yyyy, HH:MM:ss'
           )}
         </DetailItem>
 

@@ -1,4 +1,3 @@
-import { Button, Icon } from 'components-library';
 import { PaymentStatus, usePayment } from 'hooks/payment';
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { routes } from 'utils';
@@ -6,7 +5,7 @@ import styled from 'styled-components';
 import { CartItems } from 'components/cart';
 import { CartSummary } from 'components';
 import { useCart } from 'hooks/cart';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { CURRENCY, useCurrency } from 'hooks/currency';
 import { useScrollTop } from 'hooks/scroll-top';
 import { ShippingForm } from 'components/shipping-form';
@@ -14,27 +13,6 @@ import { StoreLogo } from 'pages/pos-app/inventory-layout';
 
 export const getTxExplorerUrl = ({ signature = '', isDev = false }) =>
   `https://explorer.solana.com/tx/${signature}${isDev && '?cluster=devnet'}`;
-
-const FinalizedTransactionWrapper = styled.div`
-  max-width: ${(p) => p.theme.layout.smallWidth};
-  margin: 80px auto;
-  text-align: center;
-  padding: 0 8px;
-`;
-
-export const CheckIconWrapper = styled.div`
-  width: 100px;
-  height: 100px;
-  margin: 40px auto;
-  font-size: 80px;
-  color: ${(p) => p.theme.color.white};
-  background-color: #00f090;
-  box-shadow: 0 0 0 10px #00f09022;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-`;
 
 const PageTitle = styled.div`
   font-weight: bold;
@@ -65,38 +43,6 @@ export const CartPageLayout = ({
     {children}
   </div>
 );
-
-export const ConfirmationPage = () => {
-  const { orderId, signatureId } = useParams();
-
-  return (
-    <CartPageLayout title="Confirmation">
-      <FinalizedTransactionWrapper>
-        <CheckIconWrapper>
-          <Icon name="check" />
-        </CheckIconWrapper>
-
-        <h3>Thank you for you purchase 🎉</h3>
-        <p>Order ID: {orderId}</p>
-        <div style={{ margin: '20px 0 40px' }}>
-          <a
-            href={getTxExplorerUrl({
-              signature: signatureId,
-              isDev: true,
-            })}
-            target="_blank"
-            rel="noreferrer"
-          >
-            See transaction details <Icon name="launch" />
-          </a>
-        </div>
-        <Button secondary fullWidth to={routes.store.inventory}>
-          Start new order
-        </Button>
-      </FinalizedTransactionWrapper>
-    </CartPageLayout>
-  );
-};
 
 const TopNavWrapper = styled.div`
   padding: 8px 12px;
