@@ -46,7 +46,15 @@ const CartItemsWrapper = styled.div`
 
 const FIRST_ITEMS_LENGTH = 2;
 
-export const CartItems = ({ enableUpdate = true, showMoreButton = false }) => {
+export const CartItems = ({
+  enableUpdate = true,
+  showMoreButton = false,
+  handleCloseModal,
+}: {
+  enableUpdate?: boolean;
+  showMoreButton?: boolean;
+  handleCloseModal?: () => void;
+}) => {
   const { cartItems } = useCart();
   const { currency } = useCurrency();
 
@@ -122,6 +130,7 @@ export const CartItems = ({ enableUpdate = true, showMoreButton = false }) => {
                 currency={currency}
                 productVariants={productVariants}
                 variantNames={variantNames}
+                handleCloseModal={handleCloseModal}
               />
             );
           }
@@ -156,6 +165,7 @@ export const CartItems = ({ enableUpdate = true, showMoreButton = false }) => {
               currency={currency}
               productVariants={productVariants}
               variantNames={variantNames}
+              handleCloseModal={handleCloseModal}
             />
           )
         )}
@@ -177,7 +187,7 @@ export const Cart = ({ onCloseClick }: { onCloseClick: () => void }) => {
           </CloseBtn>
         </CartHeader>
         <CartItemsWrapper>
-          <CartItems />
+          <CartItems handleCloseModal={onCloseClick} />
         </CartItemsWrapper>
 
         <CartTotal />

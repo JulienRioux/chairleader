@@ -137,6 +137,7 @@ export const CartItem = ({
   isAdmin,
   productVariants,
   variantNames,
+  handleCloseModal,
 }: {
   id: string;
   qty: number;
@@ -149,6 +150,7 @@ export const CartItem = ({
   isAdmin?: boolean;
   productVariants?: string;
   variantNames?: string[];
+  handleCloseModal?: () => void;
 }) => {
   const { decimals } = useCurrency();
 
@@ -196,6 +198,7 @@ export const CartItem = ({
                 to={`${
                   isAdmin ? routes.admin.inventory : routes.store.inventory
                 }/${id}`}
+                onClick={handleCloseModal}
               >
                 {title}
               </ProductTitle>

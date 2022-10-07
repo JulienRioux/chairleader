@@ -294,7 +294,7 @@ export const ProductPage = () => {
     }
     // Only run this on product mount
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [productId]);
 
   const handleAddToCart = useCallback(() => {
     if (productId) {
