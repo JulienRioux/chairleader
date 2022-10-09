@@ -71,7 +71,7 @@ export const ProfilePage = () => {
                 </SolScanLink>
               </p>
 
-              <p>Connected with {wallet?.adapter.name}.</p>
+              <p>Connected with: {wallet?.adapter.name}</p>
             </div>
           </ProfileInfoWrapper>
 

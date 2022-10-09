@@ -4,7 +4,7 @@ import { Button, ChildWrapper, UnstyledExternalLink } from 'components-library';
 import { useCallback, useMemo, useEffect } from 'react';
 import styled from 'styled-components';
 import { WalletName, WalletReadyState } from '@solana/wallet-adapter-base';
-import { formatShortAddress, routes } from 'utils';
+import { formatShortAddress, routes, CLUSTER_ENV } from 'utils';
 import { useWalletModal } from 'hooks/wallet-modal';
 
 const ConnectWalletBtnWrapper = styled.span`
@@ -187,23 +187,28 @@ export const ConnectedWalletModalContent = ({
 
   const walletAddress = useMemo(() => publicKey?.toBase58(), [publicKey]);
 
-  const cluster = 'devnet';
-
   return (
     <>
+      <p style={{ margin: '4px 0 24px' }}>
+        {formatShortAddress(walletAddress)}
+      </p>
       <p style={{ margin: '4px 0 24px' }}>
         Connected with {wallet?.adapter.name}.
       </p>
 
-      <Button
-        secondary
-        fullWidth
-        style={{ marginBottom: '12px' }}
-        to={routes.store.profile}
-        onClick={closeModal}
+      <UnstyledExternalLink
+        href={`https://solscan.io/account/${walletAddress}?cluster=${CLUSTER_ENV}`}
+        target="_blank"
       >
-        My account
-      </Button>
+        <Button
+          secondary
+          fullWidth
+          icon="launch"
+          style={{ marginBottom: '12px' }}
+        >
+          View on Explorer
+        </Button>
+      </UnstyledExternalLink>
 
       <Button secondary fullWidth onClick={handleDisconnect}>
         Disconnect
@@ -212,12 +217,16 @@ export const ConnectedWalletModalContent = ({
   );
 };
 
-export const ConnectWalletBtn = ({ fullWidth = false }) => {
+export const ConnectWalletBtn = ({ fullWidth = false, isAdmin = false }) => {
   const { publicKey, connecting } = useWallet();
 
-  const { openConnectModal } = useWalletModal();
+  const { openConnectModal, openConnectedModal } = useWalletModal();
 
   const walletAddress = useMemo(() => publicKey?.toBase58(), [publicKey]);
+
+  const connectedButtonProps = isAdmin
+    ? { onClick: openConnectedModal }
+    : { to: routes.store.profile };
 
   return (
     <ConnectWalletBtnWrapper>
@@ -233,7 +242,7 @@ export const ConnectWalletBtn = ({ fullWidth = false }) => {
       )}
 
       {walletAddress && (
-        <Button secondary to={routes.store.profile}>
+        <Button secondary {...connectedButtonProps}>
           {formatShortAddress(walletAddress)}
         </Button>
       )}

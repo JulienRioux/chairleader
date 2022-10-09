@@ -163,7 +163,7 @@ export const ConfirmationPage = ({ isConfirmation = false }) => {
                   </a>
                 </DetailItem>
 
-                <DetailItem label="Customer wallet address:">
+                <DetailItem label="Wallet address:">
                   <a
                     href={`https://explorer.solana.com/address/${
                       invoiceData?.customerWalletAddress

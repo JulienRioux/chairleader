@@ -310,7 +310,7 @@ export const AdminLayout = ({ children }: { children: ReactNode }) => {
             <ToggleTheme style={{ marginRight: '8px' }} />
 
             <span>
-              <ConnectWalletBtn />
+              <ConnectWalletBtn isAdmin />
             </span>
           </RightButtonWrapper>
         </TopNav>
