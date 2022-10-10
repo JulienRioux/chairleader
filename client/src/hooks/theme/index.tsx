@@ -8,8 +8,8 @@ import {
   useContext,
 } from 'react';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
-import { DarkTheme, LightTheme } from 'styles';
 import { StorageKeys } from 'utils';
+import { DarkTheme, LightTheme } from 'styles/themes/blue';
 
 enum THEME {
   DARK = 'DARK',

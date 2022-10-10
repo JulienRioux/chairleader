@@ -141,7 +141,7 @@ export const ExclusivitiesSelection = ({
               <ProductPreviewItem
                 image={image}
                 title={title}
-                priceDisplay={Number(price.toFixed(currencyDecimals))}
+                priceDisplay={Number(price?.toFixed(currencyDecimals))}
                 currency={user?.currency}
               />
 

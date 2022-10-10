@@ -367,9 +367,9 @@ export const TokenGatingNft = ({
 
           {isAdminApp && (
             <>
-              <h4>Printed token address:</h4>
+              <h4>Printed tokens:</h4>
 
-              {editionsPrintedListIsLoading && <p>Loading...</p>}
+              {editionsPrintedListIsLoading && <Loader />}
 
               {!editionsPrintedListIsLoading && (
                 <>

@@ -13,16 +13,23 @@ import { useAuth } from 'hooks/auth';
 import { useMediaQuery } from 'hooks/media-query';
 import { ReactNode, useCallback, useState } from 'react';
 import GranyFilter from './granny-filter.svg';
+import videoSrc from 'assets/homepage-video.mp4';
 
 const HeroWrapper = styled.div`
-  /* max-width: ${(p) => p.theme.layout.maxWidth}; */
+  max-width: ${(p) => p.theme.layout.maxWidth};
   margin: 0px auto 0;
   min-height: calc(100vh - 61px);
+  gap: 20px;
 
   display: flex;
   align-items: center;
-  justify-content: center;
-  /* text-align: center; */
+
+  @media (max-width: 800px) {
+    width: 100%;
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: center;
+  }
 `;
 
 export const backgroundTextAnim = keyframes`
@@ -87,8 +94,32 @@ const LeftHero = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-bottom: 80px;
-  max-width: ${(p) => p.theme.layout.maxWidth};
+  width: 50%;
+
+  @media (max-width: 800px) {
+    width: 100%;
+  }
+`;
+
+const VideoWrapper = styled.div`
+  position: relative;
+  padding-bottom: 50%;
+  height: 0;
+  width: 50%;
+  border-radius: ${(p) => p.theme.borderRadius.default};
+  overflow: hidden;
+
+  @media (max-width: 800px) {
+    width: 100%;
+    padding-bottom: 70%;
+  }
+`;
+
+const Video = styled.video`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
 `;
 
 const BtnWrapper = styled.div`
@@ -105,19 +136,23 @@ const ModeBtn = styled(Button)`
 `;
 
 const BannerWrapper = styled.div`
-  background: ${(p) => p.theme.color.text}07;
+  background: ${(p) => p.theme.color.primary}0a;
 `;
 
 const Banner = styled.div`
   max-width: ${(p) => p.theme.layout.maxWidth};
-  padding: 140px 0;
+  padding: 40px 0;
   margin: 0 auto;
-  text-align: center;
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* text-align: center; */
 `;
 
 const BannerHeader = styled.h3`
   font-size: 60px;
-  margin-top: 0;
+  margin: 0 0 20px;
 
   @media (max-width: 800px) {
     font-size: 48px;
@@ -395,7 +430,10 @@ export const Homepage = () => {
       <HomepageWrapper>
         <HeroWrapper>
           <LeftHero>
-            <Header>No-code web3 e-commerce platform</Header>
+            <Header>
+              No-code web3{' '}
+              <span style={{ whiteSpace: 'nowrap' }}>e-commerce</span> platform
+            </Header>
             <HeroPar>
               We are building the next-generation e-commerce platform offering
               online retailers a suite of web3 services including payments,
@@ -449,6 +487,12 @@ export const Homepage = () => {
               </div>
             )}
           </LeftHero>
+
+          <VideoWrapper>
+            <Video autoPlay muted loop>
+              <source src={videoSrc} type="video/mp4" />
+            </Video>
+          </VideoWrapper>
         </HeroWrapper>
 
         {!HIDE_APP && (

@@ -22,6 +22,7 @@ export const routes = {
     newCategory: '/admin/new-category',
     dashboard: '/admin/dashboard',
     tokenGating: '/admin/token-gating',
+    theme: '/admin/theme',
   },
 
   store: {

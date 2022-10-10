@@ -41,12 +41,31 @@ const TopNav = styled.div`
   z-index: 9;
 `;
 
-const PageTitle = styled.div`
-  font-weight: bold;
-  font-size: 20px;
-  text-transform: capitalize;
-  overflow: hidden;
-  text-overflow: ellipsis;
+const LogoAndLinks = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const NavLink = styled(UnstyledLink)<{ isActive?: boolean }>`
+  margin: 0 8px;
+  min-width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 8px;
+  transition: 0.2s;
+
+  :active {
+    transform: translateY(3px);
+  }
+
+  ${(p) =>
+    p.isActive &&
+    css`
+      color: ${p.theme.color.primary};
+      background-color: ${p.theme.color.primary}11;
+    `}
 `;
 
 const ChildrenWrapper = styled.div`
@@ -59,6 +78,10 @@ const StoreImgAndName = styled(UnstyledLink)`
   display: flex;
   align-items: center;
   overflow: hidden;
+
+  :active {
+    transform: translateY(3px);
+  }
 `;
 
 const ContentWrapper = styled.div``;
@@ -155,7 +178,7 @@ export const StoreLogo = ({ ...rest }) => {
   const { store } = useStore();
 
   return (
-    <StoreImgAndName to={routes.store.inventory}>
+    <StoreImgAndName to={routes.store.base}>
       <StoreImgIcon
         image={store?.image}
         storeName={store?.storeName}
@@ -203,7 +226,7 @@ const MobileBottomMenu = styled.div`
 `;
 
 const MobileMenuLabel = styled.div`
-  font-size: 12px;
+  font-size: 10px;
   margin-top: 2px;
 `;
 
@@ -217,6 +240,8 @@ const MenuBtn = styled(UnstyledButton)<{ $isActive?: boolean }>`
   flex-direction: column;
   position: relative;
   border-radius: ${(p) => p.theme.borderRadius.default};
+  height: 48px;
+  width: 48px;
 
   ${(p) =>
     p.$isActive &&
@@ -237,7 +262,7 @@ const MobileMenu = ({
   const isOnInventoryPage = useMatch(routes.store.inventory);
   const isOnProductPage = useMatch(`${routes.store.inventory}/:productId`);
 
-  const homeBtnIsActive = !!(isOnInventoryPage || isOnProductPage);
+  const productsBtnIsActive = !!(isOnInventoryPage || isOnProductPage);
 
   const isOnNftsPage = useMatch(routes.store.nfts);
   const isOnSingleNftPage = useMatch(`${routes.store.nfts}/:address`);
@@ -247,9 +272,9 @@ const MobileMenu = ({
   return (
     <MobileBottomMenu>
       <UnstyledLink to={routes.store.inventory}>
-        <MenuBtn $isActive={homeBtnIsActive}>
+        <MenuBtn $isActive={productsBtnIsActive}>
           <Icon name="house" />
-          <MobileMenuLabel>Home</MobileMenuLabel>
+          <MobileMenuLabel>Products</MobileMenuLabel>
         </MenuBtn>
       </UnstyledLink>
 
@@ -320,18 +345,26 @@ export const InventoryLayout = ({ children }: { children: ReactNode }) => {
 
   const [showCartPreview, setShowCartPreview] = useState(false);
 
+  const isOnHomepage = useMatch(routes.store.base);
+
   const isNotOnInventoryPage = !useMatch(routes.store.inventory);
   const isNotOnNftsPage = !useMatch(routes.store.nfts);
-
-  const isOnNftsPage = useMatch(routes.store.nfts);
-
-  const isOnSingleNftPage = useMatch(`${routes.store.nfts}/:address`);
-
-  const showNftsLink = !isOnNftsPage && !isOnSingleNftPage;
 
   const handleToggleModal = useCallback(() => {
     setShowCartPreview(!showCartPreview);
   }, [showCartPreview]);
+
+  const isOnNftsPage = useMatch(routes.store.nfts);
+  const isOnSingleNftPage = useMatch(`${routes.store.nfts}/:address`);
+
+  const nftsLinkIsActive = !!(isOnNftsPage || isOnSingleNftPage);
+
+  const isOnProductsPage = useMatch(routes.store.inventory);
+  const isOnSingleProductPage = useMatch(
+    `${routes.store.inventory}/:productId`
+  );
+
+  const productsLinkActive = !!(isOnProductsPage || isOnSingleProductPage);
 
   return (
     <div>
@@ -339,39 +372,33 @@ export const InventoryLayout = ({ children }: { children: ReactNode }) => {
         <LeftSideWrapper>
           <TopNavWrapper>
             <TopNav>
-              <div>
+              <LogoAndLinks>
                 <StoreLogo />
-              </div>
+
+                {!hasMobileNavBar && (
+                  <>
+                    <NavLink
+                      style={{ marginLeft: '20px' }}
+                      to={routes.store.inventory}
+                      isActive={productsLinkActive}
+                    >
+                      Products
+                    </NavLink>
+
+                    <NavLink to={routes.store.nfts} isActive={nftsLinkIsActive}>
+                      NFTs
+                    </NavLink>
+                  </>
+                )}
+              </LogoAndLinks>
               <ButtonsWrapper>
-                {isNotOnInventoryPage && isNotOnNftsPage && (
+                {!isOnHomepage && isNotOnInventoryPage && isNotOnNftsPage && (
                   <Button
                     style={{ marginRight: '8px' }}
                     secondary
                     icon="arrow_back"
                     to={-1}
                   />
-                )}
-
-                {isOnNftsPage && !hasMobileNavBar && (
-                  <Button
-                    icon="house"
-                    style={{ marginRight: '8px' }}
-                    to={routes.store.inventory}
-                    secondary
-                  >
-                    Home
-                  </Button>
-                )}
-
-                {showNftsLink && !hasMobileNavBar && (
-                  <Button
-                    icon="grid_view"
-                    style={{ marginRight: '8px' }}
-                    to={routes.store.nfts}
-                    secondary
-                  >
-                    NFTs
-                  </Button>
                 )}
 
                 <ConnectWalletBtn />

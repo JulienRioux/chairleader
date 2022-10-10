@@ -30,6 +30,7 @@ import { TokenGating } from 'pages/admin-pages/token-gating';
 import { TokenGatingNft } from 'pages/admin-pages/token-gating-nft';
 import { ConfirmationPage } from 'pages/confirmation-page';
 import { ProfilePage } from 'pages/profile-page';
+import { StoreHomepage } from 'pages/pos-app/store-homepage';
 
 export const AdminAppRouter = () => {
   return (
@@ -99,10 +100,7 @@ export const StoreAppRouter = () => {
 
             <Route path={'/profile'} element={<ProfilePage />} />
 
-            <Route
-              path={routes.base}
-              element={<Navigate to={routes.store.inventory} />}
-            />
+            <Route path={routes.base} element={<StoreHomepage />} />
 
             <Route path="*" element={<ErrorPage />} />
           </Routes>

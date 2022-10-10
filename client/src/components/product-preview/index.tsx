@@ -146,9 +146,11 @@ export const ProductPreviewItem = ({
       </NoImageProduct>
     )}
     <ProductTitle>{title}</ProductTitle>
-    <Price>
-      {priceDisplay} {currency}
-    </Price>
+    {priceDisplay && (
+      <Price>
+        {priceDisplay} {currency}
+      </Price>
+    )}
   </>
 );
 

@@ -61,7 +61,7 @@ export const HalfImagePageLayout = ({ children }: { children: ReactNode }) => {
       <BackButtonWrapper>
         <Button onClick={() => navigate(-1)} secondary icon="arrow_back" />
       </BackButtonWrapper>
-      <Img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80" />
+      <Img src="https://images.unsplash.com/photo-1623410439361-22ac19216577?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80" />
       <ChildrenWrapper>
         <ChildrenInnerWrapper>{children} </ChildrenInnerWrapper>
       </ChildrenWrapper>
