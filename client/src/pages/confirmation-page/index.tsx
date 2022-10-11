@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { GET_INVOICE_BY_ID } from 'queries';
 import { useQuery } from '@apollo/client';
 import { CartItem, CartSummary } from 'components';
-import { DetailItem, InvoiceCard } from 'pages/admin-pages/invoice-page';
+import { DetailItem, Card } from 'pages/admin-pages/invoice-page';
 import { format } from 'date-fns';
 import { NETWORK } from 'hooks/currency';
 import { useStore } from 'hooks/store';
@@ -100,7 +100,7 @@ export const ConfirmationPage = ({ isConfirmation = false }) => {
         {!loading && (
           <div>
             <SummaryWrapper>
-              <InvoiceCard title="Summary">
+              <Card title="Summary">
                 {cartItems?.map(
                   ({
                     _id,
@@ -137,9 +137,9 @@ export const ConfirmationPage = ({ isConfirmation = false }) => {
                     shippingFee={invoiceData?.shippingFee}
                   />
                 </div>
-              </InvoiceCard>
+              </Card>
 
-              <InvoiceCard title="Shipping details">
+              <Card title="Shipping details">
                 <DetailItem label="Order ID:">{orderId}</DetailItem>
 
                 <DetailItem label="Date:">
@@ -197,7 +197,7 @@ export const ConfirmationPage = ({ isConfirmation = false }) => {
                 <DetailItem label="Fulfillment status:">
                   {invoiceData?.fulfillmentStatus}
                 </DetailItem>
-              </InvoiceCard>
+              </Card>
             </SummaryWrapper>
 
             <div style={{ marginTop: '40px' }}>

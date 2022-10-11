@@ -36,7 +36,7 @@ const sharedStyles = {
   },
 };
 
-export const LightTheme: DefaultTheme = {
+export const lightTheme: DefaultTheme = {
   color: {
     primary: '#00a481',
     white: primitives.white,
@@ -52,7 +52,7 @@ export const LightTheme: DefaultTheme = {
   ...sharedStyles,
 };
 
-export const DarkTheme: DefaultTheme = {
+export const darkTheme: DefaultTheme = {
   color: {
     primary: '#14f195',
     white: primitives.white,
@@ -68,6 +68,7 @@ export const DarkTheme: DefaultTheme = {
   ...sharedStyles,
 };
 
-const isDarkTheme = false;
-
-export const Styles = isDarkTheme ? DarkTheme : LightTheme;
+export const theme = {
+  lightTheme,
+  darkTheme,
+};

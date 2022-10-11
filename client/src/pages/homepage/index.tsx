@@ -446,7 +446,9 @@ export const Homepage = () => {
                   href="https://www.producthunt.com/upcoming/chairleader"
                   target="_blank"
                 >
-                  <Button icon="launch">Get early access</Button>
+                  <Button icon="launch" fullWidth={isMobileView}>
+                    Get early access
+                  </Button>
                 </UnstyledExternalLink>
               </div>
             )}

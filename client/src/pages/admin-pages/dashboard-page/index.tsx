@@ -11,7 +11,7 @@ import {
 import { GET_INVOICES_BY_STORE_ID } from 'queries';
 import { useState } from 'react';
 import styled from 'styled-components';
-import { DetailItem } from '../invoice-page';
+import { Card, DetailItem } from '../invoice-page';
 
 const DashboardPageWrapper = styled.div`
   max-width: ${(p) => p.theme.layout.mediumWidth};
@@ -67,69 +67,72 @@ export const DashboardPage = () => {
 
   return (
     <DashboardPageWrapper>
-      {IS_DEV && (
-        <>
-          <DetailItem label="Network:">
-            {
-              <>
-                <NetworkTab
-                  secondary={network !== NETWORK.DEVNET}
-                  onClick={() => setNetwork(NETWORK.DEVNET)}
-                >
-                  {NETWORK.DEVNET}
-                </NetworkTab>
-                <NetworkTab
-                  secondary={network !== NETWORK.MAINNET}
-                  onClick={() => setNetwork(NETWORK.MAINNET)}
-                >
-                  {NETWORK.MAINNET}
-                </NetworkTab>
-              </>
-            }
-          </DetailItem>
-
-          {SHOW_MULTIPLE_CURRENCY && (
-            <DetailItem label="Currency:">
+      <Card title="Dashboard">
+        {IS_DEV && (
+          <>
+            <DetailItem label="Network:">
               {
                 <>
                   <NetworkTab
-                    secondary={currency !== CURRENCY.USDC}
-                    onClick={() => setCurrency(CURRENCY.USDC)}
+                    secondary={network !== NETWORK.DEVNET}
+                    onClick={() => setNetwork(NETWORK.DEVNET)}
                   >
-                    {CURRENCY.USDC}
+                    {NETWORK.DEVNET}
                   </NetworkTab>
                   <NetworkTab
-                    secondary={currency !== CURRENCY.SOL}
-                    onClick={() => setCurrency(CURRENCY.SOL)}
+                    secondary={network !== NETWORK.MAINNET}
+                    onClick={() => setNetwork(NETWORK.MAINNET)}
                   >
-                    {CURRENCY.SOL}
+                    {NETWORK.MAINNET}
                   </NetworkTab>
                 </>
               }
             </DetailItem>
-          )}
-        </>
-      )}
 
-      <DetailItem label="Total sale before tax:">
-        {fixDecimal(totalPrice)} <CurrencyWrapper>{currency}</CurrencyWrapper>
-      </DetailItem>
+            {SHOW_MULTIPLE_CURRENCY && (
+              <DetailItem label="Currency:">
+                {
+                  <>
+                    <NetworkTab
+                      secondary={currency !== CURRENCY.USDC}
+                      onClick={() => setCurrency(CURRENCY.USDC)}
+                    >
+                      {CURRENCY.USDC}
+                    </NetworkTab>
+                    <NetworkTab
+                      secondary={currency !== CURRENCY.SOL}
+                      onClick={() => setCurrency(CURRENCY.SOL)}
+                    >
+                      {CURRENCY.SOL}
+                    </NetworkTab>
+                  </>
+                }
+              </DetailItem>
+            )}
+          </>
+        )}
 
-      <DetailItem label="Total sale tax:">
-        {fixDecimal(totalSaleTax)} <CurrencyWrapper>{currency}</CurrencyWrapper>
-      </DetailItem>
+        <DetailItem label="Total sale before tax:">
+          {fixDecimal(totalPrice)} <CurrencyWrapper>{currency}</CurrencyWrapper>
+        </DetailItem>
 
-      <DetailItem label="Total sale with tax:">
-        {fixDecimal(totalWithSaleTax)}{' '}
-        <CurrencyWrapper>{currency}</CurrencyWrapper>
-      </DetailItem>
+        <DetailItem label="Total sale tax:">
+          {fixDecimal(totalSaleTax)}{' '}
+          <CurrencyWrapper>{currency}</CurrencyWrapper>
+        </DetailItem>
 
-      <DetailItem label="Total service fees:">
-        {fixDecimal(totalServiceFees)}{' '}
-        <CurrencyWrapper>{currency}</CurrencyWrapper>
-      </DetailItem>
+        <DetailItem label="Total sale with tax:">
+          {fixDecimal(totalWithSaleTax)}{' '}
+          <CurrencyWrapper>{currency}</CurrencyWrapper>
+        </DetailItem>
 
-      <DetailItem label="Number of orders:">{totalTransactions}</DetailItem>
+        <DetailItem label="Total service fees:">
+          {fixDecimal(totalServiceFees)}{' '}
+          <CurrencyWrapper>{currency}</CurrencyWrapper>
+        </DetailItem>
+
+        <DetailItem label="Number of orders:">{totalTransactions}</DetailItem>
+      </Card>
     </DashboardPageWrapper>
   );
 };

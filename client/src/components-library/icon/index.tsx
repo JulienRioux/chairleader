@@ -12,3 +12,5 @@ import { IconWrapper } from './styled';
 export const Icon = ({ name, style }: { name: string; style?: any }) => (
   <IconWrapper style={style ?? {}}>{name}</IconWrapper>
 );
+
+export * from './social-icons';

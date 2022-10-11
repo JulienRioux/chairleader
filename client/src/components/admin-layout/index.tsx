@@ -133,6 +133,7 @@ const SharedStyles = css`
 
 const StoreImg = styled.img`
   object-fit: cover;
+  image-rendering: pixelated;
 
   ${SharedStyles}
 
@@ -176,7 +177,7 @@ const RightButtonWrapper = styled.div`
 `;
 
 const RightLayoutWrapper = styled.div`
-  overflow: scroll;
+  /* overflow: scroll; */
   width: 100%;
 `;
 

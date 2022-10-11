@@ -65,7 +65,7 @@ const Alert = ({ children }: { children: ReactNode }) => (
   </AlertWrapper>
 );
 
-const ProductFormCard = ({
+export const ProductFormCard = ({
   title,
   text,
   children,

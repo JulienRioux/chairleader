@@ -11,6 +11,7 @@ import { Label } from 'components-library/input/input.styles';
 import { SHOW_MULTIPLE_CURRENCY } from 'configs';
 import { useAuth } from 'hooks/auth';
 import { CURRENCY } from 'hooks/currency';
+import { Card } from 'pages/admin-pages/invoice-page';
 import { HalfImagePageLayout } from 'pages/auth-page';
 import { CHECK_IF_SUBODMAIN_IS_AVAILABLE } from 'queries';
 import { ChangeEvent, FormEvent, useCallback, useRef, useState } from 'react';
@@ -237,117 +238,125 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Label>Store image</Label>
-      <ImageWrapper>
-        {currentImageSrc ? (
-          <Img src={currentImageSrc} />
-        ) : (
-          <NoImageWrapper>
-            <Icon name="image" />
-          </NoImageWrapper>
+      <Card title="Store settings">
+        <Label>Store image</Label>
+        <ImageWrapper>
+          {currentImageSrc ? (
+            <Img src={currentImageSrc} />
+          ) : (
+            <NoImageWrapper>
+              <Icon name="image" />
+            </NoImageWrapper>
+          )}
+
+          <Button
+            type="button"
+            secondary
+            onClick={handleUploadFileClick}
+            isLoading={resizeImgIsLoading}
+          >
+            {currentImageSrc ? 'Update image' : 'Add image'}
+          </Button>
+
+          <VisuallyHiddenInput
+            type="file"
+            onChange={handleChange}
+            name="image"
+            accept="image/png, image/jpg, image/jpeg, image/webp"
+            ref={fileInput}
+          />
+        </ImageWrapper>
+
+        <Input
+          label="Store Name"
+          value={storeName}
+          onChange={handleChange}
+          placeholder="Enter your store name"
+          required
+          name="storeName"
+        />
+
+        <Input
+          label="Subdomain name"
+          value={subDomain}
+          onChange={handleChange}
+          placeholder="Enter your domain name"
+          required
+          name="domainName"
+          error={domainNameError}
+        />
+
+        <Input
+          label="Email"
+          value={user?.email}
+          onChange={() => null}
+          disabled
+        />
+
+        <Input
+          label="Wallet address"
+          value={walletAddress}
+          onChange={handleChange}
+          placeholder="Enter your wallet address"
+          required
+          name="walletAddress"
+          error={walletAddressError}
+        />
+
+        {SHOW_MULTIPLE_CURRENCY && (
+          <Select
+            label="Currency"
+            value={currency}
+            onChange={handleChange}
+            options={CURRENCY_OPTIONS}
+            name="currency"
+            id="currency"
+            placeholder="Select a currency"
+            required
+          />
         )}
 
-        <Button
-          type="button"
-          secondary
-          onClick={handleUploadFileClick}
-          isLoading={resizeImgIsLoading}
-        >
-          {currentImageSrc ? 'Update image' : 'Add image'}
-        </Button>
-      </ImageWrapper>
+        <SaleTaxWrapper>
+          <Input
+            label="Sale tax (Percent)"
+            value={saleTax}
+            onChange={handleChange}
+            placeholder="Enter your sale tax percentage"
+            required
+            name="saleTax"
+            type="number"
+            max={100}
+            min={0}
+            step={0.01}
+          />
+          <PercentIconWrapper>
+            <Icon name="percent" />
+          </PercentIconWrapper>
+        </SaleTaxWrapper>
 
-      <Input
-        label="Store Name"
-        value={storeName}
-        onChange={handleChange}
-        placeholder="Enter your store name"
-        required
-        name="storeName"
-      />
-
-      <Input
-        label="Subdomain name"
-        value={subDomain}
-        onChange={handleChange}
-        placeholder="Enter your domain name"
-        required
-        name="domainName"
-        error={domainNameError}
-      />
-
-      <Input label="Email" value={user?.email} onChange={() => null} disabled />
-
-      <Input
-        label="Wallet address"
-        value={walletAddress}
-        onChange={handleChange}
-        placeholder="Enter your wallet address"
-        required
-        name="walletAddress"
-        error={walletAddressError}
-      />
-
-      {SHOW_MULTIPLE_CURRENCY && (
-        <Select
-          label="Currency"
-          value={currency}
-          onChange={handleChange}
-          options={CURRENCY_OPTIONS}
-          name="currency"
-          id="currency"
-          placeholder="Select a currency"
-          required
-        />
-      )}
-
-      <SaleTaxWrapper>
-        <Input
-          label="Sale tax (Percent)"
-          value={saleTax}
-          onChange={handleChange}
-          placeholder="Enter your sale tax percentage"
-          required
-          name="saleTax"
-          type="number"
-          max={100}
-          min={0}
-          step={0.01}
-        />
-        <PercentIconWrapper>
-          <Icon name="percent" />
-        </PercentIconWrapper>
-      </SaleTaxWrapper>
-
-      <SaleTaxWrapper>
-        <Input
-          label="Shipping fee (Fixed price per order)"
-          value={shippingFee}
-          onChange={handleChange}
-          placeholder="Enter your shipping fee"
-          required
-          name="shippingFee"
-          type="number"
-          min={0}
-          step={0.01}
-        />
-        <PercentIconWrapper>
-          <span style={{ fontWeight: 'bold' }}>USDC</span>
-        </PercentIconWrapper>
-      </SaleTaxWrapper>
-
-      <VisuallyHiddenInput
-        type="file"
-        onChange={handleChange}
-        name="image"
-        accept="image/png, image/jpg, image/jpeg, image/webp"
-        ref={fileInput}
-      />
+        <SaleTaxWrapper>
+          <Input
+            label="Shipping fee (Fixed price per order)"
+            value={shippingFee}
+            onChange={handleChange}
+            placeholder="Enter your shipping fee"
+            required
+            name="shippingFee"
+            type="number"
+            min={0}
+            step={0.01}
+          />
+          <PercentIconWrapper>
+            <span style={{ fontWeight: 'bold' }}>USDC</span>
+          </PercentIconWrapper>
+        </SaleTaxWrapper>
+      </Card>
 
       <Button
         isLoading={updateUserIsLoading || subdomainAvailabilityIsLoading}
         type="submit"
         fullWidth
+        style={{ marginTop: '20px' }}
       >
         Save and continue
       </Button>

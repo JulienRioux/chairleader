@@ -17,10 +17,9 @@ export const UserPage = () => {
 
   return (
     <UserPageWrapper>
-      <h1>Update store</h1>
       <UpdateUserForm />
       <Button
-        style={{ marginTop: '12px' }}
+        style={{ marginTop: '8px' }}
         fullWidth
         secondary
         onClick={logoutUser}

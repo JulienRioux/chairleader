@@ -1,7 +1,26 @@
-import { Button } from 'components-library';
+import {
+  Button,
+  InstagramIcon,
+  TiktokIcon,
+  UnstyledExternalLink,
+  TwitterIcon,
+  SpotifyIcon,
+  DribbbleIcon,
+  FacebookIcon,
+} from 'components-library';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { routes } from 'utils';
 import { InventoryLayout } from '../inventory-layout';
+
+const HomepageWrapper = styled.div`
+  margin: 0 0 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: calc(100vh - 200px);
+`;
 
 const Img = styled.img`
   object-position: center;
@@ -11,6 +30,8 @@ const Img = styled.img`
   /* position: absolute; */
   border-radius: ${(p) => p.theme.borderRadius.default};
   background: ${(p) => p.theme.color.text}22;
+
+  image-rendering: pixelated;
 
   @media (max-width: 800px) {
     width: 100%;
@@ -27,7 +48,6 @@ const HeroWrapper = styled.div`
 
   @media (max-width: 800px) {
     flex-direction: column-reverse;
-    margin: 0 0 80px;
   }
 `;
 
@@ -74,31 +94,108 @@ const BtnWrapper = styled.div`
   width: 100%;
 `;
 
+const SocialMediaIconsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+
+  svg {
+    width: 20px;
+  }
+
+  a {
+    margin: 8px;
+    padding: 4px;
+  }
+`;
+
+type SocialMediaNames =
+  | 'instagram'
+  | 'tiktok'
+  | 'twitter'
+  | 'facebook'
+  | 'spotify'
+  | 'dribbble';
+
+const SocialIconsMap = {
+  instagram: <InstagramIcon />,
+  tiktok: <TiktokIcon />,
+  twitter: <TwitterIcon />,
+  facebook: <FacebookIcon />,
+  spotify: <SpotifyIcon />,
+  dribbble: <DribbbleIcon />,
+};
+
+const SocialMediaIcons = () => {
+  const socialMedia = [
+    { name: 'instagram', link: 'https://instagram.com/' },
+    { name: 'twitter', link: 'https://twitter.com/0x_society' },
+    { name: 'spotify', link: 'https://spotify.com/' },
+  ];
+
+  return (
+    <SocialMediaIconsWrapper>
+      {socialMedia.map(({ name, link }) => (
+        <UnstyledExternalLink key={name} href={link} target="_blank">
+          {SocialIconsMap[name as SocialMediaNames]}
+        </UnstyledExternalLink>
+      ))}
+    </SocialMediaIconsWrapper>
+  );
+};
+
 export const StoreHomepage = () => {
+  const [title, setTitle] = useState('100% organic coffee');
+  const [subTitle, setSubTitle] = useState(
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.'
+  );
+  const [imgSrc, setImgSrc] = useState(
+    'https://images.squarespace-cdn.com/content/v1/54f775e2e4b07edc19ac338f/1585420060107-NSVI5AGYCZ27S1DG976T/image-asset.jpeg?format=1500w'
+  );
+
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const homepageTitle = searchParams.get('homepage_title');
+    if (homepageTitle) {
+      setTitle(decodeURIComponent(homepageTitle));
+    }
+    const homepageSubTitle = searchParams.get('homepage_sub_title');
+    if (homepageSubTitle) {
+      setSubTitle(decodeURIComponent(homepageSubTitle));
+    }
+    const homepageHeroImg = searchParams.get('homepage_hero_img');
+    if (homepageHeroImg) {
+      setImgSrc(decodeURIComponent(homepageHeroImg).replaceAll(' ', '+'));
+    }
+  }, [searchParams]);
+
   return (
     <InventoryLayout>
-      <HeroWrapper>
-        <HeroContentWrapper>
-          <HeroTitle>100% organic coffee</HeroTitle>
-          <HeroPar>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor.
-          </HeroPar>
+      <HomepageWrapper>
+        <HeroWrapper>
+          <HeroContentWrapper>
+            <HeroTitle>{title}</HeroTitle>
+            <HeroPar>{subTitle}</HeroPar>
 
-          <BtnWrapper>
-            <Button to={routes.store.inventory}>Shop now</Button>
-            <Button
-              style={{ marginLeft: '8px' }}
-              secondary
-              to={routes.store.nfts}
-            >
-              Browse NFTs
-            </Button>
-          </BtnWrapper>
-        </HeroContentWrapper>
+            <BtnWrapper>
+              <Button to={routes.store.inventory}>Shop now</Button>
+              <Button
+                style={{ marginLeft: '8px' }}
+                secondary
+                to={routes.store.nfts}
+              >
+                Browse NFTs
+              </Button>
+            </BtnWrapper>
+          </HeroContentWrapper>
 
-        <Img src="https://images.squarespace-cdn.com/content/v1/54f775e2e4b07edc19ac338f/1585420060107-NSVI5AGYCZ27S1DG976T/image-asset.jpeg?format=1500w" />
-      </HeroWrapper>
+          <Img src={imgSrc} />
+        </HeroWrapper>
+
+        <SocialMediaIcons />
+      </HomepageWrapper>
     </InventoryLayout>
   );
 };

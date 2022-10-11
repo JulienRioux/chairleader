@@ -31,6 +31,7 @@ import { TokenGatingNft } from 'pages/admin-pages/token-gating-nft';
 import { ConfirmationPage } from 'pages/confirmation-page';
 import { ProfilePage } from 'pages/profile-page';
 import { StoreHomepage } from 'pages/pos-app/store-homepage';
+import { ThemePage } from 'pages/admin-pages/theme-page';
 
 export const AdminAppRouter = () => {
   return (
@@ -67,6 +68,8 @@ export const AdminAppRouter = () => {
         )}
 
         <Route path={'/dashboard'} element={<DashboardPage />} />
+
+        <Route path={'/theme'} element={<ThemePage />} />
 
         <Route path="*" element={<ErrorPage />} />
       </Routes>

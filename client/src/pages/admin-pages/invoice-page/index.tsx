@@ -83,7 +83,7 @@ const FULFILLMENT_OPTIONS = [
   },
 ];
 
-export const InvoiceCard = ({
+export const Card = ({
   title,
   children,
 }: {
@@ -145,7 +145,7 @@ export const InvoicePage = () => {
 
   return (
     <InvoicePageWrapper>
-      <InvoiceCard title="Summary">
+      <Card title="Summary">
         {cartItems?.map(
           ({
             _id,
@@ -184,9 +184,9 @@ export const InvoicePage = () => {
             shippingFee={invoiceData?.shippingFee}
           />
         </div>
-      </InvoiceCard>
+      </Card>
 
-      <InvoiceCard title="Invoice details">
+      <Card title="Invoice details">
         <DetailItem label="Invoice ID:">{orderId}</DetailItem>
 
         <DetailItem label="Date:">
@@ -229,9 +229,9 @@ export const InvoicePage = () => {
             {formatShortAddress(invoiceData?.signature)} <Icon name="launch" />
           </a>
         </DetailItem>
-      </InvoiceCard>
+      </Card>
 
-      <InvoiceCard title="Shipping details">
+      <Card title="Shipping details">
         <DetailItem label="Email:">{invoiceData?.email}</DetailItem>
 
         <DetailItem label="Name:">{invoiceData?.name}</DetailItem>
@@ -247,9 +247,9 @@ export const InvoicePage = () => {
         <DetailItem label="Postal code/ZIP:">
           {invoiceData?.postalCode}
         </DetailItem>
-      </InvoiceCard>
+      </Card>
 
-      <InvoiceCard title="Fulfillment">
+      <Card title="Fulfillment">
         {updateInvoiceIsLoading ? (
           <Loader />
         ) : (
@@ -264,7 +264,7 @@ export const InvoicePage = () => {
             required
           />
         )}
-      </InvoiceCard>
+      </Card>
     </InvoicePageWrapper>
   );
 };

@@ -82,3 +82,17 @@ export const resizeFileImg = async (imgFile: File, maxSize = MAX_IMG_SIZE) => {
     );
   }
 };
+
+export const encodeImageFileAsURL = (file: File) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      resolve(reader.result);
+    };
+
+    reader.onerror = reject;
+
+    reader.readAsDataURL(file);
+  });
+};

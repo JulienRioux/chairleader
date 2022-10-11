@@ -13,7 +13,7 @@ import { useCurrency } from 'hooks/currency';
 import { useStore } from 'hooks/store';
 import { ToggleTheme } from 'pages/homepage';
 import { ReactNode, useCallback, useState, useEffect } from 'react';
-import { useMatch } from 'react-router-dom';
+import { useMatch, useSearchParams } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { routes } from 'utils';
 import { useMediaQuery } from 'hooks/media-query';
@@ -44,6 +44,8 @@ const TopNav = styled.div`
 const LogoAndLinks = styled.div`
   display: flex;
   align-items: center;
+  overflow: hidden;
+  margin-right: 8px;
 `;
 
 const NavLink = styled(UnstyledLink)<{ isActive?: boolean }>`
@@ -176,12 +178,18 @@ const CartItemsNumberBadge = styled.div`
 
 export const StoreLogo = ({ ...rest }) => {
   const { store } = useStore();
+  const [searchParams] = useSearchParams();
+
+  const previewStoreName = searchParams.get('preview_store_name');
+  const previewStoreLogo = searchParams
+    .get('preview_store_logo')
+    ?.replaceAll(' ', '+');
 
   return (
     <StoreImgAndName to={routes.store.base}>
       <StoreImgIcon
-        image={store?.image}
-        storeName={store?.storeName}
+        image={previewStoreLogo ? previewStoreLogo : store?.image}
+        storeName={previewStoreName ? previewStoreName : store?.storeName}
         {...rest}
       />
     </StoreImgAndName>

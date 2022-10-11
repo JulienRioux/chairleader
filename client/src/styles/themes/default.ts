@@ -5,7 +5,7 @@ const primitives = {
   black: '#0e0e0e',
 };
 
-export const LightTheme: DefaultTheme = {
+export const lightTheme: DefaultTheme = {
   borderRadius: {
     default: '8px',
     input: '4px',
@@ -49,7 +49,7 @@ export const LightTheme: DefaultTheme = {
   },
 };
 
-export const DarkTheme: DefaultTheme = {
+export const darkTheme: DefaultTheme = {
   borderRadius: {
     default: '0',
     input: '0',
@@ -93,6 +93,7 @@ export const DarkTheme: DefaultTheme = {
   },
 };
 
-const isDarkTheme = false;
-
-export const Styles = isDarkTheme ? DarkTheme : LightTheme;
+export const theme = {
+  lightTheme,
+  darkTheme,
+};
