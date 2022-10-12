@@ -12,6 +12,8 @@ import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 import { StorageKeys } from 'utils';
 import { themes } from 'styles/themes';
 import { useSearchParams } from 'react-router-dom';
+import { useStore } from 'hooks/store';
+import { useAuth } from 'hooks/auth';
 
 enum THEME {
   DARK = 'DARK',
@@ -29,6 +31,9 @@ export const ThemeContext = createContext<IThemeContext>({} as IThemeContext);
 type ThemeColors = 'blue' | 'green' | 'purple' | 'pink';
 
 export const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
+  const { store } = useStore();
+  const { user } = useAuth();
+
   const [themeColor, setThemeColor] = useState<ThemeColors>('blue');
   const [theme, setTheme] = useState(
     (localStorage.getItem(StorageKeys.THEME) ?? THEME.DARK) as THEME
@@ -40,8 +45,13 @@ export const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const previewTheme = searchParams.get('override_theme_color');
     if (previewTheme) {
       setThemeColor(previewTheme as ThemeColors);
+      return;
     }
-  }, [searchParams]);
+
+    const storeColor =
+      store?.theme?.primaryColor ?? user?.theme?.primaryColor ?? 'blue';
+    setThemeColor(storeColor);
+  }, [searchParams, store?.theme?.primaryColor, user?.theme?.primaryColor]);
 
   const isDarkTheme = theme === THEME.DARK;
 

@@ -102,6 +102,7 @@ const SocialMediaIconsWrapper = styled.div`
 
   svg {
     width: 20px;
+    fill: ${(p) => p.theme.color.text};
   }
 
   a {

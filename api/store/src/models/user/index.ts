@@ -16,6 +16,9 @@ export interface IUser {
   saleTax: number;
   image: string;
   shippingFee: number;
+  theme: {
+    primaryColor: string;
+  };
 }
 
 const UserSchema = new Schema<IUser>({
@@ -32,6 +35,9 @@ const UserSchema = new Schema<IUser>({
   saleTax: Number,
   image: String,
   shippingFee: { type: Number, default: 0 },
+  theme: {
+    primaryColor: { type: String, default: 'blue' },
+  },
 });
 
 export const UserModel = model<IUser>('User', UserSchema);

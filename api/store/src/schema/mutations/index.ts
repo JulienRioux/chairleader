@@ -23,6 +23,7 @@ export const mutations = gql`
       image: Upload
       saleTax: Float
       shippingFee: String
+      theme: Object
     ): Store
 
     """

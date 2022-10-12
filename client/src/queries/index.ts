@@ -16,6 +16,9 @@ export const GET_ME = gql`
       saleTax
       image
       shippingFee
+      theme {
+        primaryColor
+      }
     }
   }
 `;
@@ -48,6 +51,7 @@ export const UPDATE_USER = gql`
     $saleTax: Float
     $image: Upload
     $shippingFee: String
+    $theme: Object
   ) {
     updateUser(
       storeName: $storeName
@@ -57,6 +61,7 @@ export const UPDATE_USER = gql`
       saleTax: $saleTax
       image: $image
       shippingFee: $shippingFee
+      theme: $theme
     ) {
       storeName
       walletAddress
@@ -65,6 +70,9 @@ export const UPDATE_USER = gql`
       saleTax
       image
       shippingFee
+      theme {
+        primaryColor
+      }
     }
   }
 `;
@@ -272,6 +280,9 @@ export const GET_STORE_DATA = gql`
         saleTax
         image
         shippingFee
+        theme {
+          primaryColor
+        }
       }
       products ${PRODUCT}
     }

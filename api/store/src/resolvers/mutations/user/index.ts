@@ -70,6 +70,7 @@ export const updateUserMutation = async (
     saleTax,
     image,
     shippingFee,
+    theme,
   },
   context
 ) => {
@@ -84,8 +85,8 @@ export const updateUserMutation = async (
       currency,
       saleTax,
       image,
-
       shippingFee,
+      theme,
     });
     if (user) {
       return user;

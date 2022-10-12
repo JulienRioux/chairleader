@@ -1,6 +1,10 @@
 import { gql } from 'apollo-server-lambda';
 
 export const schemaTypes = gql`
+  type Theme {
+    primaryColor: String
+  }
+
   type Store {
     email: String!
     _id: ID
@@ -11,6 +15,7 @@ export const schemaTypes = gql`
     image: String
     saleTax: Float
     shippingFee: Float
+    theme: Theme
   }
 
   type AuthenticateResponse {

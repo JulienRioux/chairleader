@@ -4,6 +4,7 @@ import {
   Input,
   VisuallyHiddenInput,
   Icon,
+  message,
 } from 'components-library';
 import { Label } from 'components-library/input/input.styles';
 import { useAuth } from 'hooks/auth';
@@ -17,7 +18,7 @@ import {
   FormEvent,
 } from 'react';
 import styled, { css } from 'styled-components';
-import { encodeImageFileAsURL, resizeFileImg } from 'utils';
+import { encodeImageFileAsURL, Logger, resizeFileImg } from 'utils';
 import { Card } from '../invoice-page';
 import { PreviewChange } from './preview-change';
 
@@ -121,11 +122,8 @@ const colors = [
 ];
 
 export const ThemePage = () => {
-  const { user } = useAuth();
+  const { user, updateUser, updateUserIsLoading } = useAuth();
 
-  const [logoImageSrc, setlogoImageSrc] = useState(
-    'https://dev-alt-gate-products.s3.amazonaws.com/store/62f40aa40c9249b03d773ec0-4cacb30b-5e20-41e2-a8dd-b54368ec3cd3.png'
-  );
   const [logoImageFile, setLogoImageFile] = useState<File | null>(null);
   const [resizeLogoImgIsLoading, setResizeLogoImgIsLoading] = useState(false);
 
@@ -140,7 +138,11 @@ export const ThemePage = () => {
 
   const [storeName, setStoreName] = useState(user?.storeName ?? '');
 
-  const [themeColor, setThemeColor] = useState(colors[0].name);
+  const [themeColor, setThemeColor] = useState(
+    user?.theme?.primaryColor ?? colors[0].name
+  );
+
+  console.log(user);
 
   const [title, setTitle] = useState('');
   const [subTitle, setSubTitle] = useState('');
@@ -202,20 +204,44 @@ export const ThemePage = () => {
   );
 
   const handleSubmit = useCallback(
-    (e: FormEvent) => {
+    async (e: FormEvent) => {
       e.preventDefault();
+
+      try {
+        // Edit user mutation
+        const user = await updateUser({
+          theme: { primaryColor: themeColor },
+          storeName,
+          image: logoImageFile,
+        });
+        message.success('Your changes has been saved.');
+      } catch (err) {
+        Logger.error(err);
+        message.error();
+      }
       //
       console.log('Saving changes...');
-      console.log({
+      console.log(user);
+      console.log(
+        'WTF',
+        themeColor,
         storeName,
         logoImageFile,
         title,
         subTitle,
-        homepageImageFile,
-        themeColor,
-      });
+        homepageImageFile
+      );
     },
-    [homepageImageFile, logoImageFile, storeName, subTitle, title, themeColor]
+    [
+      user,
+      themeColor,
+      storeName,
+      logoImageFile,
+      title,
+      subTitle,
+      homepageImageFile,
+      updateUser,
+    ]
   );
 
   const [base64HomepageImg, setBase64HomepageImg] = useState<any>('');
@@ -248,8 +274,8 @@ export const ThemePage = () => {
   }, [handleSetBase64Img]);
 
   const currentLogoImageSrc = useMemo(
-    () => (logoImageFile ? URL.createObjectURL(logoImageFile) : logoImageSrc),
-    [logoImageFile, logoImageSrc]
+    () => (logoImageFile ? URL.createObjectURL(logoImageFile) : user.image),
+    [logoImageFile, user.image]
   );
 
   const currentHomepageImageSrc = useMemo(
@@ -344,7 +370,7 @@ export const ThemePage = () => {
               placeholder="100% organic coffee"
               value={title}
               onChange={handleChange}
-              required
+              // required
               name="title"
             />
 
@@ -353,7 +379,7 @@ export const ThemePage = () => {
               placeholder="Let's try it out!"
               value={subTitle}
               onChange={handleChange}
-              required
+              // required
               name="subTitle"
             />
           </Card>
@@ -406,7 +432,7 @@ export const ThemePage = () => {
         </CardsWrapper>
 
         <div style={{ marginTop: '20px' }}>
-          <Button fullWidth type="submit">
+          <Button fullWidth type="submit" isLoading={updateUserIsLoading}>
             Save changes
           </Button>
         </div>

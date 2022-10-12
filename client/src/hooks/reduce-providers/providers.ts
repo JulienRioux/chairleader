@@ -15,10 +15,10 @@ export const getProviders = () => {
     ApolloProviderWrapper,
     Router,
     AuthProvider,
-    ThemeProvider,
     InventoryProvider,
     AuthRequired, // Not a provider but kinda act the same...
     StoreProvider,
+    ThemeProvider,
     ConnectWalletProvider,
     WalletModalProvider,
     MetaplexProvider,
