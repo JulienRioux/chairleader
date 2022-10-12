@@ -19,6 +19,10 @@ export interface IUser {
   theme: {
     primaryColor: string;
   };
+  homepage: {
+    heroTitle: string;
+    heroSubTitle: string;
+  };
 }
 
 const UserSchema = new Schema<IUser>({
@@ -37,6 +41,10 @@ const UserSchema = new Schema<IUser>({
   shippingFee: { type: Number, default: 0 },
   theme: {
     primaryColor: { type: String, default: 'blue' },
+  },
+  homepage: {
+    heroTitle: String,
+    heroSubTitle: String,
   },
 });
 

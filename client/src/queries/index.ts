@@ -19,6 +19,10 @@ export const GET_ME = gql`
       theme {
         primaryColor
       }
+      homepage {
+        heroTitle
+        heroSubTitle
+      }
     }
   }
 `;
@@ -52,6 +56,7 @@ export const UPDATE_USER = gql`
     $image: Upload
     $shippingFee: String
     $theme: Object
+    $homepage: Object
   ) {
     updateUser(
       storeName: $storeName
@@ -62,6 +67,7 @@ export const UPDATE_USER = gql`
       image: $image
       shippingFee: $shippingFee
       theme: $theme
+      homepage: $homepage
     ) {
       storeName
       walletAddress
@@ -72,6 +78,10 @@ export const UPDATE_USER = gql`
       shippingFee
       theme {
         primaryColor
+      }
+      homepage {
+        heroTitle
+        heroSubTitle
       }
     }
   }
@@ -282,6 +292,10 @@ export const GET_STORE_DATA = gql`
         shippingFee
         theme {
           primaryColor
+        }
+        homepage {
+          heroTitle
+          heroSubTitle
         }
       }
       products ${PRODUCT}

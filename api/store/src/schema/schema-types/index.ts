@@ -5,6 +5,11 @@ export const schemaTypes = gql`
     primaryColor: String
   }
 
+  type Homepage {
+    heroTitle: String
+    heroSubTitle: String
+  }
+
   type Store {
     email: String!
     _id: ID
@@ -16,6 +21,7 @@ export const schemaTypes = gql`
     saleTax: Float
     shippingFee: Float
     theme: Theme
+    homepage: Homepage
   }
 
   type AuthenticateResponse {

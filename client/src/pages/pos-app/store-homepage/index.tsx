@@ -8,6 +8,7 @@ import {
   DribbbleIcon,
   FacebookIcon,
 } from 'components-library';
+import { useStore } from 'hooks/store';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -147,10 +148,10 @@ const SocialMediaIcons = () => {
 };
 
 export const StoreHomepage = () => {
-  const [title, setTitle] = useState('100% organic coffee');
-  const [subTitle, setSubTitle] = useState(
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.'
-  );
+  const { store } = useStore();
+
+  const [title, setTitle] = useState(store?.homepage?.heroTitle);
+  const [subTitle, setSubTitle] = useState(store?.homepage?.heroSubTitle);
   const [imgSrc, setImgSrc] = useState(
     'https://images.squarespace-cdn.com/content/v1/54f775e2e4b07edc19ac338f/1585420060107-NSVI5AGYCZ27S1DG976T/image-asset.jpeg?format=1500w'
   );
@@ -181,13 +182,13 @@ export const StoreHomepage = () => {
             <HeroPar>{subTitle}</HeroPar>
 
             <BtnWrapper>
-              <Button to={routes.store.inventory}>Shop now</Button>
+              <Button to={routes.store.inventory}>Shop products</Button>
               <Button
                 style={{ marginLeft: '8px' }}
                 secondary
                 to={routes.store.nfts}
               >
-                Browse NFTs
+                Shop NFTs
               </Button>
             </BtnWrapper>
           </HeroContentWrapper>

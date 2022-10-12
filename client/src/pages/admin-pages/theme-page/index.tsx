@@ -142,10 +142,10 @@ export const ThemePage = () => {
     user?.theme?.primaryColor ?? colors[0].name
   );
 
-  console.log(user);
+  console.log('=>>>', user?.homepage);
 
-  const [title, setTitle] = useState('');
-  const [subTitle, setSubTitle] = useState('');
+  const [title, setTitle] = useState(user?.homepage?.heroTitle ?? '');
+  const [subTitle, setSubTitle] = useState(user?.homepage?.heroSubTitle ?? '');
 
   const [imageSrc, setImageSrc] = useState(
     'https://images.squarespace-cdn.com/content/v1/54f775e2e4b07edc19ac338f/1585420060107-NSVI5AGYCZ27S1DG976T/image-asset.jpeg?format=1500w'
@@ -208,11 +208,13 @@ export const ThemePage = () => {
       e.preventDefault();
 
       try {
+        message.success('Your changes has been saved.');
         // Edit user mutation
-        const user = await updateUser({
-          theme: { primaryColor: themeColor },
+        await updateUser({
           storeName,
           image: logoImageFile,
+          theme: { primaryColor: themeColor },
+          homepage: { heroTitle: title, heroSubTitle: subTitle },
         });
         message.success('Your changes has been saved.');
       } catch (err) {

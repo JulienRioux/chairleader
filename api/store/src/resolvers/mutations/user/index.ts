@@ -71,10 +71,12 @@ export const updateUserMutation = async (
     image,
     shippingFee,
     theme,
+    homepage,
   },
   context
 ) => {
   const id = context?.user?._id;
+  console.log('homepage =>>>>>', homepage);
 
   try {
     const user = await updateUser({
@@ -87,6 +89,7 @@ export const updateUserMutation = async (
       image,
       shippingFee,
       theme,
+      homepage,
     });
     if (user) {
       return user;

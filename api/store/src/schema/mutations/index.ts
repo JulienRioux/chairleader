@@ -24,6 +24,7 @@ export const mutations = gql`
       saleTax: Float
       shippingFee: String
       theme: Object
+      homepage: Object
     ): Store
 
     """

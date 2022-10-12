@@ -16,10 +16,9 @@ export const updateUser = async ({
   image,
   shippingFee,
   theme,
+  homepage,
 }: any) => {
   let imgSrc = '';
-
-  console.log('theme =>>>', theme);
 
   // First update the image
   if (image) {
@@ -46,6 +45,8 @@ export const updateUser = async ({
   }
 
   const primaryColor = theme?.primaryColor;
+  const heroTitle = homepage?.heroTitle;
+  const heroSubTitle = homepage?.heroSubTitle;
 
   const user = await UserModel.findByIdAndUpdate(
     id,
@@ -57,6 +58,12 @@ export const updateUser = async ({
       ...(!isNaN(saleTax) && { saleTax }),
       ...(imgSrc && { image: imgSrc }),
       ...(shippingFee && { shippingFee }),
+      ...(homepage && {
+        homepage: {
+          ...(heroTitle && { heroTitle }),
+          ...(heroSubTitle && { heroSubTitle }),
+        },
+      }),
       ...(theme && {
         theme: {
           ...(primaryColor && { primaryColor }),
