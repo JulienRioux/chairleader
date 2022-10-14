@@ -286,7 +286,7 @@ export const ThemePage = () => {
     [homepageImageFile, imageSrc]
   );
 
-  const SHOW_SOCIAL_LINKS = false;
+  const SHOW_SOCIAL_LINKS = true;
 
   return (
     <ThemePageWrapper>
@@ -389,43 +389,50 @@ export const ThemePage = () => {
           {SHOW_SOCIAL_LINKS && (
             <Card title="Social media links">
               <Input
-                label="Instagram"
-                placeholder="https://www.instagram.com/thenorthface"
+                label="Instagram URL"
+                placeholder="https://www.instagram.com/username"
                 // value={title}
                 // onChange={(e) => setTitle(e.target.value)}
               />
 
               <Input
-                label="Twitter"
-                placeholder="https://www.twitter.com/thenorthface"
+                label="Twitter URL"
+                placeholder="https://www.twitter.com/username"
                 // value={title}
                 // onChange={(e) => setTitle(e.target.value)}
               />
 
               <Input
-                label="Facebook"
-                placeholder="https://www.facebook.com/thenorthface"
+                label="Facebook URL"
+                placeholder="https://facebook.com/facebookpageurl"
                 // value={title}
                 // onChange={(e) => setTitle(e.target.value)}
               />
 
               <Input
-                label="Tiktok"
-                placeholder="https://www.tiktok.com/thenorthface"
+                label="Tiktok URL"
+                placeholder="https://www.tiktok.com/username"
                 // value={title}
                 // onChange={(e) => setTitle(e.target.value)}
               />
 
               <Input
-                label="Spotify"
-                placeholder="https://www.spotify.com/thenorthface"
+                label="Youtube URL"
+                placeholder="https://youtube.com/channel/youtubechannelurl"
                 // value={title}
                 // onChange={(e) => setTitle(e.target.value)}
               />
 
               <Input
-                label="Dribbble"
-                placeholder="https://www.dribbble.com/thenorthface"
+                label="Spotify URL"
+                placeholder="https://open.spotify.com/artist/artistname"
+                // value={title}
+                // onChange={(e) => setTitle(e.target.value)}
+              />
+
+              <Input
+                label="Apple music URL"
+                placeholder="https://music.apple.com/us/album/youralbum"
                 // value={title}
                 // onChange={(e) => setTitle(e.target.value)}
               />

@@ -7,13 +7,17 @@ import {
 import styled, { keyframes } from 'styled-components';
 import { routes } from 'utils';
 import { Footer } from 'components';
-import { APP_NAME, APP_LOGO, HIDE_APP } from 'configs';
+import { APP_NAME, HIDE_APP } from 'configs';
 import { useTheme } from 'hooks/theme';
 import { useAuth } from 'hooks/auth';
 import { useMediaQuery } from 'hooks/media-query';
 import { ReactNode, useCallback, useState } from 'react';
 import GranyFilter from './granny-filter.svg';
 import videoSrc from 'assets/homepage-video.mp4';
+import appLogoSrc from 'assets/app-logo.png';
+import appLogoSrcGif from 'assets/app-logo.gif';
+import appLogoSrcQuickGif from 'assets/app-logo-quick.gif';
+import { motion } from 'framer-motion';
 
 const HeroWrapper = styled.div`
   max-width: ${(p) => p.theme.layout.maxWidth};
@@ -29,6 +33,7 @@ const HeroWrapper = styled.div`
     flex-direction: column-reverse;
     align-items: center;
     justify-content: center;
+    text-align: center;
   }
 `;
 
@@ -83,11 +88,41 @@ const TopNav = styled.div`
   min-height: 44px;
 `;
 
+const AppIconImgWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 34px;
+`;
+
+const AppIconImg = styled.img`
+  height: 34px;
+  width: 34px;
+  margin-right: 8px;
+  position: absolute;
+
+  :nth-of-type(1) {
+    opacity: 0;
+  }
+`;
+
 const Logo = styled(UnstyledLink)`
   font-weight: bold;
   font-size: 20px;
   display: flex;
   align-items: center;
+
+  :hover {
+    ${AppIconImg} {
+      :nth-of-type(2) {
+        opacity: 0;
+      }
+      :nth-of-type(1) {
+        opacity: 1;
+      }
+    }
+  }
 `;
 
 const LeftHero = styled.div`
@@ -105,7 +140,7 @@ const VideoWrapper = styled.div`
   position: relative;
   padding-bottom: 50%;
   height: 0;
-  width: 50%;
+  width: 100%;
   border-radius: ${(p) => p.theme.borderRadius.default};
   overflow: hidden;
 
@@ -115,11 +150,36 @@ const VideoWrapper = styled.div`
   }
 `;
 
-const Video = styled.video`
+const BannerVideoWrapper = styled.div``;
+
+const HeroImg = styled.img`
+  width: 100%;
+  object-position: center;
+  object-fit: cover;
+  image-rendering: pixelated;
+  /* aspect-ratio: 1; */
+
+  @media (max-width: 800px) {
+    width: 70%;
+    margin-bottom: 20px;
+  }
+`;
+
+const HeroVideo = styled.video`
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
+`;
+
+const Video = styled.video`
+  width: 70%;
+  border-radius: ${(p) => p.theme.borderRadius.default};
+  overflow: hidden;
+  margin: 0 auto;
+  aspect-ratio: 16 / 9;
+  box-shadow: 0 8px 10px 4px ${(p) => p.theme.color.text}11;
+  background: ${(p) => p.theme.color.text};
 `;
 
 const BtnWrapper = styled.div`
@@ -141,18 +201,18 @@ const BannerWrapper = styled.div`
 
 const Banner = styled.div`
   max-width: ${(p) => p.theme.layout.maxWidth};
-  padding: 40px 0;
+  padding: 80px 0;
   margin: 0 auto;
   min-height: 360px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* text-align: center; */
+  text-align: center;
 `;
 
 const BannerHeader = styled.h3`
   font-size: 60px;
-  margin: 0 0 20px;
+  margin: 0 0 60px;
 
   @media (max-width: 800px) {
     font-size: 48px;
@@ -204,6 +264,26 @@ const SecondHeroBtn = styled(Button)`
     margin-top: 8px;
   }
 `;
+
+const MotionDiv = ({
+  children,
+  delay = 0,
+  style,
+}: {
+  children: ReactNode;
+  delay?: number;
+  style?: any;
+}) => (
+  <motion.div
+    initial={{ opacity: 0, transform: 'translateY(40px)' }}
+    whileInView={{ opacity: 1, transform: 'translateY(0px)' }}
+    // viewport={{ once: true }}
+    transition={{ type: 'spring', stiffness: 100, delay }}
+    {...(style && { style })}
+  >
+    {children}
+  </motion.div>
+);
 
 export const ToggleTheme = (props: any) => {
   const { toggleTheme, isDarkTheme } = useTheme();
@@ -262,22 +342,24 @@ const PresentationItem = ({
   const isMobileView = useMediaQuery('(max-width: 800px)');
 
   return (
-    <PresentationItemGrid isLeftImg={isLeftImg}>
-      {isLeftImg && <FeaturedStoreImg src={img} />}
+    <MotionDiv>
+      <PresentationItemGrid isLeftImg={isLeftImg}>
+        {isLeftImg && <FeaturedStoreImg src={img} />}
 
-      <ItemWrapper>
-        <h1>{title}</h1>
-        <Par>{content}</Par>
+        <ItemWrapper>
+          <h1>{title}</h1>
+          <Par>{content}</Par>
 
-        <div>
-          <Button to={routes.auth} fullWidth={isMobileView}>
-            {btnText}
-          </Button>
-        </div>
-      </ItemWrapper>
+          <div>
+            <Button to={routes.auth} fullWidth={isMobileView}>
+              {btnText}
+            </Button>
+          </div>
+        </ItemWrapper>
 
-      {!isLeftImg && <FeaturedStoreImg src={img} />}
-    </PresentationItemGrid>
+        {!isLeftImg && <FeaturedStoreImg src={img} />}
+      </PresentationItemGrid>
+    </MotionDiv>
   );
 };
 
@@ -285,21 +367,21 @@ const featuredStore = [
   {
     name: 'Cafe Calypso',
     subdomain: 'cafe-calypso',
-    img: 'https://dev-alt-gate-products.s3.amazonaws.com/products/62f40aa40c9249b03d773ec0-5ab8bc6c-3e2b-457c-87ef-e59239fde25b.webp',
+    img: 'https://i.pinimg.com/originals/ee/f8/1e/eef81edc874708984b6420b8c06d2854.gif',
   },
   {
     name: 'Fast bike shop',
     subdomain: 'fast-bike-shop',
-    img: 'https://bicyclespeedshop.co/wp-content/themes/bss/img/bike-rider.gif',
+    img: 'https://media1.giphy.com/media/h4IKOfSsUyeVBepjbk/giphy.gif?cid=6c09b952yo5w4dg65pbdr0o33twzoogdla4edkcebcvewdv2&rid=giphy.gif&ct=s',
   },
 ];
 
 const FeaturedStoreImg = styled.img`
-  width: 100%;
-  border-radius: 32px;
+  width: 80%;
   aspect-ratio: 1;
   object-position: center;
   object-fit: cover;
+  margin: 0 auto;
 `;
 
 const FeaturedStoresWrapper = styled.div`
@@ -361,62 +443,77 @@ const FeaturedStores = () => {
   const storeLink = `${window.location.protocol}//${currentStore.subdomain}.${window.location.host}`;
 
   return (
-    <FeaturedStoresWrapper>
-      <LeftWrapper>
-        <div>
-          <FeaturedStoreSubtitle>
-            Meet the merchants who chose Chairleader
-          </FeaturedStoreSubtitle>
-          <FeaturedStoreTitle>{currentStore.name}</FeaturedStoreTitle>
-          <UnstyledExternalLink href={storeLink} target="_blank">
-            <Button>
-              Visit store{' '}
-              <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
-            </Button>
-          </UnstyledExternalLink>
-        </div>
+    <MotionDiv>
+      <FeaturedStoresWrapper>
+        <LeftWrapper>
+          <div>
+            <FeaturedStoreSubtitle>
+              Meet the merchants who chose Chairleader
+            </FeaturedStoreSubtitle>
+            <FeaturedStoreTitle>{currentStore.name}</FeaturedStoreTitle>
+            <UnstyledExternalLink href={storeLink} target="_blank">
+              <Button>
+                Visit store{' '}
+                <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
+              </Button>
+            </UnstyledExternalLink>
+          </div>
 
-        <ArrowBtnsWrapper>
-          <Button secondary icon="arrow_back" onClick={handleNext} />
-          <Button secondary icon="arrow_forward" onClick={handleNext} />
-        </ArrowBtnsWrapper>
-      </LeftWrapper>
+          <ArrowBtnsWrapper>
+            <Button secondary icon="arrow_back" onClick={handleNext} />
+            <Button secondary icon="arrow_forward" onClick={handleNext} />
+          </ArrowBtnsWrapper>
+        </LeftWrapper>
 
-      <UnstyledExternalLink href={storeLink} target="_blank">
-        <FeaturedStoreImg src={currentStore.img} />
-      </UnstyledExternalLink>
-    </FeaturedStoresWrapper>
+        <UnstyledExternalLink href={storeLink} target="_blank">
+          <FeaturedStoreImg src={currentStore.img} />
+        </UnstyledExternalLink>
+      </FeaturedStoresWrapper>
+    </MotionDiv>
   );
 };
 
 export const HomepageTopNav = () => {
   const { isAuthenticated, isLoading } = useAuth();
 
+  const SHOW_AUTH_BTN = !HIDE_APP && !isLoading;
+
   return (
-    <TopNavWrapper>
-      <TopNav>
-        <Logo to={routes.base}>
-          <AppIcon>{APP_LOGO}</AppIcon>
-          {APP_NAME}
-        </Logo>
+    <motion.div
+      initial={{ opacity: 0, transform: 'translateY(-61px)' }}
+      whileInView={{ opacity: 1, transform: 'translateY(0px)' }}
+      // viewport={{ once: true }}
+      transition={{ type: 'spring', stiffness: 100 }}
+    >
+      <TopNavWrapper>
+        <TopNav>
+          <Logo to={routes.base}>
+            <AppIconImgWrapper>
+              <AppIconImg src={appLogoSrcQuickGif} />
 
-        <BtnWrapper>
-          <ToggleTheme style={{ marginRight: '8px' }} />
+              <AppIconImg src={appLogoSrc} />
+            </AppIconImgWrapper>
+            {APP_NAME}
+          </Logo>
 
-          {!HIDE_APP && !isLoading && (
-            <>
-              {isAuthenticated() ? (
-                <Button to={routes.admin.inventory} secondary icon="home" />
-              ) : (
-                <Button to={routes.auth} secondary>
-                  Authenticate
-                </Button>
-              )}
-            </>
-          )}
-        </BtnWrapper>
-      </TopNav>
-    </TopNavWrapper>
+          <BtnWrapper>
+            <ToggleTheme style={{ marginRight: '8px' }} />
+
+            {SHOW_AUTH_BTN && (
+              <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}>
+                {isAuthenticated() ? (
+                  <Button to={routes.admin.inventory} secondary icon="home" />
+                ) : (
+                  <Button to={routes.auth} secondary>
+                    Authenticate
+                  </Button>
+                )}
+              </motion.div>
+            )}
+          </BtnWrapper>
+        </TopNav>
+      </TopNavWrapper>
+    </motion.div>
   );
 };
 
@@ -424,87 +521,122 @@ export const Homepage = () => {
   const { isAuthenticated, isLoading } = useAuth();
   const isMobileView = useMediaQuery('(max-width: 800px)');
 
+  const USE_HERO_VIDEO = false;
+
   return (
     <div>
       <HomepageTopNav />
       <HomepageWrapper>
         <HeroWrapper>
           <LeftHero>
-            <Header>
-              No-code web3{' '}
-              <span style={{ whiteSpace: 'nowrap' }}>e-commerce</span> platform
-            </Header>
-            <HeroPar>
-              We are building the next-generation e-commerce platform offering
-              online retailers a suite of web3 services including payments,
-              marketing, and engagement tools built on top of Solana.
-            </HeroPar>
+            <MotionDiv delay={0.3}>
+              <Header>No-code web3 ecommerce platform</Header>
+            </MotionDiv>
 
-            {HIDE_APP && (
-              <div>
-                <UnstyledExternalLink
-                  href="https://www.producthunt.com/upcoming/chairleader"
-                  target="_blank"
-                >
-                  <Button icon="launch" fullWidth={isMobileView}>
-                    Get early access
-                  </Button>
-                </UnstyledExternalLink>
-              </div>
-            )}
+            <MotionDiv delay={0.4}>
+              <HeroPar>
+                We are building the next-generation ecommerce platform offering
+                online retailers a suite of web3 services including payments,
+                marketing, and engagement tools built on top of Solana.
+              </HeroPar>
+            </MotionDiv>
 
-            {!HIDE_APP && (
-              <div>
-                {!isLoading &&
-                  (isAuthenticated() ? (
-                    <Button
-                      to={routes.admin.inventory}
-                      fullWidth={isMobileView}
-                    >
-                      Go to my store
+            <MotionDiv delay={0.5}>
+              {HIDE_APP && (
+                <div>
+                  <UnstyledExternalLink
+                    href="https://www.producthunt.com/upcoming/chairleader"
+                    target="_blank"
+                  >
+                    <Button icon="launch" fullWidth={isMobileView}>
+                      Get early access
                     </Button>
-                  ) : (
-                    <>
-                      <Button to={routes.auth} fullWidth={isMobileView}>
-                        Register now
-                      </Button>
+                  </UnstyledExternalLink>
+                </div>
+              )}
 
-                      <SecondHeroBtn
-                        to={routes.auth}
-                        secondary
+              {!HIDE_APP && (
+                <div>
+                  {!isLoading &&
+                    (isAuthenticated() ? (
+                      <Button
+                        to={routes.admin.inventory}
                         fullWidth={isMobileView}
                       >
-                        Log in
-                      </SecondHeroBtn>
-                    </>
-                  ))}
+                        Go to my store
+                      </Button>
+                    ) : (
+                      <>
+                        <Button to={routes.auth} fullWidth={isMobileView}>
+                          Register now
+                        </Button>
 
-                {isLoading && (
-                  <div>
-                    <Button fullWidth={isMobileView} isLoading={isLoading}>
-                      Go to my store
-                    </Button>
-                  </div>
-                )}
-              </div>
-            )}
+                        <SecondHeroBtn
+                          to={routes.auth}
+                          secondary
+                          fullWidth={isMobileView}
+                        >
+                          Log in
+                        </SecondHeroBtn>
+                      </>
+                    ))}
+
+                  {isLoading && (
+                    <div>
+                      <Button fullWidth={isMobileView} isLoading={isLoading}>
+                        Go to my store
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </MotionDiv>
           </LeftHero>
 
-          <VideoWrapper>
-            <Video autoPlay muted loop>
-              <source src={videoSrc} type="video/mp4" />
-            </Video>
-          </VideoWrapper>
+          <MotionDiv
+            style={{ width: isMobileView ? '70%' : '50%' }}
+            delay={0.6}
+          >
+            {USE_HERO_VIDEO ? (
+              <VideoWrapper>
+                <HeroVideo autoPlay muted loop>
+                  <source src={videoSrc} type="video/mp4" />
+                </HeroVideo>
+              </VideoWrapper>
+            ) : (
+              <HeroImg
+                src={isMobileView ? appLogoSrcGif : appLogoSrc}
+                // src="https://pbs.twimg.com/media/DARJkcWXoAIfJ8N.png"
+              />
+            )}
+          </MotionDiv>
         </HeroWrapper>
 
         {!HIDE_APP && (
           <>
             <BannerWrapper>
               <Banner>
-                <BannerHeader>Make Solana payments easy</BannerHeader>
-                <Par>
-                  {`Optimize conversion by offering seamless crypto payments. Learn
-            where and how to expand your business next, supported by insights. ${APP_NAME}’s unique data ecosystem reveals opportunities where your business can grow with the `}
+                <MotionDiv>
+                  <BannerHeader>
+                    The most advanced no-code web3 ecommerce platform ever built
+                  </BannerHeader>
+                </MotionDiv>
+
+                <BannerVideoWrapper>
+                  <MotionDiv delay={0.2}>
+                    <Video controls>
+                      <source src={videoSrc} type="video/mp4" />
+                    </Video>
+                  </MotionDiv>
+                </BannerVideoWrapper>
+              </Banner>
+            </BannerWrapper>
+
+            <PresentationItem
+              title="Powered by the Solana Network"
+              content={
+                <>
+                  {`${APP_NAME}’s unique data ecosystem reveals opportunities where your business can grow with the `}
                   <a
                     href="https://solana.com/"
                     target="_blank"
@@ -513,14 +645,19 @@ export const Homepage = () => {
                     Solana network
                   </a>
                   .
-                </Par>
-              </Banner>
-            </BannerWrapper>
+                </>
+              }
+              btnText={
+                <>
+                  Start now{' '}
+                  <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
+                </>
+              }
+              // img="http://pixelartmaker-data-78746291193.nyc3.digitaloceanspaces.com/image/71646dd9813dd57.png"
+              img="https://cdn-icons-png.flaticon.com/512/408/408168.png"
+            />
 
-            <FeaturedStores />
-
-            <PresentationItem
-              title="Solutions built for your business model"
+            {/* title="Solutions built for your business model"
               content={
                 <>
                   Unlock superior financial experiences through our single
@@ -535,6 +672,15 @@ export const Homepage = () => {
                   </a>
                   .
                 </>
+              } */}
+
+            <PresentationItem
+              title="Improve customers engagement with web3"
+              content={
+                <>
+                  Use token gating, loyalties programs, and NFTs membership to
+                  grow your business by unlocking superior customer experience.
+                </>
               }
               btnText={
                 <>
@@ -542,12 +688,13 @@ export const Homepage = () => {
                   <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
                 </>
               }
-              img="https://images.unsplash.com/photo-1462392246754-28dfa2df8e6b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2400&q=80"
+              // img="https://cdn-icons-png.flaticon.com/512/465/465267.png"
+              img="https://cdn-icons-png.flaticon.com/512/465/465227.png"
               isLeftImg
             />
 
             <PresentationItem
-              title="Another title"
+              title="World leader no-code theme customization"
               content={
                 <>
                   Unlock superior financial experiences through our single
@@ -569,10 +716,92 @@ export const Homepage = () => {
                   <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
                 </>
               }
-              img="https://images.unsplash.com/photo-1442512595331-e89e73853f31?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80"
+              img="https://cdn-icons-png.flaticon.com/512/365/365865.png"
+            />
+
+            <PresentationItem
+              title="Add your products, manage your inventory, track your orders"
+              content={
+                <>
+                  Unlock superior financial experiences through our single
+                  platform. Simplify cash management, receive payments faster,
+                  and gain full visibility of your funds leveraged by{' '}
+                  <a
+                    href="https://solanapay.com/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Solana Pay
+                  </a>
+                  .
+                </>
+              }
+              btnText={
+                <>
+                  Start now{' '}
+                  <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
+                </>
+              }
+              img="https://cdn-icons-png.flaticon.com/512/409/409064.png"
+              isLeftImg
+            />
+
+            <PresentationItem
+              title="World leader no-code theme customization"
+              content={
+                <>
+                  Unlock superior financial experiences through our single
+                  platform. Simplify cash management, receive payments faster,
+                  and gain full visibility of your funds leveraged by{' '}
+                  <a
+                    href="https://solanapay.com/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Solana Pay
+                  </a>
+                  .
+                </>
+              }
+              btnText={
+                <>
+                  Start now{' '}
+                  <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
+                </>
+              }
+              img="https://cdn-icons-png.flaticon.com/512/465/465269.png"
+            />
+
+            <PresentationItem
+              title="Pay only when you're selling"
+              content={
+                <>
+                  Unlock superior financial experiences through our single
+                  platform. Simplify cash management, receive payments faster,
+                  and gain full visibility of your funds leveraged by{' '}
+                  <a
+                    href="https://solanapay.com/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Solana Pay
+                  </a>
+                  .
+                </>
+              }
+              btnText={
+                <>
+                  Start now{' '}
+                  <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
+                </>
+              }
+              img="https://cdn-icons-png.flaticon.com/512/409/409045.png"
+              isLeftImg
             />
           </>
         )}
+
+        <FeaturedStores />
 
         <Footer />
       </HomepageWrapper>
