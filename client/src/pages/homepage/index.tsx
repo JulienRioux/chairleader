@@ -815,10 +815,10 @@ export const Homepage = () => {
               img="https://cdn-icons-png.flaticon.com/512/409/409045.png"
               isLeftImg
             />
+
+            <FeaturedStores />
           </>
         )}
-
-        <FeaturedStores />
 
         <Footer />
       </HomepageWrapper>
