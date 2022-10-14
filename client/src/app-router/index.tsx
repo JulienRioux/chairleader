@@ -54,6 +54,16 @@ export const AdminAppRouter = () => {
         <Route path={'/token-gating'} element={<TokenGating />} />
 
         <Route
+          path={'/loyalty'}
+          element={
+            <div>
+              <h1>Stay tuned</h1>
+              <p>Feature coming soon...</p>
+            </div>
+          }
+        />
+
+        <Route
           path={'/token-gating/:address'}
           element={<TokenGatingNft isAdminApp />}
         />

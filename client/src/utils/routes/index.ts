@@ -23,6 +23,7 @@ export const routes = {
     dashboard: '/admin/dashboard',
     tokenGating: '/admin/token-gating',
     theme: '/admin/theme',
+    loyalty: '/admin/loyalty',
   },
 
   store: {

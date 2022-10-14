@@ -309,6 +309,8 @@ const PresentationItemGrid = styled.div<{ isLeftImg?: boolean }>`
   gap: 100px;
 
   @media (max-width: 800px) {
+    margin: 80px auto;
+    gap: 20px;
     display: flex;
     flex-direction: ${(p) => (p.isLeftImg ? 'column' : 'column-reverse')};
   }
@@ -321,7 +323,8 @@ const ItemWrapper = styled.div`
   margin-bottom: 100px;
 
   @media (max-width: 800px) {
-    margin-bottom: 100px;
+    margin-bottom: 40px;
+    text-align: center;
   }
 `;
 
@@ -343,7 +346,7 @@ const PresentationItem = ({
   return (
     <PresentationItemGrid isLeftImg={isLeftImg}>
       {isLeftImg && (
-        <MotionDiv delay={0.2}>
+        <MotionDiv delay={0.2} style={{ textAlign: 'center' }}>
           <FeaturedStoreImg src={img} />
         </MotionDiv>
       )}
@@ -362,7 +365,7 @@ const PresentationItem = ({
       </MotionDiv>
 
       {!isLeftImg && (
-        <MotionDiv delay={0.2}>
+        <MotionDiv delay={0.2} style={{ textAlign: 'center' }}>
           <FeaturedStoreImg src={img} />
         </MotionDiv>
       )}
@@ -389,6 +392,10 @@ const FeaturedStoreImg = styled.img`
   object-position: center;
   object-fit: cover;
   margin: 0 auto;
+
+  @media (max-width: 800px) {
+    width: 50%;
+  }
 `;
 
 const FeaturedStoresWrapper = styled.div`
@@ -401,6 +408,8 @@ const FeaturedStoresWrapper = styled.div`
   @media (max-width: 800px) {
     display: flex;
     flex-direction: column-reverse;
+    margin: 80px auto;
+    text-align: center;
 
     h4 {
       font-size: 16px;
