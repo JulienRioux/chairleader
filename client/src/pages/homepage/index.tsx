@@ -342,10 +342,14 @@ const PresentationItem = ({
   const isMobileView = useMediaQuery('(max-width: 800px)');
 
   return (
-    <MotionDiv>
-      <PresentationItemGrid isLeftImg={isLeftImg}>
-        {isLeftImg && <FeaturedStoreImg src={img} />}
+    <PresentationItemGrid isLeftImg={isLeftImg}>
+      {isLeftImg && (
+        <MotionDiv delay={0.2}>
+          <FeaturedStoreImg src={img} />
+        </MotionDiv>
+      )}
 
+      <MotionDiv>
         <ItemWrapper>
           <h1>{title}</h1>
           <Par>{content}</Par>
@@ -356,10 +360,14 @@ const PresentationItem = ({
             </Button>
           </div>
         </ItemWrapper>
+      </MotionDiv>
 
-        {!isLeftImg && <FeaturedStoreImg src={img} />}
-      </PresentationItemGrid>
-    </MotionDiv>
+      {!isLeftImg && (
+        <MotionDiv delay={0.2}>
+          <FeaturedStoreImg src={img} />
+        </MotionDiv>
+      )}
+    </PresentationItemGrid>
   );
 };
 
