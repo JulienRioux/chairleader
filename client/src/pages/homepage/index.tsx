@@ -24,7 +24,6 @@ const HeroWrapper = styled.div`
   margin: 0px auto 0;
   min-height: calc(100vh - 61px);
   gap: 20px;
-
   display: flex;
   align-items: center;
 
