@@ -12,7 +12,8 @@ import { useTheme } from 'hooks/theme';
 import { useAuth } from 'hooks/auth';
 import { useMediaQuery } from 'hooks/media-query';
 import { ReactNode, useCallback, useState } from 'react';
-import { motion } from 'framer-motion';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { motion } = require('framer-motion');
 
 import GranyFilter from './granny-filter.svg';
 import videoSrc from 'assets/homepage-video.mp4';
