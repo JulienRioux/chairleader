@@ -358,9 +358,20 @@ const PresentationItem = ({
           <Par>{content}</Par>
 
           <div>
-            <Button to={routes.auth} fullWidth={isMobileView}>
-              {btnText}
-            </Button>
+            {HIDE_APP ? (
+              <UnstyledExternalLink
+                href="https://www.producthunt.com/upcoming/chairleader"
+                target="_blank"
+              >
+                <Button icon="launch" fullWidth={isMobileView}>
+                  Get early access
+                </Button>
+              </UnstyledExternalLink>
+            ) : (
+              <Button to={routes.auth} fullWidth={isMobileView}>
+                {btnText}
+              </Button>
+            )}
           </div>
         </ItemWrapper>
       </MotionDiv>
@@ -539,6 +550,8 @@ export const Homepage = () => {
   const isMobileView = useMediaQuery('(max-width: 800px)');
 
   const USE_HERO_VIDEO = false;
+  const SHOW_BANNER = false;
+  const SHOW_MERCHANTS = false;
 
   return (
     <div>
@@ -629,8 +642,8 @@ export const Homepage = () => {
           </MotionDiv>
         </HeroWrapper>
 
-        {!HIDE_APP && (
-          <>
+        <>
+          {SHOW_BANNER && (
             <BannerWrapper>
               <Banner>
                 <MotionDiv>
@@ -648,33 +661,30 @@ export const Homepage = () => {
                 </BannerVideoWrapper>
               </Banner>
             </BannerWrapper>
+          )}
 
-            <PresentationItem
-              title="Powered by the Solana Network"
-              content={
-                <>
-                  {`${APP_NAME}’s unique data ecosystem reveals opportunities where your business can grow with the `}
-                  <a
-                    href="https://solana.com/"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Solana network
-                  </a>
-                  .
-                </>
-              }
-              btnText={
-                <>
-                  Start now{' '}
-                  <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
-                </>
-              }
-              // img="http://pixelartmaker-data-78746291193.nyc3.digitaloceanspaces.com/image/71646dd9813dd57.png"
-              img="https://cdn-icons-png.flaticon.com/512/408/408168.png"
-            />
+          <PresentationItem
+            title="Powered by the Solana Network"
+            content={
+              <>
+                {`${APP_NAME}’s unique data ecosystem reveals opportunities where your business can grow with the `}
+                <a href="https://solana.com/" target="_blank" rel="noreferrer">
+                  Solana network
+                </a>
+                .
+              </>
+            }
+            btnText={
+              <>
+                Start now{' '}
+                <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
+              </>
+            }
+            // img="http://pixelartmaker-data-78746291193.nyc3.digitaloceanspaces.com/image/71646dd9813dd57.png"
+            img="https://cdn-icons-png.flaticon.com/512/408/408168.png"
+          />
 
-            {/* title="Solutions built for your business model"
+          {/* title="Solutions built for your business model"
               content={
                 <>
                   Unlock superior financial experiences through our single
@@ -691,134 +701,133 @@ export const Homepage = () => {
                 </>
               } */}
 
-            <PresentationItem
-              title="Improve customers engagement with web3"
-              content={
-                <>
-                  Use token gating, loyalties programs, and NFTs membership to
-                  grow your business by unlocking superior customer experience.
-                </>
-              }
-              btnText={
-                <>
-                  Start now{' '}
-                  <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
-                </>
-              }
-              // img="https://cdn-icons-png.flaticon.com/512/465/465267.png"
-              img="https://cdn-icons-png.flaticon.com/512/465/465227.png"
-              isLeftImg
-            />
+          <PresentationItem
+            title="Improve customers engagement with web3"
+            content={
+              <>
+                Use token gating, loyalties programs, and NFTs membership to
+                grow your business by unlocking superior customer experience.
+              </>
+            }
+            btnText={
+              <>
+                Start now{' '}
+                <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
+              </>
+            }
+            // img="https://cdn-icons-png.flaticon.com/512/465/465267.png"
+            img="https://cdn-icons-png.flaticon.com/512/465/465227.png"
+            isLeftImg
+          />
 
-            <PresentationItem
-              title="World leader no-code theme customization"
-              content={
-                <>
-                  Unlock superior financial experiences through our single
-                  platform. Simplify cash management, receive payments faster,
-                  and gain full visibility of your funds leveraged by{' '}
-                  <a
-                    href="https://solanapay.com/"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Solana Pay
-                  </a>
-                  .
-                </>
-              }
-              btnText={
-                <>
-                  Start now{' '}
-                  <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
-                </>
-              }
-              img="https://cdn-icons-png.flaticon.com/512/365/365865.png"
-            />
+          <PresentationItem
+            title="World leader no-code theme customization"
+            content={
+              <>
+                Unlock superior financial experiences through our single
+                platform. Simplify cash management, receive payments faster, and
+                gain full visibility of your funds leveraged by{' '}
+                <a
+                  href="https://solanapay.com/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Solana Pay
+                </a>
+                .
+              </>
+            }
+            btnText={
+              <>
+                Start now{' '}
+                <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
+              </>
+            }
+            img="https://cdn-icons-png.flaticon.com/512/365/365865.png"
+          />
 
-            <PresentationItem
-              title="Add your products, manage your inventory, track your orders"
-              content={
-                <>
-                  Unlock superior financial experiences through our single
-                  platform. Simplify cash management, receive payments faster,
-                  and gain full visibility of your funds leveraged by{' '}
-                  <a
-                    href="https://solanapay.com/"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Solana Pay
-                  </a>
-                  .
-                </>
-              }
-              btnText={
-                <>
-                  Start now{' '}
-                  <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
-                </>
-              }
-              img="https://cdn-icons-png.flaticon.com/512/409/409064.png"
-              isLeftImg
-            />
+          <PresentationItem
+            title="Add your products, manage your inventory, track your orders"
+            content={
+              <>
+                Unlock superior financial experiences through our single
+                platform. Simplify cash management, receive payments faster, and
+                gain full visibility of your funds leveraged by{' '}
+                <a
+                  href="https://solanapay.com/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Solana Pay
+                </a>
+                .
+              </>
+            }
+            btnText={
+              <>
+                Start now{' '}
+                <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
+              </>
+            }
+            img="https://cdn-icons-png.flaticon.com/512/409/409064.png"
+            isLeftImg
+          />
 
-            <PresentationItem
-              title="World leader no-code theme customization"
-              content={
-                <>
-                  Unlock superior financial experiences through our single
-                  platform. Simplify cash management, receive payments faster,
-                  and gain full visibility of your funds leveraged by{' '}
-                  <a
-                    href="https://solanapay.com/"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Solana Pay
-                  </a>
-                  .
-                </>
-              }
-              btnText={
-                <>
-                  Start now{' '}
-                  <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
-                </>
-              }
-              img="https://cdn-icons-png.flaticon.com/512/465/465269.png"
-            />
+          <PresentationItem
+            title="World leader no-code theme customization"
+            content={
+              <>
+                Unlock superior financial experiences through our single
+                platform. Simplify cash management, receive payments faster, and
+                gain full visibility of your funds leveraged by{' '}
+                <a
+                  href="https://solanapay.com/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Solana Pay
+                </a>
+                .
+              </>
+            }
+            btnText={
+              <>
+                Start now{' '}
+                <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
+              </>
+            }
+            img="https://cdn-icons-png.flaticon.com/512/465/465269.png"
+          />
 
-            <PresentationItem
-              title="Pay only when you're selling"
-              content={
-                <>
-                  Unlock superior financial experiences through our single
-                  platform. Simplify cash management, receive payments faster,
-                  and gain full visibility of your funds leveraged by{' '}
-                  <a
-                    href="https://solanapay.com/"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Solana Pay
-                  </a>
-                  .
-                </>
-              }
-              btnText={
-                <>
-                  Start now{' '}
-                  <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
-                </>
-              }
-              img="https://cdn-icons-png.flaticon.com/512/409/409045.png"
-              isLeftImg
-            />
+          <PresentationItem
+            title="Pay only when you're selling"
+            content={
+              <>
+                Unlock superior financial experiences through our single
+                platform. Simplify cash management, receive payments faster, and
+                gain full visibility of your funds leveraged by{' '}
+                <a
+                  href="https://solanapay.com/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Solana Pay
+                </a>
+                .
+              </>
+            }
+            btnText={
+              <>
+                Start now{' '}
+                <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
+              </>
+            }
+            img="https://cdn-icons-png.flaticon.com/512/409/409045.png"
+            isLeftImg
+          />
 
-            <FeaturedStores />
-          </>
-        )}
+          {SHOW_MERCHANTS && <FeaturedStores />}
+        </>
 
         <Footer />
       </HomepageWrapper>
