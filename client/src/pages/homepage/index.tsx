@@ -12,12 +12,13 @@ import { useTheme } from 'hooks/theme';
 import { useAuth } from 'hooks/auth';
 import { useMediaQuery } from 'hooks/media-query';
 import { ReactNode, useCallback, useState } from 'react';
+import { motion } from 'framer-motion';
+
 import GranyFilter from './granny-filter.svg';
 import videoSrc from 'assets/homepage-video.mp4';
 import appLogoSrc from 'assets/app-logo.png';
 import appLogoSrcGif from 'assets/app-logo.gif';
 import appLogoSrcQuickGif from 'assets/app-logo-quick.gif';
-import { motion } from 'framer-motion';
 
 const HeroWrapper = styled.div`
   max-width: ${(p) => p.theme.layout.maxWidth};
