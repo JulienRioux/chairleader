@@ -671,7 +671,8 @@ export const Homepage = () => {
                 <a href="https://solana.com/" target="_blank" rel="noreferrer">
                   Solana network
                 </a>
-                .
+                . From accept cryptocurrency payments, NFTs token gating, and
+                many more!
               </>
             }
             btnText={
@@ -706,7 +707,8 @@ export const Homepage = () => {
             content={
               <>
                 Use token gating, loyalties programs, and NFTs membership to
-                grow your business by unlocking superior customer experience.
+                grow your business and brand by unlocking superior customer
+                experience.
               </>
             }
             btnText={
@@ -724,17 +726,8 @@ export const Homepage = () => {
             title="World leader no-code theme customization"
             content={
               <>
-                Unlock superior financial experiences through our single
-                platform. Simplify cash management, receive payments faster, and
-                gain full visibility of your funds leveraged by{' '}
-                <a
-                  href="https://solanapay.com/"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Solana Pay
-                </a>
-                .
+                Create a store you and your customers will love with our live
+                update theme customization.
               </>
             }
             btnText={
@@ -750,17 +743,9 @@ export const Homepage = () => {
             title="Add your products, manage your inventory, track your orders"
             content={
               <>
-                Unlock superior financial experiences through our single
-                platform. Simplify cash management, receive payments faster, and
-                gain full visibility of your funds leveraged by{' '}
-                <a
-                  href="https://solanapay.com/"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Solana Pay
-                </a>
-                .
+                Inventory tracking can help you avoid selling products that have
+                run out of stock, or let you know when you need to order or make
+                more of your product.
               </>
             }
             btnText={
@@ -774,20 +759,11 @@ export const Homepage = () => {
           />
 
           <PresentationItem
-            title="World leader no-code theme customization"
+            title="In-app NFTs creation"
             content={
               <>
-                Unlock superior financial experiences through our single
-                platform. Simplify cash management, receive payments faster, and
-                gain full visibility of your funds leveraged by{' '}
-                <a
-                  href="https://solanapay.com/"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Solana Pay
-                </a>
-                .
+                Chairleader is really easy to use! Create NFTs without coding
+                knowledge and without leaving the app.
               </>
             }
             btnText={
@@ -796,24 +772,15 @@ export const Homepage = () => {
                 <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
               </>
             }
-            img="https://cdn-icons-png.flaticon.com/512/465/465269.png"
+            img="https://cdn-icons-png.flaticon.com/512/8254/8254111.png"
           />
 
           <PresentationItem
             title="Pay only when you're selling"
             content={
               <>
-                Unlock superior financial experiences through our single
-                platform. Simplify cash management, receive payments faster, and
-                gain full visibility of your funds leveraged by{' '}
-                <a
-                  href="https://solanapay.com/"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Solana Pay
-                </a>
-                .
+                Access a complete ecommerce platform with simple, pay-as-you-go
+                pricing. 1% fee per transaction.
               </>
             }
             btnText={
