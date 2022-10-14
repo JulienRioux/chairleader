@@ -3,6 +3,7 @@ import {
   Icon,
   UnstyledExternalLink,
   UnstyledLink,
+  Video,
 } from 'components-library';
 import styled, { keyframes } from 'styled-components';
 import { routes } from 'utils';
@@ -170,16 +171,6 @@ const HeroVideo = styled.video`
   top: 0;
   left: 0;
   width: 100%;
-`;
-
-const Video = styled.video`
-  width: 70%;
-  border-radius: ${(p) => p.theme.borderRadius.default};
-  overflow: hidden;
-  margin: 0 auto;
-  aspect-ratio: 16 / 9;
-  box-shadow: 0 8px 10px 4px ${(p) => p.theme.color.text}11;
-  background: ${(p) => p.theme.color.text};
 `;
 
 const BtnWrapper = styled.div`
@@ -479,6 +470,7 @@ const FeaturedStores = () => {
               Meet the merchants who chose Chairleader
             </FeaturedStoreSubtitle>
             <FeaturedStoreTitle>{currentStore.name}</FeaturedStoreTitle>
+
             <UnstyledExternalLink href={storeLink} target="_blank">
               <Button>
                 Visit store{' '}
@@ -654,9 +646,7 @@ export const Homepage = () => {
 
                 <BannerVideoWrapper>
                   <MotionDiv delay={0.2}>
-                    <Video controls>
-                      <source src={videoSrc} type="video/mp4" />
-                    </Video>
+                    <Video src="https://fiverr-res.cloudinary.com/video/upload/t_fiverr_hd/molma0ndtlwze7jlfwhl" />
                   </MotionDiv>
                 </BannerVideoWrapper>
               </Banner>

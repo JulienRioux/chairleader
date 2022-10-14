@@ -234,8 +234,8 @@ export const StoreImgIcon = ({
 
 const SIDE_NAV_ROUTE = [
   { route: routes.admin.inventory, icon: 'local_offer', label: 'Products' },
-  { route: routes.admin.tokenGating, icon: 'loyalty', label: 'NFTs' },
-  { route: routes.admin.loyalty, icon: 'favorite_border', label: 'Loyalty' },
+  { route: routes.admin.tokenGating, icon: 'collections', label: 'NFTs' },
+  { route: routes.admin.loyalty, icon: 'favorite', label: 'Loyalty' },
   { route: routes.admin.payments, icon: 'receipt_long', label: 'Orders' },
   { route: routes.admin.dashboard, icon: 'equalizer', label: 'Dashboard' },
   { route: routes.admin.myStore, icon: 'settings', label: 'Settings' },

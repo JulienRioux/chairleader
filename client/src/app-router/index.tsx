@@ -32,6 +32,7 @@ import { ConfirmationPage } from 'pages/confirmation-page';
 import { ProfilePage } from 'pages/profile-page';
 import { StoreHomepage } from 'pages/pos-app/store-homepage';
 import { ThemePage } from 'pages/admin-pages/theme-page';
+import { LoyaltyPage } from 'pages/admin-pages/loyalty-page';
 
 export const AdminAppRouter = () => {
   return (
@@ -53,15 +54,7 @@ export const AdminAppRouter = () => {
 
         <Route path={'/token-gating'} element={<TokenGating />} />
 
-        <Route
-          path={'/loyalty'}
-          element={
-            <div>
-              <h1>Stay tuned</h1>
-              <p>Feature coming soon...</p>
-            </div>
-          }
-        />
+        <Route path={'/loyalty'} element={<LoyaltyPage />} />
 
         <Route
           path={'/token-gating/:address'}

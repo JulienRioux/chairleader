@@ -52,6 +52,7 @@ import {
 import { NftOwnerBadge } from 'pages/pos-app/product-page';
 import styled from 'styled-components';
 import { useSplTokenPayent } from 'hooks/spl-token-payment';
+import { useWalletModal } from 'hooks/wallet-modal';
 
 export const NftImgWrapper = styled.div`
   position: relative;
@@ -139,6 +140,7 @@ export const TokenGatingNft = ({
 }: {
   isAdminApp?: boolean;
 }) => {
+  const { openConnectModal } = useWalletModal();
   const { metaplex } = useMetaplex();
   const { address } = useParams();
 
@@ -186,9 +188,10 @@ export const TokenGatingNft = ({
   const storeLink = useStoreLink();
 
   const loadNftData = useCallback(async () => {
-    if (address && metaplex) {
+    if (address) {
       setNftDataIsLoading(true);
       const nft = await getNftMetadata(address);
+      console.log('nft', nft);
 
       setImage(nft?.json?.image ?? '');
       setName(nft?.json?.name ?? '');
@@ -285,10 +288,6 @@ export const TokenGatingNft = ({
     return <Loader />;
   }
 
-  if (!publicKey) {
-    return <p>Connect your wallet in order to see this page.</p>;
-  }
-
   const printedAddresses = showAll
     ? editionsPrintedList
     : editionsPrintedList.slice(0, 5);
@@ -353,17 +352,24 @@ export const TokenGatingNft = ({
             </UnstyledExternalLink>
           )}
 
-          {!isAdminApp && (
-            <Button
-              fullWidth
-              style={{ margin: '20px 0' }}
-              onClick={handlePrintNewEdition}
-              isLoading={printNftIsLoading}
-              disabled={hasNftPrintedVersion}
-            >
-              {hasNftPrintedVersion ? 'You own this NFT' : 'Buy now'}
-            </Button>
-          )}
+          {!isAdminApp &&
+            (publicKey ? (
+              <Button
+                fullWidth
+                style={{ margin: '20px 0' }}
+                onClick={handlePrintNewEdition}
+                isLoading={printNftIsLoading}
+                disabled={hasNftPrintedVersion}
+              >
+                {hasNftPrintedVersion ? 'You own this NFT' : 'Buy now'}
+              </Button>
+            ) : (
+              <div>
+                <Button icon="lock" fullWidth onClick={openConnectModal}>
+                  Connect your wallet to purchase
+                </Button>
+              </div>
+            ))}
 
           {isAdminApp && (
             <>

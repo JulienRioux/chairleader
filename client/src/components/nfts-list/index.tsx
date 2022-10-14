@@ -120,9 +120,6 @@ export const NftsList = ({ isStoreApp = false }: { isStoreApp?: boolean }) => {
   const { storeNfts: storeNftsFromDb } = useNft();
 
   const findNftByAddress = useCallback(async () => {
-    if (!metaplex) {
-      return;
-    }
     if (!storeNftsFromDb) {
       return;
     }
@@ -145,7 +142,7 @@ export const NftsList = ({ isStoreApp = false }: { isStoreApp?: boolean }) => {
 
     setStoreNfts(populatedNftsWithDbData);
     setIsLoading(false);
-  }, [metaplex, storeNftsFromDb]);
+  }, [storeNftsFromDb]);
 
   useEffect(() => {
     findNftByAddress();

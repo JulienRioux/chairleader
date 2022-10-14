@@ -208,7 +208,6 @@ export const ThemePage = () => {
       e.preventDefault();
 
       try {
-        message.success('Your changes has been saved.');
         // Edit user mutation
         await updateUser({
           storeName,

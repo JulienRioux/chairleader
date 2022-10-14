@@ -19,6 +19,7 @@ import { routes } from 'utils';
 import { useMediaQuery } from 'hooks/media-query';
 import { useTheme } from 'hooks/theme';
 import { drawerIn, fadeIn, fadeOut, drawerOut } from 'utils/keyframes';
+import { motion } from 'framer-motion';
 
 const AMINATION_DURATION = 300;
 

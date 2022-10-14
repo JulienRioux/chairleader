@@ -233,17 +233,6 @@ export const TokenGating = () => {
     return <Loader />;
   }
 
-  if (!wallet.connected) {
-    return (
-      <div>
-        <p>Connect your wallet in order to create NFTs.</p>
-        <Button secondary onClick={openConnectModal}>
-          Connect wallet
-        </Button>
-      </div>
-    );
-  }
-
   let currentImageSrc = '';
 
   if (imageFile) {
@@ -253,98 +242,102 @@ export const TokenGating = () => {
   const REVENUE_AFTER_FEES = (1 - SELLING_NFT_SERVICE_FEE) * Number(price);
 
   return (
-    wallet.connected && (
-      <TokenGatingWrapper>
+    <TokenGatingWrapper>
+      {wallet.connected ? (
         <Button onClick={openModal}>Create new NFT</Button>
+      ) : (
+        <Button icon="lock" onClick={openConnectModal}>
+          Connect wallet to create NFTs
+        </Button>
+      )}
 
-        <div style={{ margin: '20px 0' }}>
-          <NftsList />
-        </div>
+      <div style={{ margin: '20px 0' }}>
+        <NftsList />
+      </div>
 
-        <Modal title="Create new NFT">
-          <form onSubmit={uploadNFT}>
-            <Input
-              label="Name"
-              onChange={handleChange}
-              value={name}
-              required
-              name="name"
-              placeholder="Crypto Punk"
-              autoFocus
-            />
-            <Textarea
-              label="Description"
-              onChange={handleChange}
-              value={description}
-              required
-              name="description"
-              placeholder="These NFT will unlocked exclusive products."
-            />
-            <Label>
-              NFT asset <RequiredWrapper>*</RequiredWrapper>
-            </Label>
-            <ImageWrapper>
-              {currentImageSrc ? (
-                <Img src={currentImageSrc} onClick={handleUploadFileClick} />
-              ) : (
-                <NoImageWrapper onClick={handleUploadFileClick}>
-                  <Icon name="image" />
-                </NoImageWrapper>
-              )}
-
-              <Button
-                type="button"
-                secondary
-                onClick={handleUploadFileClick}
-                isLoading={resizeImgIsLoading}
-              >
-                {currentImageSrc ? 'Update image' : 'Add image'}
-              </Button>
-            </ImageWrapper>
-            <VisuallyHiddenInput
-              type="file"
-              onChange={handleChange}
-              name="image"
-              accept="image/png, image/jpg, image/jpeg, image/webp"
-              ref={fileInput}
-            />
-            <Input
-              label="Price (USDC)"
-              type="number"
-              onChange={handleChange}
-              value={price}
-              required
-              name="price"
-              placeholder="10"
-              min={1}
-            />
-
-            {price && (
-              <ServiceFeesExplaination>
-                <div style={{ marginBottom: '4px' }}>
-                  Service fee: {SELLING_NFT_SERVICE_FEE} %
-                </div>
-                <div>You will receive: {REVENUE_AFTER_FEES} USDC</div>
-              </ServiceFeesExplaination>
+      <Modal title="Create new NFT">
+        <form onSubmit={uploadNFT}>
+          <Input
+            label="Name"
+            onChange={handleChange}
+            value={name}
+            required
+            name="name"
+            placeholder="Crypto Punk"
+            autoFocus
+          />
+          <Textarea
+            label="Description"
+            onChange={handleChange}
+            value={description}
+            required
+            name="description"
+            placeholder="These NFT will unlocked exclusive products."
+          />
+          <Label>
+            NFT asset <RequiredWrapper>*</RequiredWrapper>
+          </Label>
+          <ImageWrapper>
+            {currentImageSrc ? (
+              <Img src={currentImageSrc} onClick={handleUploadFileClick} />
+            ) : (
+              <NoImageWrapper onClick={handleUploadFileClick}>
+                <Icon name="image" />
+              </NoImageWrapper>
             )}
 
-            <Input
-              label="Maximum supply"
-              type="number"
-              onChange={handleChange}
-              value={maxSupply}
-              required
-              name="maxSupply"
-              placeholder="1000"
-            />
-            <div style={{ marginTop: '20px' }}>
-              <Button type="submit" fullWidth isLoading={uploadingNft}>
-                Save and continue
-              </Button>
-            </div>
-          </form>
-        </Modal>
-      </TokenGatingWrapper>
-    )
+            <Button
+              type="button"
+              secondary
+              onClick={handleUploadFileClick}
+              isLoading={resizeImgIsLoading}
+            >
+              {currentImageSrc ? 'Update image' : 'Add image'}
+            </Button>
+          </ImageWrapper>
+          <VisuallyHiddenInput
+            type="file"
+            onChange={handleChange}
+            name="image"
+            accept="image/png, image/jpg, image/jpeg, image/webp"
+            ref={fileInput}
+          />
+          <Input
+            label="Price (USDC)"
+            type="number"
+            onChange={handleChange}
+            value={price}
+            required
+            name="price"
+            placeholder="10"
+            min={1}
+          />
+
+          {price && (
+            <ServiceFeesExplaination>
+              <div style={{ marginBottom: '4px' }}>
+                Service fee: {SELLING_NFT_SERVICE_FEE} %
+              </div>
+              <div>You will receive: {REVENUE_AFTER_FEES} USDC</div>
+            </ServiceFeesExplaination>
+          )}
+
+          <Input
+            label="Maximum supply"
+            type="number"
+            onChange={handleChange}
+            value={maxSupply}
+            required
+            name="maxSupply"
+            placeholder="1000"
+          />
+          <div style={{ marginTop: '20px' }}>
+            <Button type="submit" fullWidth isLoading={uploadingNft}>
+              Save and continue
+            </Button>
+          </div>
+        </form>
+      </Modal>
+    </TokenGatingWrapper>
   );
 };

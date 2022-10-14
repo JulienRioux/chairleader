@@ -2,6 +2,7 @@ import { Icon, Button, UnstyledButton, message } from 'components-library';
 import styled from 'styled-components';
 import { useAuth } from 'hooks/auth';
 import { useCallback } from 'react';
+import appLogoSrcGif from 'assets/app-logo.gif';
 
 const PointOfSalePageWrapper = styled.div`
   max-width: ${(p) => p.theme.layout.mediumWidth};
@@ -14,11 +15,17 @@ const Par = styled.p`
   margin-bottom: 40px;
 `;
 
+const ImgWrapper = styled.div`
+  margin: 40px auto 60px;
+  width: 70%;
+`;
+
 const Img = styled.img`
   width: 100%;
-  border-radius: ${(p) => p.theme.borderRadius.default};
-  aspect-ratio: 12 / 8;
-  border: 1px solid ${(p) => p.theme.color.lightGrey};
+  image-rendering: pixelated;
+  /* border-radius: ${(p) => p.theme.borderRadius.default}; */
+  /* aspect-ratio: 12 / 8; */
+  /* border: 1px solid ${(p) => p.theme.color.lightGrey}; */
 `;
 
 const CopyLinkBtn = styled(UnstyledButton)`
@@ -47,7 +54,9 @@ export const PointOfSalePage = () => {
 
   return (
     <PointOfSalePageWrapper>
-      <Img src="https://craftwork-images.b-cdn.net/wp-content/uploads/flow-lava-02-cyborg-and-woman.png" />
+      <ImgWrapper>
+        <Img src={appLogoSrcGif} />
+      </ImgWrapper>
 
       <Par>
         Your store is located at:{' '}

@@ -14,8 +14,9 @@ import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { routes } from 'utils';
 import { InventoryLayout } from '../inventory-layout';
+import { motion } from 'framer-motion';
 
-const HomepageWrapper = styled.div`
+const HomepageWrapper = styled(motion.div)`
   margin: 0 0 60px;
   display: flex;
   flex-direction: column;
@@ -175,7 +176,10 @@ export const StoreHomepage = () => {
 
   return (
     <InventoryLayout>
-      <HomepageWrapper>
+      <HomepageWrapper
+        initial={{ opacity: 0, transform: 'translateY(40px)' }}
+        whileInView={{ opacity: 1, transform: 'translateY(0px)' }}
+      >
         <HeroWrapper>
           <HeroContentWrapper>
             <HeroTitle>{title}</HeroTitle>
