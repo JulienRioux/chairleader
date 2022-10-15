@@ -12,8 +12,8 @@ import { NftProvider } from 'hooks/nft';
 
 export const getProviders = () => {
   return [
-    ApolloProviderWrapper,
     Router,
+    ApolloProviderWrapper,
     AuthProvider,
     InventoryProvider,
     AuthRequired, // Not a provider but kinda act the same...

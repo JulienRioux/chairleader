@@ -5,6 +5,7 @@ import { Styles } from 'styles';
 import { Icon } from 'components-library/icon';
 import { MessageWrapper, IconWrapper, TextWrapper } from './styled';
 import { ThemeProvider } from 'hooks/theme';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 let notificationInstance: RCNotificationInstance | null = null;
 
@@ -85,12 +86,14 @@ const sendMessage = (
     notificationInstance &&
     notificationInstance.notice({
       content: (
-        <ThemeProvider>
-          <MessageComponent time={time}>
-            {prefix}
-            <TextWrapper>{text}</TextWrapper>
-          </MessageComponent>
-        </ThemeProvider>
+        <Router>
+          <ThemeProvider>
+            <MessageComponent time={time}>
+              {prefix}
+              <TextWrapper>{text}</TextWrapper>
+            </MessageComponent>
+          </ThemeProvider>
+        </Router>
       ),
       duration: time,
     })

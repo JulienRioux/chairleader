@@ -142,8 +142,6 @@ export const ThemePage = () => {
     user?.theme?.primaryColor ?? colors[0].name
   );
 
-  console.log('=>>>', user?.homepage);
-
   const [title, setTitle] = useState(user?.homepage?.heroTitle ?? '');
   const [subTitle, setSubTitle] = useState(user?.homepage?.heroSubTitle ?? '');
 
@@ -220,29 +218,8 @@ export const ThemePage = () => {
         Logger.error(err);
         message.error();
       }
-      //
-      console.log('Saving changes...');
-      console.log(user);
-      console.log(
-        'WTF',
-        themeColor,
-        storeName,
-        logoImageFile,
-        title,
-        subTitle,
-        homepageImageFile
-      );
     },
-    [
-      user,
-      themeColor,
-      storeName,
-      logoImageFile,
-      title,
-      subTitle,
-      homepageImageFile,
-      updateUser,
-    ]
+    [themeColor, storeName, logoImageFile, title, subTitle, updateUser]
   );
 
   const [base64HomepageImg, setBase64HomepageImg] = useState<any>('');
