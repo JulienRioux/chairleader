@@ -45,10 +45,6 @@ const footerData = [
     content: [
       { title: 'Privacy policy', to: routes.static.privacy },
       { title: 'Terms of service', to: routes.static.termsOfService },
-      {
-        title: 'Icons created by Freepik',
-        href: 'https://www.flaticon.com',
-      },
     ],
     title: 'Legal',
   },

@@ -20,6 +20,12 @@ import videoSrc from 'assets/homepage-video.mp4';
 import appLogoSrc from 'assets/app-logo.png';
 import appLogoSrcGif from 'assets/app-logo.gif';
 import appLogoSrcQuickGif from 'assets/app-logo-quick.gif';
+import rainbowSrc from 'assets/homepage/rainbow.png';
+import msgSrc from 'assets/homepage/msg.png';
+import solanaSrc from 'assets/homepage/solana.png';
+import shopSrc from 'assets/homepage/shop.png';
+import robotSrc from 'assets/homepage/robot.png';
+import graphSrc from 'assets/homepage/graph.png';
 
 const HeroWrapper = styled.div`
   max-width: ${(p) => p.theme.layout.maxWidth};
@@ -151,7 +157,10 @@ const VideoWrapper = styled.div`
   }
 `;
 
-const BannerVideoWrapper = styled.div``;
+const BannerVideoWrapper = styled.div`
+  max-width: 800px;
+  margin: 0 auto;
+`;
 
 const HeroImg = styled.img`
   width: 100%;
@@ -293,6 +302,13 @@ export const ToggleTheme = (props: any) => {
   );
 };
 
+const StartNowBtnText = () => (
+  <>
+    Start now
+    <Icon style={{ marginLeft: '12px' }} name="arrow_forward" />
+  </>
+);
+
 const PresentationItemGrid = styled.div<{ isLeftImg?: boolean }>`
   display: grid;
   grid-template-columns: ${(p) => (p.isLeftImg ? '1fr 2fr' : '2fr 1fr')};
@@ -320,6 +336,11 @@ const ItemWrapper = styled.div`
   }
 `;
 
+const PresentationTitle = styled.h3`
+  font-size: 36px;
+  margin-bottom: 16px;
+`;
+
 const PresentationItem = ({
   title,
   content,
@@ -345,7 +366,7 @@ const PresentationItem = ({
 
       <MotionDiv>
         <ItemWrapper>
-          <h1>{title}</h1>
+          <PresentationTitle>{title}</PresentationTitle>
           <Par>{content}</Par>
 
           <div>
@@ -395,6 +416,7 @@ const FeaturedStoreImg = styled.img`
   object-position: center;
   object-fit: cover;
   margin: 0 auto;
+  image-rendering: pixelated;
 
   @media (max-width: 800px) {
     width: 50%;
@@ -542,7 +564,7 @@ export const Homepage = () => {
   const isMobileView = useMediaQuery('(max-width: 800px)');
 
   const USE_HERO_VIDEO = false;
-  const SHOW_BANNER = false;
+  const SHOW_BANNER = true;
   const SHOW_MERCHANTS = false;
 
   return (
@@ -665,14 +687,8 @@ export const Homepage = () => {
                 many more!
               </>
             }
-            btnText={
-              <>
-                Start now{' '}
-                <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
-              </>
-            }
-            // img="http://pixelartmaker-data-78746291193.nyc3.digitaloceanspaces.com/image/71646dd9813dd57.png"
-            img="https://cdn-icons-png.flaticon.com/512/408/408168.png"
+            btnText={<StartNowBtnText />}
+            img={solanaSrc}
           />
 
           {/* title="Solutions built for your business model"
@@ -701,14 +717,9 @@ export const Homepage = () => {
                 experience.
               </>
             }
-            btnText={
-              <>
-                Start now{' '}
-                <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
-              </>
-            }
+            btnText={<StartNowBtnText />}
             // img="https://cdn-icons-png.flaticon.com/512/465/465267.png"
-            img="https://cdn-icons-png.flaticon.com/512/465/465227.png"
+            img={msgSrc}
             isLeftImg
           />
 
@@ -720,13 +731,8 @@ export const Homepage = () => {
                 update theme customization.
               </>
             }
-            btnText={
-              <>
-                Start now{' '}
-                <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
-              </>
-            }
-            img="https://cdn-icons-png.flaticon.com/512/365/365865.png"
+            btnText={<StartNowBtnText />}
+            img={rainbowSrc}
           />
 
           <PresentationItem
@@ -738,13 +744,8 @@ export const Homepage = () => {
                 more of your product.
               </>
             }
-            btnText={
-              <>
-                Start now{' '}
-                <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
-              </>
-            }
-            img="https://cdn-icons-png.flaticon.com/512/409/409064.png"
+            btnText={<StartNowBtnText />}
+            img={shopSrc}
             isLeftImg
           />
 
@@ -756,13 +757,8 @@ export const Homepage = () => {
                 knowledge and without leaving the app.
               </>
             }
-            btnText={
-              <>
-                Start now{' '}
-                <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
-              </>
-            }
-            img="https://cdn-icons-png.flaticon.com/512/8254/8254111.png"
+            btnText={<StartNowBtnText />}
+            img={robotSrc}
           />
 
           <PresentationItem
@@ -773,13 +769,8 @@ export const Homepage = () => {
                 pricing. 1% fee per transaction.
               </>
             }
-            btnText={
-              <>
-                Start now{' '}
-                <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
-              </>
-            }
-            img="https://cdn-icons-png.flaticon.com/512/409/409045.png"
+            btnText={<StartNowBtnText />}
+            img={graphSrc}
             isLeftImg
           />
 

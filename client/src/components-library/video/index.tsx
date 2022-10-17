@@ -18,12 +18,32 @@ const ControlsBtn = styled(UnstyledButton)<{ $playing: boolean }>`
   padding: 8px;
 `;
 
+const FullscreensBtn = styled(UnstyledButton)<{ $playing: boolean }>`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 32px;
+  padding: 8px;
+  color: ${(p) => p.theme.color.lightText};
+  transition: 0.2s;
+  border-radius: ${(p) => p.theme.borderRadius.default};
+  opacity: ${(p) => (p.$playing ? 0 : 1)};
+
+  :hover {
+    background-color: ${(p) => p.theme.color.black}11;
+  }
+`;
+
 const VideoWrapper = styled.div`
   position: relative;
   cursor: pointer;
 
   :hover {
     ${ControlsBtn} {
+      opacity: 1;
+    }
+
+    ${FullscreensBtn} {
       opacity: 1;
     }
   }
@@ -62,6 +82,22 @@ export const Video = ({ src }: { src: string }) => {
     }
   }, []);
 
+  function toggleFullScreen(e: any) {
+    e.stopPropagation();
+    if (videoRef?.current?.requestFullscreen)
+      videoRef?.current?.requestFullscreen();
+  }
+
+  const SHOW_NATIVE_CONTROLS = true;
+
+  if (SHOW_NATIVE_CONTROLS) {
+    return (
+      <VideoComponent ref={videoRef} controls>
+        <source src={src} type="video/mp4" />
+      </VideoComponent>
+    );
+  }
+
   return (
     <VideoWrapper
       onClick={() => handleControlClick(playing ? 'pause' : 'play')}
@@ -73,6 +109,10 @@ export const Video = ({ src }: { src: string }) => {
         <ControlsBtn $playing={playing}>
           <Icon name={playing ? 'pause' : 'play_arrow'} />
         </ControlsBtn>
+
+        <FullscreensBtn onClick={toggleFullScreen} $playing={playing}>
+          <Icon name="fullscreen" />
+        </FullscreensBtn>
       </ControlsBtnWrapper>
     </VideoWrapper>
   );

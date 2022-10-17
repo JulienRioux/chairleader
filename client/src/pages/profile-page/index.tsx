@@ -45,6 +45,8 @@ export const ProfilePage = () => {
     disconnect();
   }, [disconnect]);
 
+  const SHOW_USER_NFTS = false;
+
   return (
     <InventoryLayout>
       {publicKey ? (
@@ -75,8 +77,12 @@ export const ProfilePage = () => {
             </div>
           </ProfileInfoWrapper>
 
-          <h3>My NFTs</h3>
-          <p>TODO</p>
+          {SHOW_USER_NFTS && (
+            <>
+              <h3>My NFTs</h3>
+              <p>TODO</p>
+            </>
+          )}
 
           <h3>My orders</h3>
 
