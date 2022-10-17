@@ -564,7 +564,7 @@ export const Homepage = () => {
   const isMobileView = useMediaQuery('(max-width: 800px)');
 
   const USE_HERO_VIDEO = false;
-  const SHOW_BANNER = true;
+  const SHOW_BANNER = false;
   const SHOW_MERCHANTS = false;
 
   return (
