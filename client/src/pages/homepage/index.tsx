@@ -406,15 +406,22 @@ const PresentationItem = ({
 
 const featuredStore = [
   {
-    name: 'Cafe Calypso',
-    subdomain: 'cafe-calypso',
-    img: 'https://i.pinimg.com/originals/ee/f8/1e/eef81edc874708984b6420b8c06d2854.gif',
+    name: 'Official store',
+    subdomain: 'store',
+    subText:
+      'Visit our official store to get some Chairleader swag and merch 🤙',
+    img: 'https://dev-alt-gate-products.s3.amazonaws.com/products/63503ffd1dc49f88ee9b08f3-cc986c65-7004-444b-9812-81675ac912e9.png',
   },
-  {
-    name: 'Fast bike shop',
-    subdomain: 'fast-bike-shop',
-    img: 'https://media1.giphy.com/media/h4IKOfSsUyeVBepjbk/giphy.gif?cid=6c09b952yo5w4dg65pbdr0o33twzoogdla4edkcebcvewdv2&rid=giphy.gif&ct=s',
-  },
+  // {
+  //   name: 'Cafe Calypso',
+  //   subdomain: 'cafe-calypso',
+  //   img: 'https://i.pinimg.com/originals/ee/f8/1e/eef81edc874708984b6420b8c06d2854.gif',
+  // },
+  // {
+  //   name: 'Fast bike shop',
+  //   subdomain: 'fast-bike-shop',
+  //   img: 'https://media1.giphy.com/media/h4IKOfSsUyeVBepjbk/giphy.gif?cid=6c09b952yo5w4dg65pbdr0o33twzoogdla4edkcebcvewdv2&rid=giphy.gif&ct=s',
+  // },
 ];
 
 const FeaturedStoreImg = styled.img`
@@ -423,6 +430,7 @@ const FeaturedStoreImg = styled.img`
   object-position: center;
   object-fit: cover;
   margin: 0 auto;
+  border-radius: ${(p) => p.theme.borderRadius.default};
   image-rendering: pixelated;
 
   @media (max-width: 800px) {
@@ -458,11 +466,12 @@ const FeaturedStoreSubtitle = styled.h4`
   font-size: 20px;
   margin: 0 0 20px;
   font-weight: normal;
+  color: ${(p) => p.theme.color.lightText};
 `;
 
 const FeaturedStoreTitle = styled.h3`
   font-size: 60px;
-  margin: 0 0 32px;
+  margin: 0 0 8px;
 `;
 
 const ArrowBtnsWrapper = styled.div`
@@ -500,6 +509,8 @@ const FeaturedStores = () => {
             </FeaturedStoreSubtitle>
             <FeaturedStoreTitle>{currentStore.name}</FeaturedStoreTitle>
 
+            <p>{currentStore.subText}</p>
+
             <UnstyledExternalLink href={storeLink} target="_blank">
               <Button>
                 Visit store{' '}
@@ -508,10 +519,12 @@ const FeaturedStores = () => {
             </UnstyledExternalLink>
           </div>
 
-          <ArrowBtnsWrapper>
-            <Button secondary icon="arrow_back" onClick={handleNext} />
-            <Button secondary icon="arrow_forward" onClick={handleNext} />
-          </ArrowBtnsWrapper>
+          {featuredStore.length > 1 && (
+            <ArrowBtnsWrapper>
+              <Button secondary icon="arrow_back" onClick={handleNext} />
+              <Button secondary icon="arrow_forward" onClick={handleNext} />
+            </ArrowBtnsWrapper>
+          )}
         </LeftWrapper>
 
         <UnstyledExternalLink href={storeLink} target="_blank">
