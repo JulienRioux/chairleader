@@ -33,6 +33,7 @@ import { ProfilePage } from 'pages/profile-page';
 import { StoreHomepage } from 'pages/pos-app/store-homepage';
 import { ThemePage } from 'pages/admin-pages/theme-page';
 import { LoyaltyPage } from 'pages/admin-pages/loyalty-page';
+import { MintNftPage } from 'pages/mint-nft-page';
 
 export const AdminAppRouter = () => {
   return (
@@ -130,6 +131,8 @@ const MainAppRouter = () => {
         element={<VerifyCodePage />}
       />
 
+      <Route path={routes.mintNft} element={<MintNftPage />} />
+
       <Route path={routes.storeNotFound} element={<StoreNotFoundPage />} />
 
       <Route path={routes.admin.base + '/*'} element={<AdminAppRouter />} />
@@ -152,6 +155,7 @@ const HideAppRouter = () => (
   <Routes>
     <Route path={routes.base} element={<Homepage />} />
     <Route path={routes.pricing} element={<PricingPage />} />
+    <Route path={routes.mintNft} element={<MintNftPage />} />
     <Route path="*" element={<Navigate to={routes.base} />} />
     <Route
       path={routes.static.base + '/:staticPage'}

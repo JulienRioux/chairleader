@@ -36,8 +36,8 @@ const footerData = [
   {
     content: [
       { title: 'Pricing', to: routes.pricing },
+      { title: 'NFTs', to: routes.mintNft },
       { title: 'Authenticate', to: routes.auth },
-      { title: 'Changelog', href: 'https://chairleader.canny.io/changelog' },
     ],
     title: 'Product',
   },
@@ -67,6 +67,7 @@ const footerData = [
         href: 'https://chairleader.canny.io/',
         title: 'Send feedback',
       },
+      { title: 'Changelog', href: 'https://chairleader.canny.io/changelog' },
     ],
     title: 'Other',
   },

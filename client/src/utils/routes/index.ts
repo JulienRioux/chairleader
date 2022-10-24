@@ -2,6 +2,7 @@ export const routes = {
   base: '/',
   auth: '/authenticate',
   pricing: '/pricing',
+  mintNft: '/mint-nft',
   magicLink: '/magic-link',
   completeSignup: '/complete-signup',
   storeNotFound: '/store-not-found',

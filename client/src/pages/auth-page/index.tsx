@@ -28,6 +28,8 @@ const Img = styled.img`
   object-fit: cover;
   height: 100vh;
   background: ${(p) => p.theme.color.lightGrey};
+  image-rendering: pixelated;
+
   @media (max-width: 800px) {
     display: none;
   }
@@ -67,12 +69,7 @@ export const HalfImagePageLayout = ({
       <BackButtonWrapper>
         <Button onClick={() => navigate(-1)} secondary icon="arrow_back" />
       </BackButtonWrapper>
-      <Img
-        src={
-          img ??
-          'https://images.unsplash.com/photo-1652420933133-0e0e4675523b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1335&q=80'
-        }
-      />
+      <Img src={img ?? 'https://art.pixilart.com/sr2e976eda4edea.png'} />
       <ChildrenWrapper>
         <ChildrenInnerWrapper>{children} </ChildrenInnerWrapper>
       </ChildrenWrapper>
