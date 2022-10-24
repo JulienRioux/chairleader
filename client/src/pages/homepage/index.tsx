@@ -564,7 +564,7 @@ export const Homepage = () => {
   const isMobileView = useMediaQuery('(max-width: 800px)');
 
   const USE_HERO_VIDEO = false;
-  const SHOW_BANNER = false;
+  const SHOW_BANNER = true;
   const SHOW_MERCHANTS = false;
 
   return (
@@ -676,39 +676,6 @@ export const Homepage = () => {
           )}
 
           <PresentationItem
-            title="Powered by the Solana Network"
-            content={
-              <>
-                {`${APP_NAME}’s unique data ecosystem reveals opportunities where your business can grow with the `}
-                <a href="https://solana.com/" target="_blank" rel="noreferrer">
-                  Solana network
-                </a>
-                . From accept cryptocurrency payments, NFTs token gating, and
-                many more!
-              </>
-            }
-            btnText={<StartNowBtnText />}
-            img={solanaSrc}
-          />
-
-          {/* title="Solutions built for your business model"
-              content={
-                <>
-                  Unlock superior financial experiences through our single
-                  platform. Simplify cash management, receive payments faster,
-                  and gain full visibility of your funds leveraged by{' '}
-                  <a
-                    href="https://solanapay.com/"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Solana Pay
-                  </a>
-                  .
-                </>
-              } */}
-
-          <PresentationItem
             title="Improve customers engagement with web3"
             content={
               <>
@@ -718,21 +685,20 @@ export const Homepage = () => {
               </>
             }
             btnText={<StartNowBtnText />}
-            // img="https://cdn-icons-png.flaticon.com/512/465/465267.png"
             img={msgSrc}
             isLeftImg
           />
 
           <PresentationItem
-            title="World leader no-code theme customization"
+            title="In-app NFTs creation"
             content={
               <>
-                Create a store you and your customers will love with our live
-                update theme customization.
+                Chairleader is really easy to use! Create NFTs without coding
+                knowledge and without leaving the app.
               </>
             }
             btnText={<StartNowBtnText />}
-            img={rainbowSrc}
+            img={robotSrc}
           />
 
           <PresentationItem
@@ -750,15 +716,15 @@ export const Homepage = () => {
           />
 
           <PresentationItem
-            title="In-app NFTs creation"
+            title="World leader no-code theme customization"
             content={
               <>
-                Chairleader is really easy to use! Create NFTs without coding
-                knowledge and without leaving the app.
+                Create a store you and your customers will love with our live
+                update theme customization.
               </>
             }
             btnText={<StartNowBtnText />}
-            img={robotSrc}
+            img={rainbowSrc}
           />
 
           <PresentationItem
@@ -772,6 +738,22 @@ export const Homepage = () => {
             btnText={<StartNowBtnText />}
             img={graphSrc}
             isLeftImg
+          />
+
+          <PresentationItem
+            title="Powered by the Solana Network"
+            content={
+              <>
+                {`${APP_NAME}’s unique data ecosystem reveals opportunities where your business can grow with the `}
+                <a href="https://solana.com/" target="_blank" rel="noreferrer">
+                  Solana network
+                </a>
+                . From accept cryptocurrency payments, NFTs token gating, and
+                many more!
+              </>
+            }
+            btnText={<StartNowBtnText />}
+            img={solanaSrc}
           />
 
           {SHOW_MERCHANTS && <FeaturedStores />}

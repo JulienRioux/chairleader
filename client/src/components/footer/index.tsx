@@ -43,6 +43,14 @@ const footerData = [
   },
   {
     content: [
+      { href: 'https://twitter.com/chairleader_app', title: 'Twitter' },
+      { href: 'https://discord.gg/Men7Amz3vq', title: 'Discord' },
+      { href: 'https://medium.com/chairleader-xyz', title: 'Blog' },
+    ],
+    title: 'Social',
+  },
+  {
+    content: [
       { title: 'Privacy policy', to: routes.static.privacy },
       { title: 'Terms of service', to: routes.static.termsOfService },
     ],
@@ -59,12 +67,8 @@ const footerData = [
         href: 'https://chairleader.canny.io/',
         title: 'Send feedback',
       },
-      {
-        href: 'https://twitter.com/chairleader_app',
-        title: 'Twitter',
-      },
     ],
-    title: 'More',
+    title: 'Other',
   },
 ];
 
