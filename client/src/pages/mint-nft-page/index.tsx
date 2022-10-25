@@ -2,8 +2,8 @@ import { Footer } from 'components';
 import { Button, UnstyledExternalLink } from 'components-library';
 import { HomepageTopNav } from 'pages/homepage';
 import styled from 'styled-components';
-// import appLogoSrcGif from 'assets/mint-nft.png';
-import appLogoSrcGif from 'assets/background-test.png';
+import appLogoSrcGif from 'assets/app-logo.gif';
+import backgroundGlassSrc from 'assets/background-glass.png';
 import { useScrollTop } from 'hooks/scroll-top';
 import { motion } from 'framer-motion';
 
@@ -13,7 +13,7 @@ const MintNftPageWrapper = styled(motion.div)`
   padding: 0 8px;
 `;
 
-const HeroWrapper = styled(motion.div)`
+const HeroWrapper = styled.div`
   min-height: calc(100vh - 61px);
   gap: 20px;
   display: flex;
@@ -38,25 +38,50 @@ const HeroTitle = styled.h1`
 `;
 
 const HeroPar = styled.p`
-  font-size: 20px;
+  font-size: 22px;
   color: ${(p) => p.theme.color.lightText};
 `;
 
+const HeroImgsWrapper = styled(motion.div)`
+  width: 50%;
+  position: relative;
+  aspect-ratio: 1;
+
+  @media (max-width: 800px) {
+    width: 100%;
+  }
+`;
+
 const HeroImg = styled.img`
-  width: 40%;
-  padding: 0 5%;
+  position: absolute;
+  width: 80%;
+  padding: 0 10%;
   object-position: center;
   object-fit: cover;
   image-rendering: pixelated;
   border-radius: ${(p) => p.theme.borderRadius.default};
 
   @media (max-width: 800px) {
-    width: 50%;
-    margin-bottom: 20px;
+    width: 70%;
+    left: 15%;
+    padding: 0;
   }
 `;
 
-const HeroTextWrapper = styled.div`
+const BackgroundGlass = styled.img`
+  position: absolute;
+  width: 80%;
+  margin: 10%;
+  height: 80%;
+
+  @media (max-width: 800px) {
+    width: 80%;
+    left: 10%;
+    margin: 0;
+  }
+`;
+
+const HeroTextWrapper = styled(motion.div)`
   width: 50%;
 
   @media (max-width: 800px) {
@@ -72,6 +97,7 @@ const Par = styled.p`
 
 const BannerWrapper = styled(motion.div)`
   background: ${(p) => p.theme.color.primary}11;
+  padding: 20px 8px;
 `;
 
 const DataBanner = styled.div`
@@ -123,30 +149,40 @@ const BannerBottomText = styled.div`
   font-size: 20px;
   margin-top: 8px;
   line-height: 1.4;
-
   color: ${(p) => p.theme.color.lightText};
+
+  @media (max-width: 800px) {
+    font-size: 16px;
+  }
 `;
 
-const BannerContentWrapper = styled.div<{ hasBackground?: boolean }>`
+const BannerContentWrapper = styled(motion.div)<{ $hasBackground?: boolean }>`
   display: flex;
   padding: 8px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   border-radius: ${(p) => p.theme.borderRadius.default};
-  ${(p) => !p.hasBackground && `background: ${p.theme.color.text}08;`}
+  ${(p) => !p.$hasBackground && `background: ${p.theme.color.text}08;`}
 `;
 
 const BannerContent = ({
   topText,
   bottomText,
   hasBackground,
+  delay = 0,
 }: {
   topText: string;
   bottomText: string;
   hasBackground?: boolean;
+  delay?: number;
 }) => (
-  <BannerContentWrapper hasBackground={hasBackground}>
+  <BannerContentWrapper
+    $hasBackground={hasBackground}
+    initial={{ opacity: 0, transform: 'translateY(40px)' }}
+    whileInView={{ opacity: 1, transform: 'translateY(0px)' }}
+    transition={{ type: 'spring', stiffness: 100, delay: delay }}
+  >
     <BannerTopText>{topText}</BannerTopText>
     <BannerBottomText>{bottomText}</BannerBottomText>
   </BannerContentWrapper>
@@ -160,12 +196,12 @@ export const MintNftPage = () => {
       <HomepageTopNav />
 
       <MintNftPageWrapper>
-        <HeroWrapper
-          initial={{ opacity: 0, transform: 'translateY(40px)' }}
-          whileInView={{ opacity: 1, transform: 'translateY(0px)' }}
-          transition={{ type: 'spring', stiffness: 100, delay: 0.2 }}
-        >
-          <HeroTextWrapper>
+        <HeroWrapper>
+          <HeroTextWrapper
+            initial={{ opacity: 0, transform: 'translateY(40px)' }}
+            whileInView={{ opacity: 1, transform: 'translateY(0px)' }}
+            transition={{ type: 'spring', stiffness: 100, delay: 0.2 }}
+          >
             <HeroTitle>
               Chairleader V1
               <br /> NFT collection
@@ -185,7 +221,14 @@ export const MintNftPage = () => {
             </UnstyledExternalLink>
           </HeroTextWrapper>
 
-          <HeroImg src={appLogoSrcGif} />
+          <HeroImgsWrapper
+            initial={{ opacity: 0, transform: 'translateY(40px)' }}
+            whileInView={{ opacity: 1, transform: 'translateY(0px)' }}
+            transition={{ type: 'spring', stiffness: 100, delay: 0.3 }}
+          >
+            <BackgroundGlass src={backgroundGlassSrc} />
+            <HeroImg src={appLogoSrcGif} />
+          </HeroImgsWrapper>
         </HeroWrapper>
       </MintNftPageWrapper>
 
@@ -204,16 +247,19 @@ export const MintNftPage = () => {
             hasBackground
             topText="50%"
             bottomText="Platform revenue redistribution"
+            delay={0.1}
           />
           <BannerContent
             hasBackground
             topText="3 months"
             bottomText="Revenue redistribution period"
+            delay={0.2}
           />
           <BannerContent
             hasBackground
-            topText="1 SOL"
+            topText="1.5 SOL"
             bottomText="Price per NFT"
+            delay={0.3}
           />
         </DataBanner>
       </BannerWrapper>
@@ -261,14 +307,20 @@ export const MintNftPage = () => {
           bottomText="Join our community to get early access"
         />
 
-        <BannerContent topText="2" bottomText="Token minting period" />
+        <BannerContent
+          topText="2"
+          bottomText="Token minting period"
+          delay={0.1}
+        />
         <BannerContent
           topText="3"
           bottomText="Chairleader generating revenue for 3 months"
+          delay={0.2}
         />
         <BannerContent
           topText="4"
           bottomText="Equal revenue distribution to NFTs holders"
+          delay={0.3}
         />
       </DataBanner>
 
