@@ -145,9 +145,6 @@ export const ThemePage = () => {
   const [title, setTitle] = useState(user?.homepage?.heroTitle ?? '');
   const [subTitle, setSubTitle] = useState(user?.homepage?.heroSubTitle ?? '');
 
-  const [imageSrc, setImageSrc] = useState(
-    'https://images.squarespace-cdn.com/content/v1/54f775e2e4b07edc19ac338f/1585420060107-NSVI5AGYCZ27S1DG976T/image-asset.jpeg?format=1500w'
-  );
   const [homepageImageFile, setHomepageImageFile] = useState<File | null>(null);
   const [resizeHomepageImgIsLoading, setResizeHomepageImgIsLoading] =
     useState(false);
@@ -270,8 +267,10 @@ export const ThemePage = () => {
 
   const currentHomepageImageSrc = useMemo(
     () =>
-      homepageImageFile ? URL.createObjectURL(homepageImageFile) : imageSrc,
-    [homepageImageFile, imageSrc]
+      homepageImageFile
+        ? URL.createObjectURL(homepageImageFile)
+        : user?.homepage?.heroImg,
+    [homepageImageFile, user?.homepage?.heroImg]
   );
 
   const SHOW_SOCIAL_LINKS = true;

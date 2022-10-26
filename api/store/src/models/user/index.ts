@@ -22,6 +22,7 @@ export interface IUser {
   homepage: {
     heroTitle: string;
     heroSubTitle: string;
+    heroImage: string;
   };
 }
 
@@ -45,6 +46,7 @@ const UserSchema = new Schema<IUser>({
   homepage: {
     heroTitle: String,
     heroSubTitle: String,
+    heroImage: String,
   },
 });
 
