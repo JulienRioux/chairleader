@@ -211,7 +211,11 @@ export const ThemePage = () => {
           storeName,
           image: logoImageFile,
           theme: { primaryColor: themeColor },
-          homepage: { heroTitle: title, heroSubTitle: subTitle },
+          homepage: {
+            heroTitle: title,
+            heroSubTitle: subTitle,
+            heroImage: homepageImageFile,
+          },
         });
         message.success('Your changes has been saved.');
       } catch (err) {
@@ -219,7 +223,15 @@ export const ThemePage = () => {
         message.error();
       }
     },
-    [themeColor, storeName, logoImageFile, title, subTitle, updateUser]
+    [
+      themeColor,
+      storeName,
+      logoImageFile,
+      title,
+      subTitle,
+      updateUser,
+      homepageImageFile,
+    ]
   );
 
   const [base64HomepageImg, setBase64HomepageImg] = useState<any>('');

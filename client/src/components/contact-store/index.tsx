@@ -60,8 +60,6 @@ export const ContactStore = () => {
       } catch (err) {
         messageComponent.error();
       }
-
-      console.log({ name, email, subject, message });
     },
     [contactStore, email, message, name, subject]
   );

@@ -88,6 +88,7 @@ export const PreviewChange = ({
   themeColor = '',
 }) => {
   const storeLink = useStoreLink();
+
   const [iframeUrl, setIframeUrl] = useState(storeLink);
 
   useEffect(() => {

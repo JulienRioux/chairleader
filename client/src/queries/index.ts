@@ -82,6 +82,7 @@ export const UPDATE_USER = gql`
       homepage {
         heroTitle
         heroSubTitle
+        heroImage
       }
     }
   }

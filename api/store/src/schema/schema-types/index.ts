@@ -8,6 +8,7 @@ export const schemaTypes = gql`
   type Homepage {
     heroTitle: String
     heroSubTitle: String
+    heroImage: String
   }
 
   type Store {
