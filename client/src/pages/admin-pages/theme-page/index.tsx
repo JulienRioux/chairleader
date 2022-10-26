@@ -269,8 +269,8 @@ export const ThemePage = () => {
     () =>
       homepageImageFile
         ? URL.createObjectURL(homepageImageFile)
-        : user?.homepage?.heroImg,
-    [homepageImageFile, user?.homepage?.heroImg]
+        : user?.homepage?.heroImage,
+    [homepageImageFile, user?.homepage?.heroImage]
   );
 
   const SHOW_SOCIAL_LINKS = true;

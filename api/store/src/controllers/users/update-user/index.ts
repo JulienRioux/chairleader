@@ -51,7 +51,7 @@ export const updateUser = async ({
 
   let homepageHeroImgSrc = '';
 
-  // First update the image
+  // Upload the hero image
   if (heroImage) {
     try {
       // Make sure to remove the image

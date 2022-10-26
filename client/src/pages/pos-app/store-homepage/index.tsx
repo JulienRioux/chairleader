@@ -153,7 +153,7 @@ export const StoreHomepage = () => {
 
   const [title, setTitle] = useState(store?.homepage?.heroTitle);
   const [subTitle, setSubTitle] = useState(store?.homepage?.heroSubTitle);
-  const [imgSrc, setImgSrc] = useState(store?.homepage?.heroImg);
+  const [imgSrc, setImgSrc] = useState(store?.homepage?.heroImage);
   console.log(store?.homepage);
 
   const [searchParams] = useSearchParams();
