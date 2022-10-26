@@ -58,6 +58,7 @@ export const UPDATE_USER = gql`
     $shippingFee: String
     $theme: Object
     $homepage: Object
+    $heroImage: Upload
   ) {
     updateUser(
       storeName: $storeName
@@ -69,6 +70,7 @@ export const UPDATE_USER = gql`
       shippingFee: $shippingFee
       theme: $theme
       homepage: $homepage
+      heroImage: $heroImage
     ) {
       storeName
       walletAddress

@@ -25,6 +25,7 @@ export const mutations = gql`
       shippingFee: String
       theme: Object
       homepage: Object
+      heroImage: Upload
     ): Store
 
     """

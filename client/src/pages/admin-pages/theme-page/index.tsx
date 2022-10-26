@@ -211,8 +211,8 @@ export const ThemePage = () => {
           homepage: {
             heroTitle: title,
             heroSubTitle: subTitle,
-            heroImage: homepageImageFile,
           },
+          heroImage: homepageImageFile,
         });
         message.success('Your changes has been saved.');
       } catch (err) {

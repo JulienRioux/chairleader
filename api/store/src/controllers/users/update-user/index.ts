@@ -17,6 +17,7 @@ export const updateUser = async ({
   shippingFee,
   theme,
   homepage,
+  heroImage,
 }: any) => {
   let imgSrc = '';
 
@@ -47,7 +48,6 @@ export const updateUser = async ({
   const primaryColor = theme?.primaryColor;
   const heroTitle = homepage?.heroTitle;
   const heroSubTitle = homepage?.heroSubTitle;
-  const heroImage = homepage?.heroImage;
 
   let homepageHeroImgSrc = '';
 
