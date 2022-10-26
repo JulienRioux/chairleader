@@ -15,10 +15,10 @@ const Form = styled.form`
 `;
 
 export const ContactStore = () => {
-  const [name, setName] = useState('James');
-  const [email, setEmail] = useState('james@bond.com');
-  const [subject, setSubject] = useState('Testing');
-  const [message, setMessage] = useState('Hello world!');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('');
 
   const [contactStore, { loading }] = useMutation(CONTACT_STORE);
 
