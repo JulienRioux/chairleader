@@ -19,9 +19,8 @@ import { routes } from 'utils';
 import { useMediaQuery } from 'hooks/media-query';
 import { useTheme } from 'hooks/theme';
 import { drawerIn, fadeIn, fadeOut, drawerOut } from 'utils/keyframes';
-import { motion } from 'framer-motion';
 
-const AMINATION_DURATION = 300;
+const AMINATION_DURATION = 500;
 
 const TopNavWrapper = styled.div`
   padding: 8px 12px;

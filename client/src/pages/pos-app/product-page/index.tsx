@@ -30,6 +30,7 @@ import {
   getNftDataFromAddressArr,
   routes,
 } from 'utils';
+import { slideInBottom } from 'utils/keyframes';
 
 const ProductWrapper = styled.div`
   max-width: ${(p) => p.theme.layout.mediumWidth};
@@ -83,6 +84,7 @@ const NoImageProduct = styled.div`
 
 const ImgWrapper = styled.div`
   position: relative;
+  animation: 0.4s ${slideInBottom} forwards;
 `;
 
 /** This is needed to make sure we're not having any content under the add to cart button */

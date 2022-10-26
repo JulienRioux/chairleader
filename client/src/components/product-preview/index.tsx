@@ -2,12 +2,18 @@ import { UnstyledLink, Icon } from 'components-library';
 import { useAuth } from 'hooks/auth';
 import { useCurrency } from 'hooks/currency';
 import { useNft } from 'hooks/nft';
-import { PRODUCT_TYPE } from 'pages/admin-pages/product-form';
 import styled, { css } from 'styled-components';
 import { getProductVariantsLowestPrice, routes } from 'utils';
+import { slideInBottom } from 'utils/keyframes';
 
-const ProductWrapper = styled(UnstyledLink)<{ $isOutOfStock: boolean }>`
+const ProductWrapper = styled(UnstyledLink)<{
+  $isOutOfStock: boolean;
+  $delay: number;
+}>`
   position: relative;
+  opacity: 0;
+  animation: 0.4s ${slideInBottom} ${(p) => p.$delay}s forwards;
+
   ${(p) =>
     p.$isOutOfStock &&
     css`
@@ -129,6 +135,7 @@ interface ProductPreviewProps {
   status?: string;
   allPossibleVariantsObject?: any;
   productType: string;
+  index?: number;
 }
 
 export const ProductPreviewItem = ({
@@ -164,6 +171,7 @@ export const ProductPreview = ({
   status,
   productType,
   allPossibleVariantsObject,
+  index = 0,
 }: ProductPreviewProps) => {
   const { user, currencyDecimals } = useAuth();
   const { currency, decimals } = useCurrency();
@@ -191,6 +199,7 @@ export const ProductPreview = ({
     <ProductWrapper
       to={`${isPos ? routes.store.inventory : routes.admin.inventory}/${id}`}
       $isOutOfStock={isOutOfStock}
+      $delay={index / 20}
     >
       <ProductPreviewItem
         image={image}

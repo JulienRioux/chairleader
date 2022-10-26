@@ -14,9 +14,9 @@ import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { routes } from 'utils';
 import { InventoryLayout } from '../inventory-layout';
-import { motion } from 'framer-motion';
+import { slideInBottom } from 'utils/keyframes';
 
-const HomepageWrapper = styled(motion.div)`
+const HomepageWrapper = styled.div`
   margin: 0 0 60px;
   display: flex;
   flex-direction: column;
@@ -34,6 +34,9 @@ const Img = styled.img`
   background: ${(p) => p.theme.color.text}22;
 
   image-rendering: pixelated;
+
+  opacity: 0;
+  animation: 0.4s ${slideInBottom} 0.1s forwards;
 
   @media (max-width: 800px) {
     width: 100%;
@@ -61,6 +64,9 @@ const HeroContentWrapper = styled.div`
   padding: 8px;
   height: calc(100% - 16px);
   width: 50%;
+
+  opacity: 0;
+  animation: 0.4s ${slideInBottom} forwards;
 
   @media (max-width: 800px) {
     width: 100%;
@@ -154,7 +160,6 @@ export const StoreHomepage = () => {
   const [title, setTitle] = useState(store?.homepage?.heroTitle);
   const [subTitle, setSubTitle] = useState(store?.homepage?.heroSubTitle);
   const [imgSrc, setImgSrc] = useState(store?.homepage?.heroImage);
-  console.log(store?.homepage);
 
   const [searchParams] = useSearchParams();
 
@@ -175,10 +180,7 @@ export const StoreHomepage = () => {
 
   return (
     <InventoryLayout>
-      <HomepageWrapper
-        initial={{ opacity: 0, transform: 'translateY(40px)' }}
-        whileInView={{ opacity: 1, transform: 'translateY(0px)' }}
-      >
+      <HomepageWrapper>
         <HeroWrapper>
           <HeroContentWrapper>
             <HeroTitle>{title}</HeroTitle>

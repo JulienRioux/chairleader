@@ -153,15 +153,18 @@ export const InventoryPage = () => {
 
       <ProductGrid>
         {result?.map(
-          ({
-            image,
-            title,
-            price,
-            _id,
-            status,
-            allPossibleVariantsObject,
-            productType,
-          }) => (
+          (
+            {
+              image,
+              title,
+              price,
+              _id,
+              status,
+              allPossibleVariantsObject,
+              productType,
+            },
+            index
+          ) => (
             <ProductPreview
               key={_id}
               image={image}
@@ -171,6 +174,7 @@ export const InventoryPage = () => {
               status={status}
               allPossibleVariantsObject={allPossibleVariantsObject}
               productType={productType}
+              index={index}
             />
           )
         )}
@@ -258,15 +262,18 @@ export const StorePage = () => {
     <div>
       <ProductGrid isPos>
         {publishedInventory?.map(
-          ({
-            image,
-            title,
-            price,
-            _id,
-            totalSupply,
-            allPossibleVariantsObject,
-            productType,
-          }) => (
+          (
+            {
+              image,
+              title,
+              price,
+              _id,
+              totalSupply,
+              allPossibleVariantsObject,
+              productType,
+            },
+            index
+          ) => (
             <ProductPreview
               key={_id}
               image={image}
@@ -277,6 +284,7 @@ export const StorePage = () => {
               totalSupply={totalSupply}
               allPossibleVariantsObject={allPossibleVariantsObject}
               productType={productType}
+              index={index}
             />
           )
         )}
