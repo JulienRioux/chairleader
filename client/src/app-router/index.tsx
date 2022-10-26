@@ -34,6 +34,7 @@ import { StoreHomepage } from 'pages/pos-app/store-homepage';
 import { ThemePage } from 'pages/admin-pages/theme-page';
 import { LoyaltyPage } from 'pages/admin-pages/loyalty-page';
 import { MintNftPage } from 'pages/mint-nft-page';
+import { ContactStorePage } from 'pages/pos-app/contact-store-page';
 
 export const AdminAppRouter = () => {
   return (
@@ -108,6 +109,8 @@ export const StoreAppRouter = () => {
             <Route path={'/profile'} element={<ProfilePage />} />
 
             <Route path={routes.base} element={<StoreHomepage />} />
+
+            <Route path={routes.store.contact} element={<ContactStorePage />} />
 
             <Route path="*" element={<ErrorPage />} />
           </Routes>

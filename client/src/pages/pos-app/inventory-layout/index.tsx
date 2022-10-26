@@ -276,6 +276,8 @@ const MobileMenu = ({
   const isOnNftsPage = useMatch(routes.store.nfts);
   const isOnSingleNftPage = useMatch(`${routes.store.nfts}/:address`);
 
+  const contactLinkIsActive = !!useMatch(routes.store.contact);
+
   const nftsBtnIsActive = !!(isOnNftsPage || isOnSingleNftPage);
 
   return (
@@ -291,6 +293,13 @@ const MobileMenu = ({
         <MenuBtn $isActive={nftsBtnIsActive}>
           <Icon name="grid_view" />
           <MobileMenuLabel>NFTs</MobileMenuLabel>
+        </MenuBtn>
+      </UnstyledLink>
+
+      <UnstyledLink to={routes.store.contact}>
+        <MenuBtn $isActive={contactLinkIsActive}>
+          <Icon name="send" />
+          <MobileMenuLabel>Contact</MobileMenuLabel>
         </MenuBtn>
       </UnstyledLink>
 
@@ -372,6 +381,7 @@ export const InventoryLayout = ({ children }: { children: ReactNode }) => {
   const isOnSingleProductPage = useMatch(
     `${routes.store.inventory}/:productId`
   );
+  const contactLinkIsActive = !!useMatch(routes.store.contact);
 
   const productsLinkActive = !!(isOnProductsPage || isOnSingleProductPage);
 
@@ -396,6 +406,13 @@ export const InventoryLayout = ({ children }: { children: ReactNode }) => {
 
                     <NavLink to={routes.store.nfts} isActive={nftsLinkIsActive}>
                       NFTs
+                    </NavLink>
+
+                    <NavLink
+                      to={routes.store.contact}
+                      isActive={contactLinkIsActive}
+                    >
+                      Contact
                     </NavLink>
                   </>
                 )}

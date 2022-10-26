@@ -1,23 +1,25 @@
-import { styles } from './styles';
-import english from './translations/english.json';
+const BORDER_RADIUS = '12px';
+const BACKGROUND_COLOR = '#ffffff';
+const TEXT_COLOR = '#000000';
+const PRIMARY_COLOR = '#0185fe';
 
-const { PRIMARY_COLOR, BORDER_RADIUS, BACKGROUND_COLOR, TEXT_COLOR } = styles;
-
-export const emailTemplate = ({ link, validationCode }) => {
-  const {
-    header,
-    subHeader,
-    ifLinkNotWorking,
-    thanks,
-    teamName,
-    copyAndPasteText,
-  } = english;
-
-  return `
+export const templateWrapper = ({
+  content,
+  headTitle = '',
+  buttonText,
+  link,
+  header,
+}: {
+  content: string;
+  headTitle: string;
+  buttonText: string;
+  link: string;
+  header: string;
+}) => `
 <!DOCTYPE html>
 <html>
   <head>
-    <title></title>
+    <title>${headTitle}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -108,15 +110,15 @@ export const emailTemplate = ({ link, validationCode }) => {
             <tr>
               <td bgcolor="${BACKGROUND_COLOR}" align="left" valign="top" style="padding: 0px  0px 20px  0px; border-radius: ${BORDER_RADIUS} ${BORDER_RADIUS} 0px 0px; color: #111111; font-family: 'Inconsolata', monospace; font-size: 48px; font-weight: 400; letter-spacing: 0px; line-height: 48px;">
                 <div style="display: flex; align-content: center; margin: 20px 0;">
-                  <img style="height: 40px;" src="https://pbs.twimg.com/profile_images/1580946862210695168/t6aSH_ZU_400x400.jpg" alt="" />
-                  <h1 style="font-size: 40px; margin: 0 0 4px 12px; line-height: 1;">Chairleader</h1>
+                  <img style="height: 60px;" src="https://pbs.twimg.com/profile_images/1580946862210695168/t6aSH_ZU_400x400.jpg" alt="" />
+                  <h1 style="font-size: 40px; margin: 0 0 0 12px; line-height: 1; line-height: 1.55;">Chairleader</h1>
                 </div>
                 <h3 style="font-size: 24px; font-weight: bold; margin: 0;">${header}</h3>
               </td>
             </tr>
             <tr>
-              <td bgcolor="${BACKGROUND_COLOR}" align="left" style="padding: 0px 0px 0px 0px; color: ${TEXT_COLOR}; font-family: 'Inconsolata', monospace; font-size: 16px; font-weight: 400; line-height: 25px;">
-                <p style="margin: 0; text-align: left;">${subHeader}</p>
+              <td bgcolor="${BACKGROUND_COLOR}" align="left" style="padding: 0px 0px 0px 0px; color: ${TEXT_COLOR} !important; font-family: 'Inconsolata', monospace; font-size: 16px; font-weight: 400; line-height: 25px;">
+                ${content}
               </td>
             </tr>
           </table>
@@ -147,40 +149,13 @@ export const emailTemplate = ({ link, validationCode }) => {
                       <table border="0" cellspacing="0" cellpadding="0" style="width: 100%;">
                         <tr>
                           <td align="center" style="border-radius: ${BORDER_RADIUS};" bgcolor=${PRIMARY_COLOR}>
-                            <a href="${link}" target="_blank" style="font-size: 20px; font-family: 'Inconsolata', monospace; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 8px 0px; border-radius: 8px; border: 1px solid #oof; display: inline-block;min-width: 220px; font-weight: bold; line-height: 1.5;">Authenticate</a>
+                            <a href="${link}" target="_blank" style="font-size: 20px; font-family: 'Inconsolata', monospace; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 8px 0px; border-radius: 8px; border: 1px solid #oof; display: inline-block;min-width: 220px; font-weight: bold; line-height: 1.5;">${buttonText}</a>
                           </td>
                         </tr>
                       </table>
                     </td>
                   </tr>
                 </table>
-              </td>
-            </tr>
-            <!-- COPY -->
-            <tr>
-              <td bgcolor="${BACKGROUND_COLOR}" align="left" style="padding: 0px 0px 0px 0px; color: ${TEXT_COLOR}; font-family: 'Inconsolata', monospace; font-size: 18px; font-weight: 400; line-height: 25px;">
-                <p style="margin: 0;">${copyAndPasteText}</p>
-              </td>
-            </tr>
-            <!-- COPY -->
-            <tr>
-              <td bgcolor="${BACKGROUND_COLOR}" align="left" style="padding: 0px 0px 20px 0px; color: #000; font-family: 'Inconsolata', monospace; font-size: 18px; font-weight: 400; line-height: 25px;">
-                <p style="border-radius: ${BORDER_RADIUS};padding: 12px;width: min-content;border: 1px solid #0002;margin: 20px auto;letter-spacing: 6px;font-size: 20px;width: auto;text-align: center;">${validationCode}</p>
-
-                <p>The code above expires 20 minutes after you received this email.</p>
-              </td>
-            </tr>
-            <!-- COPY -->
-            <tr>
-              <td bgcolor="${BACKGROUND_COLOR}" align="left" style="padding: 0px 0px 20px 0px; color: ${TEXT_COLOR}; font-family: 'Inconsolata', monospace; font-size: 18px; font-weight: 400; line-height: 25px;">
-                <p style="margin: 0;">${ifLinkNotWorking}</p>
-              </td>
-            </tr>
-            <!-- COPY -->
-            <tr>
-              <td bgcolor="${BACKGROUND_COLOR}" align="left" style="padding: 0px 0px 40px 0px; border-radius: 0px 0px ${BORDER_RADIUS} ${BORDER_RADIUS}; color: #222222; font-family: 'Inconsolata', monospace; font-size: 18px; font-weight: 400; line-height: 25px;">
-                <p style="margin: 0;">${thanks}</p>
-                <p style="margin: 10px 0;">${teamName}</p>
               </td>
             </tr>
           </table>
@@ -195,4 +170,3 @@ export const emailTemplate = ({ link, validationCode }) => {
   </body>
 </html>
 `;
-};

@@ -103,5 +103,15 @@ export const mutations = gql`
     Update Invoice by ID
     """
     updateInvoice(fulfillmentStatus: String!, invoiceId: String!): Invoice
+
+    """
+    Contact Store
+    """
+    contactStore(
+      name: String!
+      email: String!
+      subject: String!
+      message: String!
+    ): ContactStoreResponse
   }
 `;

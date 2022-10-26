@@ -37,5 +37,6 @@ export const routes = {
     nfts: '/nfts',
     shipping: '/shipping',
     profile: '/profile',
+    contact: '/contact',
   },
 };

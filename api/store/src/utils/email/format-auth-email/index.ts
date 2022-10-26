@@ -9,7 +9,7 @@ const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY ?? '';
 
 sgMail.setApiKey(SENDGRID_API_KEY);
 
-const APP_EMAIL_ADDRESS = 'hello@gouache.app';
+export const APP_EMAIL_ADDRESS = 'hello@gouache.app';
 
 /** Generating the JWT token and format the email message  */
 export const formatAuthEmailMsg = ({ email, authLink, validationCode }) => {

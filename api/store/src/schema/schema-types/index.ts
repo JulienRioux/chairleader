@@ -29,6 +29,11 @@ export const schemaTypes = gql`
     message: String
   }
 
+  type ContactStoreResponse {
+    status: Int
+    message: String
+  }
+
   type ValidateOtpResponse {
     status: Int
     message: String

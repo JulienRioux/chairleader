@@ -360,3 +360,21 @@ export const UPDATE_INVOICE = gql`
     updateInvoice(fulfillmentStatus: $fulfillmentStatus, invoiceId: $invoiceId) ${INVOICE}
   }
 `;
+
+export const CONTACT_STORE = gql`
+  mutation ContactStore(
+    $name: String!
+    $email: String!
+    $subject: String!
+    $message: String!
+  ) {
+    contactStore(
+      name: $name
+      email: $email
+      subject: $subject
+      message: $message
+    ) {
+      status
+    }
+  }
+`;

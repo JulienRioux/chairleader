@@ -2,7 +2,7 @@ import sgMail from '@sendgrid/mail';
 import dotenv from 'dotenv';
 import { Logger } from '../logger';
 
-import { formatAuthEmailMsg } from './format-auth-email';
+import { APP_EMAIL_ADDRESS, formatAuthEmailMsg } from './format-auth-email';
 
 dotenv.config();
 
@@ -32,7 +32,12 @@ export const sendLoginEmail = async ({ email, hostname, validationCode }) => {
   }
 };
 
-export const sendEmail = async ({ fromEmail, toEmail, subject, content }) => {
+export const sendEmail = async ({
+  fromEmail = APP_EMAIL_ADDRESS,
+  toEmail,
+  subject,
+  content,
+}) => {
   const emailObject = {
     from: fromEmail,
     html: content,

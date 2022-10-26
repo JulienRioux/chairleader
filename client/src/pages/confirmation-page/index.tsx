@@ -208,15 +208,9 @@ export const ConfirmationPage = ({ isConfirmation = false }) => {
                 to fix it!
               </ContactText>
 
-              <UnstyledExternalLink
-                href={`mailto:${
-                  store?.email
-                }?subject=Issue with order ID ${orderId}&body=${contactUsBody(
-                  orderId
-                )}`}
-              >
-                <Button secondary>Contact us</Button>
-              </UnstyledExternalLink>
+              <Button secondary to={routes.store.contact}>
+                Contact us
+              </Button>
             </div>
           </div>
         )}
