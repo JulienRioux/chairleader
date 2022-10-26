@@ -8,8 +8,9 @@ import {
 import { CONTACT_STORE } from 'queries';
 import { ChangeEvent, FormEvent, useCallback, useState } from 'react';
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
-const Form = styled.form`
+const Form = styled(motion.form)`
   max-width: ${(p) => p.theme.layout.mediumWidth};
   margin: 0 auto;
 `;
@@ -66,7 +67,11 @@ export const ContactStore = () => {
   );
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form
+      onSubmit={handleSubmit}
+      initial={{ opacity: 0, transform: 'translateY(40px)' }}
+      whileInView={{ opacity: 1, transform: 'translateY(0px)' }}
+    >
       <h1>Contact us</h1>
       <Input
         value={name}

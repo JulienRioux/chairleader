@@ -9,12 +9,16 @@ export const templateWrapper = ({
   buttonText,
   link,
   header,
+  storeName = 'Chairleader',
+  storeImg = 'https://pbs.twimg.com/profile_images/1580946862210695168/t6aSH_ZU_400x400.jpg',
 }: {
   content: string;
   headTitle: string;
   buttonText: string;
   link: string;
   header: string;
+  storeName?: string;
+  storeImg?: string;
 }) => `
 <!DOCTYPE html>
 <html>
@@ -110,8 +114,8 @@ export const templateWrapper = ({
             <tr>
               <td bgcolor="${BACKGROUND_COLOR}" align="left" valign="top" style="padding: 0px  0px 20px  0px; border-radius: ${BORDER_RADIUS} ${BORDER_RADIUS} 0px 0px; color: #111111; font-family: 'Inconsolata', monospace; font-size: 48px; font-weight: 400; letter-spacing: 0px; line-height: 48px;">
                 <div style="display: flex; align-content: center; margin: 20px 0;">
-                  <img style="height: 60px;" src="https://pbs.twimg.com/profile_images/1580946862210695168/t6aSH_ZU_400x400.jpg" alt="" />
-                  <h1 style="font-size: 40px; margin: 0 0 0 12px; line-height: 1; line-height: 1.55;">Chairleader</h1>
+                  <img style="height: 60px;" src=${storeImg} alt="" />
+                  <h1 style="font-size: 40px; margin: 0 0 0 12px; line-height: 1; line-height: 1.55;">${storeName}</h1>
                 </div>
                 <h3 style="font-size: 24px; font-weight: bold; margin: 0;">${header}</h3>
               </td>

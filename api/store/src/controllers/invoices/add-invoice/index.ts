@@ -1,6 +1,8 @@
 import { InvoiceModel } from '../../../models/invoice';
 import { ProductModel } from '../../../models/product';
-import { asyncForEach, Logger } from '../../../utils';
+import { asyncForEach, Logger, sendEmail } from '../../../utils';
+import { templateWrapper } from '../../../utils/email/template-components';
+import { getUserById } from '../../users/get-user-by-id';
 
 export const addInvoice = async ({
   signature,
@@ -103,7 +105,7 @@ export const addInvoice = async ({
             updatedQuantity.toString();
 
           // Update the product inventory
-          const wtf = await ProductModel.findByIdAndUpdate(
+          await ProductModel.findByIdAndUpdate(
             { _id },
             { allPossibleVariantsObject: allPossibleVariantsObjectToUpdate }
           );
@@ -112,6 +114,70 @@ export const addInvoice = async ({
     );
 
     await doc.save();
+
+    const currentStore = await getUserById(doc?.storeId);
+
+    const baseContent = `
+      <p>Order ID: ${doc?._id}</p>
+      <div style="border-bottom: 1px solid #eee;"> </div>
+      <p>Total: ${doc?.totalWithSaleTax} ${doc?.currency}</p>
+      <div style="border-bottom: 1px solid #eee;"> </div>
+    `;
+
+    // =================================================
+    //     Send a message to the store owner
+    // =================================================
+    const adminOrderPageLink = `https://chairleader.xyz/admin/payments/${doc?._id}`;
+
+    const adminContent = `
+      ${baseContent}
+      <p>You can review details of this order in your shop admin at <a href="${adminOrderPageLink}">${adminOrderPageLink}</a></p>
+      <div style="border-bottom: 1px solid #eee;"> </div>
+    `;
+
+    const adminEmailContent = templateWrapper({
+      headTitle: 'Chairleader | New order 🎉',
+      buttonText: 'Check my order',
+      link: adminOrderPageLink,
+      header: 'You have a new order 🎉',
+      content: adminContent,
+    });
+
+    await sendEmail({
+      toEmail: currentStore?.email,
+      subject: 'Chairleader | New order 🎉',
+      content: adminEmailContent,
+    });
+
+    // =================================================
+    //   Send the confirmation email to the customer
+    // =================================================
+
+    const customerOrderPageLink = `https://${currentStore?.subDomain}.chairleader.xyz/confirmation/${doc?._id}`;
+
+    const customerContent = `
+      ${baseContent}
+      <p>You can review details of this order here <a href="${customerOrderPageLink}">${customerOrderPageLink}</a></p>
+      <div style="border-bottom: 1px solid #eee;"> </div>
+    `;
+
+    // TODO: Use the store image anmd the store name in the email template instead of the Chairleader one
+
+    const customerEmailContent = templateWrapper({
+      headTitle: `${currentStore?.storeName} | Order confirmation`,
+      buttonText: 'Check my order',
+      link: adminOrderPageLink,
+      header: 'Order confirmation',
+      content: customerContent,
+      storeName: currentStore?.storeName,
+      storeImg: currentStore?.image,
+    });
+
+    await sendEmail({
+      toEmail: doc?.email,
+      subject: `${currentStore?.storeName} | Order confirmation`,
+      content: customerEmailContent,
+    });
 
     return doc;
   } catch (err) {

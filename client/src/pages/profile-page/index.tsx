@@ -59,8 +59,6 @@ export const ProfilePage = () => {
 
   const formattedData = formatTableData(invoices?.getInvoicesByWalletAddress);
 
-  console.log('formattedData', formattedData);
-
   return (
     <InventoryLayout>
       {publicKey ? (
