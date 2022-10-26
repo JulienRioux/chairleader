@@ -49,6 +49,8 @@ export const updateUser = async ({
   const heroSubTitle = homepage?.heroSubTitle;
   const heroImage = homepage?.heroImage;
 
+  let homepageHeroImgSrc = '';
+
   // First update the image
   if (heroImage) {
     try {
@@ -62,7 +64,7 @@ export const updateUser = async ({
         userId: id.toString(),
       });
 
-      imgSrc = uploadedImage.location;
+      homepageHeroImgSrc = uploadedImage.location;
 
       // Delete the previous image
       if (notUpdatedUser?.image) {
@@ -87,7 +89,7 @@ export const updateUser = async ({
         homepage: {
           ...(heroTitle && { heroTitle }),
           ...(heroSubTitle && { heroSubTitle }),
-          ...(heroImage && { heroImage }),
+          ...(homepageHeroImgSrc && { heroImage: homepageHeroImgSrc }),
         },
       }),
       ...(theme && {
