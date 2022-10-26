@@ -6,6 +6,7 @@ import appLogoSrcGif from 'assets/app-logo.gif';
 import backgroundGlassSrc from 'assets/background-glass.png';
 import { useScrollTop } from 'hooks/scroll-top';
 import { motion } from 'framer-motion';
+import { useMediaQuery } from 'hooks/media-query';
 
 const MintNftPageWrapper = styled(motion.div)`
   max-width: ${(p) => p.theme.layout.maxWidth};
@@ -166,6 +167,18 @@ const BannerContentWrapper = styled(motion.div)<{ $hasBackground?: boolean }>`
   ${(p) => !p.$hasBackground && `background: ${p.theme.color.text}08;`}
 `;
 
+const FollowOnTwitterLink = styled(UnstyledExternalLink)`
+  margin-left: 8px;
+
+  @media (max-width: 800px) {
+    margin-left: 0;
+
+    button {
+      margin-top: 8px;
+    }
+  }
+`;
+
 const BannerContent = ({
   topText,
   bottomText,
@@ -191,6 +204,8 @@ const BannerContent = ({
 export const MintNftPage = () => {
   useScrollTop();
 
+  const isMobileView = useMediaQuery('(max-width: 800px)');
+
   return (
     <div>
       <HomepageTopNav />
@@ -208,17 +223,16 @@ export const MintNftPage = () => {
             </HeroTitle>
             <HeroPar>Join our community to get early access 🚀</HeroPar>
             <UnstyledExternalLink href="https://discord.gg/Men7Amz3vq">
-              <Button icon="launch">Join Discord</Button>
-            </UnstyledExternalLink>
-
-            <UnstyledExternalLink
-              href="https://twitter.com/chairleader_app"
-              style={{ marginLeft: '8px' }}
-            >
-              <Button secondary icon="launch">
-                Follow on Twitter
+              <Button icon="launch" fullWidth={isMobileView}>
+                Join on Discord
               </Button>
             </UnstyledExternalLink>
+
+            <FollowOnTwitterLink href="https://twitter.com/chairleader_app">
+              <Button secondary icon="launch" fullWidth={isMobileView}>
+                Follow on Twitter
+              </Button>
+            </FollowOnTwitterLink>
           </HeroTextWrapper>
 
           <HeroImgsWrapper
@@ -335,14 +349,15 @@ export const MintNftPage = () => {
 
         <div>
           <UnstyledExternalLink href="https://discord.gg/Men7Amz3vq">
-            <Button icon="launch">Join Discord</Button>
+            <Button icon="launch" fullWidth={isMobileView}>
+              Join on Discord
+            </Button>
           </UnstyledExternalLink>
-          <UnstyledExternalLink
-            href="https://twitter.com/chairleader_app"
-            style={{ marginLeft: '8px' }}
-          >
-            <Button icon="launch">Follow on Twitter</Button>
-          </UnstyledExternalLink>
+          <FollowOnTwitterLink href="https://twitter.com/chairleader_app">
+            <Button icon="launch" secondary fullWidth={isMobileView}>
+              Follow on Twitter
+            </Button>
+          </FollowOnTwitterLink>
         </div>
       </JoinOurCommunityWrapper>
 

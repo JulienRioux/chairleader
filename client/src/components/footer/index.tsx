@@ -38,6 +38,7 @@ const footerData = [
       { title: 'Pricing', to: routes.pricing },
       { title: 'NFTs', to: routes.mintNft },
       { title: 'Authenticate', to: routes.auth },
+      { title: 'Home', to: routes.base },
     ],
     title: 'Product',
   },

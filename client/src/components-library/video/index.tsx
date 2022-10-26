@@ -68,7 +68,7 @@ const ControlsBtnWrapper = styled.div`
   align-items: center;
 `;
 
-export const Video = ({ src }: { src: string }) => {
+export const Video = ({ src, poster }: { src: string; poster?: string }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
 
@@ -92,7 +92,7 @@ export const Video = ({ src }: { src: string }) => {
 
   if (SHOW_NATIVE_CONTROLS) {
     return (
-      <VideoComponent ref={videoRef} controls>
+      <VideoComponent ref={videoRef} controls poster={poster}>
         <source src={src} type="video/mp4" />
       </VideoComponent>
     );
@@ -102,7 +102,7 @@ export const Video = ({ src }: { src: string }) => {
     <VideoWrapper
       onClick={() => handleControlClick(playing ? 'pause' : 'play')}
     >
-      <VideoComponent ref={videoRef}>
+      <VideoComponent ref={videoRef} poster={poster}>
         <source src={src} type="video/mp4" />
       </VideoComponent>
       <ControlsBtnWrapper>

@@ -16,7 +16,7 @@ import { ReactNode, useCallback, useState } from 'react';
 import { motion } from 'framer-motion';
 
 import GranyFilter from './granny-filter.svg';
-import videoSrc from 'assets/homepage-video.mp4';
+import videoSrc from 'assets/homepage/homepage-video.mp4';
 import appLogoSrc from 'assets/app-logo.png';
 import appLogoSrcGif from 'assets/app-logo.gif';
 import appLogoSrcQuickGif from 'assets/app-logo-quick.gif';
@@ -27,6 +27,7 @@ import shopSrc from 'assets/homepage/shop.png';
 import robotSrc from 'assets/homepage/robot.png';
 import graphSrc from 'assets/homepage/graph.png';
 import cupSrc from 'assets/homepage/cup.png';
+import videoPosterSrc from 'assets/homepage/video-poster.png';
 
 const HeroWrapper = styled.div`
   max-width: ${(p) => p.theme.layout.maxWidth};
@@ -425,7 +426,7 @@ const featuredStore = [
 ];
 
 const FeaturedStoreImg = styled.img`
-  width: 80%;
+  width: 70%;
   aspect-ratio: 1;
   object-position: center;
   object-fit: cover;
@@ -434,7 +435,7 @@ const FeaturedStoreImg = styled.img`
   image-rendering: pixelated;
 
   @media (max-width: 800px) {
-    width: 50%;
+    width: 40%;
   }
 `;
 
@@ -583,8 +584,7 @@ export const Homepage = () => {
   const { isAuthenticated, isLoading } = useAuth();
   const isMobileView = useMediaQuery('(max-width: 800px)');
 
-  const USE_HERO_VIDEO = false;
-  const SHOW_BANNER = false;
+  const SHOW_BANNER = true;
   const SHOW_MERCHANTS = false;
 
   return (
@@ -599,9 +599,9 @@ export const Homepage = () => {
 
             <MotionDiv delay={0.4}>
               <HeroPar>
-                We are building the next-generation ecommerce platform offering
-                online retailers a suite of web3 services including payments,
-                marketing, and engagement tools built on top of Solana.
+                We're building the next-generation eCommerce platform that
+                offers a variety of web3 services including crypto payments, NFT
+                gating, loyalty programs, and much more.
               </HeroPar>
             </MotionDiv>
 
@@ -661,18 +661,7 @@ export const Homepage = () => {
             style={{ width: isMobileView ? '70%' : '50%' }}
             delay={0.6}
           >
-            {USE_HERO_VIDEO ? (
-              <VideoWrapper>
-                <HeroVideo autoPlay muted loop>
-                  <source src={videoSrc} type="video/mp4" />
-                </HeroVideo>
-              </VideoWrapper>
-            ) : (
-              <HeroImg
-                src={isMobileView ? appLogoSrcGif : appLogoSrc}
-                // src="https://pbs.twimg.com/media/DARJkcWXoAIfJ8N.png"
-              />
-            )}
+            <HeroImg src={isMobileView ? appLogoSrcGif : appLogoSrc} />
           </MotionDiv>
         </HeroWrapper>
 
@@ -688,7 +677,7 @@ export const Homepage = () => {
 
                 <BannerVideoWrapper>
                   <MotionDiv delay={0.2}>
-                    <Video src="https://fiverr-res.cloudinary.com/video/upload/t_fiverr_hd/molma0ndtlwze7jlfwhl" />
+                    <Video src={videoSrc} poster={videoPosterSrc} />
                   </MotionDiv>
                 </BannerVideoWrapper>
               </Banner>
