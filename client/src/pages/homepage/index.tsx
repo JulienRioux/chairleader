@@ -584,7 +584,7 @@ export const Homepage = () => {
   const { isAuthenticated, isLoading } = useAuth();
   const isMobileView = useMediaQuery('(max-width: 800px)');
 
-  const SHOW_BANNER = true;
+  const SHOW_BANNER = false;
   const SHOW_MERCHANTS = false;
 
   return (

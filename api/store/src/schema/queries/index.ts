@@ -23,5 +23,10 @@ export const queries = gql`
     Find Nft by address
     """
     findNftByAddress(nftAddress: String!): Nft
+
+    """
+    Get invoices by wallet address
+    """
+    getInvoicesByWalletAddress(walletAddress: String!): [Invoice]
   }
 `;

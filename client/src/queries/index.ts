@@ -274,6 +274,12 @@ export const GET_INVOICES_BY_STORE_ID = gql`
   }
 `;
 
+export const GET_INVOICES_BY_WALLET_ADDRESS = gql`
+  query GetInvoicesByWalletAddress($walletAddress: String!) {
+    getInvoicesByWalletAddress(walletAddress: $walletAddress)  ${INVOICE}
+  }
+`;
+
 // ============
 //   Store
 // ============

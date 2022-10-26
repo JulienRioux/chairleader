@@ -191,7 +191,6 @@ export const TokenGatingNft = ({
     if (address) {
       setNftDataIsLoading(true);
       const nft = await getNftMetadata(address);
-      console.log('nft', nft);
 
       setImage(nft?.json?.image ?? '');
       setName(nft?.json?.name ?? '');

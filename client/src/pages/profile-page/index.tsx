@@ -1,14 +1,28 @@
+import { useQuery } from '@apollo/client';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { Button, Icon, Table } from 'components-library';
+import { Button, Icon, Loader, Table } from 'components-library';
 import { ConnectWalletBtn } from 'components/connect-wallet-btn';
+import { format } from 'date-fns';
 import { SolScanLink } from 'pages/admin-pages/token-gating-nft/token-gating.nft.styles';
 import { InventoryLayout } from 'pages/pos-app/inventory-layout';
+import { GET_INVOICES_BY_WALLET_ADDRESS } from 'queries';
 import { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { CLUSTER_ENV, formatShortAddress, routes } from 'utils';
 
 const COLUMNS = ['Date', 'Order ID', 'Total', 'Items'];
+
+const formatTableData = (tableData: any) =>
+  tableData?.map((invoice: any) => ({
+    'Order ID': invoice?._id,
+    Date: format(new Date(Number(invoice?.createdAt)), 'MMMM dd yyyy, h:mm'),
+    Total: `${invoice?.totalWithSaleTax} ${invoice?.currency}`,
+    Items: invoice?.cartItems.reduce(
+      (acc: number, curr: any) => acc + curr.qty,
+      0
+    ),
+  }));
 
 const ProfileInfoWrapper = styled.div`
   margin: 40px 0;
@@ -25,14 +39,10 @@ export const ProfilePage = () => {
 
   const walletAddress = useMemo(() => publicKey?.toBase58(), [publicKey]);
 
-  const tableData: any[] = [
-    {
-      'Order ID': '634080146173ad661c84a35c',
-      Date: 'October 07 2022, 15:10',
-      Total: '123.6 USDC',
-      Items: '2 items',
-    },
-  ];
+  const { data: invoices, loading: invoicesIsLoading } = useQuery(
+    GET_INVOICES_BY_WALLET_ADDRESS,
+    { variables: { walletAddress }, skip: !walletAddress }
+  );
 
   const handleRowClick = useCallback(
     (row: any) => {
@@ -46,6 +56,10 @@ export const ProfilePage = () => {
   }, [disconnect]);
 
   const SHOW_USER_NFTS = false;
+
+  const formattedData = formatTableData(invoices?.getInvoicesByWalletAddress);
+
+  console.log('formattedData', formattedData);
 
   return (
     <InventoryLayout>
@@ -84,12 +98,16 @@ export const ProfilePage = () => {
             </>
           )}
 
-          <h3>My orders</h3>
+          <h3>
+            My orders {!!formattedData?.length && `(${formattedData?.length})`}
+          </h3>
 
-          {tableData.length ? (
+          {invoicesIsLoading ? (
+            <Loader />
+          ) : formattedData?.length ? (
             <Table
               columns={COLUMNS}
-              rows={tableData}
+              rows={formattedData}
               handleRowClick={handleRowClick}
             />
           ) : (

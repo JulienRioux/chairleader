@@ -76,7 +76,6 @@ export const updateUserMutation = async (
   context
 ) => {
   const id = context?.user?._id;
-  console.log('homepage =>>>>>', homepage);
 
   try {
     const user = await updateUser({
