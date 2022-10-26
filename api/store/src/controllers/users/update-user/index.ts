@@ -87,6 +87,7 @@ export const updateUser = async ({
         homepage: {
           ...(heroTitle && { heroTitle }),
           ...(heroSubTitle && { heroSubTitle }),
+          ...(heroImage && { heroImage }),
         },
       }),
       ...(theme && {
