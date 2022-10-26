@@ -153,9 +153,7 @@ export const StoreHomepage = () => {
 
   const [title, setTitle] = useState(store?.homepage?.heroTitle);
   const [subTitle, setSubTitle] = useState(store?.homepage?.heroSubTitle);
-  const [imgSrc, setImgSrc] = useState(
-    'https://images.squarespace-cdn.com/content/v1/54f775e2e4b07edc19ac338f/1585420060107-NSVI5AGYCZ27S1DG976T/image-asset.jpeg?format=1500w'
-  );
+  const [imgSrc, setImgSrc] = useState(store?.homepage?.heroImg);
 
   const [searchParams] = useSearchParams();
 
