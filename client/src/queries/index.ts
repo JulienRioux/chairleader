@@ -22,6 +22,7 @@ export const GET_ME = gql`
       homepage {
         heroTitle
         heroSubTitle
+        heroImage
       }
     }
   }
@@ -303,6 +304,7 @@ export const GET_STORE_DATA = gql`
         homepage {
           heroTitle
           heroSubTitle
+          heroImage
         }
       }
       products ${PRODUCT}
