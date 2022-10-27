@@ -73,6 +73,7 @@ export const updateUserMutation = async (
     theme,
     homepage,
     heroImage,
+    social,
   },
   context
 ) => {
@@ -91,6 +92,7 @@ export const updateUserMutation = async (
       theme,
       homepage,
       heroImage,
+      social,
     });
     if (user) {
       return user;

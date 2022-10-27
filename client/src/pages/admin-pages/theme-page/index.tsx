@@ -163,7 +163,6 @@ export const ThemePage = () => {
       if (e.target.name === 'storeName') {
         setStoreName(e.target.value);
       }
-
       if (e.target.name === 'title') {
         setTitle(e.target.value);
       }
@@ -198,6 +197,60 @@ export const ThemePage = () => {
     []
   );
 
+  // Social icons links
+  const [instagramLink, setInstagramLink] = useState(
+    user?.social?.instagramLink ?? ''
+  );
+  const [twitterLink, setTwitterLink] = useState(
+    user?.social?.twitterLink ?? ''
+  );
+  const [facebookLink, setFacebookLink] = useState(
+    user?.social?.facebookLink ?? ''
+  );
+  const [tiktokLink, setTiktokLink] = useState(user?.social?.tiktokLink ?? '');
+  const [youtubeLink, setYoutubeLink] = useState(
+    user?.social?.youtubeLink ?? ''
+  );
+  const [spotifyLink, setSpotifyLink] = useState(
+    user?.social?.spotifyLink ?? ''
+  );
+  const [appleMusicLink, setAppleMusicLink] = useState(
+    user?.social?.appleMusicLink ?? ''
+  );
+  const [discordLink, setDiscordLink] = useState(
+    user?.social?.discordLink ?? ''
+  );
+
+  const handleSocialIconsChange = useCallback(
+    async (e: ChangeEvent<HTMLInputElement>) => {
+      if (e.target.name === 'instagram') {
+        setInstagramLink(e.target.value);
+      }
+      if (e.target.name === 'twitter') {
+        setTwitterLink(e.target.value);
+      }
+      if (e.target.name === 'facebook') {
+        setFacebookLink(e.target.value);
+      }
+      if (e.target.name === 'tiktok') {
+        setTiktokLink(e.target.value);
+      }
+      if (e.target.name === 'youtube') {
+        setYoutubeLink(e.target.value);
+      }
+      if (e.target.name === 'spotify') {
+        setSpotifyLink(e.target.value);
+      }
+      if (e.target.name === 'appleMusic') {
+        setAppleMusicLink(e.target.value);
+      }
+      if (e.target.name === 'discord') {
+        setDiscordLink(e.target.value);
+      }
+    },
+    []
+  );
+
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
@@ -213,6 +266,16 @@ export const ThemePage = () => {
             heroSubTitle: subTitle,
           },
           heroImage: homepageImageFile,
+          social: {
+            instagramLink,
+            twitterLink,
+            facebookLink,
+            tiktokLink,
+            youtubeLink,
+            spotifyLink,
+            appleMusicLink,
+            discordLink,
+          },
         });
         message.success('Your changes has been saved.');
       } catch (err) {
@@ -228,6 +291,14 @@ export const ThemePage = () => {
       subTitle,
       updateUser,
       homepageImageFile,
+      instagramLink,
+      twitterLink,
+      facebookLink,
+      tiktokLink,
+      youtubeLink,
+      spotifyLink,
+      appleMusicLink,
+      discordLink,
     ]
   );
 
@@ -374,54 +445,69 @@ export const ThemePage = () => {
           </Card>
 
           {SHOW_SOCIAL_LINKS && (
-            <Card title="Social media links">
+            <Card title="Social icons">
               <Input
                 label="Instagram URL"
                 placeholder="https://www.instagram.com/username"
-                // value={title}
-                // onChange={(e) => setTitle(e.target.value)}
+                name="instagram"
+                value={instagramLink}
+                onChange={handleSocialIconsChange}
               />
 
               <Input
                 label="Twitter URL"
                 placeholder="https://www.twitter.com/username"
-                // value={title}
-                // onChange={(e) => setTitle(e.target.value)}
+                name="twitter"
+                value={twitterLink}
+                onChange={handleSocialIconsChange}
               />
 
               <Input
                 label="Facebook URL"
                 placeholder="https://facebook.com/facebookpageurl"
-                // value={title}
-                // onChange={(e) => setTitle(e.target.value)}
+                name="facebook"
+                value={facebookLink}
+                onChange={handleSocialIconsChange}
               />
 
               <Input
                 label="Tiktok URL"
                 placeholder="https://www.tiktok.com/username"
-                // value={title}
-                // onChange={(e) => setTitle(e.target.value)}
+                name="tiktok"
+                value={tiktokLink}
+                onChange={handleSocialIconsChange}
               />
 
               <Input
                 label="Youtube URL"
                 placeholder="https://youtube.com/channel/youtubechannelurl"
-                // value={title}
-                // onChange={(e) => setTitle(e.target.value)}
+                name="youtube"
+                value={youtubeLink}
+                onChange={handleSocialIconsChange}
               />
 
               <Input
                 label="Spotify URL"
                 placeholder="https://open.spotify.com/artist/artistname"
-                // value={title}
-                // onChange={(e) => setTitle(e.target.value)}
+                name="spotify"
+                value={spotifyLink}
+                onChange={handleSocialIconsChange}
               />
 
               <Input
                 label="Apple music URL"
                 placeholder="https://music.apple.com/us/album/youralbum"
-                // value={title}
-                // onChange={(e) => setTitle(e.target.value)}
+                name="appleMusic"
+                value={appleMusicLink}
+                onChange={handleSocialIconsChange}
+              />
+
+              <Input
+                label="Discord URL"
+                placeholder="https://discord.com/invite/servername"
+                name="discord"
+                value={discordLink}
+                onChange={handleSocialIconsChange}
               />
             </Card>
           )}

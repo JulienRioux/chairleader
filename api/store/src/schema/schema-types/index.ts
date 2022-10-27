@@ -11,6 +11,17 @@ export const schemaTypes = gql`
     heroImage: String
   }
 
+  type Social {
+    instagramLink: String
+    twitterLink: String
+    facebookLink: String
+    tiktokLink: String
+    youtubeLink: String
+    spotifyLink: String
+    appleMusicLink: String
+    discordLink: String
+  }
+
   type Store {
     email: String!
     _id: ID
@@ -23,6 +34,7 @@ export const schemaTypes = gql`
     shippingFee: Float
     theme: Theme
     homepage: Homepage
+    social: Social
   }
 
   type AuthenticateResponse {

@@ -4,27 +4,41 @@ import { gql } from '@apollo/client';
 //    Users
 // ============
 
+const STORE = gql`
+  {
+    email
+    _id
+    storeName
+    walletAddress
+    subDomain
+    currency
+    saleTax
+    image
+    shippingFee
+    theme {
+      primaryColor
+    }
+    homepage {
+      heroTitle
+      heroSubTitle
+      heroImage
+    }
+    social {
+      instagramLink
+      twitterLink
+      facebookLink
+      tiktokLink
+      youtubeLink
+      spotifyLink
+      appleMusicLink
+      discordLink
+    }
+  }
+`;
+
 export const GET_ME = gql`
   query GetMe {
-    getMe {
-      email
-      _id
-      storeName
-      walletAddress
-      subDomain
-      currency
-      saleTax
-      image
-      shippingFee
-      theme {
-        primaryColor
-      }
-      homepage {
-        heroTitle
-        heroSubTitle
-        heroImage
-      }
-    }
+    getMe ${STORE}
   }
 `;
 
@@ -59,6 +73,7 @@ export const UPDATE_USER = gql`
     $theme: Object
     $homepage: Object
     $heroImage: Upload
+    $social: Object
   ) {
     updateUser(
       storeName: $storeName
@@ -71,23 +86,8 @@ export const UPDATE_USER = gql`
       theme: $theme
       homepage: $homepage
       heroImage: $heroImage
-    ) {
-      storeName
-      walletAddress
-      subDomain
-      currency
-      saleTax
-      image
-      shippingFee
-      theme {
-        primaryColor
-      }
-      homepage {
-        heroTitle
-        heroSubTitle
-        heroImage
-      }
-    }
+      social: $social
+    ) ${STORE}
   }
 `;
 
@@ -290,25 +290,7 @@ export const GET_INVOICES_BY_WALLET_ADDRESS = gql`
 export const GET_STORE_DATA = gql`
   query GetStoreData {
     getStoreData {
-      store {
-        email
-        _id
-        storeName
-        walletAddress
-        subDomain
-        currency
-        saleTax
-        image
-        shippingFee
-        theme {
-          primaryColor
-        }
-        homepage {
-          heroTitle
-          heroSubTitle
-          heroImage
-        }
-      }
+      store ${STORE}
       products ${PRODUCT}
     }
   }

@@ -18,6 +18,7 @@ export const updateUser = async ({
   theme,
   homepage,
   heroImage,
+  social,
 }: any) => {
   let imgSrc = '';
 
@@ -97,6 +98,7 @@ export const updateUser = async ({
           ...(primaryColor && { primaryColor }),
         },
       }),
+      ...(social && { social }),
       updatedAt: new Date(),
     },
     { upsert: true }

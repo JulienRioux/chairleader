@@ -5,8 +5,8 @@ import {
   UnstyledExternalLink,
   TwitterIcon,
   SpotifyIcon,
-  DribbbleIcon,
   FacebookIcon,
+  DiscordIcon,
 } from 'components-library';
 import { useStore } from 'hooks/store';
 import { useEffect, useState } from 'react';
@@ -21,7 +21,7 @@ const HomepageWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: calc(100vh - 200px);
+  min-height: calc(100vh - 260px);
 `;
 
 const Img = styled.img`
@@ -125,7 +125,7 @@ type SocialMediaNames =
   | 'twitter'
   | 'facebook'
   | 'spotify'
-  | 'dribbble';
+  | 'discord';
 
 const SocialIconsMap = {
   instagram: <InstagramIcon />,
@@ -133,14 +133,17 @@ const SocialIconsMap = {
   twitter: <TwitterIcon />,
   facebook: <FacebookIcon />,
   spotify: <SpotifyIcon />,
-  dribbble: <DribbbleIcon />,
+  discord: <DiscordIcon />,
 };
 
 const SocialMediaIcons = () => {
   const socialMedia = [
     { name: 'instagram', link: 'https://instagram.com/' },
+    { name: 'tiktok', link: 'https://instagram.com/' },
     { name: 'twitter', link: 'https://twitter.com/0x_society' },
+    { name: 'facebook', link: 'https://instagram.com/' },
     { name: 'spotify', link: 'https://spotify.com/' },
+    { name: 'discord', link: 'https://spotify.com/' },
   ];
 
   return (

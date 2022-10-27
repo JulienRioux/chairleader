@@ -26,6 +26,7 @@ export const mutations = gql`
       theme: Object
       homepage: Object
       heroImage: Upload
+      social: Object
     ): Store
 
     """

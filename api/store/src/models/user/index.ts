@@ -24,6 +24,16 @@ export interface IUser {
     heroSubTitle: string;
     heroImage: string;
   };
+  social: {
+    instagramLink: string;
+    twitterLink: string;
+    facebookLink: string;
+    tiktokLink: string;
+    youtubeLink: string;
+    spotifyLink: string;
+    appleMusicLink: string;
+    discordLink: string;
+  };
 }
 
 const UserSchema = new Schema<IUser>({
@@ -42,6 +52,16 @@ const UserSchema = new Schema<IUser>({
   shippingFee: { type: Number, default: 0 },
   theme: {
     primaryColor: { type: String, default: 'blue' },
+  },
+  social: {
+    instagramLink: String,
+    twitterLink: String,
+    facebookLink: String,
+    tiktokLink: String,
+    youtubeLink: String,
+    spotifyLink: String,
+    appleMusicLink: String,
+    discordLink: String,
   },
   homepage: {
     heroTitle: String,
