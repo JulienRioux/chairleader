@@ -10,6 +10,7 @@ import { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { CLUSTER_ENV, formatShortAddress, routes } from 'utils';
+import { slideInBottom } from 'utils/keyframes';
 
 const COLUMNS = ['Date', 'Order ID', 'Total', 'Items'];
 
@@ -31,6 +32,11 @@ const ProfileInfoWrapper = styled.div`
 const TitleAndDisconnectBtn = styled.div`
   display: flex;
   justify-content: space-between;
+`;
+
+const ProfilePageWrapper = styled.div`
+  opacity: 0;
+  animation: 0.4s ${slideInBottom} forwards;
 `;
 
 export const ProfilePage = () => {
@@ -62,7 +68,7 @@ export const ProfilePage = () => {
   return (
     <InventoryLayout>
       {publicKey ? (
-        <>
+        <ProfilePageWrapper>
           <ProfileInfoWrapper>
             <div>
               <TitleAndDisconnectBtn>
@@ -111,7 +117,7 @@ export const ProfilePage = () => {
           ) : (
             <p>No orders yet.</p>
           )}
-        </>
+        </ProfilePageWrapper>
       ) : (
         <div>
           <p>Connect your wallet in order to see this page.</p>

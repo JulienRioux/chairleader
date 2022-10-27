@@ -10,12 +10,15 @@ import { format } from 'date-fns';
 import { NETWORK } from 'hooks/currency';
 import { useStore } from 'hooks/store';
 import { InventoryLayout } from 'pages/pos-app/inventory-layout';
+import { slideInBottom } from 'utils/keyframes';
 
 export const getTxExplorerUrl = ({ signature = '', isDev = false }) =>
   `https://explorer.solana.com/tx/${signature}${isDev && '?cluster=devnet'}`;
 
 const ConfirmationPageWrapper = styled.div`
   margin: 40px auto 80px;
+  opacity: 0;
+  animation: 0.4s ${slideInBottom} forwards;
 `;
 
 const SummaryWrapper = styled.div`

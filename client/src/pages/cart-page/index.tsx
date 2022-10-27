@@ -10,6 +10,7 @@ import { CURRENCY, useCurrency } from 'hooks/currency';
 import { useScrollTop } from 'hooks/scroll-top';
 import { ShippingForm } from 'components/shipping-form';
 import { StoreLogo } from 'pages/pos-app/inventory-layout';
+import { slideInBottom } from 'utils/keyframes';
 
 export const getTxExplorerUrl = ({ signature = '', isDev = false }) =>
   `https://explorer.solana.com/tx/${signature}${isDev && '?cluster=devnet'}`;
@@ -66,6 +67,8 @@ const CartPaymentLayout = styled.div`
   margin: 20px auto;
   max-width: ${(p) => p.theme.layout.maxWidth};
   padding: 0 12px;
+  opacity: 0;
+  animation: 0.4s ${slideInBottom} forwards;
 
   @media (max-width: 1000px) {
     grid-template-columns: 1fr;

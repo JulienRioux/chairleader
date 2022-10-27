@@ -41,6 +41,7 @@ import {
   StyledButton,
   TokenGateTypeTitle,
   TokenGatingNftWrapper,
+  TokenGatingNftPageWrapper,
   DetailsWrapper,
   Description,
   SolScanLink,
@@ -298,7 +299,7 @@ export const TokenGatingNft = ({
   const hasNftPrintedVersion = checkIfUserHasPrintedVersion(address);
 
   return (
-    <div>
+    <TokenGatingNftPageWrapper>
       <div>
         <SolScanLink
           href={`https://solscan.io/token/${address}?cluster=${CLUSTER_ENV}`}
@@ -441,6 +442,6 @@ export const TokenGatingNft = ({
           )}
         </RightWrapper>
       </TokenGatingNftWrapper>
-    </div>
+    </TokenGatingNftPageWrapper>
   );
 };

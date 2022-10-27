@@ -1,5 +1,6 @@
 import { Button, UnstyledExternalLink, UnstyledLink } from 'components-library';
 import styled from 'styled-components';
+import { slideInBottom } from 'utils/keyframes';
 
 export const NftImg = styled.img`
   border-radius: ${(p) => p.theme.borderRadius.default};
@@ -110,4 +111,9 @@ export const DealItemButton = styled(UnstyledLink)`
 
 export const RightWrapper = styled.div`
   overflow: scroll;
+`;
+
+export const TokenGatingNftPageWrapper = styled.div`
+  opacity: 0;
+  animation: 0.4s ${slideInBottom} forwards;
 `;

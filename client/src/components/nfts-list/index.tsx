@@ -7,6 +7,7 @@ import { useAuth } from 'hooks/auth';
 import { useNft } from 'hooks/nft';
 import { NftOwnerBadge } from 'pages/pos-app/product-page';
 import { NftImgWrapper } from 'pages/admin-pages/token-gating-nft';
+import { slideInBottom } from 'utils/keyframes';
 
 const NftDisplayWrapper = styled.div`
   width: 100%;
@@ -59,18 +60,25 @@ export const Price = styled.div`
   font-size: 18px;
 `;
 
+const NftDisplayLink = styled(UnstyledLink)<{ $delay: number }>`
+  opacity: 0;
+  animation: 0.4s ${slideInBottom} ${(p) => p.$delay}s forwards;
+`;
+
 const NftDisplay = ({
   image,
   address,
   name,
   isStoreApp,
   price,
+  index = 0,
 }: {
   image: string;
   address: string;
   name: string;
   isStoreApp?: boolean;
   price: boolean;
+  index?: number;
 }) => {
   const { nftAddressWithProductsLocked, checkIfUserHasPrintedVersion } =
     useNft();
@@ -88,7 +96,8 @@ const NftDisplay = ({
   const hasNftPrintedVersion = checkIfUserHasPrintedVersion(address);
 
   return (
-    <UnstyledLink
+    <NftDisplayLink
+      $delay={index / 20}
       to={`${
         isStoreApp ? routes.store.nfts : routes.admin.tokenGating
       }/${address}`}
@@ -105,7 +114,7 @@ const NftDisplay = ({
 
         <RewardsOrExclusivity>{exclusivitiesText}</RewardsOrExclusivity>
       </NftDisplayWrapper>
-    </UnstyledLink>
+    </NftDisplayLink>
   );
 };
 
@@ -163,7 +172,7 @@ export const NftsList = ({ isStoreApp = false }: { isStoreApp?: boolean }) => {
   return (
     <div>
       <NftsListWrapper>
-        {activeNfts.map((nft) => (
+        {activeNfts.map((nft, index) => (
           <NftDisplay
             key={nft?.address?.toBase58()}
             image={nft?.json?.image}
@@ -171,6 +180,7 @@ export const NftsList = ({ isStoreApp = false }: { isStoreApp?: boolean }) => {
             name={nft?.json?.name}
             isStoreApp={isStoreApp}
             price={nft?.json?.initialPrice}
+            index={index}
           />
         ))}
 
