@@ -39,7 +39,10 @@ export const sendEmail = async ({
   content,
 }) => {
   const emailObject = {
-    from: fromEmail,
+    from: {
+      email: fromEmail,
+      name: 'Chairleader',
+    },
     html: content,
     subject,
     text: content,
@@ -71,7 +74,11 @@ export const sendEmailTemplate = async ({
 }) => {
   const emailObject = {
     dynamicTemplateData,
-    from: fromEmail,
+    from: {
+      email: fromEmail,
+      name: 'Chairleader',
+    },
+
     subject,
     templateId,
     to: toEmail,

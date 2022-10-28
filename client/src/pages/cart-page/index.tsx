@@ -11,6 +11,7 @@ import { useScrollTop } from 'hooks/scroll-top';
 import { ShippingForm } from 'components/shipping-form';
 import { StoreLogo } from 'pages/pos-app/inventory-layout';
 import { slideInBottom } from 'utils/keyframes';
+import { Button } from 'components-library';
 
 export const getTxExplorerUrl = ({ signature = '', isDev = false }) =>
   `https://explorer.solana.com/tx/${signature}${isDev && '?cluster=devnet'}`;
@@ -26,25 +27,6 @@ const CartTitle = styled.h3`
   margin: 0;
 `;
 
-export const CartPageLayout = ({
-  title,
-  children,
-}: {
-  title: ReactNode;
-  children: ReactNode;
-  link?: string;
-}) => (
-  <div>
-    <TopNavWrapper>
-      <TopNav>
-        <PageTitle>{title}</PageTitle>
-      </TopNav>
-    </TopNavWrapper>
-
-    {children}
-  </div>
-);
-
 const TopNavWrapper = styled.div`
   padding: 8px 12px;
   border-bottom: 1px solid ${(p) => p.theme.color.lightGrey};
@@ -59,6 +41,32 @@ const TopNav = styled.div`
   margin: 0 auto;
   height: 100%;
 `;
+
+export const CartPageLayout = ({
+  title,
+  children,
+}: {
+  title: ReactNode;
+  children: ReactNode;
+  link?: string;
+}) => (
+  <div>
+    <TopNavWrapper>
+      <TopNav>
+        <PageTitle>{title}</PageTitle>
+
+        <Button
+          secondary
+          icon="arrow_back"
+          to={-1}
+          style={{ marginRight: '8px' }}
+        />
+      </TopNav>
+    </TopNavWrapper>
+
+    {children}
+  </div>
+);
 
 const CartPaymentLayout = styled.div`
   display: grid;
