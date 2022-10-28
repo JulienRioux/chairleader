@@ -7,6 +7,9 @@ import {
   SpotifyIcon,
   FacebookIcon,
   DiscordIcon,
+  YoutubeIcon,
+  AppleMusicIcon,
+  SnapchatIcon,
 } from 'components-library';
 import { useStore } from 'hooks/store';
 import { useEffect, useState } from 'react';
@@ -125,7 +128,10 @@ type SocialMediaNames =
   | 'twitter'
   | 'facebook'
   | 'spotify'
-  | 'discord';
+  | 'discord'
+  | 'youtube'
+  | 'appleMusic'
+  | 'snapchat';
 
 const SocialIconsMap = {
   instagram: <InstagramIcon />,
@@ -134,21 +140,35 @@ const SocialIconsMap = {
   facebook: <FacebookIcon />,
   spotify: <SpotifyIcon />,
   discord: <DiscordIcon />,
+  youtube: <YoutubeIcon />,
+  appleMusic: <AppleMusicIcon />,
+  snapchat: <SnapchatIcon />,
 };
 
+interface ISocialMedia {
+  name: SocialMediaNames;
+  link: string;
+}
+
 const SocialMediaIcons = () => {
-  const socialMedia = [
-    { name: 'instagram', link: 'https://instagram.com/' },
-    { name: 'tiktok', link: 'https://instagram.com/' },
-    { name: 'twitter', link: 'https://twitter.com/0x_society' },
-    { name: 'facebook', link: 'https://instagram.com/' },
-    { name: 'spotify', link: 'https://spotify.com/' },
-    { name: 'discord', link: 'https://spotify.com/' },
-  ];
+  const { store } = useStore();
+
+  // Formatting data to display social media icons and links
+  const socialMedia = Object.keys(store?.social)
+    .map((socialMedia) => {
+      const socialMediaLink = store?.social[socialMedia];
+      if (!socialMediaLink) return;
+
+      return {
+        name: socialMedia.replace('Link', ''),
+        link: store?.social[socialMedia],
+      };
+    })
+    .filter((socialMedia) => !!socialMedia) as ISocialMedia[];
 
   return (
     <SocialMediaIconsWrapper>
-      {socialMedia.map(({ name, link }) => (
+      {socialMedia?.map(({ name, link }: { name: string; link: string }) => (
         <UnstyledExternalLink key={name} href={link} target="_blank">
           {SocialIconsMap[name as SocialMediaNames]}
         </UnstyledExternalLink>

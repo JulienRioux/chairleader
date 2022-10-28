@@ -29,6 +29,9 @@ const Img = styled.img`
   height: 100vh;
   background: ${(p) => p.theme.color.lightGrey};
   image-rendering: pixelated;
+  position: sticky;
+  top: 0;
+  z-index: -1;
 
   @media (max-width: 800px) {
     display: none;

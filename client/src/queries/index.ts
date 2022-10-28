@@ -28,6 +28,7 @@ const STORE = gql`
       twitterLink
       facebookLink
       tiktokLink
+      snapchatLink
       youtubeLink
       spotifyLink
       appleMusicLink

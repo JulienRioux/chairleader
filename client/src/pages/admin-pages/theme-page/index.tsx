@@ -208,6 +208,9 @@ export const ThemePage = () => {
     user?.social?.facebookLink ?? ''
   );
   const [tiktokLink, setTiktokLink] = useState(user?.social?.tiktokLink ?? '');
+  const [snapchatLink, setSnapchatLink] = useState(
+    user?.social?.snapchatLink ?? ''
+  );
   const [youtubeLink, setYoutubeLink] = useState(
     user?.social?.youtubeLink ?? ''
   );
@@ -234,6 +237,9 @@ export const ThemePage = () => {
       }
       if (e.target.name === 'tiktok') {
         setTiktokLink(e.target.value);
+      }
+      if (e.target.name === 'snapchat') {
+        setSnapchatLink(e.target.value);
       }
       if (e.target.name === 'youtube') {
         setYoutubeLink(e.target.value);
@@ -271,6 +277,7 @@ export const ThemePage = () => {
             twitterLink,
             facebookLink,
             tiktokLink,
+            snapchatLink,
             youtubeLink,
             spotifyLink,
             appleMusicLink,
@@ -295,6 +302,7 @@ export const ThemePage = () => {
       twitterLink,
       facebookLink,
       tiktokLink,
+      snapchatLink,
       youtubeLink,
       spotifyLink,
       appleMusicLink,
@@ -475,6 +483,14 @@ export const ThemePage = () => {
                 placeholder="https://www.tiktok.com/username"
                 name="tiktok"
                 value={tiktokLink}
+                onChange={handleSocialIconsChange}
+              />
+
+              <Input
+                label="Snapchat URL"
+                placeholder="https://www.snapchat.com/add/username"
+                name="snapchat"
+                value={snapchatLink}
                 onChange={handleSocialIconsChange}
               />
 

@@ -15,6 +15,7 @@ export const schemaTypes = gql`
     instagramLink: String
     twitterLink: String
     facebookLink: String
+    snapchatLink: String
     tiktokLink: String
     youtubeLink: String
     spotifyLink: String

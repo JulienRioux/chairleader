@@ -29,6 +29,7 @@ export interface IUser {
     twitterLink: string;
     facebookLink: string;
     tiktokLink: string;
+    snapchatLink: string;
     youtubeLink: string;
     spotifyLink: string;
     appleMusicLink: string;
@@ -57,6 +58,7 @@ const UserSchema = new Schema<IUser>({
     instagramLink: String,
     twitterLink: String,
     facebookLink: String,
+    snapchatLink: String,
     tiktokLink: String,
     youtubeLink: String,
     spotifyLink: String,
