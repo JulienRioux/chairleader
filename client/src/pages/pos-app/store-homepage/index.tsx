@@ -110,15 +110,28 @@ const SocialMediaIconsWrapper = styled.div`
   align-items: center;
   justify-content: center;
   margin-top: 20px;
+`;
+
+const SocialMediaLink = styled(UnstyledExternalLink)`
+  height: 36px;
+  width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 4px;
+  transition: 0.2s;
+  border-radius: ${(p) => p.theme.borderRadius.default};
 
   svg {
     width: 20px;
     fill: ${(p) => p.theme.color.text};
   }
 
-  a {
-    margin: 8px;
-    padding: 4px;
+  :hover {
+    background: ${(p) => p.theme.color.text}11;
+  }
+  :active {
+    transform: translateY(3px);
   }
 `;
 
@@ -169,9 +182,9 @@ const SocialMediaIcons = () => {
   return (
     <SocialMediaIconsWrapper>
       {socialMedia?.map(({ name, link }: { name: string; link: string }) => (
-        <UnstyledExternalLink key={name} href={link} target="_blank">
+        <SocialMediaLink key={name} href={link} target="_blank">
           {SocialIconsMap[name as SocialMediaNames]}
-        </UnstyledExternalLink>
+        </SocialMediaLink>
       ))}
     </SocialMediaIconsWrapper>
   );

@@ -3,7 +3,7 @@ import { useAuth } from 'hooks/auth';
 import { useCart } from 'hooks/cart';
 import { useCurrency } from 'hooks/currency';
 import { useStore } from 'hooks/store';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { routes } from 'utils';
 
 const CartTotalWrapper = styled.div`
@@ -17,11 +17,17 @@ const SubTotalItem = styled.div`
   padding-bottom: 20px;
 `;
 
-const TotalItem = styled.div`
+const TotalItem = styled.div<{ $showTopBorder: boolean }>`
   display: flex;
   justify-content: space-between;
-  padding: 20px 0;
+  padding: 20px 0 32px;
   border-top: 1px solid ${(p) => p.theme.color.lightGrey};
+
+  ${(p) =>
+    p.$showTopBorder &&
+    css`
+      border-top: none;
+    `}
 `;
 
 export const CartSummary = ({
@@ -44,28 +50,32 @@ export const CartSummary = ({
 
   const saleTax = isAdminApp ? user?.saleTax : store?.saleTax;
 
+  const hasSaleTaxOrShippingFees = !!saleTax || !!shippingFee;
+
   return (
     <>
-      {saleTax && (
-        <>
-          <SubTotalItem>
-            <span>Subtotal:</span>
-            {totalPrice} {currency}
-          </SubTotalItem>
-
-          <SubTotalItem>
-            <span>Total sale tax ({saleTax}%):</span>
-            {totalSaleTax} {currency}
-          </SubTotalItem>
-
-          <SubTotalItem>
-            <span>Shipping fee:</span>
-            {shippingFee ? `${shippingFee} ${currency}` : 'Free'}
-          </SubTotalItem>
-        </>
+      {hasSaleTaxOrShippingFees && (
+        <SubTotalItem>
+          <span>Subtotal:</span>
+          {totalPrice} {currency}
+        </SubTotalItem>
       )}
 
-      <TotalItem>
+      {!!saleTax && (
+        <SubTotalItem>
+          <span>Total sale tax ({saleTax}%):</span>
+          {totalSaleTax} {currency}
+        </SubTotalItem>
+      )}
+
+      {!!shippingFee && (
+        <SubTotalItem>
+          <span>Shipping fee:</span>
+          {shippingFee ? `${shippingFee} ${currency}` : 'Free'}
+        </SubTotalItem>
+      )}
+
+      <TotalItem $showTopBorder={!hasSaleTaxOrShippingFees}>
         <span>Total:</span>
         <strong>
           {totalWithSaleTax} {currency}
