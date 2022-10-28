@@ -1,6 +1,7 @@
 import {
   Button,
   Icon,
+  UnstyledButton,
   UnstyledExternalLink,
   UnstyledLink,
   Video,
@@ -28,6 +29,7 @@ import robotSrc from 'assets/homepage/robot.png';
 import graphSrc from 'assets/homepage/graph.png';
 import cupSrc from 'assets/homepage/cup.png';
 import videoPosterSrc from 'assets/homepage/video-poster.png';
+import { useLocation } from 'react-router-dom';
 
 const HeroWrapper = styled.div`
   max-width: ${(p) => p.theme.layout.maxWidth};
@@ -536,10 +538,96 @@ const FeaturedStores = () => {
   );
 };
 
+const TopBannerWrapper = styled.div<{
+  $color: string;
+  $backgroundColor: string;
+}>`
+  background: #000;
+  color: ${(p) => p.$color};
+  background-color: ${(p) => p.$backgroundColor};
+  padding: 0 8px;
+
+  button {
+    color: ${(p) => p.$color};
+    padding: 4px;
+    font-size: 16px;
+    transition: 0.2s;
+    border-radius: ${(p) => p.theme.borderRadius.input};
+
+    :hover {
+      background-color: ${(p) => p.$color}22;
+    }
+  }
+`;
+
+const InnerTopBanner = styled.div`
+  max-width: ${(p) => p.theme.layout.maxWidth};
+  margin: 0px auto 0;
+  padding: 4px 0;
+  min-height: 32px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const TopBanner = ({
+  text,
+  color,
+  backgroundColor,
+}: {
+  text: ReactNode;
+  color: string;
+  backgroundColor: string;
+}) => {
+  const [showBanner, setShowBanner] = useState(true);
+  const { pathname } = useLocation();
+
+  if (!showBanner || pathname !== routes.base) {
+    return null;
+  }
+  return (
+    <TopBannerWrapper $color={color} $backgroundColor={backgroundColor}>
+      <InnerTopBanner>
+        <span>{text}</span>
+        <UnstyledButton onClick={() => setShowBanner(false)}>
+          <Icon name="close" />
+        </UnstyledButton>
+      </InnerTopBanner>
+    </TopBannerWrapper>
+  );
+};
+
+const BannerBtnText = styled.span``;
+
+const BannerContent = styled.div`
+  ${BannerBtnText} {
+    margin-right: 4px;
+  }
+
+  a {
+    color: #000000;
+    text-decoration: none;
+    background: #00000022;
+    padding: 4px 8px;
+    transition: 0.2s;
+    border-radius: ${(p) => p.theme.borderRadius.input};
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    :hover {
+      background: #00000033;
+    }
+  }
+`;
+
 export const HomepageTopNav = () => {
   const { isAuthenticated, isLoading } = useAuth();
 
   const SHOW_AUTH_BTN = !HIDE_APP && !isLoading;
+
+  const SHOW_BANNER = true;
 
   return (
     <motion.div
@@ -548,6 +636,46 @@ export const HomepageTopNav = () => {
       // viewport={{ once: true }}
       transition={{ type: 'spring', stiffness: 100 }}
     >
+      {/* Product hunt banner */}
+      {/* {SHOW_BANNER && (
+        <TopBanner
+          text={
+            <BannerContent>
+              <span>We're live on Product Hunt! 🚀</span>
+              <a
+                href="https://www.producthunt.com"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Check it out
+                <Icon style={{ marginLeft: '8px' }} name="arrow_forward" />
+              </a>
+            </BannerContent>
+          }
+          color="#000000"
+          backgroundColor="#FFFF00"
+        />
+      )} */}
+
+      {SHOW_BANNER && (
+        <TopBanner
+          text={
+            <BannerContent>
+              <span style={{ marginRight: '16px' }}>
+                Oct 2nd: NFT giveaway! 📢
+              </span>
+              <UnstyledLink to={routes.mintNft}>
+                <BannerBtnText>Check it out</BannerBtnText>
+
+                <Icon name="arrow_forward" />
+              </UnstyledLink>
+            </BannerContent>
+          }
+          color="#000000"
+          backgroundColor="#FFFF00"
+        />
+      )}
+
       <TopNavWrapper>
         <TopNav>
           <Logo to={routes.base}>
