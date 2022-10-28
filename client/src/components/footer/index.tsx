@@ -60,10 +60,10 @@ const footerData = [
   {
     content: [
       {
-        href: 'mailto:chairleaderapp@gmail.com',
+        href: 'mailto:investors@chairleader.xyz',
         title: 'Investors',
       },
-      { href: 'mailto:chairleaderapp@gmail.com', title: 'Contact' },
+      { href: 'mailto:hello@chairleader.xyz', title: 'Contact' },
       {
         href: 'https://chairleader.canny.io/',
         title: 'Send feedback',
