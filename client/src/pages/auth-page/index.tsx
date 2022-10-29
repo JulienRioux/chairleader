@@ -84,7 +84,7 @@ const Par = styled.p`
   color: ${(p) => p.theme.color.lightText};
 `;
 
-export const AuthPage = () => {
+export const OtpForm = ({ buttonText = 'Send magic link' }) => {
   const [email, setEmail] = useState('');
   const [authenticate, { loading: authIsLoading }] = useMutation(AUTHENTICATE);
 
@@ -120,30 +120,36 @@ export const AuthPage = () => {
   );
 
   return (
+    <form onSubmit={handleSubmit}>
+      <Input
+        label="Email"
+        value={email}
+        onChange={handleChange}
+        placeholder="Enter your email to login or register"
+        required
+        type="email"
+      />
+
+      <Button isLoading={authIsLoading} type="submit" fullWidth>
+        {buttonText}
+      </Button>
+
+      <Par>
+        By clicking &quot;Create account&quot;, I agree to {APP_NAME}&apos;s{' '}
+        <Link to={routes.static.termsOfService}>TOS</Link> and{' '}
+        <Link to={routes.static.privacy}>privacy policy</Link>.
+      </Par>
+    </form>
+  );
+};
+
+export const AuthPage = () => {
+  return (
     <HalfImagePageLayout>
       <AuthPageWrapper>
         <h1>Register or log in</h1>
 
-        <form onSubmit={handleSubmit}>
-          <Input
-            label="Email"
-            value={email}
-            onChange={handleChange}
-            placeholder="Enter your email to login or register"
-            required
-            type="email"
-          />
-
-          <Button isLoading={authIsLoading} type="submit" fullWidth>
-            Send magic link
-          </Button>
-
-          <Par>
-            By clicking &quot;Create account&quot;, I agree to {APP_NAME}&apos;s{' '}
-            <Link to={routes.static.termsOfService}>TOS</Link> and{' '}
-            <Link to={routes.static.privacy}>privacy policy</Link>.
-          </Par>
-        </form>
+        <OtpForm />
       </AuthPageWrapper>
     </HalfImagePageLayout>
   );

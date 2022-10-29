@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const InputWrapper = styled.input`
   border: ${(p) => p.theme.borderWidth} solid ${(p) => p.theme.color.text}66;
   color: ${(p) => p.theme.color.text};
-  background: transparent;
+  background: ${(p) => p.theme.color.background};
   font-size: 16px;
   width: -webkit-fill-available;
   padding: 12px;

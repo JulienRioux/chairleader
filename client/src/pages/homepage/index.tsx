@@ -30,6 +30,7 @@ import graphSrc from 'assets/homepage/graph.png';
 import cupSrc from 'assets/homepage/cup.png';
 import videoPosterSrc from 'assets/homepage/video-poster.png';
 import { useLocation } from 'react-router-dom';
+import { OtpWidget } from 'pages/features-page';
 
 const HeroWrapper = styled.div`
   max-width: ${(p) => p.theme.layout.maxWidth};
@@ -662,7 +663,7 @@ export const HomepageTopNav = () => {
           text={
             <BannerContent>
               <span style={{ marginRight: '16px' }}>
-                Oct 2nd: NFT giveaway! 📢
+                Oct 2nd: NFT OG giveaway! 📢
               </span>
               <UnstyledLink to={routes.mintNft}>
                 <BannerBtnText>Check it out</BannerBtnText>
@@ -917,6 +918,8 @@ export const Homepage = () => {
 
           {SHOW_MERCHANTS && <FeaturedStores />}
         </>
+
+        {!HIDE_APP && <OtpWidget />}
 
         <Footer />
       </HomepageWrapper>

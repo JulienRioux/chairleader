@@ -8,6 +8,7 @@ import { useMediaQuery } from 'hooks/media-query';
 import { ReactNode, useState } from 'react';
 import { fadeIn } from 'utils/keyframes';
 import { featuresList } from './features';
+import { OtpForm } from 'pages/auth-page';
 
 const FeaturePageTitle = styled.h1`
   font-size: 56px;
@@ -31,6 +32,7 @@ const FeatureGroupWrapper = styled.div<{ $isRightImg: boolean }>`
   display: grid;
   grid-template-columns: ${(p) => (p.$isRightImg ? '4fr 6fr' : '6fr 4fr')};
   gap: 20px;
+  position: relative;
 
   @media (max-width: 800px) {
     grid-template-columns: 1fr;
@@ -45,6 +47,13 @@ const FeatureImg = styled.img<{ $isMobileImg?: boolean; $isActive?: boolean }>`
 
   opacity: 0;
   animation: 0.4s ${fadeIn} forwards;
+
+  ${(p) =>
+    !p.$isMobileImg &&
+    css`
+      position: sticky;
+      top: 20px;
+    `}
 
   @media (max-width: 800px) {
     display: none;
@@ -118,6 +127,43 @@ const SingleFeatureTitleWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
 `;
+
+const OtpFormWrapper = styled.div`
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 80px 8px;
+`;
+
+const OtpTitle = styled.h3`
+  font-size: 36px;
+  margin: 0 0 12px;
+  font-size: 36px;
+`;
+
+const OtpFormBakcground = styled.div`
+  background: #ffff00;
+
+  color: ${(p) => p.theme.color.black};
+
+  label,
+  p {
+    color: ${(p) => p.theme.color.black};
+  }
+
+  input {
+    background-color: ${(p) => p.theme.color.white};
+    border-color: #767676;
+  }
+`;
+
+export const OtpWidget = () => (
+  <OtpFormBakcground>
+    <OtpFormWrapper>
+      <OtpTitle>Open your web3 store today!</OtpTitle>
+      <OtpForm buttonText="Sign up now" />
+    </OtpFormWrapper>
+  </OtpFormBakcground>
+);
 
 export const FeatureGroup = ({
   title,
@@ -206,6 +252,8 @@ export const FeaturesPage = () => {
           />
         ))}
       </FeaturesPageWrapper>
+
+      <OtpWidget />
 
       <Footer />
     </>
