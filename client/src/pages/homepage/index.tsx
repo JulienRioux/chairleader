@@ -881,7 +881,7 @@ export const Homepage = () => {
             title="Powered by the Solana Network"
             content={
               <>
-                {`${APP_NAME}’s unique data ecosystem reveals opportunities where your business can grow with the `}
+                {`Chairleader's unique data ecosystem reveals opportunities where your business can grow with the `}
                 <a href="https://solana.com/" target="_blank" rel="noreferrer">
                   Solana network
                 </a>

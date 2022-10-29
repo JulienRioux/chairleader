@@ -35,8 +35,9 @@ interface IFooterItem {
 const footerData = [
   {
     content: [
-      { title: 'Pricing', to: routes.pricing },
+      { title: 'Features', to: routes.features },
       { title: 'NFTs', to: routes.mintNft },
+      { title: 'Pricing', to: routes.pricing },
       { title: 'Authenticate', to: routes.auth },
       { title: 'Home', to: routes.base },
     ],

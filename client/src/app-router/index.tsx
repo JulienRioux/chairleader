@@ -35,6 +35,7 @@ import { ThemePage } from 'pages/admin-pages/theme-page';
 import { LoyaltyPage } from 'pages/admin-pages/loyalty-page';
 import { MintNftPage } from 'pages/mint-nft-page';
 import { ContactStorePage } from 'pages/pos-app/contact-store-page';
+import { FeaturesPage } from 'pages/features-page';
 
 export const AdminAppRouter = () => {
   return (
@@ -146,6 +147,8 @@ const MainAppRouter = () => {
         path={routes.static.base + '/:staticPage'}
         element={<StaticPage />}
       />
+
+      <Route path={routes.features} element={<FeaturesPage />} />
 
       <Route path={routes.pricing} element={<PricingPage />} />
 

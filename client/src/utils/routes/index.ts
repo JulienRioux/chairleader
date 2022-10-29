@@ -6,6 +6,7 @@ export const routes = {
   magicLink: '/magic-link',
   completeSignup: '/complete-signup',
   storeNotFound: '/store-not-found',
+  features: '/features',
   static: {
     base: '/static',
     privacy: '/static/privacy',
