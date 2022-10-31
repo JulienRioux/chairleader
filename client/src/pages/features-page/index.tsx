@@ -169,11 +169,12 @@ const OtpFormBakcground = styled(motion.div)`
   max-width: ${(p) => p.theme.layout.maxWidth};
   border-radius: ${(p) => p.theme.borderRadius.default};
   margin: 80px auto;
-  background: #ff0;
+  background: ${(p) => p.theme.color.primary}11;
+  border: 1px solid ${(p) => p.theme.color.primary};
 
-  color: ${(p) => p.theme.color.black};
+  /* color: ${(p) => p.theme.color.black}; */
 
-  label,
+  /* label,
   p {
     color: ${(p) => p.theme.color.black};
   }
@@ -181,7 +182,7 @@ const OtpFormBakcground = styled(motion.div)`
   input {
     background-color: ${(p) => p.theme.color.white};
     border-color: #767676;
-  }
+  } */
 `;
 
 export const OtpWidget = () => (
