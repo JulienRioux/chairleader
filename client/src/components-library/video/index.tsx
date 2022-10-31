@@ -52,7 +52,6 @@ const VideoWrapper = styled.div`
 const VideoComponent = styled.video`
   border-radius: ${(p) => p.theme.borderRadius.default};
   overflow: hidden;
-  box-shadow: 0 8px 10px 4px ${(p) => p.theme.color.text}11;
   background: ${(p) => p.theme.color.text};
   width: 100%;
 `;

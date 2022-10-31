@@ -16,7 +16,7 @@ import { useMediaQuery } from 'hooks/media-query';
 import { ReactNode, useCallback, useState } from 'react';
 import { motion } from 'framer-motion';
 
-import GranyFilter from './granny-filter.svg';
+import background3 from '../features-page/background/background-3.svg';
 import videoSrc from 'assets/homepage/homepage-video.mp4';
 import appLogoSrc from 'assets/app-logo.png';
 import appLogoSrcGif from 'assets/app-logo.gif';
@@ -30,7 +30,8 @@ import graphSrc from 'assets/homepage/graph.png';
 import cupSrc from 'assets/homepage/cup.png';
 import videoPosterSrc from 'assets/homepage/video-poster.png';
 import { useLocation } from 'react-router-dom';
-import { OtpWidget } from 'pages/features-page';
+import { FeatureGroup, OtpWidget } from 'pages/features-page';
+import { featuresList } from 'pages/features-page/features';
 
 const HeroWrapper = styled.div`
   max-width: ${(p) => p.theme.layout.maxWidth};
@@ -61,7 +62,6 @@ const Header = styled.h1`
   margin-top: 0;
   /* background-clip: text;
   -webkit-background-clip: text;
-  background-image: url(${GranyFilter});
   color: transparent;
   mix-blend-mode: exclusion;
   animation: 3s ${backgroundTextAnim} linear infinite; */
@@ -211,18 +211,24 @@ const Banner = styled.div`
   padding: 80px 0;
   margin: 0 auto;
   min-height: 360px;
-  display: flex;
-  flex-direction: column;
   justify-content: center;
-  text-align: center;
+  align-items: center;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 4fr 6fr;
+  gap: 20px;
+
+  @media (max-width: 800px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const BannerHeader = styled.h3`
-  font-size: 60px;
+  font-size: 36px;
   margin: 0 0 60px;
 
   @media (max-width: 800px) {
-    font-size: 48px;
+    margin: 0 0 20px;
   }
 `;
 
@@ -284,7 +290,7 @@ const MotionDiv = ({
   <motion.div
     initial={{ opacity: 0, transform: 'translateY(40px)' }}
     whileInView={{ opacity: 1, transform: 'translateY(0px)' }}
-    // viewport={{ once: true }}
+    viewport={{ once: true }}
     transition={{ type: 'spring', stiffness: 100, delay }}
     {...(style && { style })}
   >
@@ -442,6 +448,12 @@ const FeaturedStoreImg = styled.img`
   }
 `;
 
+const FeatureGroupWrapper = styled(motion.div)`
+  max-width: ${(p) => p.theme.layout.maxWidth};
+  margin: 0 auto;
+  padding: 0 8px;
+`;
+
 const FeaturedStoresWrapper = styled.div`
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -491,6 +503,85 @@ const LeftWrapper = styled.div`
   flex-direction: column;
   justify-content: space-between;
 `;
+
+const StepsExplainedWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  max-width: ${(p) => p.theme.layout.maxWidth};
+  margin: 160px auto;
+  border-bottom: 1px solid ${(p) => p.theme.color.lightGrey};
+
+  @media (max-width: 800px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const SingleStep = styled.div`
+  display: flex;
+  /* align-items: center; */
+  flex-direction: column;
+  border-width: 0 0 0 1px;
+  border-style: solid;
+  border-color: ${(p) => p.theme.color.lightGrey};
+  padding: 0 50px 80px;
+
+  :first-of-type {
+    border: none;
+  }
+`;
+
+const StepTitle = styled.div`
+  font-size: 24px;
+  font-weight: bold;
+
+  span {
+    /* font-size: 40px; */
+    border: 1px solid ${(p) => p.theme.color.lightGrey};
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+  }
+`;
+
+const StepText = styled.p`
+  line-height: 1.6;
+  /* text-align: center; */
+  margin-bottom: 0;
+`;
+
+const StepsExplained = () => (
+  <StepsExplainedWrapper>
+    <SingleStep>
+      <StepTitle>
+        <span>1</span> Customise a theme
+      </StepTitle>
+      <StepText>
+        Customize your store. No design experience or programming skills
+        required.
+      </StepText>
+    </SingleStep>
+
+    <SingleStep>
+      <StepTitle>
+        <span>2</span> Add products
+      </StepTitle>
+      <StepText>
+        Add your products to the shop. List your eye-catching products with the
+        best photos, price and descriptions.
+      </StepText>
+    </SingleStep>
+
+    <SingleStep>
+      <StepTitle>
+        <span>3</span> Start selling
+      </StepTitle>
+      <StepText>Set up payments and shipping, and start selling.</StepText>
+    </SingleStep>
+  </StepsExplainedWrapper>
+);
 
 const FeaturedStores = () => {
   const [shopIndex, setShopIndex] = useState(0);
@@ -543,9 +634,8 @@ const TopBannerWrapper = styled.div<{
   $color: string;
   $backgroundColor: string;
 }>`
-  background: #000;
+  background: #ff0;
   color: ${(p) => p.$color};
-  background-color: ${(p) => p.$backgroundColor};
   padding: 0 8px;
 
   button {
@@ -634,7 +724,7 @@ export const HomepageTopNav = () => {
     <motion.div
       initial={{ opacity: 0, transform: 'translateY(-61px)' }}
       whileInView={{ opacity: 1, transform: 'translateY(0px)' }}
-      // viewport={{ once: true }}
+      viewport={{ once: true }}
       transition={{ type: 'spring', stiffness: 100 }}
     >
       {/* Product hunt banner */}
@@ -692,7 +782,11 @@ export const HomepageTopNav = () => {
             <ToggleTheme style={{ marginRight: '8px' }} />
 
             {SHOW_AUTH_BTN && (
-              <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}>
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+              >
                 {isAuthenticated() ? (
                   <Button to={routes.admin.inventory} secondary icon="home" />
                 ) : (
@@ -713,8 +807,9 @@ export const Homepage = () => {
   const { isAuthenticated, isLoading } = useAuth();
   const isMobileView = useMediaQuery('(max-width: 800px)');
 
-  const SHOW_BANNER = false;
+  const SHOW_BANNER = true;
   const SHOW_MERCHANTS = false;
+  const OLD_UI = false;
 
   return (
     <div>
@@ -813,111 +908,137 @@ export const Homepage = () => {
             </BannerWrapper>
           )}
 
-          <PresentationItem
-            title="Improve customers engagement with web3"
-            content={
-              <>
-                Use token gating, loyalties programs, and NFTs membership to
-                grow your business and brand by unlocking superior customer
-                experience.
-              </>
-            }
-            btnText={<StartNowBtnText />}
-            img={msgSrc}
-            isLeftImg
-          />
+          {OLD_UI && (
+            <>
+              <PresentationItem
+                title="Improve customers engagement with web3"
+                content={
+                  <>
+                    Use token gating, loyalties programs, and NFTs membership to
+                    grow your business and brand by unlocking superior customer
+                    experience.
+                  </>
+                }
+                btnText={<StartNowBtnText />}
+                img={msgSrc}
+                isLeftImg
+              />
 
-          <PresentationItem
-            title="In-app NFTs creation"
-            content={
-              <>
-                Chairleader is really easy to use! Create NFTs without coding
-                knowledge and without leaving the app.
-              </>
-            }
-            btnText={<StartNowBtnText />}
-            img={robotSrc}
-          />
+              <PresentationItem
+                title="In-app NFTs creation"
+                content={
+                  <>
+                    Chairleader is really easy to use! Create NFTs without
+                    coding knowledge and without leaving the app.
+                  </>
+                }
+                btnText={<StartNowBtnText />}
+                img={robotSrc}
+              />
 
-          <PresentationItem
-            title="Add your products, manage your inventory, track your orders"
-            content={
-              <>
-                Inventory tracking can help you avoid selling products that have
-                run out of stock, or let you know when you need to order or make
-                more of your product.
-              </>
-            }
-            btnText={<StartNowBtnText />}
-            img={shopSrc}
-            isLeftImg
-          />
+              <PresentationItem
+                title="Add your products, manage your inventory, track your orders"
+                content={
+                  <>
+                    Inventory tracking can help you avoid selling products that
+                    have run out of stock, or let you know when you need to
+                    order or make more of your product.
+                  </>
+                }
+                btnText={<StartNowBtnText />}
+                img={shopSrc}
+                isLeftImg
+              />
 
-          <PresentationItem
-            title="World leader no-code theme customization"
-            content={
-              <>
-                Create a store you and your customers will love with our live
-                update theme customization.
-              </>
-            }
-            btnText={<StartNowBtnText />}
-            img={rainbowSrc}
-          />
+              <PresentationItem
+                title="World leader no-code theme customization"
+                content={
+                  <>
+                    Create a store you and your customers will love with our
+                    live update theme customization.
+                  </>
+                }
+                btnText={<StartNowBtnText />}
+                img={rainbowSrc}
+              />
 
-          <PresentationItem
-            title="Pay only when you're selling"
-            content={
-              <>
-                Access a complete ecommerce platform with simple, pay-as-you-go
-                pricing. 1% fee per transaction.
-              </>
-            }
-            btnText={<StartNowBtnText />}
-            img={graphSrc}
-            isLeftImg
-          />
+              <PresentationItem
+                title="Pay only when you're selling"
+                content={
+                  <>
+                    Access a complete ecommerce platform with simple,
+                    pay-as-you-go pricing. 1% fee per transaction.
+                  </>
+                }
+                btnText={<StartNowBtnText />}
+                img={graphSrc}
+                isLeftImg
+              />
 
-          <PresentationItem
-            title="Powered by the Solana Network"
-            content={
-              <>
-                {`Chairleader's unique data ecosystem reveals opportunities where your business can grow with the `}
-                <a href="https://solana.com/" target="_blank" rel="noreferrer">
-                  Solana network
-                </a>
-                . From accept cryptocurrency payments, NFTs token gating, and
-                many more!
-              </>
-            }
-            btnText={<StartNowBtnText />}
-            img={solanaSrc}
-          />
+              <PresentationItem
+                title="Powered by the Solana Network"
+                content={
+                  <>
+                    {`Chairleader's unique data ecosystem reveals opportunities where your business can grow with the `}
+                    <a
+                      href="https://solana.com/"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Solana network
+                    </a>
+                    . From accept cryptocurrency payments, NFTs token gating,
+                    and many more!
+                  </>
+                }
+                btnText={<StartNowBtnText />}
+                img={solanaSrc}
+              />
 
-          <PresentationItem
-            title="NFT collection giveaway"
-            content={
-              <>
-                Join our community to get early access to our NFT collection
-                that will allow all the NFT token collection holders to get 50%
-                of all the revenue generated by our platform for a period of 3
-                months and will give early access to our next NFT collection.
-              </>
-            }
-            btnText={
-              <>
-                Learn more
-                <Icon style={{ marginLeft: '12px' }} name="arrow_forward" />
-              </>
-            }
-            img={cupSrc}
-            isLeftImg
-            showBtnText
-            link={routes.mintNft}
-          />
+              <PresentationItem
+                title="NFT collection giveaway"
+                content={
+                  <>
+                    Join our community to get early access to our NFT collection
+                    that will allow all the NFT token collection holders to get
+                    50% of all the revenue generated by our platform for a
+                    period of 3 months and will give early access to our next
+                    NFT collection.
+                  </>
+                }
+                btnText={
+                  <>
+                    Learn more
+                    <Icon style={{ marginLeft: '12px' }} name="arrow_forward" />
+                  </>
+                }
+                img={cupSrc}
+                isLeftImg
+                showBtnText
+                link={routes.mintNft}
+              />
+            </>
+          )}
 
           {SHOW_MERCHANTS && <FeaturedStores />}
         </>
+
+        <FeatureGroupWrapper>
+          {featuresList.map(
+            ({ title, description, features, backgroundImage }, index) => (
+              <FeatureGroup
+                key={title}
+                title={title}
+                description={description}
+                features={features}
+                isRightImg={!!(index % 2)}
+                backgroundImage={backgroundImage}
+              />
+            )
+          )}
+        </FeatureGroupWrapper>
+
+        <StepsExplained />
 
         {!HIDE_APP && <OtpWidget />}
 

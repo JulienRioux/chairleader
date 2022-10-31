@@ -6,9 +6,10 @@ import { useScrollTop } from 'hooks/scroll-top';
 import { motion } from 'framer-motion';
 import { useMediaQuery } from 'hooks/media-query';
 import { ReactNode, useState } from 'react';
-import { fadeIn } from 'utils/keyframes';
+import { slideInBottom, fadeIn } from 'utils/keyframes';
 import { featuresList } from './features';
 import { OtpForm } from 'pages/auth-page';
+import background1 from './background/background-1.svg';
 
 const FeaturePageTitle = styled.h1`
   font-size: 56px;
@@ -20,7 +21,7 @@ const FeaturesPageWrapper = styled(motion.div)`
   padding: 0 8px;
 `;
 
-const FeatureGroupMainWrapper = styled.div`
+const FeatureGroupMainWrapper = styled(motion.div)`
   margin: 120px 0;
 
   @media (max-width: 800px) {
@@ -39,20 +40,26 @@ const FeatureGroupWrapper = styled.div<{ $isRightImg: boolean }>`
   }
 `;
 
-const FeatureImg = styled.img<{ $isMobileImg?: boolean; $isActive?: boolean }>`
-  width: 100%;
-  aspect-ratio: 3 / 2;
+const FeatureImgWrapper = styled.div<{
+  $backgroundImage: string;
+  $isMobileImg?: boolean;
+  $isActive?: boolean;
+}>`
+  background-image: url(${(p) => p.$backgroundImage});
+  background-size: cover;
+  background-position: 50% 50%;
   border-radius: ${(p) => p.theme.borderRadius.default};
-  background: ${(p) => p.theme.color.lightGrey};
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
 
-  opacity: 0;
-  animation: 0.4s ${fadeIn} forwards;
+  @media (max-width: 800px) {
+    margin: 0 20px 20px;
+  }
 
   ${(p) =>
     !p.$isMobileImg &&
     css`
-      position: sticky;
-      top: 20px;
+      position: relative;
     `}
 
   @media (max-width: 800px) {
@@ -67,10 +74,26 @@ const FeatureImg = styled.img<{ $isMobileImg?: boolean; $isActive?: boolean }>`
 
       @media (max-width: 800px) {
         display: block;
-        margin: 0 20px 20px;
-        width: calc(100% - 40px);
+        position: relative;
       }
     `}
+`;
+
+const FeatureImg = styled.img`
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 3 / 2;
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+
+  /* background: ${(p) => p.theme.color.lightGrey}; */
+
+  opacity: 0;
+  animation: 0.6s ${slideInBottom} forwards;
 `;
 
 const FeatureButton = styled(UnstyledButton)<{ $isActive: boolean }>`
@@ -81,7 +104,9 @@ const FeatureButton = styled(UnstyledButton)<{ $isActive: boolean }>`
   transition: 0.2s;
 `;
 
-const FeatureButtonWrapper = styled.div`
+const FeatureButtonWrapper = styled.div``;
+
+const FeatureButtonInnerWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -140,8 +165,11 @@ const OtpTitle = styled.h3`
   font-size: 36px;
 `;
 
-const OtpFormBakcground = styled.div`
-  background: #ffff00;
+const OtpFormBakcground = styled(motion.div)`
+  max-width: ${(p) => p.theme.layout.maxWidth};
+  border-radius: ${(p) => p.theme.borderRadius.default};
+  margin: 80px auto;
+  background: #ff0;
 
   color: ${(p) => p.theme.color.black};
 
@@ -157,7 +185,12 @@ const OtpFormBakcground = styled.div`
 `;
 
 export const OtpWidget = () => (
-  <OtpFormBakcground>
+  <OtpFormBakcground
+    initial={{ opacity: 0, transform: 'translateY(40px)' }}
+    whileInView={{ opacity: 1, transform: 'translateY(0px)' }}
+    viewport={{ once: true }}
+    transition={{ type: 'spring', stiffness: 100 }}
+  >
     <OtpFormWrapper>
       <OtpTitle>Open your web3 store today!</OtpTitle>
       <OtpForm buttonText="Sign up now" />
@@ -170,63 +203,80 @@ export const FeatureGroup = ({
   description,
   features,
   isRightImg,
+  backgroundImage,
 }: {
   title: string;
   description: ReactNode;
   features: any[];
   isRightImg: boolean;
+  backgroundImage: string;
 }) => {
   const [activeFeature, setActiveFeature] = useState(0);
   const isMobileView = useMediaQuery('(max-width: 800px)');
 
   return (
-    <FeatureGroupMainWrapper>
+    <FeatureGroupMainWrapper
+      initial={{ opacity: 0, transform: 'translateY(40px)' }}
+      whileInView={{ opacity: 1, transform: 'translateY(0px)' }}
+      viewport={{ once: true }}
+      transition={{ type: 'spring', stiffness: 100 }}
+    >
       <FeatureGroupTitle>{title}</FeatureGroupTitle>
 
       <FeatureGroupDescription>{description}</FeatureGroupDescription>
 
       <FeatureGroupWrapper $isRightImg={isRightImg}>
         {!isRightImg && !isMobileView && (
-          <div key={activeFeature}>
-            <FeatureImg src={features[activeFeature].imgSrc} />
-          </div>
+          <FeatureImgWrapper $backgroundImage={backgroundImage}>
+            <FeatureImg
+              src={features[activeFeature].imgSrc}
+              key={`${title}_${activeFeature}`}
+            />
+          </FeatureImgWrapper>
         )}
 
         <FeatureButtonWrapper>
-          {features.map(({ title, description }, index) => {
-            const isActive = activeFeature === index;
-            return (
-              <FeatureButton
-                key={title}
-                onClick={() => setActiveFeature(index)}
-                $isActive={isActive}
-              >
-                <SingleFeatureTitleWrapper>
-                  <SingleFeatureTitle>{title}</SingleFeatureTitle>
+          <FeatureButtonInnerWrapper>
+            {features.map(({ title, description }, index) => {
+              const isActive = activeFeature === index;
+              return (
+                <FeatureButton
+                  key={title}
+                  onClick={() => setActiveFeature(index)}
+                  $isActive={isActive}
+                >
+                  <SingleFeatureTitleWrapper>
+                    <SingleFeatureTitle>{title}</SingleFeatureTitle>
 
-                  <Icon name={isActive ? 'arrow_upward' : 'arrow_downward'} />
-                </SingleFeatureTitleWrapper>
-                {isActive && (
-                  <SingleFeatureDescription>
-                    {description}
-                  </SingleFeatureDescription>
-                )}
+                    <Icon name={isActive ? 'arrow_upward' : 'arrow_downward'} />
+                  </SingleFeatureTitleWrapper>
+                  {isActive && (
+                    <SingleFeatureDescription>
+                      {description}
+                    </SingleFeatureDescription>
+                  )}
 
-                {isMobileView && (
-                  <FeatureImg
-                    $isMobileImg
-                    $isActive={isActive}
-                    src={features[activeFeature].imgSrc}
-                  />
-                )}
-              </FeatureButton>
-            );
-          })}
+                  {isMobileView && (
+                    <FeatureImgWrapper
+                      $backgroundImage={backgroundImage}
+                      $isMobileImg
+                      $isActive={isActive}
+                    >
+                      <FeatureImg src={features[activeFeature].imgSrc} />
+                    </FeatureImgWrapper>
+                  )}
+                </FeatureButton>
+              );
+            })}
+          </FeatureButtonInnerWrapper>
         </FeatureButtonWrapper>
         {isRightImg && !isMobileView && (
-          <div>
-            <FeatureImg src={features[activeFeature].imgSrc} />
-          </div>
+          <FeatureImgWrapper $backgroundImage={backgroundImage}>
+            <FeatureImg
+              src={features[activeFeature].imgSrc}
+              key={`${title}_${activeFeature}`}
+            />
+          </FeatureImgWrapper>
         )}
       </FeatureGroupWrapper>
     </FeatureGroupMainWrapper>
@@ -242,15 +292,18 @@ export const FeaturesPage = () => {
       <FeaturesPageWrapper>
         <FeaturePageTitle>Features</FeaturePageTitle>
 
-        {featuresList.map(({ title, description, features }, index) => (
-          <FeatureGroup
-            key={title}
-            title={title}
-            description={description}
-            features={features}
-            isRightImg={!!(index % 2)}
-          />
-        ))}
+        {featuresList.map(
+          ({ title, description, features, backgroundImage }, index) => (
+            <FeatureGroup
+              key={title}
+              title={title}
+              description={description}
+              features={features}
+              isRightImg={!!(index % 2)}
+              backgroundImage={backgroundImage}
+            />
+          )
+        )}
       </FeaturesPageWrapper>
 
       <OtpWidget />
