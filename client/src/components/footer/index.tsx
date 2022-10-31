@@ -62,18 +62,18 @@ interface IFooterItem {
 const footerData = [
   {
     content: [
+      { title: 'Home', to: routes.base },
+      { title: 'Pricing', to: routes.pricing },
       { title: 'Features', to: routes.features },
       { title: 'NFTs', to: routes.mintNft },
-      { title: 'Pricing', to: routes.pricing },
       { title: 'Authenticate', to: routes.auth },
-      { title: 'Home', to: routes.base },
     ],
     title: 'Product',
   },
   {
     content: [
       { href: 'https://twitter.com/chairleader_app', title: 'Twitter' },
-      { href: 'https://discord.gg/Men7Amz3vq', title: 'Discord' },
+      { href: 'https://discord.gg/sbTcWHkKBN', title: 'Discord' },
       { href: 'https://medium.com/chairleader-xyz', title: 'Blog' },
     ],
     title: 'Social',

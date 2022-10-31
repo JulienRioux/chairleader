@@ -163,7 +163,11 @@ const SingleFeatureTitleWrapper = styled.div`
 const OtpFormWrapper = styled.div`
   max-width: 600px;
   margin: 0 auto;
-  padding: 80px 8px;
+  padding: 80px 20px;
+
+  @media (max-width: 800px) {
+    padding: 40px 20px;
+  }
 `;
 
 const OtpTitle = styled.h3`
@@ -192,34 +196,40 @@ const OtpFormBakcground = styled(motion.div)`
   } */
 `;
 
-export const OtpWidget = () => (
-  <OtpFormBakcground
-    initial={{ opacity: 0, transform: 'translateY(40px)' }}
-    whileInView={{ opacity: 1, transform: 'translateY(0px)' }}
-    viewport={{ once: true }}
-    transition={{ type: 'spring', stiffness: 100 }}
-  >
-    <OtpFormWrapper>
-      <OtpTitle>Open your web3 store today!</OtpTitle>
+export const OtpWidget = () => {
+  const isMobileView = useMediaQuery('(max-width: 800px)');
 
-      <p style={{ lineHeight: 1.6 }}>
-        Try the platform before everyone else. Subscribe to get early access to
-        Chairleader.
-      </p>
+  return (
+    <OtpFormBakcground
+      initial={{ opacity: 0, transform: 'translateY(40px)' }}
+      whileInView={{ opacity: 1, transform: 'translateY(0px)' }}
+      viewport={{ once: true }}
+      transition={{ type: 'spring', stiffness: 100 }}
+    >
+      <OtpFormWrapper>
+        <OtpTitle>Open your web3 store today!</OtpTitle>
 
-      {HIDE_APP ? (
-        <UnstyledExternalLink
-          href="https://www.producthunt.com/upcoming/chairleader"
-          target="_blank"
-        >
-          <Button icon="launch">Get early access</Button>
-        </UnstyledExternalLink>
-      ) : (
-        <OtpForm buttonText="Sign up now" />
-      )}
-    </OtpFormWrapper>
-  </OtpFormBakcground>
-);
+        <p style={{ lineHeight: 1.6 }}>
+          Try the platform before everyone else. Subscribe to get early access
+          to Chairleader.
+        </p>
+
+        {!HIDE_APP ? (
+          <UnstyledExternalLink
+            href="https://www.producthunt.com/upcoming/chairleader"
+            target="_blank"
+          >
+            <Button icon="launch" fullWidth={isMobileView}>
+              Get early access
+            </Button>
+          </UnstyledExternalLink>
+        ) : (
+          <OtpForm buttonText="Sign up now" />
+        )}
+      </OtpFormWrapper>
+    </OtpFormBakcground>
+  );
+};
 
 export const FeatureGroup = ({
   title,

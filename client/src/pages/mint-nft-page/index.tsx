@@ -221,7 +221,7 @@ export const MintNftPage = () => {
               <br /> NFT collection
             </HeroTitle>
             <HeroPar>Join our community to get early access 🚀</HeroPar>
-            <UnstyledExternalLink href="https://discord.gg/Men7Amz3vq">
+            <UnstyledExternalLink href="https://discord.gg/sbTcWHkKBN">
               <Button icon="launch" fullWidth={isMobileView}>
                 Join on Discord
               </Button>
@@ -366,7 +366,7 @@ export const MintNftPage = () => {
         </JoinOurCommunityTitle>
 
         <div>
-          <UnstyledExternalLink href="https://discord.gg/Men7Amz3vq">
+          <UnstyledExternalLink href="https://discord.gg/sbTcWHkKBN">
             <Button icon="launch" fullWidth={isMobileView}>
               Join on Discord
             </Button>

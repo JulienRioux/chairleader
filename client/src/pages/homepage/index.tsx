@@ -514,6 +514,7 @@ const StepsExplainedWrapper = styled.div`
   @media (max-width: 800px) {
     grid-template-columns: 1fr;
     border: none;
+    margin: 120px auto 80px;
   }
 `;
 
