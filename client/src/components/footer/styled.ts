@@ -69,3 +69,17 @@ export const CopyrightPar = styled.p`
     text-align: center;
   }
 `;
+
+export const BottomFooter = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  svg {
+    height: 16px;
+    width: 16px;
+  }
+
+  @media (max-width: 600px) {
+    display: block;
+  }
+`;

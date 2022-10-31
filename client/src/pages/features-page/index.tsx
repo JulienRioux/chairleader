@@ -57,6 +57,7 @@ const FeatureImgWrapper = styled.div<{
   border-radius: ${(p) => p.theme.borderRadius.default};
   aspect-ratio: 3 / 2;
   overflow: hidden;
+  border: 1px solid ${(p) => p.theme.color.lightGrey};
 
   @media (max-width: 800px) {
     margin: 0 20px 20px;
