@@ -6,7 +6,7 @@ import {
   UnstyledLink,
   Video,
 } from 'components-library';
-import styled, { keyframes } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import { routes } from 'utils';
 import { Footer } from 'components';
 import { APP_NAME, HIDE_APP } from 'configs';
@@ -535,7 +535,7 @@ const SingleStep = styled.div`
   }
 `;
 
-const StepTitle = styled.div`
+const StepTitle = styled.div<{ $isDarkTheme: boolean }>`
   font-size: 24px;
   font-weight: bold;
 
@@ -548,6 +548,14 @@ const StepTitle = styled.div`
     height: 32px;
     width: 32px;
     border-radius: 50%;
+
+    ${(p) =>
+      p.$isDarkTheme &&
+      css`
+        color: #ff0;
+        background: #ff01;
+        border-color: #ff0;
+      `}
   }
 `;
 
@@ -557,36 +565,40 @@ const StepText = styled.p`
   margin-bottom: 0;
 `;
 
-const StepsExplained = () => (
-  <StepsExplainedWrapper>
-    <SingleStep>
-      <StepTitle>
-        <span>1</span> Customise a theme
-      </StepTitle>
-      <StepText>
-        Customize your store. No design experience or programming skills
-        required.
-      </StepText>
-    </SingleStep>
+const StepsExplained = () => {
+  const { isDarkTheme } = useTheme();
 
-    <SingleStep>
-      <StepTitle>
-        <span>2</span> Add products
-      </StepTitle>
-      <StepText>
-        Add your products to the shop. List your eye-catching products with the
-        best photos, price and descriptions.
-      </StepText>
-    </SingleStep>
+  return (
+    <StepsExplainedWrapper>
+      <SingleStep>
+        <StepTitle $isDarkTheme={isDarkTheme}>
+          <span>1</span> Customise a theme
+        </StepTitle>
+        <StepText>
+          Customize your store. No design experience or programming skills
+          required.
+        </StepText>
+      </SingleStep>
 
-    <SingleStep>
-      <StepTitle>
-        <span>3</span> Start selling
-      </StepTitle>
-      <StepText>Set up payments and shipping, and start selling.</StepText>
-    </SingleStep>
-  </StepsExplainedWrapper>
-);
+      <SingleStep>
+        <StepTitle $isDarkTheme={isDarkTheme}>
+          <span>2</span> Add products
+        </StepTitle>
+        <StepText>
+          Add your products to the shop. List your eye-catching products with
+          the best photos, price and descriptions.
+        </StepText>
+      </SingleStep>
+
+      <SingleStep>
+        <StepTitle $isDarkTheme={isDarkTheme}>
+          <span>3</span> Start selling
+        </StepTitle>
+        <StepText>Set up payments and shipping, and start selling.</StepText>
+      </SingleStep>
+    </StepsExplainedWrapper>
+  );
+};
 
 const FeaturedStores = () => {
   const [shopIndex, setShopIndex] = useState(0);
@@ -718,6 +730,20 @@ const BannerContent = styled.div`
   }
 `;
 
+const LeftNav = styled.div`
+  display: flex;
+`;
+
+const NavLink = styled(UnstyledLink)`
+  margin-left: 24px;
+  display: flex;
+  align-items: center;
+
+  @media (max-width: 800px) {
+    display: none;
+  }
+`;
+
 export const HomepageTopNav = () => {
   const { isAuthenticated, isLoading } = useAuth();
 
@@ -774,14 +800,18 @@ export const HomepageTopNav = () => {
 
       <TopNavWrapper>
         <TopNav>
-          <Logo to={routes.base}>
-            <AppIconImgWrapper>
-              <AppIconImg src={appLogoSrcQuickGif} />
+          <LeftNav>
+            <Logo to={routes.base}>
+              <AppIconImgWrapper>
+                <AppIconImg src={appLogoSrcQuickGif} />
 
-              <AppIconImg src={appLogoSrc} />
-            </AppIconImgWrapper>
-            {APP_NAME}
-          </Logo>
+                <AppIconImg src={appLogoSrc} />
+              </AppIconImgWrapper>
+              {APP_NAME}
+            </Logo>
+
+            <NavLink to={routes.pricing}>Pricing</NavLink>
+          </LeftNav>
 
           <BtnWrapper>
             <ToggleTheme style={{ marginRight: '8px' }} />
