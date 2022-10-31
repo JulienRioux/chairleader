@@ -513,6 +513,7 @@ const StepsExplainedWrapper = styled.div`
 
   @media (max-width: 800px) {
     grid-template-columns: 1fr;
+    border: none;
   }
 `;
 
@@ -526,6 +527,10 @@ const SingleStep = styled.div`
   padding: 0 50px 80px;
 
   :first-of-type {
+    border: none;
+  }
+
+  @media (max-width: 800px) {
     border: none;
   }
 `;

@@ -148,9 +148,8 @@ export const featuresList = [
     backgroundImage: background2,
   },
   {
-    title: 'Store features',
-    description:
-      'Accelerate deal execution Optimize transaction costs Save professional time Streamline collaboration with advisors.',
+    title: 'Easy store management',
+    description: 'Manage and customize your store easily with Chairleader.',
     features: storeFeatures,
     backgroundImage: background3,
   },
