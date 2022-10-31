@@ -1075,7 +1075,7 @@ export const Homepage = () => {
 
         <StepsExplained />
 
-        {!HIDE_APP && <OtpWidget />}
+        <OtpWidget />
 
         <Footer />
       </HomepageWrapper>

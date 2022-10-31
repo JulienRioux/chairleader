@@ -1,5 +1,10 @@
 import { Footer } from 'components';
-import { Icon, UnstyledButton } from 'components-library';
+import {
+  Button,
+  Icon,
+  UnstyledButton,
+  UnstyledExternalLink,
+} from 'components-library';
 import { HomepageTopNav } from 'pages/homepage';
 import styled, { css } from 'styled-components';
 import { useScrollTop } from 'hooks/scroll-top';
@@ -10,6 +15,7 @@ import { slideInBottom, fadeIn } from 'utils/keyframes';
 import { featuresList } from './features';
 import { OtpForm } from 'pages/auth-page';
 import background1 from './background/background-1.svg';
+import { HIDE_APP } from 'configs';
 
 const FeaturePageTitle = styled.h1`
   font-size: 56px;
@@ -194,7 +200,22 @@ export const OtpWidget = () => (
   >
     <OtpFormWrapper>
       <OtpTitle>Open your web3 store today!</OtpTitle>
-      <OtpForm buttonText="Sign up now" />
+
+      <p style={{ lineHeight: 1.6 }}>
+        Try the platform before everyone else. Subscribe to get early access to
+        Chairleader.
+      </p>
+
+      {HIDE_APP ? (
+        <UnstyledExternalLink
+          href="https://www.producthunt.com/upcoming/chairleader"
+          target="_blank"
+        >
+          <Button icon="launch">Get early access</Button>
+        </UnstyledExternalLink>
+      ) : (
+        <OtpForm buttonText="Sign up now" />
+      )}
     </OtpFormWrapper>
   </OtpFormBakcground>
 );
