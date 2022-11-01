@@ -15,7 +15,7 @@ import productVariants from 'assets/features/product-variants.png';
 import dashboard from 'assets/features/dashboard.png';
 import commingSoon from 'assets/features/comming-soon.png';
 import inAppNft from 'assets/features/in-app-nft.png';
-import background1 from './background/background-1.svg';
+import background1 from './background/background-1.png';
 import background2 from './background/background-2.png';
 import background3 from './background/background-3.png';
 
@@ -73,7 +73,8 @@ const web3Features = [
 const uiFeatures = [
   {
     title: 'One-Time-Password',
-    description: 'Securely login to your eCommerce plaftorm using OTP.',
+    description:
+      'Sign up & log in with one click. Authenticate to our platform on an ongoing basis via one-click, passwordless login. With Email Magic Links.',
     imgSrc: otp,
   },
   {
@@ -138,7 +139,7 @@ export const featuresList = [
     description:
       'Use token gating, loyalties programs, and NFTs membership to grow your business and brand by unlocking superior customer experience.',
     features: web3Features,
-    backgroundImage: 'https://meshgradient.com/gallery/8.png',
+    backgroundImage: background1,
   },
   {
     title: 'Seamless experience',

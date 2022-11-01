@@ -93,6 +93,17 @@ export const slideInBottom = keyframes`
   }
 `;
 
+export const slideInLeft = keyframes`
+  0% { 
+    opacity: 0; 
+    transform: translateX(-60px); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateX(0); 
+  }
+`;
+
 export const messageIn = keyframes`
   0% { 
     opacity: 0; 

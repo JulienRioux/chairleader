@@ -66,7 +66,9 @@ const FeatureImgWrapper = styled.div<{
   ${(p) =>
     !p.$isMobileImg &&
     css`
-      position: relative;
+      /* position: relative; */
+      position: sticky;
+      top: 8px;
     `}
 
   @media (max-width: 800px) {
@@ -108,7 +110,15 @@ const FeatureButton = styled(UnstyledButton)<{ $isActive: boolean }>`
     ${(p) => (p.$isActive ? p.theme.color.text : p.theme.color.lightGrey)};
   border-radius: ${(p) => p.theme.borderRadius.default};
   text-align: left;
-  transition: 0.2s;
+  transition: 0.4s;
+
+  :hover {
+    ${(p) =>
+      !p.$isActive &&
+      css`
+        background: ${p.theme.color.text}09;
+      `};
+  }
 `;
 
 const FeatureButtonWrapper = styled.div``;
@@ -128,7 +138,7 @@ const SingleFeatureTitle = styled.h5`
 const SingleFeatureDescription = styled.p`
   margin: 0;
   color: ${(p) => p.theme.color.lightText};
-  margin: 0 20px 20px;
+  margin: 0 28px 28px;
   line-height: 1.6;
 
   opacity: 0;
@@ -154,7 +164,7 @@ const FeatureGroupDescription = styled.p`
 `;
 
 const SingleFeatureTitleWrapper = styled.div`
-  margin: 20px;
+  margin: 28px;
   display: flex;
   align-items: center;
   justify-content: space-between;

@@ -12,10 +12,12 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Logger, routes } from 'utils';
+import background1 from 'pages/features-page/background/background-1.png';
+import { slideInBottom, slideInLeft } from 'utils/keyframes';
 
 const HalfImagePageLayoutWrapper = styled.div`
   display: grid;
-  grid-template-columns: 50% 50%;
+  grid-template-columns: 4fr 6fr;
 
   @media (max-width: 800px) {
     grid-template-columns: 1fr;
@@ -32,6 +34,8 @@ const Img = styled.img`
   position: sticky;
   top: 0;
   z-index: -1;
+  opacity: 0;
+  animation: 0.4s ${slideInLeft} forwards;
 
   @media (max-width: 800px) {
     display: none;
@@ -41,17 +45,20 @@ const Img = styled.img`
 const ChildrenWrapper = styled.div`
   max-width: 100%;
   width: 100%;
+  opacity: 0;
+  animation: 0.4s ${slideInBottom} 0.1s forwards;
   /* margin: 100px auto; */
 `;
 
 const ChildrenInnerWrapper = styled.div`
-  padding: 8px;
+  padding: 20px;
 `;
 
 const BackButtonWrapper = styled.div`
-  position: absolute;
+  position: fixed;
   top: 20px;
   left: 20px;
+  z-index: 9;
 `;
 
 const AuthPageWrapper = styled.div`
@@ -72,7 +79,7 @@ export const HalfImagePageLayout = ({
       <BackButtonWrapper>
         <Button onClick={() => navigate(-1)} secondary icon="arrow_back" />
       </BackButtonWrapper>
-      <Img src={img ?? 'https://art.pixilart.com/sr2e976eda4edea.png'} />
+      <Img src={img ?? background1} />
       <ChildrenWrapper>
         <ChildrenInnerWrapper>{children} </ChildrenInnerWrapper>
       </ChildrenWrapper>

@@ -35,7 +35,7 @@ import { featuresList } from 'pages/features-page/features';
 const HeroWrapper = styled.div`
   max-width: ${(p) => p.theme.layout.maxWidth};
   margin: 0px auto 0;
-  min-height: calc(100vh - 61px);
+  min-height: calc(100vh - 101px);
   gap: 20px;
   display: flex;
   align-items: center;
@@ -140,7 +140,7 @@ const LeftHero = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 50%;
+  width: 60%;
 
   @media (max-width: 800px) {
     width: 100%;
@@ -168,7 +168,7 @@ const BannerVideoWrapper = styled.div`
 
 const HeroImg = styled.img`
   width: 90%;
-  padding-left: 10%;
+  margin-left: 10%;
   object-position: center;
   object-fit: cover;
   image-rendering: pixelated;
@@ -738,9 +738,16 @@ const NavLink = styled(UnstyledLink)`
   margin-left: 24px;
   display: flex;
   align-items: center;
+  border-radius: ${(p) => p.theme.borderRadius.input};
+  transition: 0.2s;
+  padding: 8px 12px;
 
   @media (max-width: 800px) {
     display: none;
+  }
+
+  :hover {
+    background: ${(p) => p.theme.color.text}11;
   }
 `;
 
@@ -917,10 +924,10 @@ export const Homepage = () => {
           </LeftHero>
 
           <MotionDiv
-            style={{ width: isMobileView ? '70%' : '50%' }}
+            style={{ width: isMobileView ? '70%' : '40%' }}
             delay={0.6}
           >
-            <HeroImg src={isMobileView ? appLogoSrcGif : appLogoSrc} />
+            <HeroImg src={isMobileView ? appLogoSrcGif : appLogoSrcGif} />
           </MotionDiv>
         </HeroWrapper>
 

@@ -1,12 +1,13 @@
 import { Footer } from 'components';
 import { Button, UnstyledExternalLink } from 'components-library';
 import { HomepageTopNav } from 'pages/homepage';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import appLogoSrcGif from 'assets/app-logo.gif';
 import backgroundGlassSrc from 'assets/background-glass.png';
 import { useScrollTop } from 'hooks/scroll-top';
 import { motion } from 'framer-motion';
 import { useMediaQuery } from 'hooks/media-query';
+import background1 from 'pages/features-page/background/background-1.png';
 
 const MintNftPageWrapper = styled(motion.div)`
   max-width: ${(p) => p.theme.layout.maxWidth};
@@ -97,8 +98,12 @@ const Par = styled.p`
 `;
 
 const BannerWrapper = styled(motion.div)`
-  background: ${(p) => p.theme.color.primary}11;
   padding: 20px 8px;
+  background-image: url(${background1});
+  background-size: cover;
+  background-position: 50% 50%;
+
+  color: ${(p) => p.theme.color.black};
 `;
 
 const DataBanner = styled.div`
@@ -149,7 +154,6 @@ const BannerBottomText = styled.div`
   font-size: 20px;
   margin-top: 8px;
   line-height: 1.4;
-  color: ${(p) => p.theme.color.lightText};
 
   @media (max-width: 800px) {
     font-size: 16px;
@@ -163,7 +167,13 @@ const BannerContentWrapper = styled(motion.div)<{ $hasBackground?: boolean }>`
   justify-content: center;
   align-items: center;
   border-radius: ${(p) => p.theme.borderRadius.default};
-  ${(p) => !p.$hasBackground && `background: ${p.theme.color.text}08;`}
+  ${(p) =>
+    !p.$hasBackground &&
+    css`
+      background: ${p.theme.color.primary}11;
+      color: ${p.theme.color.primary};
+      border: 1px solid ${p.theme.color.primary};
+    `}
 `;
 
 const FollowOnTwitterLink = styled(UnstyledExternalLink)`

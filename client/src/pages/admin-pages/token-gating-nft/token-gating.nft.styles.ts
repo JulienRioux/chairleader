@@ -1,6 +1,6 @@
 import { Button, UnstyledExternalLink, UnstyledLink } from 'components-library';
 import styled from 'styled-components';
-import { slideInBottom } from 'utils/keyframes';
+import { fadeIn } from 'utils/keyframes';
 
 export const NftImg = styled.img`
   border-radius: ${(p) => p.theme.borderRadius.default};
@@ -76,6 +76,7 @@ export const ProductImg = styled.img`
   border-radius: ${(p) => p.theme.borderRadius.default};
   border: 1px solid ${(p) => p.theme.color.text}22;
   aspect-ratio: 1 / 1;
+  object-fit: cover;
 `;
 
 export const Scoller = styled.div`
@@ -115,5 +116,5 @@ export const RightWrapper = styled.div`
 
 export const TokenGatingNftPageWrapper = styled.div`
   opacity: 0;
-  animation: 0.4s ${slideInBottom} forwards;
+  animation: 0.4s ${fadeIn} forwards;
 `;
