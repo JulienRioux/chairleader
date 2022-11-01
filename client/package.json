@@ -5,6 +5,9 @@
   "dependencies": {
     "@apollo/client": "^3.6.6",
     "@metaplex-foundation/js": "^0.15.0",
+    "@sanity/block-content-to-react": "^3.0.0",
+    "@sanity/client": "^3.4.1",
+    "@sanity/image-url": "^1.0.1",
     "@solana/pay": "^0.2.0",
     "@solana/spl-token": "^0.2.0",
     "@solana/wallet-adapter-react": "^0.15.8",
