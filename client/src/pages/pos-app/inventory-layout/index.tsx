@@ -56,17 +56,21 @@ const NavLink = styled(UnstyledLink)<{ isActive?: boolean }>`
   justify-content: center;
   padding: 8px;
   border-radius: 8px;
-  transition: 0.2s;
+  transition: 0.4s;
 
   :active {
     transform: translateY(3px);
+  }
+
+  :hover {
+    background: ${(p) => p.theme.color.text}11;
   }
 
   ${(p) =>
     p.isActive &&
     css`
       color: ${p.theme.color.primary};
-      background-color: ${p.theme.color.primary}11;
+      background-color: ${p.theme.color.primary}11 !important;
     `}
 `;
 

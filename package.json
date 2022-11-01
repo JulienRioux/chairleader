@@ -20,11 +20,6 @@
     "inquirer": "^9.0.2"
   },
   "dependencies": {
-    "@sanity/block-content-to-react": "^3.0.0",
-    "@sanity/client": "^3.4.1",
-    "@sanity/image-url": "^1.0.1",
-    "@solana/spl-token": "^0.2.0",
-    "@solana/wallet-adapter-base": "^0.9.17",
     "bs58": "^5.0.0",
     "shelljs": "^0.8.5"
   },
