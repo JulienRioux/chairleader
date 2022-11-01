@@ -7,7 +7,9 @@
     "dev": "cd scripts && yarn start",
     "dev:remote-store-api": "cd client && yarn dev",
     "dev:local-store-api": "concurrently --kill-others \"cd client && sleep 15 && yarn dev:local-store-api\" \"cd api/store && yarn dev\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cms": "cd ./cms && sanity start",
+    "deploy:cms": "cd ./cms && sanity deploy"
   },
   "author": "Julien Rioux",
   "license": "ISC",
@@ -18,6 +20,9 @@
     "inquirer": "^9.0.2"
   },
   "dependencies": {
+    "@sanity/block-content-to-react": "^3.0.0",
+    "@sanity/client": "^3.4.1",
+    "@sanity/image-url": "^1.0.1",
     "@solana/spl-token": "^0.2.0",
     "@solana/wallet-adapter-base": "^0.9.17",
     "bs58": "^5.0.0",

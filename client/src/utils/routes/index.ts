@@ -9,7 +9,7 @@ export const routes = {
   features: '/features',
   static: {
     base: '/static',
-    privacy: '/static/privacy',
+    privacy: '/static/privacy-policy',
     termsOfService: '/static/terms-of-service',
   },
 

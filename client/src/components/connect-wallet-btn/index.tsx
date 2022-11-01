@@ -160,7 +160,7 @@ export const ConnectWalletModalContent = ({
           </a>{' '}
           and{' '}
           <a
-            href="https://chairleader.xyz/static/privacy"
+            href="https://chairleader.xyz/static/privacy-policy"
             target="_blank"
             rel="noreferrer"
           >
