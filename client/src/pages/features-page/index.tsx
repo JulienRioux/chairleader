@@ -214,7 +214,7 @@ export const OtpWidget = () => {
           to Chairleader.
         </p>
 
-        {!HIDE_APP ? (
+        {HIDE_APP ? (
           <UnstyledExternalLink
             href="https://www.producthunt.com/upcoming/chairleader"
             target="_blank"

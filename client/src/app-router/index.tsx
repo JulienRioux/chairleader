@@ -23,7 +23,7 @@ import { Loader } from 'components-library';
 import { useStore } from 'hooks/store';
 import { DashboardPage } from 'pages/admin-pages/dashboard-page';
 import { CartPaymentPage } from 'pages/cart-payment-page';
-import { StaticPage } from 'pages/static-page/inex';
+import { StaticPage } from 'pages/static-page';
 import { PricingPage } from 'pages/pricing-page';
 import { SolanaPayProviders } from 'contexts/solana-pay';
 import { TokenGating } from 'pages/admin-pages/token-gating';

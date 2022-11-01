@@ -16,7 +16,6 @@ import { useMediaQuery } from 'hooks/media-query';
 import { ReactNode, useCallback, useState } from 'react';
 import { motion } from 'framer-motion';
 
-import background3 from '../features-page/background/background-3.svg';
 import videoSrc from 'assets/homepage/homepage-video.mp4';
 import appLogoSrc from 'assets/app-logo.png';
 import appLogoSrcGif from 'assets/app-logo.gif';
