@@ -956,7 +956,7 @@ export const Homepage = () => {
                 title="Improve customers engagement with web3"
                 content={
                   <>
-                    Use token gating, loyalties programs, and NFTs membership to
+                    Use token gating, loyalties programs, and NFT memberships to
                     grow your business and brand by unlocking superior customer
                     experience.
                   </>

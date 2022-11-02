@@ -426,7 +426,7 @@ export const ProductPage = () => {
         !!tokenGatedNftData.length && (
           <>
             <QualifyingNftsHeader>
-              NFTs that unlocks this product:
+              NFT memberships that unlocks this product:
             </QualifyingNftsHeader>
 
             <NftCardScrollerWrapper>
@@ -495,14 +495,14 @@ export const ProductPage = () => {
               {getProductLockedMapIsLoading ? (
                 <p>Checking NFT ownership...</p>
               ) : (
-                <p>You don't own qualifying NFT.</p>
+                <p>You don't own NFT membership.</p>
               )}
               <Button
-                icon="grid_view"
+                icon="card_membership"
                 to={routes.store.nfts}
                 isLoading={getProductLockedMapIsLoading}
               >
-                Shop all NFTs
+                Get NFT membership
               </Button>
             </>
           )}

@@ -54,7 +54,7 @@ const NavLink = styled(UnstyledLink)<{ isActive?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px;
+  padding: 8px 16px;
   border-radius: 8px;
   transition: 0.4s;
 
@@ -287,15 +287,15 @@ const MobileMenu = ({
     <MobileBottomMenu>
       <UnstyledLink to={routes.store.inventory}>
         <MenuBtn $isActive={productsBtnIsActive}>
-          <Icon name="house" />
+          <Icon name="storefront" />
           <MobileMenuLabel>Products</MobileMenuLabel>
         </MenuBtn>
       </UnstyledLink>
 
       <UnstyledLink to={routes.store.nfts}>
         <MenuBtn $isActive={nftsBtnIsActive}>
-          <Icon name="grid_view" />
-          <MobileMenuLabel>NFTs</MobileMenuLabel>
+          <Icon name="card_membership" />
+          <MobileMenuLabel>Memberships</MobileMenuLabel>
         </MenuBtn>
       </UnstyledLink>
 
@@ -408,7 +408,7 @@ export const InventoryLayout = ({ children }: { children: ReactNode }) => {
                     </NavLink>
 
                     <NavLink to={routes.store.nfts} isActive={nftsLinkIsActive}>
-                      NFTs
+                      NFT memberships
                     </NavLink>
 
                     <NavLink

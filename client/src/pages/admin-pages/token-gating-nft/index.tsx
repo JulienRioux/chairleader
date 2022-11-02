@@ -25,6 +25,7 @@ import {
   getNftMetadata,
   Logger,
   routes,
+  getProductVariantsLowestPrice,
 } from 'utils';
 import { ExclusivitiesSelection } from '../exclusitivies-selection';
 import { DetailItem } from '../invoice-page';
@@ -67,7 +68,8 @@ const DealItem = ({
   isAdminApp: boolean;
 }) => {
   const { inventory: adminApp } = useInventory();
-  const { user } = useAuth();
+  const { user, currencyDecimals } = useAuth();
+  const { decimals } = useCurrency();
 
   const { inventory: storeApp } = useStore();
   const { currency: storeAppCurrency } = useCurrency();
@@ -78,13 +80,27 @@ const DealItem = ({
 
   const currentProduct = inventory.find(({ _id }) => _id === productId);
 
+  const { productPrice, hasMultiplePrice } = getProductVariantsLowestPrice({
+    allPossibleVariantsObject: currentProduct?.allPossibleVariantsObject,
+    price: currentProduct?.price?.toString() ?? '',
+    productType: currentProduct?.productType ?? '',
+  });
+
+  const priceDisplay = Number(
+    Number(productPrice)?.toFixed(!isAdminApp ? decimals : currencyDecimals)
+  );
+
+  const priceDisplayString = `${
+    hasMultiplePrice ? 'From ' : ''
+  } ${priceDisplay}`;
+
   return (
     <DealItemButton to={`${linkPath}/${productId}`}>
       <ProductImg src={currentProduct?.image} />
       <DealTitle>{currentProduct?.title}</DealTitle>
 
       <DealPrice>
-        {currentProduct?.price} {currency}
+        {priceDisplayString} {currency}
       </DealPrice>
     </DealItemButton>
   );
@@ -206,7 +222,7 @@ export const TokenGatingNft = ({
       }
       setNftDataIsLoading(false);
     }
-  }, [address, metaplex]);
+  }, [address]);
 
   const handlePrintNewEdition = useCallback(async () => {
     if (!address) {

@@ -237,13 +237,13 @@ const SIDE_NAV_ROUTE = [
   {
     route: routes.admin.tokenGating,
     icon: 'card_membership',
-    label: 'NFTs memberships',
+    label: 'NFT memberships',
   },
   { route: routes.admin.loyalty, icon: 'favorite', label: 'Loyalty programs' },
   { route: routes.admin.payments, icon: 'receipt_long', label: 'Orders' },
   { route: routes.admin.dashboard, icon: 'equalizer', label: 'Dashboard' },
-  { route: routes.admin.myStore, icon: 'settings', label: 'Settings' },
   { route: routes.admin.theme, icon: 'palette', label: 'Theme' },
+  { route: routes.admin.myStore, icon: 'settings', label: 'Settings' },
   { route: routes.admin.pos, icon: 'shopping_bag', label: 'Open store' },
 ];
 

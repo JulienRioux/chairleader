@@ -155,7 +155,7 @@ export const NftsList = ({ isStoreApp = false }: { isStoreApp?: boolean }) => {
 
   useEffect(() => {
     findNftByAddress();
-  }, [findNftByAddress]);
+  }, [findNftByAddress, storeNftsFromDb]);
 
   if (isLoading || isLoadingUser) {
     return <Loader />;
@@ -171,6 +171,12 @@ export const NftsList = ({ isStoreApp = false }: { isStoreApp?: boolean }) => {
 
   return (
     <div>
+      {isStoreApp && (
+        <div style={{ marginBottom: '28px' }}>
+          <h1>NFT memberships</h1>
+          <p>Collect NFTs to unlock exclusive products, deals and more 🎉</p>
+        </div>
+      )}
       <NftsListWrapper>
         {activeNfts.map((nft, index) => (
           <NftDisplay

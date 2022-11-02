@@ -13,6 +13,7 @@ import { getPrintedVersionsFromMasterAddress, Logger } from 'utils';
 import { JsonMetadata, Metadata } from '@metaplex-foundation/js';
 import { FIND_NFT_BY_STORE_ID, UPDATE_NFT } from 'queries';
 import { useMutation, useQuery } from '@apollo/client';
+import { useAuth } from 'hooks/auth';
 
 export interface INftContext {
   userNftsIsLoading: boolean;
@@ -51,6 +52,7 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
   const [userNftsIsLoading, setUserNftsIsLoading] = useState(false);
   const [productsLockedWithNftAddress, setProductsLockedWithNftAddress] =
     useState<any>({});
+  const { user } = useAuth();
 
   const [nftAddressWithProductsLocked, setNftAddressWithProductsLocked] =
     useState<any>({});
@@ -69,7 +71,9 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
     loading: storeNftsAreLoading,
     data: storeNfts,
     refetch: refetchStoreNfts,
-  } = useQuery(FIND_NFT_BY_STORE_ID);
+  } = useQuery(FIND_NFT_BY_STORE_ID, {
+    skip: !user,
+  });
 
   const [updateNftMutation, { loading: updateNftIsLoading }] =
     useMutation(UPDATE_NFT);
@@ -196,7 +200,7 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
     setMapMasterToPrintedEditions(masterToPrintedEditionsMap);
 
     setGetProductLockedMapIsLoading(false);
-  }, [storeNfts?.findNftsByStoreId]);
+  }, [storeNfts]);
 
   useEffect(() => {
     getProductLockedMap();

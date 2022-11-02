@@ -229,7 +229,7 @@ export const StoreHomepage = () => {
                 secondary
                 to={routes.store.nfts}
               >
-                Shop NFTs
+                NFT membership
               </Button>
             </BtnWrapper>
           </HeroContentWrapper>
