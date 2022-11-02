@@ -30,13 +30,18 @@ export const ThemeContext = createContext<IThemeContext>({} as IThemeContext);
 
 type ThemeColors = 'blue' | 'green' | 'purple' | 'pink';
 
+const getUserPreferedMode = () =>
+  window?.matchMedia('(prefers-color-scheme: dark)').matches
+    ? THEME.DARK
+    : THEME.LIGHT;
+
 export const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const { store } = useStore();
   const { user } = useAuth();
 
   const [themeColor, setThemeColor] = useState<ThemeColors>('blue');
   const [theme, setTheme] = useState(
-    (localStorage.getItem(StorageKeys.THEME) ?? THEME.DARK) as THEME
+    (localStorage.getItem(StorageKeys.THEME) ?? getUserPreferedMode()) as THEME
   );
 
   const [searchParams] = useSearchParams();

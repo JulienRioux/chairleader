@@ -88,6 +88,10 @@ const footerData = [
   {
     content: [
       {
+        href: 'https://www.notion.so/Job-at-Chairleader-xyz-88f18c99bada46c3b3f98dc571a1f531',
+        title: 'Jobs',
+      },
+      {
         href: 'mailto:investors@chairleader.xyz',
         title: 'Investors',
       },
