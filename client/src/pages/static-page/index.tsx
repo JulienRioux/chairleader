@@ -7,6 +7,7 @@ import { FC, useCallback, useEffect, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { Logger } from 'utils';
 import { Loader } from 'components-library';
+import { ErrorPage } from 'pages/error-page';
 
 const getSanityQuery = (queryName: string) => `
 *[_type == '${queryName}']{
@@ -47,7 +48,6 @@ export const StaticPage: FC = () => {
       const staticPageData = await sanityClient.fetch(
         getSanityQuery(staticPage ?? '')
       );
-      console.log('staticPageData', staticPageData);
       setTitle(staticPageData.title[locale]);
       setText(staticPageData.text[locale]);
       setIsLoading(false);
@@ -61,10 +61,6 @@ export const StaticPage: FC = () => {
   useEffect(() => {
     loadStaticPageData();
   }, [loadStaticPageData]);
-
-  if (fetchingDataError) {
-    return <Navigate to="/something-went-wrong" />;
-  }
 
   return (
     <HalfImagePageLayout>
@@ -81,6 +77,8 @@ export const StaticPage: FC = () => {
           </BlockContentWrapper>
         </StaticPageWrapper>
       )}
+
+      {fetchingDataError && <ErrorPage />}
     </HalfImagePageLayout>
   );
 };
