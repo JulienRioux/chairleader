@@ -1,4 +1,5 @@
 import { clusterApiUrl, PublicKey } from '@solana/web3.js';
+import { IS_DEV } from 'configs';
 
 export const MAX_CONFIRMATIONS = 32;
 
@@ -18,3 +19,5 @@ export const DEVNET_DUMMY_MINT = new PublicKey(
 export const MAINNET_USDC_MINT = new PublicKey(
   'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
 );
+
+export const USDC_MINT = IS_DEV ? DEVNET_DUMMY_MINT : MAINNET_USDC_MINT;

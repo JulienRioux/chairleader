@@ -253,7 +253,7 @@ const MenuBtn = styled(UnstyledButton)<{ $isActive?: boolean }>`
   position: relative;
   border-radius: ${(p) => p.theme.borderRadius.default};
   height: 48px;
-  width: 48px;
+  width: 64px;
 
   ${(p) =>
     p.$isActive &&

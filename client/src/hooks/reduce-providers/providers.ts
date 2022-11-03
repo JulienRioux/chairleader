@@ -9,6 +9,7 @@ import { ConnectWalletProvider } from 'hooks/wallet';
 import { MetaplexProvider } from 'hooks/metaplex';
 import { WalletModalProvider } from 'hooks/wallet-modal';
 import { NftProvider } from 'hooks/nft';
+import { BalanceProvider } from 'hooks/balance';
 
 export const getProviders = () => {
   return [
@@ -23,5 +24,6 @@ export const getProviders = () => {
     WalletModalProvider,
     MetaplexProvider,
     NftProvider,
+    BalanceProvider,
   ];
 };

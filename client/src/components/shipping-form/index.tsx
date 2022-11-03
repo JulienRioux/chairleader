@@ -6,6 +6,7 @@ import { useWalletModal } from 'hooks/wallet-modal';
 import { ChangeEvent, FormEvent, useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { Logger } from 'utils';
+import { useBalance } from 'hooks/balance';
 
 const PayButton = styled(Button)`
   position: relative;
@@ -14,6 +15,23 @@ const PayButton = styled(Button)`
 const IconWrapper = styled.div`
   position: absolute;
   right: 8px;
+`;
+
+const InsufficientFundsWrapper = styled.div`
+  border-radius: ${(p) => p.theme.borderRadius.default};
+  border: 1px solid;
+  color: ${(p) => p.theme.color.danger};
+  background-color: ${(p) => p.theme.color.danger}11;
+  padding: 20px;
+  font-size: 14px;
+  line-height: 1.4;
+`;
+
+const InsufficientFundTitle = styled.div`
+  margin-bottom: 8px;
+  line-height: 1;
+  font-weight: bold;
+  font-size: 16px;
 `;
 
 const USE_DEV_SHIPPING_FORM = true;
@@ -58,14 +76,17 @@ export const ShippingForm = () => {
   const [postalCode, setPostalCode] = useState(postalCodeInitialState);
 
   const [paymentIsLoading, setPaymentIsLoading] = useState(false);
+  const { userBalance, isLoading: userBalanceIsLoading } = useBalance();
 
   const { openConnectModal } = useWalletModal();
 
-  const { publicKey } = useWallet();
+  const { publicKey, connecting } = useWallet();
 
   const { makePayment } = useSplTokenPayent();
 
   const { totalWithSaleTax } = useCart();
+
+  const INSUFFICIENT_FUNDS = userBalance && userBalance < totalWithSaleTax;
 
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.name === 'email') {
@@ -112,6 +133,11 @@ export const ShippingForm = () => {
       };
 
       try {
+        if (INSUFFICIENT_FUNDS) {
+          message.error('Insufficient funds.');
+          return;
+        }
+
         setPaymentIsLoading(true);
 
         await makePayment({
@@ -124,6 +150,7 @@ export const ShippingForm = () => {
       setPaymentIsLoading(false);
     },
     [
+      INSUFFICIENT_FUNDS,
       address,
       city,
       country,
@@ -200,16 +227,37 @@ export const ShippingForm = () => {
         value={postalCode}
       />
 
+      {INSUFFICIENT_FUNDS && (
+        <InsufficientFundsWrapper>
+          <InsufficientFundTitle>
+            <Icon name="warning_amber" /> Insufficient funds.
+          </InsufficientFundTitle>
+          <div>
+            You have {userBalance} USDC in your wallet. Please add funds in
+            order to continue the transaction.
+          </div>
+        </InsufficientFundsWrapper>
+      )}
+
       <div style={{ margin: '12px 0' }}>
         {publicKey ? (
-          <PayButton fullWidth type="submit" isLoading={paymentIsLoading}>
+          <PayButton
+            fullWidth
+            type="submit"
+            isLoading={paymentIsLoading || userBalanceIsLoading}
+          >
             <span>Pay {totalWithSaleTax} USDC</span>
             <IconWrapper>
               <Icon name="lock" />
             </IconWrapper>
           </PayButton>
         ) : (
-          <Button type="button" onClick={openConnectModal} fullWidth>
+          <Button
+            type="button"
+            onClick={openConnectModal}
+            fullWidth
+            isLoading={connecting}
+          >
             Connect wallet
           </Button>
         )}

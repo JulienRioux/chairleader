@@ -3,6 +3,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { Button, Icon, Loader, Table } from 'components-library';
 import { ConnectWalletBtn } from 'components/connect-wallet-btn';
 import { format } from 'date-fns';
+import { useBalance } from 'hooks/balance';
 import { SolScanLink } from 'pages/admin-pages/token-gating-nft/token-gating.nft.styles';
 import { InventoryLayout } from 'pages/pos-app/inventory-layout';
 import { GET_INVOICES_BY_WALLET_ADDRESS } from 'queries';
@@ -42,6 +43,7 @@ const ProfilePageWrapper = styled.div`
 export const ProfilePage = () => {
   const { publicKey, wallet, disconnect } = useWallet();
   const navigate = useNavigate();
+  const { userBalance } = useBalance();
 
   const walletAddress = useMemo(() => publicKey?.toBase58(), [publicKey]);
 
@@ -92,6 +94,8 @@ export const ProfilePage = () => {
               </p>
 
               <p>Connected with: {wallet?.adapter.name}</p>
+
+              <p>Wallet balance: {userBalance} USDC</p>
             </div>
           </ProfileInfoWrapper>
 

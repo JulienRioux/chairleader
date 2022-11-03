@@ -178,6 +178,7 @@ export const TokenGating = () => {
             tokenOwner: new PublicKey(
               process.env.REACT_APP_TRANSACTION_PAYEE_PUBLIC_KEY ?? ''
             ),
+            confirmOptions: { commitment: 'finalized' },
           })
           .run();
 
