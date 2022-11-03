@@ -242,18 +242,32 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
 
       const isTokenGatedProduct = tokenGated !== undefined;
 
-      // The product is unlocked if the user wallet is connected and the user has one token-gating NFT
-      const productIsUnlocked =
+      const printedNftUnlockingTheProduct =
         publicKey &&
-        tokenGated?.some((nftAddress) => userNfts.includes(nftAddress));
+        tokenGated?.find((nftAddress) => userNfts.includes(nftAddress));
+
+      // Get the master edition
+      let masterEdition = null;
+      if (printedNftUnlockingTheProduct) {
+        masterEdition = Object.keys(mapMasterToPrintedEditions).find(
+          (masterEd) => {
+            return mapMasterToPrintedEditions[masterEd].includes(
+              printedNftUnlockingTheProduct
+            );
+          }
+        );
+      }
 
       return {
-        isUnlocked: !!productIsUnlocked,
+        isUnlocked: !!printedNftUnlockingTheProduct,
         isTokenGated: isTokenGatedProduct,
+        nftPrintedEdition: printedNftUnlockingTheProduct,
+        nftMasterEdition: masterEdition,
       };
     },
     [
       getProductLockedMapIsLoading,
+      mapMasterToPrintedEditions,
       productsLockedWithNftAddress,
       publicKey,
       storeNfts?.findNftsByStoreId,

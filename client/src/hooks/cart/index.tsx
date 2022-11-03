@@ -15,6 +15,7 @@ import {
 import { message } from 'components-library';
 import { useSearchParams } from 'react-router-dom';
 import { USE_PAYMENT_LINK } from 'configs';
+import { useNft } from 'hooks/nft';
 
 export interface IInventoryItem {
   _id: string;
@@ -40,7 +41,10 @@ interface ICartContext {
   totalSaleTax: number;
   totalWithSaleTax: number;
   resetCart: () => void;
-  getCartSummaryForInvoice: (storeNfts: any[]) => any;
+  getCartSummaryForInvoice: (
+    storeNfts: any[],
+    checkIfUserCanPurchaseTokenGatedProduct: any
+  ) => any;
   cartItemsNumber: number;
   handleAddCustomItems: ({
     title,
@@ -275,33 +279,20 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   /** Return the cartItems as an array of object in a JSON string, the total price before and after tax + the sale tax. */
   const getCartSummaryForInvoice = useCallback(
-    (storeNfts: any[]) => {
+    (storeNfts: any[], checkIfUserCanPurchaseTokenGatedProduct: any) => {
       // Add the NFT exclusivity data to the cart items if the items have been bought with NFTs memberships
       const cartItemsWithNfts = populatedCartItems.map(
         (singleCartItem: any) => {
           // Check if the product is token gated
-          let nftAddress = null;
-          let isTokenGated = false;
+          const { isTokenGated, nftPrintedEdition, nftMasterEdition } =
+            checkIfUserCanPurchaseTokenGatedProduct(singleCartItem?._id);
 
-          storeNfts.forEach(
-            ({
-              productsUnlocked,
-              nftAddress: address,
-            }: {
-              productsUnlocked: string[];
-              nftAddress: string;
-            }) => {
-              if (isTokenGated) return;
-              const isTokenGatedProduct = !!productsUnlocked?.includes(
-                singleCartItem?._id
-              );
-              if (isTokenGatedProduct) {
-                nftAddress = address;
-                isTokenGated = isTokenGatedProduct;
-              }
-            }
-          );
-          return { ...singleCartItem, nftAddress, isTokenGated };
+          return {
+            ...singleCartItem,
+            nftPrintedEdition,
+            nftMasterEdition,
+            isTokenGated,
+          };
         }
       );
 

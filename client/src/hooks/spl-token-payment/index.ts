@@ -33,7 +33,7 @@ export const useSplTokenPayent = () => {
   const { sendTransaction, publicKey } = useWallet();
   const { connection } = useConnection();
   const navigate = useNavigate();
-  const { storeNfts } = useNft();
+  const { storeNfts, checkIfUserCanPurchaseTokenGatedProduct } = useNft();
 
   const { getCartSummaryForInvoice, resetCart } = useCart();
 
@@ -133,7 +133,8 @@ export const useSplTokenPayent = () => {
 
         // Saving the invoice in out DB
         const cartSummary = getCartSummaryForInvoice(
-          storeNfts?.findNftsByStoreId ?? []
+          storeNfts?.findNftsByStoreId ?? [],
+          checkIfUserCanPurchaseTokenGatedProduct
         );
 
         const newInvoice = await saveTransactionInvoice({
@@ -165,6 +166,7 @@ export const useSplTokenPayent = () => {
       }
     },
     [
+      checkIfUserCanPurchaseTokenGatedProduct,
       connection,
       currency,
       getCartSummaryForInvoice,

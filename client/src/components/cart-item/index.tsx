@@ -164,6 +164,7 @@ export const CartItem = ({
   variantNames,
   handleCloseModal,
   nftAddress,
+  nftMasterEdition,
 }: {
   id: string;
   qty: number;
@@ -178,10 +179,11 @@ export const CartItem = ({
   variantNames?: string[];
   handleCloseModal?: () => void;
   nftAddress?: string;
+  nftMasterEdition?: string;
 }) => {
   const { decimals } = useCurrency();
 
-  const { storeNfts } = useNft();
+  const { checkIfUserCanPurchaseTokenGatedProduct } = useNft();
 
   const { updateQuantity, removeItemFromCart } = useCart();
 
@@ -205,15 +207,7 @@ export const CartItem = ({
 
   const showDetailledOptions = variantNames && variantsArr;
 
-  // Check if the product is token gated
-  let isTokenGated = false;
-
-  storeNfts?.findNftsByStoreId?.forEach(
-    ({ productsUnlocked }: { productsUnlocked: string[] }) => {
-      if (isTokenGated) return;
-      isTokenGated = !!productsUnlocked?.includes(id);
-    }
-  );
+  const { isTokenGated } = checkIfUserCanPurchaseTokenGatedProduct(id);
 
   return (
     <CartItemWrapper>
@@ -252,11 +246,27 @@ export const CartItem = ({
 
               {(nftAddress || isTokenGated) && (
                 <TokenGatingBadge>
-                  <Icon style={{ marginRight: '4px' }} name="verified" />
+                  <Icon style={{ marginRight: '4px' }} name="lock_open" />
                   <TokenGatingText>Exclusivity</TokenGatingText>
                   {nftAddress && (
                     <NftAddress
                       href={`https://solscan.io/token/${nftAddress}?cluster=${CLUSTER_ENV}`}
+                      target="_blank"
+                    >
+                      {formatShortAddress(nftAddress)}
+                      <Icon style={{ marginLeft: '2px' }} name="launch" />
+                    </NftAddress>
+                  )}
+                </TokenGatingBadge>
+              )}
+
+              {nftMasterEdition && (
+                <TokenGatingBadge>
+                  <Icon style={{ marginRight: '4px' }} name="verified" />
+                  <TokenGatingText>Master edition</TokenGatingText>
+                  {nftAddress && (
+                    <NftAddress
+                      href={`https://solscan.io/token/${nftMasterEdition}?cluster=${CLUSTER_ENV}`}
                       target="_blank"
                     >
                       {formatShortAddress(nftAddress)}

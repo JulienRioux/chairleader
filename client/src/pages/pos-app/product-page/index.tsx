@@ -177,7 +177,7 @@ const QualifyingNftsHeader = styled.h3`
 
 export const NftOwnerBadge = () => (
   <HasNftPrintedVersionBadge>
-    <Icon style={{ marginRight: '4px' }} name="verified" />
+    <Icon style={{ marginRight: '4px' }} name="lock_open" />
     <div>Member</div>
   </HasNftPrintedVersionBadge>
 );

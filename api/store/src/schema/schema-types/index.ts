@@ -81,7 +81,8 @@ export const schemaTypes = gql`
     productType: String
     productVariants: String
     variantNames: [String]
-    nftAddress: String
+    nftPrintedEdition: String
+    nftMasterEdition: String
     isTokenGated: Boolean
   }
 
