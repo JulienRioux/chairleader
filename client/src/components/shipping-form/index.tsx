@@ -7,6 +7,7 @@ import { ChangeEvent, FormEvent, useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { Logger } from 'utils';
 import { useBalance } from 'hooks/balance';
+import { useNft } from 'hooks/nft';
 
 const PayButton = styled(Button)`
   position: relative;
@@ -76,7 +77,9 @@ export const ShippingForm = () => {
   const [postalCode, setPostalCode] = useState(postalCodeInitialState);
 
   const [paymentIsLoading, setPaymentIsLoading] = useState(false);
+
   const { userBalance, isLoading: userBalanceIsLoading } = useBalance();
+  const { storeNftsAreLoading } = useNft();
 
   const { openConnectModal } = useWalletModal();
 
@@ -244,7 +247,9 @@ export const ShippingForm = () => {
           <PayButton
             fullWidth
             type="submit"
-            isLoading={paymentIsLoading || userBalanceIsLoading}
+            isLoading={
+              paymentIsLoading || userBalanceIsLoading || storeNftsAreLoading
+            }
           >
             <span>Pay {totalWithSaleTax} USDC</span>
             <IconWrapper>
