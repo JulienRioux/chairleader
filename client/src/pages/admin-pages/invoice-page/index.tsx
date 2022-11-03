@@ -156,6 +156,7 @@ export const InvoicePage = () => {
             totalSupply,
             productVariants,
             variantNames,
+            nftAddress,
           }: any) => (
             <CartItem
               key={`${_id}_${productVariants}`}
@@ -170,6 +171,7 @@ export const InvoicePage = () => {
               productVariants={productVariants}
               isAdmin
               variantNames={variantNames}
+              nftAddress={nftAddress}
             />
           )
         )}

@@ -1,5 +1,5 @@
 import { SAVE_TRANSACTION_INVOICE } from 'queries';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Logger,
@@ -17,6 +17,7 @@ import { message } from 'components-library';
 import { useCart } from 'hooks/cart';
 import { useCurrency } from 'hooks/currency';
 import { useStore } from 'hooks/store';
+import { useNft } from 'hooks/nft';
 
 export interface IShippingInfo {
   email: string;
@@ -32,6 +33,7 @@ export const useSplTokenPayent = () => {
   const { sendTransaction, publicKey } = useWallet();
   const { connection } = useConnection();
   const navigate = useNavigate();
+  const { storeNfts } = useNft();
 
   const { getCartSummaryForInvoice, resetCart } = useCart();
 
@@ -130,7 +132,9 @@ export const useSplTokenPayent = () => {
         }
 
         // Saving the invoice in out DB
-        const cartSummary = getCartSummaryForInvoice();
+        const cartSummary = getCartSummaryForInvoice(
+          storeNfts?.findNftsByStoreId ?? []
+        );
 
         const newInvoice = await saveTransactionInvoice({
           variables: {
@@ -172,6 +176,7 @@ export const useSplTokenPayent = () => {
       saveTransactionInvoice,
       sendTransaction,
       store?._id,
+      storeNfts?.findNftsByStoreId,
     ]
   );
 

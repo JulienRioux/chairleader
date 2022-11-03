@@ -114,6 +114,7 @@ export const ConfirmationPage = ({ isConfirmation = false }) => {
                     totalSupply,
                     productVariants,
                     variantNames,
+                    nftAddress,
                   }: any) => (
                     <CartItem
                       key={`${_id}_${productVariants}`}
@@ -128,6 +129,7 @@ export const ConfirmationPage = ({ isConfirmation = false }) => {
                       productVariants={productVariants}
                       isAdmin
                       variantNames={variantNames}
+                      nftAddress={nftAddress}
                     />
                   )
                 )}

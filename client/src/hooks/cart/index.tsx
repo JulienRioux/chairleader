@@ -3,7 +3,6 @@ import { useStore } from 'hooks/store';
 import * as React from 'react';
 import { useContext } from 'react';
 import { Logger, routes, StorageKeys } from 'utils';
-import { v4 as uuid } from 'uuid';
 import {
   createContext,
   useCallback,
@@ -16,7 +15,6 @@ import {
 import { message } from 'components-library';
 import { useSearchParams } from 'react-router-dom';
 import { USE_PAYMENT_LINK } from 'configs';
-import { PRODUCT_TYPE } from 'pages/admin-pages/product-form';
 
 export interface IInventoryItem {
   _id: string;
@@ -42,7 +40,7 @@ interface ICartContext {
   totalSaleTax: number;
   totalWithSaleTax: number;
   resetCart: () => void;
-  getCartSummaryForInvoice: () => any;
+  getCartSummaryForInvoice: (storeNfts: any[]) => any;
   cartItemsNumber: number;
   handleAddCustomItems: ({
     title,
@@ -276,21 +274,53 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
   }, []);
 
   /** Return the cartItems as an array of object in a JSON string, the total price before and after tax + the sale tax. */
-  const getCartSummaryForInvoice = useCallback(() => {
-    return {
-      cartItems: JSON.stringify(populatedCartItems),
+  const getCartSummaryForInvoice = useCallback(
+    (storeNfts: any[]) => {
+      // Add the NFT exclusivity data to the cart items if the items have been bought with NFTs memberships
+      const cartItemsWithNfts = populatedCartItems.map(
+        (singleCartItem: any) => {
+          // Check if the product is token gated
+          let nftAddress = null;
+          let isTokenGated = false;
+
+          storeNfts.forEach(
+            ({
+              productsUnlocked,
+              nftAddress: address,
+            }: {
+              productsUnlocked: string[];
+              nftAddress: string;
+            }) => {
+              if (isTokenGated) return;
+              const isTokenGatedProduct = !!productsUnlocked?.includes(
+                singleCartItem?._id
+              );
+              if (isTokenGatedProduct) {
+                nftAddress = address;
+                isTokenGated = isTokenGatedProduct;
+              }
+            }
+          );
+          return { ...singleCartItem, nftAddress, isTokenGated };
+        }
+      );
+
+      return {
+        cartItems: JSON.stringify(cartItemsWithNfts),
+        totalPrice,
+        totalSaleTax,
+        totalWithSaleTax,
+        shippingFee,
+      };
+    },
+    [
+      populatedCartItems,
       totalPrice,
       totalSaleTax,
       totalWithSaleTax,
       shippingFee,
-    };
-  }, [
-    populatedCartItems,
-    totalPrice,
-    totalSaleTax,
-    totalWithSaleTax,
-    shippingFee,
-  ]);
+    ]
+  );
 
   const getCtx = useCallback(() => {
     return {

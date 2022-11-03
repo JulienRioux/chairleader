@@ -260,6 +260,8 @@ const INVOICE = gql`
       productType
       productVariants
       variantNames
+      nftAddress
+      isTokenGated
     }
     shippingFee
     email

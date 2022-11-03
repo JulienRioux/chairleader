@@ -175,7 +175,7 @@ export const PaymentProvider: FC<PaymentProviderProps> = ({ children }) => {
             clearInterval(interval);
             setStatus(PaymentStatus.Finalized);
             // Saving the invoice in out DB
-            const cartSummary = getCartSummaryForInvoice();
+            const cartSummary = getCartSummaryForInvoice([]);
 
             // Getting the customer wallet ID
             const response = await connection.getTransaction(signature);

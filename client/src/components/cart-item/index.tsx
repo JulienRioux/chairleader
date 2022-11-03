@@ -2,13 +2,15 @@ import {
   Icon,
   NumberInput,
   UnstyledButton,
+  UnstyledExternalLink,
   UnstyledLink,
 } from 'components-library';
 import { useCart } from 'hooks/cart';
 import { useCurrency } from 'hooks/currency';
+import { useNft } from 'hooks/nft';
 import { useCallback } from 'react';
 import styled, { css } from 'styled-components';
-import { routes } from 'utils';
+import { CLUSTER_ENV, formatShortAddress, routes } from 'utils';
 
 const CartItemWrapper = styled.div`
   padding: 20px 0;
@@ -125,6 +127,29 @@ const CustomText = styled.span`
   color: ${(p) => p.theme.color.primary};
 `;
 
+const TokenGatingBadge = styled.div`
+  margin-bottom: 12px;
+  font-size: 12px;
+  color: ${(p) => p.theme.color.primary};
+`;
+
+const TokenGatingText = styled.span`
+  font-size: 12px;
+`;
+
+const NftAddress = styled(UnstyledExternalLink)`
+  color: ${(p) => p.theme.color.primary};
+  /* background: ${(p) => p.theme.color.primary}22; */
+  margin-left: 8px;
+
+  padding: 0 4px;
+  border-radius: ${(p) => p.theme.borderRadius.default};
+
+  :hover {
+    text-decoration: underline;
+  }
+`;
+
 export const CartItem = ({
   id,
   qty,
@@ -138,6 +163,7 @@ export const CartItem = ({
   productVariants,
   variantNames,
   handleCloseModal,
+  nftAddress,
 }: {
   id: string;
   qty: number;
@@ -151,8 +177,11 @@ export const CartItem = ({
   productVariants?: string;
   variantNames?: string[];
   handleCloseModal?: () => void;
+  nftAddress?: string;
 }) => {
   const { decimals } = useCurrency();
+
+  const { storeNfts } = useNft();
 
   const { updateQuantity, removeItemFromCart } = useCart();
 
@@ -175,6 +204,16 @@ export const CartItem = ({
   const variantsArr = productVariants?.split('/');
 
   const showDetailledOptions = variantNames && variantsArr;
+
+  // Check if the product is token gated
+  let isTokenGated = false;
+
+  storeNfts?.findNftsByStoreId?.forEach(
+    ({ productsUnlocked }: { productsUnlocked: string[] }) => {
+      if (isTokenGated) return;
+      isTokenGated = !!productsUnlocked?.includes(id);
+    }
+  );
 
   return (
     <CartItemWrapper>
@@ -210,6 +249,22 @@ export const CartItem = ({
                     </ProductVariants>
                   ))}
               </ProductVariantsWrapper>
+
+              {(nftAddress || isTokenGated) && (
+                <TokenGatingBadge>
+                  <Icon style={{ marginRight: '4px' }} name="verified" />
+                  <TokenGatingText>Exclusivity</TokenGatingText>
+                  {nftAddress && (
+                    <NftAddress
+                      href={`https://solscan.io/token/${nftAddress}?cluster=${CLUSTER_ENV}`}
+                      target="_blank"
+                    >
+                      {formatShortAddress(nftAddress)}
+                      <Icon style={{ marginLeft: '2px' }} name="launch" />
+                    </NftAddress>
+                  )}
+                </TokenGatingBadge>
+              )}
             </div>
 
             {enableUpdate && (
