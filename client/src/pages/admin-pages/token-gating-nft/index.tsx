@@ -58,6 +58,7 @@ import { useWalletModal } from 'hooks/wallet-modal';
 
 export const NftImgWrapper = styled.div`
   position: relative;
+  margin-bottom: 12px;
 `;
 
 const DealItem = ({
@@ -163,7 +164,7 @@ export const TokenGatingNft = ({
 
   const [showAll, setShowAll] = useState(false);
 
-  const { connecting, publicKey } = useWallet();
+  const { publicKey } = useWallet();
   const [nftDataIsLoading, setNftDataIsLoading] = useState(false);
 
   const {
@@ -187,6 +188,7 @@ export const TokenGatingNft = ({
     updateNft,
     updateNftIsLoading,
     checkIfUserHasPrintedVersion,
+    getProductLockedMapIsLoading,
   } = useNft();
 
   const { makePayment } = useSplTokenPayent();
@@ -291,15 +293,6 @@ export const TokenGatingNft = ({
     loadNftData();
   }, [loadNftData]);
 
-  if (connecting) {
-    return (
-      <div>
-        <Loader />
-        <p style={{ textAlign: 'center' }}>Connecting to wallet</p>
-      </div>
-    );
-  }
-
   if (nftDataIsLoading) {
     return <Loader />;
   }
@@ -374,14 +367,19 @@ export const TokenGatingNft = ({
                 fullWidth
                 style={{ margin: '20px 0' }}
                 onClick={handlePrintNewEdition}
-                isLoading={printNftIsLoading}
+                isLoading={printNftIsLoading || getProductLockedMapIsLoading}
                 disabled={hasNftPrintedVersion}
               >
-                {hasNftPrintedVersion ? 'You own this NFT' : 'Buy now'}
+                {hasNftPrintedVersion ? "You're already member" : 'Buy now'}
               </Button>
             ) : (
               <div>
-                <Button icon="lock" fullWidth onClick={openConnectModal}>
+                <Button
+                  icon="lock"
+                  fullWidth
+                  onClick={openConnectModal}
+                  style={{ margin: '20px 0' }}
+                >
                   Connect your wallet to purchase
                 </Button>
               </div>

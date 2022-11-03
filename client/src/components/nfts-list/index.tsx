@@ -126,7 +126,7 @@ export const NftsList = ({ isStoreApp = false }: { isStoreApp?: boolean }) => {
   const [storeNfts, setStoreNfts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { storeNfts: storeNftsFromDb } = useNft();
+  const { storeNfts: storeNftsFromDb, storeNftsAreLoading } = useNft();
 
   const findNftByAddress = useCallback(async () => {
     if (!storeNftsFromDb) {
@@ -157,10 +157,6 @@ export const NftsList = ({ isStoreApp = false }: { isStoreApp?: boolean }) => {
     findNftByAddress();
   }, [findNftByAddress, storeNftsFromDb]);
 
-  if (isLoading || isLoadingUser) {
-    return <Loader />;
-  }
-
   const activeNfts = storeNfts?.filter(
     ({ isArchived }: { isArchived: boolean }) => !isArchived
   );
@@ -190,9 +186,12 @@ export const NftsList = ({ isStoreApp = false }: { isStoreApp?: boolean }) => {
           />
         ))}
 
-        {!storeNfts.length && !isLoading && !isLoadingUser && (
-          <p>No NFT yet.</p>
-        )}
+        {!storeNfts.length &&
+          !storeNftsAreLoading &&
+          !isLoading &&
+          !isLoadingUser && <p>No NFT yet.</p>}
+
+        {(isLoading || isLoadingUser || storeNftsAreLoading) && <Loader />}
       </NftsListWrapper>
 
       {!isStoreApp && !!archivedNfts.length && (

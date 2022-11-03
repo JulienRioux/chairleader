@@ -178,7 +178,7 @@ const QualifyingNftsHeader = styled.h3`
 export const NftOwnerBadge = () => (
   <HasNftPrintedVersionBadge>
     <Icon style={{ marginRight: '4px' }} name="verified" />
-    <div>Owner</div>
+    <div>Member</div>
   </HasNftPrintedVersionBadge>
 );
 
@@ -216,8 +216,12 @@ export const ProductPage = () => {
 
   const { openConnectModal } = useWalletModal();
 
-  const { mapProductLockedToMaster, checkIfUserCanPurchaseTokenGatedProduct } =
-    useNft();
+  const {
+    mapProductLockedToMaster,
+    checkIfUserCanPurchaseTokenGatedProduct,
+    getProductLockedMapIsLoading,
+    storeNftsAreLoading,
+  } = useNft();
 
   const { inventory } = useStore();
 
@@ -237,8 +241,6 @@ export const ProductPage = () => {
     useState<any>({});
 
   const [productVariants, setProductVariants] = useState<string[]>([]);
-
-  const { getProductLockedMapIsLoading } = useNft();
 
   const [tokenGatedNftData, setTokenGatedNftData] = useState<any>([]);
   const [tokenGatedNftDataIsLoading, setTokenGatedNftDataIsLoading] =
@@ -460,7 +462,7 @@ export const ProductPage = () => {
 
       <AddToCartWrapper>
         <InnerAddToCartWrapper>
-          {(!isTokenGated || isUnlocked) && (
+          {!storeNftsAreLoading && (!isTokenGated || isUnlocked) && (
             <>
               {isOutOfStock ? (
                 <span />
@@ -493,9 +495,9 @@ export const ProductPage = () => {
           {SHOW_MISSING_TOKEN_MSG && (
             <>
               {getProductLockedMapIsLoading ? (
-                <p>Checking NFT ownership...</p>
+                <div>Checking NFT ownership...</div>
               ) : (
-                <p>You don't own NFT membership.</p>
+                <div>You don't own NFT membership.</div>
               )}
               <Button
                 icon="card_membership"

@@ -14,6 +14,7 @@ import { JsonMetadata, Metadata } from '@metaplex-foundation/js';
 import { FIND_NFT_BY_STORE_ID, UPDATE_NFT } from 'queries';
 import { useMutation, useQuery } from '@apollo/client';
 import { useAuth } from 'hooks/auth';
+import { useStore } from 'hooks/store';
 
 export interface INftContext {
   userNftsIsLoading: boolean;
@@ -53,6 +54,7 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
   const [productsLockedWithNftAddress, setProductsLockedWithNftAddress] =
     useState<any>({});
   const { user } = useAuth();
+  const { store } = useStore();
 
   const [nftAddressWithProductsLocked, setNftAddressWithProductsLocked] =
     useState<any>({});
@@ -72,7 +74,8 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
     data: storeNfts,
     refetch: refetchStoreNfts,
   } = useQuery(FIND_NFT_BY_STORE_ID, {
-    skip: !user,
+    skip: !user && !store,
+    notifyOnNetworkStatusChange: true,
   });
 
   const [updateNftMutation, { loading: updateNftIsLoading }] =
