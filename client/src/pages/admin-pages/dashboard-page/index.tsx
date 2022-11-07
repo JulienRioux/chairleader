@@ -186,11 +186,22 @@ const DATE_RANGE_OPTIONS = [
 ];
 
 const DATASET_OPTIONS = [
-  { value: 'totalWithSaleTax', label: 'Total sales with tax' },
+  { value: 'totalWithSaleTax', label: 'Sales with tax' },
+  { value: 'totalPrice', label: 'Sales before tax' },
+  { value: 'totalSaleTax', label: 'Sales tax' },
+  { value: 'shippingFee', label: 'Shipping fees' },
+  { value: 'serviceFees', label: 'Service fees' },
   { value: 'totalTransactions', label: 'Number of orders' },
+  { value: 'numOfItems', label: 'Number of items sold' },
 ];
 
-const SHOW_DOLLAR_SIGN_DATASET = ['totalWithSaleTax'];
+const SHOW_DOLLAR_SIGN_DATASET = [
+  'totalWithSaleTax',
+  'totalPrice',
+  'serviceFees',
+  'shippingFee',
+  'totalSaleTax',
+];
 
 const Chart = () => {
   const [numOfDays, setNumOfDays] = useState('7');
