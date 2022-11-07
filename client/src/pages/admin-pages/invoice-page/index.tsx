@@ -143,6 +143,8 @@ export const InvoicePage = () => {
 
   const isDevNetwork = invoiceData?.network === NETWORK.DEVNET;
 
+  console.log('=>', invoiceData?.isNft);
+
   return (
     <InvoicePageWrapper>
       <Card title="Summary">
@@ -193,6 +195,10 @@ export const InvoicePage = () => {
       <Card title="Invoice details">
         <DetailItem label="Invoice ID:">{orderId}</DetailItem>
 
+        <DetailItem label="Order type:">
+          {invoiceData?.isNft ? 'NFT membership' : 'Products'}
+        </DetailItem>
+
         <DetailItem label="Date:">
           {format(
             new Date(Number(invoiceData?.createdAt)),
@@ -235,40 +241,46 @@ export const InvoicePage = () => {
         </DetailItem>
       </Card>
 
-      <Card title="Shipping details">
-        <DetailItem label="Email:">{invoiceData?.email}</DetailItem>
+      {!invoiceData?.isNft && (
+        <>
+          <Card title="Shipping details">
+            <DetailItem label="Email:">{invoiceData?.email}</DetailItem>
 
-        <DetailItem label="Name:">{invoiceData?.name}</DetailItem>
+            <DetailItem label="Name:">{invoiceData?.name}</DetailItem>
 
-        <DetailItem label="Country:">{invoiceData?.country}</DetailItem>
+            <DetailItem label="Country:">{invoiceData?.country}</DetailItem>
 
-        <DetailItem label="Address:">{invoiceData?.address}</DetailItem>
+            <DetailItem label="Address:">{invoiceData?.address}</DetailItem>
 
-        <DetailItem label="City:">{invoiceData?.city}</DetailItem>
+            <DetailItem label="City:">{invoiceData?.city}</DetailItem>
 
-        <DetailItem label="State/Province:">{invoiceData?.state}</DetailItem>
+            <DetailItem label="State/Province:">
+              {invoiceData?.state}
+            </DetailItem>
 
-        <DetailItem label="Postal code/ZIP:">
-          {invoiceData?.postalCode}
-        </DetailItem>
-      </Card>
+            <DetailItem label="Postal code/ZIP:">
+              {invoiceData?.postalCode}
+            </DetailItem>
+          </Card>
 
-      <Card title="Fulfillment">
-        {updateInvoiceIsLoading ? (
-          <Loader />
-        ) : (
-          <Select
-            label="Update fulfillment status"
-            value={invoiceData?.fulfillmentStatus}
-            onChange={handleFulfillmentStatusChange}
-            options={FULFILLMENT_OPTIONS}
-            name="fulfillmentStatus"
-            id="fulfillmentStatus"
-            placeholder="Fulfillment status"
-            required
-          />
-        )}
-      </Card>
+          <Card title="Fulfillment">
+            {updateInvoiceIsLoading ? (
+              <Loader />
+            ) : (
+              <Select
+                label="Update fulfillment status"
+                value={invoiceData?.fulfillmentStatus}
+                onChange={handleFulfillmentStatusChange}
+                options={FULFILLMENT_OPTIONS}
+                name="fulfillmentStatus"
+                id="fulfillmentStatus"
+                placeholder="Fulfillment status"
+                required
+              />
+            )}
+          </Card>
+        </>
+      )}
     </InvoicePageWrapper>
   );
 };

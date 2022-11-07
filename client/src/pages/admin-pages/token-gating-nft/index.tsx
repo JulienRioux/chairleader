@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { useWallet } from '@solana/wallet-adapter-react';
 import {
   Button,
@@ -15,7 +15,7 @@ import { useMetaplex } from 'hooks/metaplex';
 import { useNft } from 'hooks/nft';
 import { usePrintedNftsEditions } from 'hooks/printed-nfts-editions';
 import { useStore } from 'hooks/store';
-import { FIND_NFT_BY_ADDRESS } from 'queries';
+import { FIND_NFT_BY_ADDRESS, SAVE_TRANSACTION_INVOICE } from 'queries';
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
@@ -59,6 +59,11 @@ import { useWalletModal } from 'hooks/wallet-modal';
 export const NftImgWrapper = styled.div`
   position: relative;
   margin-bottom: 12px;
+`;
+
+const NftInfoWrapper = styled.div`
+  max-width: 400px;
+  margin: 0 auto;
 `;
 
 const DealItem = ({
@@ -193,6 +198,8 @@ export const TokenGatingNft = ({
 
   const { makePayment } = useSplTokenPayent();
 
+  const [saveTransactionInvoice] = useMutation(SAVE_TRANSACTION_INVOICE);
+
   const [image, setImage] = useState('');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -228,6 +235,7 @@ export const TokenGatingNft = ({
 
   const handlePrintNewEdition = useCallback(async () => {
     if (!address) {
+      message.error();
       return;
     }
 
@@ -237,17 +245,42 @@ export const TokenGatingNft = ({
     const newOwnerPublicKey = identity ? identity.publicKey : null;
 
     if (!newOwnerPublicKey) {
+      message.error();
       return;
     }
 
     try {
-      await makePayment({ amount: Number(price), isNft: true });
+      const transactionDetails = await makePayment({
+        amount: Number(price),
+        isNft: true,
+      });
 
       message.success('Payment succeed.');
 
-      await printNewNftEditionWithoutFees({
+      const printedNft = await printNewNftEditionWithoutFees({
         originalNftAddress: address,
         newOwnerPublicKey,
+      });
+
+      const nftItem = {
+        _id: printedNft?.address?.toBase58(),
+        qty: 1,
+        title: printedNft?.json?.name,
+        description: printedNft?.json?.description,
+        image: printedNft?.json?.image,
+        productVariants: 'nft',
+      };
+
+      await saveTransactionInvoice({
+        variables: {
+          cartItems: JSON.stringify([nftItem]),
+          totalPrice: Number(price),
+          totalSaleTax: 0,
+          totalWithSaleTax: Number(price),
+          shippingFee: 0,
+          ...transactionDetails,
+          isNft: true,
+        },
       });
 
       setPrintNftIsLoading(false);
@@ -268,6 +301,7 @@ export const TokenGatingNft = ({
     metaplex,
     makePayment,
     price,
+    saveTransactionInvoice,
     loadNftData,
     refreshEditionsPrintedList,
     refreshUserNfts,
@@ -320,70 +354,73 @@ export const TokenGatingNft = ({
       </div>
       <TokenGatingNftWrapper>
         <DetailsWrapper>
-          <NftImgWrapper>
-            <NftImg {...(image && { src: image })} />
+          <NftInfoWrapper>
+            <NftImgWrapper>
+              <NftImg {...(image && { src: image })} />
 
-            {hasNftPrintedVersion && <NftOwnerBadge />}
-          </NftImgWrapper>
-          <NftName>{name}</NftName>
+              {hasNftPrintedVersion && <NftOwnerBadge />}
+            </NftImgWrapper>
 
-          <Description>{description}</Description>
+            <NftName>{name}</NftName>
 
-          <DetailItem label="Editions">{`${currentSupply} minted of maximum ${maxSupply}`}</DetailItem>
+            <Description>{description}</Description>
 
-          <DetailItem label="External Link">
-            {externalUrl ? (
-              <a href={externalUrl} target="_blank" rel="noreferrer">
-                {externalUrl}
-              </a>
-            ) : (
-              '-'
-            )}
-          </DetailItem>
+            <DetailItem label="Editions">{`${currentSupply} minted of maximum ${maxSupply}`}</DetailItem>
 
-          <DetailItem label="Royalty">{royalties}%</DetailItem>
+            <DetailItem label="External Link">
+              {externalUrl ? (
+                <a href={externalUrl} target="_blank" rel="noreferrer">
+                  {externalUrl}
+                </a>
+              ) : (
+                '-'
+              )}
+            </DetailItem>
 
-          <DetailItem label="Price">{price} USDC</DetailItem>
+            <DetailItem label="Royalty">{royalties}%</DetailItem>
 
-          {isAdminApp && (
-            <UnstyledExternalLink
-              href={`${storeLink}${routes.store.nfts}/${address}`}
-              target="_blank"
-            >
-              <Button
-                fullWidth
-                secondary
-                style={{ margin: '20px 0' }}
-                icon="launch"
+            <DetailItem label="Price">{price} USDC</DetailItem>
+
+            {isAdminApp && (
+              <UnstyledExternalLink
+                href={`${storeLink}${routes.store.nfts}/${address}`}
+                target="_blank"
               >
-                See in store
-              </Button>
-            </UnstyledExternalLink>
-          )}
-
-          {!isAdminApp &&
-            (publicKey ? (
-              <Button
-                fullWidth
-                style={{ margin: '20px 0' }}
-                onClick={handlePrintNewEdition}
-                isLoading={printNftIsLoading || getProductLockedMapIsLoading}
-                disabled={hasNftPrintedVersion}
-              >
-                {hasNftPrintedVersion ? "You're already member" : 'Buy now'}
-              </Button>
-            ) : (
-              <div>
                 <Button
-                  icon="lock"
                   fullWidth
-                  onClick={openConnectModal}
+                  secondary
                   style={{ margin: '20px 0' }}
+                  icon="launch"
                 >
-                  Connect your wallet to purchase
+                  See in store
                 </Button>
-              </div>
-            ))}
+              </UnstyledExternalLink>
+            )}
+
+            {!isAdminApp &&
+              (publicKey ? (
+                <Button
+                  fullWidth
+                  style={{ margin: '20px 0' }}
+                  onClick={handlePrintNewEdition}
+                  isLoading={printNftIsLoading || getProductLockedMapIsLoading}
+                  disabled={hasNftPrintedVersion}
+                >
+                  {hasNftPrintedVersion ? "You're already member" : 'Buy now'}
+                </Button>
+              ) : (
+                <div>
+                  <Button
+                    icon="lock"
+                    fullWidth
+                    onClick={openConnectModal}
+                    style={{ margin: '20px 0' }}
+                  >
+                    Connect your wallet to purchase
+                  </Button>
+                </div>
+              ))}
+          </NftInfoWrapper>
 
           {isAdminApp && (
             <>

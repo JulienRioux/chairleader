@@ -82,13 +82,14 @@ export const mutations = gql`
       network: String!
       serviceFees: Float!
       shippingFee: Float
-      email: String!
-      name: String!
-      country: String!
-      address: String!
-      city: String!
+      email: String
+      name: String
+      country: String
+      address: String
+      city: String
       state: String
-      postalCode: String!
+      postalCode: String
+      isNft: Boolean
     ): Invoice
 
     """

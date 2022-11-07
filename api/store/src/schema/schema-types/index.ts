@@ -107,6 +107,7 @@ export const schemaTypes = gql`
     state: String
     postalCode: String
     fulfillmentStatus: String
+    isNft: Boolean
   }
 
   type StoreData {

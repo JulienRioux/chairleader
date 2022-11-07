@@ -153,7 +153,7 @@ const NoImgStore = styled.div`
 `;
 
 const TopNav = styled.div`
-  padding: 8px 12px;
+  padding: 4px 12px;
   border-bottom: 1px solid ${(p) => p.theme.color.lightGrey};
   height: 44px;
   display: flex;

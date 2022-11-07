@@ -231,6 +231,8 @@ export const formatDataCountForXDays = ({ data, numOfDays = 14 }: any) => {
         shippingFee: 0,
         numOfItems: 0,
         totalTransactions: 0,
+        numOfNftSold: 0,
+        totalNftSale: 0,
       },
     }),
     {}
@@ -238,29 +240,40 @@ export const formatDataCountForXDays = ({ data, numOfDays = 14 }: any) => {
 
   // Iterate over the data array to count the occurence of the data
   data?.forEach((invoice) => {
-    const logDate = moment(new Date(Number(invoice.createdAt))).format(
+    const invoiceDate = moment(new Date(Number(invoice.createdAt))).format(
       formatType
     );
-    const currentDate = lastXDaysCounterObj[logDate];
+
+    const currentDate = lastXDaysCounterObj[invoiceDate];
     if (currentDate !== undefined) {
-      lastXDaysCounterObj[logDate].totalWithSaleTax = fixDecimal(
+      lastXDaysCounterObj[invoiceDate].totalWithSaleTax += fixDecimal(
         invoice.totalWithSaleTax
       );
-      lastXDaysCounterObj[logDate].totalPrice += fixDecimal(invoice.totalPrice);
-      lastXDaysCounterObj[logDate].totalSaleTax += fixDecimal(
+      lastXDaysCounterObj[invoiceDate].totalPrice += fixDecimal(
+        invoice.totalPrice
+      );
+      lastXDaysCounterObj[invoiceDate].totalSaleTax += fixDecimal(
         invoice.totalSaleTax
       );
-      lastXDaysCounterObj[logDate].serviceFees += fixDecimal(
+      lastXDaysCounterObj[invoiceDate].serviceFees += fixDecimal(
         invoice.serviceFees
       );
-      lastXDaysCounterObj[logDate].shippingFee += fixDecimal(
+      lastXDaysCounterObj[invoiceDate].shippingFee += fixDecimal(
         invoice.shippingFee
       );
-      lastXDaysCounterObj[logDate].numOfItems += invoice.cartItems.length;
-      lastXDaysCounterObj[logDate].totalTransactions++;
+      lastXDaysCounterObj[invoiceDate].numOfItems += invoice.cartItems.length;
+      lastXDaysCounterObj[invoiceDate].totalTransactions++;
+
+      // // Add NFT related data
+      if (invoice?.isNft) {
+        lastXDaysCounterObj[invoiceDate].numOfNftSold++;
+        lastXDaysCounterObj[invoiceDate].totalNftSale += fixDecimal(
+          invoice?.totalWithSaleTax
+        );
+      }
     }
   });
-
+  // totalNftSale, totalNftSale
   const sortedByDateDataset = Object.entries(lastXDaysCounterObj)
     .map((e) => ({ sales: e[1], date: e[0] }))
     .sort(function (a, b) {
@@ -271,11 +284,6 @@ export const formatDataCountForXDays = ({ data, numOfDays = 14 }: any) => {
       if (keyA > keyB) return -1;
       return 0;
     });
-
-  console.log(
-    'sortedByDateDataset',
-    sortedByDateDataset[0].sales?.totalWithSaleTax
-  );
 
   return sortedByDateDataset.reverse();
 };

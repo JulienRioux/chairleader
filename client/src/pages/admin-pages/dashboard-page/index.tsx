@@ -193,6 +193,8 @@ const DATASET_OPTIONS = [
   { value: 'serviceFees', label: 'Service fees' },
   { value: 'totalTransactions', label: 'Number of orders' },
   { value: 'numOfItems', label: 'Number of items sold' },
+  { value: 'totalNftSale', label: 'NFTs sales' },
+  { value: 'numOfNftSold', label: 'Number of NFTs sold' },
 ];
 
 const SHOW_DOLLAR_SIGN_DATASET = [
@@ -201,6 +203,7 @@ const SHOW_DOLLAR_SIGN_DATASET = [
   'serviceFees',
   'shippingFee',
   'totalSaleTax',
+  'totalNftSale',
 ];
 
 const Chart = () => {
@@ -229,6 +232,8 @@ const Chart = () => {
   const totalWithSaleTax = getDataSum('totalWithSaleTax');
   const totalTransactions = getDataSum('totalTransactions');
   const numOfItemsSold = getDataSum('numOfItems');
+  const numOfNftSold = getDataSum('numOfNftSold');
+  const totalNftSale = getDataSum('totalNftSale');
 
   const dataToDisplay = formattedData.map(({ date, sales }: any) => ({
     date,
@@ -304,6 +309,11 @@ const Chart = () => {
               <CurrencyWrapper>$</CurrencyWrapper>
               {totalServiceFees}
             </DetailItem>
+
+            <DetailItem label="Total NFT sales:">
+              <CurrencyWrapper>$</CurrencyWrapper>
+              {totalNftSale}
+            </DetailItem>
           </div>
 
           <div>
@@ -314,6 +324,8 @@ const Chart = () => {
             <DetailItem label="Number of items sold:">
               {numOfItemsSold}
             </DetailItem>
+
+            <DetailItem label="Number of NFTs sold:">{numOfNftSold}</DetailItem>
 
             <DetailItem label="Average total sale per order:">
               <CurrencyWrapper>$</CurrencyWrapper>

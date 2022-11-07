@@ -22,6 +22,7 @@ export interface IInvoice {
   state: string;
   postalCode: string;
   fulfillmentStatus: string;
+  isNft: boolean;
 }
 
 const InvoiceSchema = new Schema<IInvoice>({
@@ -45,6 +46,7 @@ const InvoiceSchema = new Schema<IInvoice>({
   state: String,
   postalCode: String,
   fulfillmentStatus: { default: 'unfulfilled', type: String },
+  isNft: { default: false, type: Boolean },
 });
 
 export const InvoiceModel = model<IInvoice>('Invoice', InvoiceSchema);

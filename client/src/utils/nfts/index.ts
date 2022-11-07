@@ -144,14 +144,6 @@ export const printNewNftEditionWithoutFees = async ({
 
   const mintAddress = new PublicKey(originalNftAddress);
 
-  const originalNft = await adminMetaplex
-    .nfts()
-    .findByMint({ mintAddress })
-    .run();
-
-  // Check if it's an original ??? (Is it possible to print on a non original?? If not, don't do this check...)
-  console.log('originalNft', originalNft);
-
   // Make the new print
   const { nft: printedNft } = await adminMetaplex
     .nfts()

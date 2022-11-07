@@ -23,6 +23,7 @@ export const addInvoice = async ({
   city,
   state,
   postalCode,
+  isNft,
 }: {
   signature: string;
   totalPrice: number;
@@ -42,6 +43,7 @@ export const addInvoice = async ({
   city: string;
   state?: string;
   postalCode: string;
+  isNft: boolean;
 }) => {
   try {
     const doc = new InvoiceModel({
@@ -63,6 +65,8 @@ export const addInvoice = async ({
       city,
       state,
       postalCode,
+      fulfillmentStatus: isNft ? 'fulfilled' : 'unfulfilled',
+      isNft,
     });
 
     // Updating the product quantity

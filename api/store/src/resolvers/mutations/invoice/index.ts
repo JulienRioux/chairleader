@@ -24,6 +24,7 @@ export const saveTransactionInvoiceMutation = async (
     city,
     state,
     postalCode,
+    isNft,
   },
   context
 ) => {
@@ -46,6 +47,7 @@ export const saveTransactionInvoiceMutation = async (
     city,
     state,
     postalCode,
+    isNft,
   });
 };
 

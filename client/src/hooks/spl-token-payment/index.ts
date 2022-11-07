@@ -126,9 +126,19 @@ export const useSplTokenPayent = () => {
           signature,
         });
 
+        const transactionDetails = {
+          signature,
+          customerWalletAddress: publicKey.toString(),
+          storeId: store?._id,
+          currency,
+          network,
+          serviceFees: servicePayout,
+          ...shippingInfo,
+        };
+
         if (isNft) {
           // Do something here to save the Invoice
-          return;
+          return transactionDetails;
         }
 
         // Saving the invoice in out DB
@@ -140,13 +150,7 @@ export const useSplTokenPayent = () => {
         const newInvoice = await saveTransactionInvoice({
           variables: {
             ...cartSummary,
-            signature,
-            customerWalletAddress: publicKey.toString(),
-            storeId: store?._id,
-            currency,
-            network,
-            serviceFees: servicePayout,
-            ...shippingInfo,
+            ...transactionDetails,
           },
         });
 

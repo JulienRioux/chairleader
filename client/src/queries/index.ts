@@ -198,13 +198,14 @@ export const SAVE_TRANSACTION_INVOICE = gql`
     $currency: String!
     $network: String!
     $serviceFees: Float!
-    $email: String!
-    $name: String!
-    $country: String!
-    $address: String!
-    $city: String!
+    $email: String
+    $name: String
+    $country: String
+    $address: String
+    $city: String
     $state: String
-    $postalCode: String!
+    $postalCode: String
+    $isNft: Boolean
   ) {
     saveTransactionInvoice(
       cartItems: $cartItems
@@ -225,6 +226,7 @@ export const SAVE_TRANSACTION_INVOICE = gql`
       city: $city
       state: $state
       postalCode: $postalCode
+      isNft: $isNft
     ) {
       _id
       signature
@@ -273,6 +275,7 @@ const INVOICE = gql`
     state
     postalCode
     fulfillmentStatus
+    isNft
   }
 `;
 

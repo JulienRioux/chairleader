@@ -1,4 +1,4 @@
-import { Button, Icon, Loader, UnstyledExternalLink } from 'components-library';
+import { Button, Icon, Loader } from 'components-library';
 import { formatShortAddress, routes } from 'utils';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
@@ -8,7 +8,6 @@ import { CartItem, CartSummary } from 'components';
 import { DetailItem, Card } from 'pages/admin-pages/invoice-page';
 import { format } from 'date-fns';
 import { NETWORK } from 'hooks/currency';
-import { useStore } from 'hooks/store';
 import { InventoryLayout } from 'pages/pos-app/inventory-layout';
 import { slideInBottom } from 'utils/keyframes';
 
@@ -44,7 +43,6 @@ const contactUsBody = (orderId = 'ORDER_ID') =>
 
 export const ConfirmationPage = ({ isConfirmation = false }) => {
   const { orderId, signatureId } = useParams();
-  const { store } = useStore();
 
   const { data, loading } = useQuery(GET_INVOICE_BY_ID, {
     variables: { id: orderId },
@@ -147,6 +145,10 @@ export const ConfirmationPage = ({ isConfirmation = false }) => {
               <Card title="Shipping details">
                 <DetailItem label="Order ID:">{orderId}</DetailItem>
 
+                <DetailItem label="Order type:">
+                  {invoiceData?.isNft ? 'NFT membership' : 'Products'}
+                </DetailItem>
+
                 <DetailItem label="Date:">
                   {format(
                     new Date(Number(invoiceData?.createdAt)),
@@ -181,23 +183,41 @@ export const ConfirmationPage = ({ isConfirmation = false }) => {
                   </a>
                 </DetailItem>
 
-                <DetailItem label="Email:">{invoiceData?.email}</DetailItem>
+                {invoiceData?.email && (
+                  <DetailItem label="Email:">{invoiceData?.email}</DetailItem>
+                )}
 
-                <DetailItem label="Name:">{invoiceData?.name}</DetailItem>
+                {invoiceData?.name && (
+                  <DetailItem label="Name:">{invoiceData?.name}</DetailItem>
+                )}
 
-                <DetailItem label="Country:">{invoiceData?.country}</DetailItem>
+                {invoiceData?.country && (
+                  <DetailItem label="Country:">
+                    {invoiceData?.country}
+                  </DetailItem>
+                )}
 
-                <DetailItem label="Address:">{invoiceData?.address}</DetailItem>
+                {invoiceData?.address && (
+                  <DetailItem label="Address:">
+                    {invoiceData?.address}
+                  </DetailItem>
+                )}
 
-                <DetailItem label="City:">{invoiceData?.city}</DetailItem>
+                {invoiceData?.city && (
+                  <DetailItem label="City:">{invoiceData?.city}</DetailItem>
+                )}
 
-                <DetailItem label="State/Province:">
-                  {invoiceData?.state}
-                </DetailItem>
+                {invoiceData?.state && (
+                  <DetailItem label="State/Province:">
+                    {invoiceData?.state}
+                  </DetailItem>
+                )}
 
-                <DetailItem label="Postal code/ZIP:">
-                  {invoiceData?.postalCode}
-                </DetailItem>
+                {invoiceData?.postalCode && (
+                  <DetailItem label="Postal code/ZIP:">
+                    {invoiceData?.postalCode}
+                  </DetailItem>
+                )}
 
                 <DetailItem label="Fulfillment status:">
                   {invoiceData?.fulfillmentStatus}

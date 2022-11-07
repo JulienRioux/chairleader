@@ -154,7 +154,7 @@ export const TokenGating = () => {
             description,
             external_url: 'https://chairleader.xyz/',
             collection: {
-              name: 'Testing collections',
+              name: 'Chairleader collections',
               family: 'Chairleader.xyz',
             },
             initialPrice: price,
@@ -196,7 +196,6 @@ export const TokenGating = () => {
 
         message.success(`${name} has been created successfully!`);
 
-        // TODO: This is not working properly...
         refetchStoreNfts();
 
         setUploadingNft(false);

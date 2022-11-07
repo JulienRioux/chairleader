@@ -18,7 +18,14 @@ import styled, { css } from 'styled-components';
 import { routes } from 'utils';
 import { useMediaQuery } from 'hooks/media-query';
 import { useTheme } from 'hooks/theme';
-import { drawerIn, fadeIn, fadeOut, drawerOut } from 'utils/keyframes';
+import {
+  drawerIn,
+  fadeIn,
+  fadeOut,
+  drawerOut,
+  scaleIn,
+  numberSlideIn,
+} from 'utils/keyframes';
 
 const AMINATION_DURATION = 500;
 
@@ -178,6 +185,13 @@ const CartItemsNumberBadge = styled.div`
   justify-content: center;
   align-items: center;
   font-weight: bold;
+
+  animation: 0.2s ${scaleIn} forwards;
+
+  span {
+    overflow: hidden;
+    animation: 0.4s ${numberSlideIn} forwards;
+  }
 `;
 
 export const StoreLogo = ({ ...rest }) => {
@@ -316,7 +330,11 @@ const MobileMenu = ({
         <MobileMenuLabel>Cart</MobileMenuLabel>
 
         {!!cartItemsNumber && (
-          <CartItemsNumberBadge>{cartItemsNumber}</CartItemsNumberBadge>
+          <CartItemsNumberBadge>
+            <span key={`cart_items_total${cartItemsNumber}`}>
+              {cartItemsNumber}
+            </span>
+          </CartItemsNumberBadge>
         )}
       </MenuBtn>
     </MobileBottomMenu>
@@ -445,7 +463,9 @@ export const InventoryLayout = ({ children }: { children: ReactNode }) => {
                       />
                       {!!cartItemsNumber && (
                         <CartItemsNumberBadge>
-                          {cartItemsNumber}
+                          <span key={`cart_items_total${cartItemsNumber}`}>
+                            {cartItemsNumber}
+                          </span>
                         </CartItemsNumberBadge>
                       )}
                     </CartButtonWrapper>
