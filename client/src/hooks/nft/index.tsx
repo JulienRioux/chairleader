@@ -126,14 +126,17 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
       nftId,
       productsUnlocked,
       isArchived,
+      rewardsUnlocked,
     }: {
       nftId: string;
       productsUnlocked?: string[];
       isArchived?: boolean;
+      rewardsUnlocked?: Array<{ type: string; value: number }>;
     }) => {
       await updateNftMutation({
         variables: {
-          productsUnlocked,
+          ...(productsUnlocked && { productsUnlocked }),
+          ...(rewardsUnlocked && { rewardsUnlocked }),
           isArchived,
           id: nftId,
         },
@@ -292,26 +295,34 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
 
   const getNftDiscount = useCallback(() => {
     // Filter out NFTs that did not have discount associated with
-    const discountNfts = storeNfts?.findNftsByStoreId;
-    // TODO: Order by  discount  (Bigger ot lower)
+    const discountNfts = storeNfts?.findNftsByStoreId.filter(
+      ({ rewardsUnlocked }: any) => !!rewardsUnlocked.length
+    );
+    // Order by  discount  (Bigger ot lower)
+    const sortedDiscountNfts = discountNfts?.sort(
+      (a: any, b: any) =>
+        b?.rewardsUnlocked[0].value - a?.rewardsUnlocked[0].value
+    );
+
+    let currentDiscount = 0;
 
     // Check if the user has NFT with discount
-    discountNfts?.forEach((discountNft: any) => {
-      if (nftDiscount) return;
+    sortedDiscountNfts?.forEach((discountNft: any) => {
       const discountNftToUse = mapMasterToPrintedEditions[
         discountNft?.nftAddress
       ]?.find((printedVersion: string) => userNfts.includes(printedVersion));
-      if (discountNftToUse) {
-        // Setup the discount here
-        setNftDiscount(0.1);
+
+      if (
+        discountNftToUse &&
+        (discountNft?.rewardsUnlocked[0]?.value > currentDiscount ||
+          !currentDiscount)
+      ) {
+        currentDiscount = discountNft?.rewardsUnlocked[0]?.value;
       }
     });
-  }, [
-    mapMasterToPrintedEditions,
-    nftDiscount,
-    storeNfts?.findNftsByStoreId,
-    userNfts,
-  ]);
+    // Setup the discount here (Put it in fraction)
+    setNftDiscount(currentDiscount);
+  }, [mapMasterToPrintedEditions, storeNfts?.findNftsByStoreId, userNfts]);
 
   useEffect(() => {
     getNftDiscount();
@@ -339,7 +350,7 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
       updateNft,
       updateNftIsLoading,
       getProductLockedMapIsLoading,
-      nftDiscount,
+      nftDiscount: nftDiscount / 100,
     };
   }, [
     userNftsIsLoading,

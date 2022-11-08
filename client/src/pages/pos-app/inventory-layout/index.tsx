@@ -474,6 +474,7 @@ export const InventoryLayout = ({ children }: { children: ReactNode }) => {
               </ButtonsWrapper>
             </TopNav>
           </TopNavWrapper>
+
           <ChildrenWrapper>{children}</ChildrenWrapper>
         </LeftSideWrapper>
 

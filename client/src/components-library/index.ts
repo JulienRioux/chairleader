@@ -15,3 +15,4 @@ export * from './skeleton';
 export * from './tag-input';
 export * from './select-buttons';
 export * from './video';
+export * from './checkbox';

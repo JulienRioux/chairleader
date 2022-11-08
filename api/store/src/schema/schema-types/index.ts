@@ -115,12 +115,18 @@ export const schemaTypes = gql`
     products: [Product]
   }
 
+  type Reward {
+    type: String
+    value: Float
+  }
+
   type Nft {
     _id: String
     storeId: String
     nftAddress: String
     productsUnlocked: [String]
     isArchived: Boolean
+    rewardsUnlocked: [Reward]
   }
 
   scalar Upload

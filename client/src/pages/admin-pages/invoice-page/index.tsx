@@ -143,8 +143,6 @@ export const InvoicePage = () => {
 
   const isDevNetwork = invoiceData?.network === NETWORK.DEVNET;
 
-  console.log('=>', invoiceData?.isNft);
-
   return (
     <InvoicePageWrapper>
       <Card title="Summary">

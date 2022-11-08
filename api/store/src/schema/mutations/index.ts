@@ -100,7 +100,12 @@ export const mutations = gql`
     """
     Update Nft by ID
     """
-    updateNft(id: String!, productsUnlocked: [String], isArchived: Boolean): Nft
+    updateNft(
+      id: String!
+      productsUnlocked: [String]
+      rewardsUnlocked: [Object]
+      isArchived: Boolean
+    ): Nft
 
     """
     Update Invoice by ID

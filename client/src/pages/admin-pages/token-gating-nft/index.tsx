@@ -50,11 +50,17 @@ import {
   NftName,
   NftImg,
   RightWrapper,
+  DealWrapper,
+  RewardWrapper,
+  RewardBanner,
+  RewardTitle,
+  RewardDescription,
 } from './token-gating.nft.styles';
 import { NftOwnerBadge } from 'pages/pos-app/product-page';
 import styled from 'styled-components';
 import { useSplTokenPayent } from 'hooks/spl-token-payment';
 import { useWalletModal } from 'hooks/wallet-modal';
+import { RewardsSelection } from '../rewards-selection';
 
 export const NftImgWrapper = styled.div`
   position: relative;
@@ -115,45 +121,101 @@ const DealItem = ({
 const ExclusivitiesCarousel = ({
   productsUnlocked,
   refetchNftByAddress,
+  rewardsUnlocked,
   isAdminApp,
 }: {
   productsUnlocked?: string[];
+  rewardsUnlocked?: any[];
   refetchNftByAddress: () => void;
   isAdminApp: boolean;
 }) => {
-  const { Modal, openModal, closeModal } = useModal();
+  const {
+    Modal: ExclusivitiesModal,
+    openModal: openExclusivitiesModal,
+    closeModal: closeExclusivitiesModal,
+  } = useModal();
+  const {
+    Modal: RewardsModal,
+    openModal: openRewardsModal,
+    closeModal: closeRewardsModal,
+  } = useModal();
+
+  const hasRewards = !!rewardsUnlocked?.length;
 
   return (
     <DealsWrapper>
-      <TitleWrapper>
-        <TokenGateTypeTitle>
-          <Icon name="lock_open" /> Exclusivities unlocked
-        </TokenGateTypeTitle>
-        {isAdminApp && (
-          <StyledButton secondary onClick={openModal}>
-            Select exclusivities
-          </StyledButton>
-        )}
-      </TitleWrapper>
+      <DealWrapper>
+        <TitleWrapper>
+          <TokenGateTypeTitle>
+            <Icon name="lock_open" /> Exclusivities unlocked
+          </TokenGateTypeTitle>
+          {isAdminApp && (
+            <StyledButton secondary onClick={openExclusivitiesModal}>
+              Select exclusivities
+            </StyledButton>
+          )}
+        </TitleWrapper>
 
-      <Scoller>
-        {productsUnlocked?.map((productId) => (
-          <DealItem
-            key={productId}
-            productId={productId}
-            isAdminApp={isAdminApp}
-          />
-        ))}
-      </Scoller>
+        <Scoller>
+          {productsUnlocked?.map((productId) => (
+            <DealItem
+              key={productId}
+              productId={productId}
+              isAdminApp={isAdminApp}
+            />
+          ))}
+        </Scoller>
 
-      {!productsUnlocked?.length && <p>No exclusivities yet.</p>}
+        {!productsUnlocked?.length && <p>No exclusivities yet.</p>}
+      </DealWrapper>
 
-      <Modal title="Select exclusive products" isMaxWidth>
+      <DealWrapper>
+        <TitleWrapper>
+          <TokenGateTypeTitle>
+            <Icon name="lock_open" /> Rewards unlocked
+          </TokenGateTypeTitle>
+
+          {isAdminApp && (
+            <StyledButton secondary onClick={openRewardsModal}>
+              {`${hasRewards ? 'Update' : 'Add'} rewards`}
+            </StyledButton>
+          )}
+        </TitleWrapper>
+
+        <Scoller>
+          {rewardsUnlocked?.map(
+            ({ type, value }: { type: string; value: number }) => (
+              <RewardWrapper
+                key={`${type}_${value}`}
+                {...(isAdminApp && { onClick: openRewardsModal })}
+                isAdminApp={isAdminApp}
+              >
+                <RewardBanner>{value}% OFF</RewardBanner>
+                <RewardTitle>
+                  {value}% {type.replace('_', ' ')}
+                </RewardTitle>
+                <RewardDescription>On all products</RewardDescription>
+              </RewardWrapper>
+            )
+          )}
+        </Scoller>
+
+        {!rewardsUnlocked?.length && <p>No rewards yet.</p>}
+      </DealWrapper>
+
+      <ExclusivitiesModal title="Select exclusive products" isMaxWidth>
         <ExclusivitiesSelection
-          closeModal={closeModal}
+          closeModal={closeExclusivitiesModal}
           refetchNftByAddress={refetchNftByAddress}
         />
-      </Modal>
+      </ExclusivitiesModal>
+
+      <RewardsModal title={`${hasRewards ? 'Update' : 'Select'} rewards`}>
+        <RewardsSelection
+          closeModal={closeRewardsModal}
+          refetchNftByAddress={refetchNftByAddress}
+        />
+      </RewardsModal>
     </DealsWrapper>
   );
 };
@@ -423,7 +485,7 @@ export const TokenGatingNft = ({
           </NftInfoWrapper>
 
           {isAdminApp && (
-            <>
+            <NftInfoWrapper>
               <h4>Printed tokens:</h4>
 
               {editionsPrintedListIsLoading && <Loader />}
@@ -474,7 +536,7 @@ export const TokenGatingNft = ({
                   {nftIsArchived ? 'Unarchive NFT' : 'Archive NFT'}
                 </Button>
               </div>
-            </>
+            </NftInfoWrapper>
           )}
         </DetailsWrapper>
 
@@ -482,11 +544,14 @@ export const TokenGatingNft = ({
           {currentNftIsLoading ? (
             <div>
               <Loader />
-              <div style={{ textAlign: 'center' }}>Loading exclusivities</div>
+              <div style={{ textAlign: 'center' }}>
+                Loading latest exclusivities and rewards
+              </div>
             </div>
           ) : (
             <ExclusivitiesCarousel
               productsUnlocked={currentNft?.findNftByAddress?.productsUnlocked}
+              rewardsUnlocked={currentNft?.findNftByAddress?.rewardsUnlocked}
               refetchNftByAddress={refetchNftByAddress}
               isAdminApp={isAdminApp}
             />

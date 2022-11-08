@@ -74,13 +74,13 @@ export const CartSummary = ({
         </SubTotalItem>
       )}
 
-      {discount && (
+      {!!discount && (
         <SubTotalItem>
-          <span>NFT membersip discount:</span>
+          <span>NFT membership discount:</span>
           <div>
             <Discount>{discount * 100}% OFF</Discount>
             <span>
-              -{totalDiscount} {currency}
+              -{Number(totalDiscount.toFixed(6))} {currency}
             </span>
           </div>
         </SubTotalItem>
@@ -103,7 +103,7 @@ export const CartSummary = ({
       <TotalItem $showTopBorder={!hasSaleTaxOrShippingFees}>
         <span>Total:</span>
         <strong>
-          {totalWithSaleTax - totalDiscount} {currency}
+          {Number((totalWithSaleTax - totalDiscount).toFixed(6))} {currency}
         </strong>
       </TotalItem>
     </>

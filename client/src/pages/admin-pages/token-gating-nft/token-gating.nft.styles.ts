@@ -1,4 +1,9 @@
-import { Button, UnstyledExternalLink, UnstyledLink } from 'components-library';
+import {
+  Button,
+  UnstyledButton,
+  UnstyledExternalLink,
+  UnstyledLink,
+} from 'components-library';
 import styled from 'styled-components';
 import { fadeIn } from 'utils/keyframes';
 
@@ -117,4 +122,42 @@ export const RightWrapper = styled.div`
 export const TokenGatingNftPageWrapper = styled.div`
   opacity: 0;
   animation: 0.4s ${fadeIn} forwards;
+`;
+
+export const DealWrapper = styled.div`
+  margin-bottom: 40px;
+`;
+
+export const RewardWrapper = styled(UnstyledButton)<{ isAdminApp?: boolean }>`
+  min-width: 200px;
+  width: 200px;
+  text-align: left;
+  ${(p) => !p.isAdminApp && `cursor: default;`}
+`;
+
+export const RewardBanner = styled.div`
+  width: 100%;
+  border-radius: ${(p) => p.theme.borderRadius.default};
+  border: 1px solid ${(p) => p.theme.color.text}22;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${(p) => p.theme.color.primary};
+  background: ${(p) => p.theme.color.text}11;
+  font-size: 20px;
+  font-weight: bold;
+`;
+
+export const RewardTitle = styled.h4`
+  margin: 8px 0 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`;
+
+export const RewardDescription = styled.div`
+  margin: 8px 0 0;
+  color: ${(p) => p.theme.color.primary};
 `;
