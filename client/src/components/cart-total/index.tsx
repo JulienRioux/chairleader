@@ -30,6 +30,15 @@ const TotalItem = styled.div<{ $showTopBorder: boolean }>`
     `}
 `;
 
+const Discount = styled.span`
+  /* background: ${(p) => p.theme.color.primary}22; */
+  color: ${(p) => p.theme.color.primary};
+  border-radius: ${(p) => p.theme.borderRadius.input};
+  padding: 0 4px;
+  border: 1px solid;
+  margin-right: 8px;
+`;
+
 export const CartSummary = ({
   totalPrice,
   totalSaleTax,
@@ -37,6 +46,7 @@ export const CartSummary = ({
   currency,
   isAdminApp,
   shippingFee,
+  discount,
 }: {
   totalPrice: number;
   totalSaleTax: number;
@@ -44,6 +54,7 @@ export const CartSummary = ({
   currency: string;
   isAdminApp?: boolean;
   shippingFee?: number;
+  discount?: number;
 }) => {
   const { store } = useStore();
   const { user } = useAuth();
@@ -52,12 +63,26 @@ export const CartSummary = ({
 
   const hasSaleTaxOrShippingFees = !!saleTax || !!shippingFee;
 
+  const totalDiscount = discount ? discount * totalPrice : 0;
+
   return (
     <>
       {hasSaleTaxOrShippingFees && (
         <SubTotalItem>
           <span>Subtotal:</span>
           {totalPrice} {currency}
+        </SubTotalItem>
+      )}
+
+      {discount && (
+        <SubTotalItem>
+          <span>NFT membersip discount:</span>
+          <div>
+            <Discount>{discount * 100}% OFF</Discount>
+            <span>
+              -{totalDiscount} {currency}
+            </span>
+          </div>
         </SubTotalItem>
       )}
 
@@ -78,7 +103,7 @@ export const CartSummary = ({
       <TotalItem $showTopBorder={!hasSaleTaxOrShippingFees}>
         <span>Total:</span>
         <strong>
-          {totalWithSaleTax} {currency}
+          {totalWithSaleTax - totalDiscount} {currency}
         </strong>
       </TotalItem>
     </>
@@ -86,8 +111,14 @@ export const CartSummary = ({
 };
 
 export const CartTotal = () => {
-  const { totalPrice, totalSaleTax, totalWithSaleTax, cartItems, shippingFee } =
-    useCart();
+  const {
+    totalPrice,
+    totalSaleTax,
+    totalWithSaleTax,
+    cartItems,
+    shippingFee,
+    discount,
+  } = useCart();
 
   const { currency } = useCurrency();
 
@@ -103,6 +134,7 @@ export const CartTotal = () => {
         totalWithSaleTax={totalWithSaleTax}
         currency={currency}
         shippingFee={shippingFee}
+        discount={discount}
       />
 
       <Button fullWidth to={routes.store.cart}>

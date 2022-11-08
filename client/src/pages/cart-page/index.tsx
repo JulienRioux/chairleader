@@ -174,8 +174,14 @@ const DevnetMsg = () => {
 
 export const CartPage = () => {
   useScrollTop();
-  const { totalWithSaleTax, cartItems, totalPrice, totalSaleTax, shippingFee } =
-    useCart();
+  const {
+    totalWithSaleTax,
+    cartItems,
+    totalPrice,
+    totalSaleTax,
+    shippingFee,
+    discount,
+  } = useCart();
   const { status } = usePayment();
   const navigate = useNavigate();
 
@@ -216,6 +222,7 @@ export const CartPage = () => {
                   totalWithSaleTax={totalWithSaleTax}
                   currency={currency}
                   shippingFee={shippingFee}
+                  discount={discount}
                 />
               </CartSummaryWrapper>
             </DesktopSummaryWrapper>

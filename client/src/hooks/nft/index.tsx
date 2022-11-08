@@ -33,6 +33,7 @@ export interface INftContext {
   updateNft: (args: any) => void;
   updateNftIsLoading: boolean;
   getProductLockedMapIsLoading: boolean;
+  nftDiscount: number;
 }
 
 export async function asyncForEach<T>(
@@ -287,6 +288,35 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
     [mapMasterToPrintedEditions, userNfts]
   );
 
+  const [nftDiscount, setNftDiscount] = useState(0);
+
+  const getNftDiscount = useCallback(() => {
+    // Filter out NFTs that did not have discount associated with
+    const discountNfts = storeNfts?.findNftsByStoreId;
+    // TODO: Order by  discount  (Bigger ot lower)
+
+    // Check if the user has NFT with discount
+    discountNfts?.forEach((discountNft: any) => {
+      if (nftDiscount) return;
+      const discountNftToUse = mapMasterToPrintedEditions[
+        discountNft?.nftAddress
+      ]?.find((printedVersion: string) => userNfts.includes(printedVersion));
+      if (discountNftToUse) {
+        // Setup the discount here
+        setNftDiscount(0.1);
+      }
+    });
+  }, [
+    mapMasterToPrintedEditions,
+    nftDiscount,
+    storeNfts?.findNftsByStoreId,
+    userNfts,
+  ]);
+
+  useEffect(() => {
+    getNftDiscount();
+  }, [getNftDiscount]);
+
   useEffect(() => {
     getUserNfts();
   }, [getUserNfts]);
@@ -309,6 +339,7 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
       updateNft,
       updateNftIsLoading,
       getProductLockedMapIsLoading,
+      nftDiscount,
     };
   }, [
     userNftsIsLoading,
@@ -327,6 +358,7 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
     updateNft,
     updateNftIsLoading,
     getProductLockedMapIsLoading,
+    nftDiscount,
   ]);
 
   return <NftContext.Provider value={getCtx()}>{children}</NftContext.Provider>;

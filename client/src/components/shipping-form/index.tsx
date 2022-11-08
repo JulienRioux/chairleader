@@ -87,7 +87,9 @@ export const ShippingForm = () => {
 
   const { makePayment } = useSplTokenPayent();
 
-  const { totalWithSaleTax } = useCart();
+  const { totalWithSaleTax, discount, totalPrice } = useCart();
+
+  const finalPayment = totalWithSaleTax - totalPrice * discount;
 
   const INSUFFICIENT_FUNDS = userBalance && userBalance < totalWithSaleTax;
 
@@ -144,7 +146,7 @@ export const ShippingForm = () => {
         setPaymentIsLoading(true);
 
         await makePayment({
-          amount: Number(totalWithSaleTax),
+          amount: Number(finalPayment),
           shippingInfo,
         });
       } catch (err) {
@@ -158,11 +160,11 @@ export const ShippingForm = () => {
       city,
       country,
       email,
+      finalPayment,
       makePayment,
       name,
       postalCode,
       state,
-      totalWithSaleTax,
     ]
   );
 
@@ -251,7 +253,7 @@ export const ShippingForm = () => {
               paymentIsLoading || userBalanceIsLoading || storeNftsAreLoading
             }
           >
-            <span>Pay {totalWithSaleTax} USDC</span>
+            <span>Pay {finalPayment} USDC</span>
             <IconWrapper>
               <Icon name="lock" />
             </IconWrapper>

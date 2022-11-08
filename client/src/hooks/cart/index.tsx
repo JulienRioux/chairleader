@@ -55,6 +55,7 @@ interface ICartContext {
   }) => void;
   getPaymentLink: () => any;
   shippingFee: number;
+  discount: number;
 }
 
 export interface ICartItem {
@@ -313,6 +314,8 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
     ]
   );
 
+  const { nftDiscount } = useNft();
+
   const getCtx = useCallback(() => {
     return {
       cartItems: populatedCartItems,
@@ -327,6 +330,7 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
       handleAddCustomItems,
       getPaymentLink,
       shippingFee,
+      discount: nftDiscount,
     };
   }, [
     populatedCartItems,
@@ -341,6 +345,7 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
     handleAddCustomItems,
     getPaymentLink,
     shippingFee,
+    nftDiscount,
   ]);
 
   return (
