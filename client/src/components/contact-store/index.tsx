@@ -69,7 +69,6 @@ export const ContactStore = () => {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <h1>Contact us</h1>
       <Input
         value={name}
         onChange={handleChange}

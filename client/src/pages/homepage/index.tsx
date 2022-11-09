@@ -105,6 +105,7 @@ const AppIconImgWrapper = styled.div`
   justify-content: center;
   position: relative;
   width: 34px;
+  height: 34px;
 `;
 
 const AppIconImg = styled.img`
@@ -118,7 +119,9 @@ const AppIconImg = styled.img`
   }
 `;
 
-const Logo = styled(UnstyledLink)`
+const Logo = styled(UnstyledLink)``;
+
+const AppLogoWrapper = styled.div`
   font-weight: bold;
   font-size: 20px;
   display: flex;
@@ -751,6 +754,23 @@ const NavLink = styled(UnstyledLink)`
   }
 `;
 
+export const AppLogo = () => (
+  <AppLogoWrapper>
+    <AppIconImgWrapper>
+      <AppIconImg src={appLogoSrcQuickGif} />
+
+      <AppIconImg src={appLogoSrc} />
+    </AppIconImgWrapper>
+    <span>{APP_NAME}</span>
+  </AppLogoWrapper>
+);
+
+export const AppLogoLink = () => (
+  <Logo to={routes.base}>
+    <AppLogo />
+  </Logo>
+);
+
 export const HomepageTopNav = () => {
   const { isAuthenticated, isLoading } = useAuth();
 
@@ -808,15 +828,7 @@ export const HomepageTopNav = () => {
       <TopNavWrapper>
         <TopNav>
           <LeftNav>
-            <Logo to={routes.base}>
-              <AppIconImgWrapper>
-                <AppIconImg src={appLogoSrcQuickGif} />
-
-                <AppIconImg src={appLogoSrc} />
-              </AppIconImgWrapper>
-              {APP_NAME}
-            </Logo>
-
+            <AppLogoLink />
             <NavLink to={routes.pricing}>Pricing</NavLink>
           </LeftNav>
 

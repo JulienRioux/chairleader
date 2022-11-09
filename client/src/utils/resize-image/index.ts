@@ -60,7 +60,7 @@ export const resizeFileImage = (settings: IResizeImageOptions) => {
   });
 };
 
-const MAX_IMG_SIZE = 1200;
+const MAX_IMG_SIZE = 1400;
 /** This function resize the image file to a maxSize (max width or length) */
 export const resizeFileImg = async (imgFile: File, maxSize = MAX_IMG_SIZE) => {
   const config = {

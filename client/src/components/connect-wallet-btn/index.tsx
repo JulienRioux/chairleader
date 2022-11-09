@@ -7,13 +7,7 @@ import { WalletName, WalletReadyState } from '@solana/wallet-adapter-base';
 import { formatShortAddress, routes, CLUSTER_ENV } from 'utils';
 import { useWalletModal } from 'hooks/wallet-modal';
 
-const ConnectWalletBtnWrapper = styled.span`
-  margin-right: 12px;
-
-  @media (max-width: 1000px) {
-    margin-right: 0;
-  }
-`;
+const ConnectWalletBtnWrapper = styled.span``;
 
 const LoginDisclaimer = styled.p`
   background: ${(p) => p.theme.color.text}11;

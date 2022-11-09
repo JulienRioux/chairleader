@@ -41,7 +41,7 @@ const OutOfStockBadgeWrapper = styled.div`
   text-align: center;
 `;
 const sharedStyles = css`
-  width: 100%;
+  width: calc(100% - 2px);
   aspect-ratio: ${(p) => p.theme.products.image.aspectRatio};
   border-radius: ${(p) => p.theme.borderRadius.default};
   border: 1px solid ${(p) => p.theme.color.lightGrey};

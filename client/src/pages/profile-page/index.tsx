@@ -5,10 +5,11 @@ import { ConnectWalletBtn } from 'components/connect-wallet-btn';
 import { format } from 'date-fns';
 import { useBalance } from 'hooks/balance';
 import { SolScanLink } from 'pages/admin-pages/token-gating-nft/token-gating.nft.styles';
+import { ToggleTheme } from 'pages/homepage';
 import { InventoryLayout } from 'pages/pos-app/inventory-layout';
 import { GET_INVOICES_BY_WALLET_ADDRESS } from 'queries';
 import { useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { CLUSTER_ENV, formatShortAddress, routes } from 'utils';
 import { slideInBottom } from 'utils/keyframes';
@@ -38,6 +39,12 @@ const TitleAndDisconnectBtn = styled.div`
 const ProfilePageWrapper = styled.div`
   opacity: 0;
   animation: 0.4s ${slideInBottom} forwards;
+`;
+
+const BtnsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
 `;
 
 export const ProfilePage = () => {
@@ -72,30 +79,31 @@ export const ProfilePage = () => {
       {publicKey ? (
         <ProfilePageWrapper>
           <ProfileInfoWrapper>
+            <h3>Wallet info</h3>
             <div>
-              <TitleAndDisconnectBtn>
-                <h1 style={{ marginTop: 0 }}>My profile</h1>
-
-                <div>
-                  <Button secondary onClick={handleDisconnect}>
-                    Disconnect
-                  </Button>
-                </div>
-              </TitleAndDisconnectBtn>
               <p>
                 Wallet address:{' '}
-                <SolScanLink
+                <a
                   href={`https://solscan.io/token/${walletAddress}?cluster=${CLUSTER_ENV}`}
                   target="_blank"
+                  rel="noreferrer"
                 >
                   {formatShortAddress(walletAddress)}
                   <Icon name="launch" style={{ marginLeft: '8px' }} />
-                </SolScanLink>
+                </a>
               </p>
 
               <p>Connected with: {wallet?.adapter.name}</p>
 
               <p>Wallet balance: {userBalance} USDC</p>
+
+              <BtnsWrapper>
+                <ToggleTheme />
+
+                <Button secondary onClick={handleDisconnect}>
+                  Disconnect
+                </Button>
+              </BtnsWrapper>
             </div>
           </ProfileInfoWrapper>
 
@@ -107,7 +115,8 @@ export const ProfilePage = () => {
           )}
 
           <h3>
-            My orders {!!formattedData?.length && `(${formattedData?.length})`}
+            Past orders{' '}
+            {!!formattedData?.length && `(${formattedData?.length})`}
           </h3>
 
           {invoicesIsLoading ? (

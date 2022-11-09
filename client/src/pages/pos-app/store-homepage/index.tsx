@@ -10,11 +10,14 @@ import {
   YoutubeIcon,
   AppleMusicIcon,
   SnapchatIcon,
+  Icon,
+  UnstyledButton,
+  message,
 } from 'components-library';
 import { useStore } from 'hooks/store';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { routes } from 'utils';
 import { InventoryLayout } from '../inventory-layout';
 import { slideInBottom } from 'utils/keyframes';
@@ -109,30 +112,43 @@ const SocialMediaIconsWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 20px;
+  margin: 4px 0;
 `;
 
-const SocialMediaLink = styled(UnstyledExternalLink)`
-  height: 36px;
-  width: 36px;
+const sharedSocialStyles = css`
+  height: 38px;
+  width: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 4px;
+  margin: 0 4px;
   transition: 0.2s;
-  border-radius: ${(p) => p.theme.borderRadius.default};
+  /* border-radius: ${(p) => p.theme.borderRadius.default}; */
+  border-radius: 50%;
+  background: ${(p) => p.theme.color.white}bb;
+  backdrop-filter: blur(4px);
 
+  button,
   svg {
     width: 20px;
-    fill: ${(p) => p.theme.color.text};
+    fill: ${(p) => p.theme.color.black};
   }
 
   :hover {
-    background: ${(p) => p.theme.color.text}11;
+    background: ${(p) => p.theme.color.white};
   }
   :active {
     transform: translateY(3px);
   }
+`;
+
+const SocialMediaLink = styled(UnstyledExternalLink)`
+  ${sharedSocialStyles}
+`;
+
+const ShareButton = styled(UnstyledButton)`
+  color: ${(p) => p.theme.color.black};
+  ${sharedSocialStyles}
 `;
 
 type SocialMediaNames =
@@ -163,8 +179,9 @@ interface ISocialMedia {
   link: string;
 }
 
-const SocialMediaIcons = () => {
+export const SocialMediaIcons = () => {
   const { store } = useStore();
+  console.log('store', store);
 
   // Formatting data to display social media icons and links
   const socialMedia = Object.keys(store?.social)
@@ -179,6 +196,19 @@ const SocialMediaIcons = () => {
     })
     .filter((socialMedia) => !!socialMedia) as ISocialMedia[];
 
+  const handleShare = useCallback(() => {
+    if (!navigator?.canShare()) {
+      navigator.clipboard.writeText(window.location.origin);
+      message.success('Link copied');
+      return;
+    }
+    navigator?.share({
+      url: window.location.origin,
+      text: store?.description,
+      title: store?.storeName,
+    });
+  }, [store?.description, store?.storeName]);
+
   return (
     <SocialMediaIconsWrapper>
       {socialMedia?.map(({ name, link }: { name: string; link: string }) => (
@@ -186,6 +216,9 @@ const SocialMediaIcons = () => {
           {SocialIconsMap[name as SocialMediaNames]}
         </SocialMediaLink>
       ))}
+      <ShareButton onClick={handleShare}>
+        <Icon name="share" />
+      </ShareButton>
     </SocialMediaIconsWrapper>
   );
 };

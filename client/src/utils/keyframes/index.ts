@@ -223,3 +223,14 @@ export const numberSlideIn = keyframes`
     transform: translateY(0); 
   }
 `;
+
+export const launchIconSlide = keyframes`
+  0% { 
+    transform: translatex(-8px);
+    opacity: 0;
+  }
+  100% { 
+    transform: translatex(0); 
+    opacity: 1;
+  }
+`;

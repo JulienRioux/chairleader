@@ -33,8 +33,13 @@ import {
 import { slideInBottom } from 'utils/keyframes';
 
 const ProductWrapper = styled.div`
-  max-width: ${(p) => p.theme.layout.mediumWidth};
-  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+
+  @media (max-width: 800px) {
+    display: block;
+  }
 `;
 
 const TitleAndPrice = styled.div`
@@ -109,11 +114,17 @@ const AddToCartWrapper = styled.div`
 `;
 
 const InnerAddToCartWrapper = styled.div`
-  max-width: ${(p) => p.theme.layout.mediumWidth};
+  max-width: ${(p) => p.theme.layout.maxWidth};
   margin: 0 auto;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
+
+  gap: 20px;
+
+  @media (max-width: 800px) {
+    justify-content: space-between;
+  }
 `;
 
 const NftCardScroller = styled.div`
@@ -310,7 +321,7 @@ export const ProductPage = () => {
       });
     }
     message.success(`${qty} x ${name} added to the cart.`);
-    navigate(routes.store.inventory);
+    navigate(-1);
   }, [name, navigate, price, productId, productVariants, qty, updateQuantity]);
 
   const isOutOfStock = Number(maxQuantity) === 0;
@@ -397,66 +408,68 @@ export const ProductPage = () => {
         </BadgeWrapper>
       </ImgWrapper>
 
-      <TitleAndPrice>
-        <ProductTitle>{name}</ProductTitle>
-        <Price>
-          {priceDisplay} {currency}
-        </Price>
-      </TitleAndPrice>
+      <div>
+        <TitleAndPrice>
+          <ProductTitle>{name}</ProductTitle>
+          <Price>
+            {priceDisplay} {currency}
+          </Price>
+        </TitleAndPrice>
 
-      {IS_PRODUCT_WITH_VARIANTS &&
-        variantNames?.map((variantName, index) => (
-          <SelectButtons
-            key={variantName}
-            label={variantName}
-            options={variantsValues ? variantsValues[index] : []}
-            value={productVariants[index]}
-            onChange={(option: string) =>
-              handleProductVariantsChange(option, index)
-            }
-            checkIfOptionIsOutOfStock={(option: string) =>
-              checkIfOptionIsOutOfStock({ index, option })
-            }
-          />
-        ))}
+        <Description>{description}</Description>
 
-      <Description>{description}</Description>
+        {IS_PRODUCT_WITH_VARIANTS &&
+          variantNames?.map((variantName, index) => (
+            <SelectButtons
+              key={variantName}
+              label={variantName}
+              options={variantsValues ? variantsValues[index] : []}
+              value={productVariants[index]}
+              onChange={(option: string) =>
+                handleProductVariantsChange(option, index)
+              }
+              checkIfOptionIsOutOfStock={(option: string) =>
+                checkIfOptionIsOutOfStock({ index, option })
+              }
+            />
+          ))}
 
-      {tokenGatedNftDataIsLoading ? (
-        <Loader />
-      ) : (
-        !!tokenGatedNftData.length && (
-          <>
-            <QualifyingNftsHeader>
-              NFT memberships that unlocks this product:
-            </QualifyingNftsHeader>
+        {tokenGatedNftDataIsLoading ? (
+          <Loader />
+        ) : (
+          !!tokenGatedNftData.length && (
+            <>
+              <QualifyingNftsHeader>
+                NFT memberships that unlocks this product:
+              </QualifyingNftsHeader>
 
-            <NftCardScrollerWrapper>
-              <NftCardScroller>
-                {tokenGatedNftData.map(
-                  ({
-                    address,
-                    json: { name, image },
-                  }: {
-                    address: PublicKey;
-                    json: { name: string; image: string };
-                  }) => {
-                    const addressString = address.toBase58();
-                    return (
-                      <NftCard
-                        key={addressString}
-                        image={image}
-                        name={name}
-                        address={addressString}
-                      />
-                    );
-                  }
-                )}
-              </NftCardScroller>
-            </NftCardScrollerWrapper>
-          </>
-        )
-      )}
+              <NftCardScrollerWrapper>
+                <NftCardScroller>
+                  {tokenGatedNftData.map(
+                    ({
+                      address,
+                      json: { name, image },
+                    }: {
+                      address: PublicKey;
+                      json: { name: string; image: string };
+                    }) => {
+                      const addressString = address.toBase58();
+                      return (
+                        <NftCard
+                          key={addressString}
+                          image={image}
+                          name={name}
+                          address={addressString}
+                        />
+                      );
+                    }
+                  )}
+                </NftCardScroller>
+              </NftCardScrollerWrapper>
+            </>
+          )
+        )}
+      </div>
 
       <DummyDiv />
 
