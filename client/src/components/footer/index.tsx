@@ -139,7 +139,7 @@ export const Footer: FC = () => {
 
         <BottomFooter>
           <CopyrightPar>
-            Copyright © {new Date().getFullYear()} {APP_NAME}
+            © {new Date().getFullYear()} {APP_NAME}
           </CopyrightPar>
 
           <UnstyledExternalLink href="https://solana.com/" target="_blank">

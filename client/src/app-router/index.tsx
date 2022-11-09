@@ -109,7 +109,12 @@ export const StoreAppRouter = () => {
 
             <Route path={'/profile'} element={<ProfilePage />} />
 
-            <Route path={routes.base} element={<StoreHomepage />} />
+            {/* <Route path={routes.base} element={<StoreHomepage />} /> */}
+
+            <Route
+              path={routes.base}
+              element={<Navigate to={routes.store.inventory} />}
+            />
 
             <Route path={routes.store.contact} element={<ContactStorePage />} />
 

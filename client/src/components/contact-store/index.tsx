@@ -11,11 +11,19 @@ import styled from 'styled-components';
 import { slideInBottom } from 'utils/keyframes';
 
 const Form = styled.form`
-  max-width: ${(p) => p.theme.layout.mediumWidth};
-  margin: 0 auto;
-
   opacity: 0;
   animation: 0.4s ${slideInBottom} forwards;
+`;
+
+const NameAndEmail = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+`;
+
+const SendMessageWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
 `;
 
 export const ContactStore = () => {
@@ -69,48 +77,61 @@ export const ContactStore = () => {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <Input
-        value={name}
-        onChange={handleChange}
-        name="name"
-        placeholder="Enter your name"
-        label="Name"
-        required
-        type="name"
-      />
+      <h3>Get in touch</h3>
+      <div>
+        <NameAndEmail>
+          <div>
+            <Input
+              value={name}
+              onChange={handleChange}
+              name="name"
+              placeholder="Enter your name"
+              label="Name"
+              required
+              type="name"
+            />
+          </div>
 
-      <Input
-        value={email}
-        onChange={handleChange}
-        name="email"
-        placeholder="Enter your email"
-        label="Email"
-        required
-        type="email"
-      />
+          <div>
+            <Input
+              value={email}
+              onChange={handleChange}
+              name="email"
+              placeholder="Enter your email"
+              label="Email"
+              required
+              type="email"
+            />
+          </div>
+        </NameAndEmail>
 
-      <Input
-        value={subject}
-        onChange={handleChange}
-        name="subject"
-        placeholder="Enter the subject of the message"
-        label="Subject"
-        required
-      />
+        <Input
+          value={subject}
+          onChange={handleChange}
+          name="subject"
+          placeholder="Enter the subject of the message"
+          label="Subject"
+          required
+        />
 
-      <Textarea
-        value={message}
-        onChange={handleChange}
-        name="message"
-        placeholder="Enter your message"
-        label="Message"
-        required
-        rows={10}
-      />
+        <div>
+          <Textarea
+            value={message}
+            onChange={handleChange}
+            name="message"
+            placeholder="Enter your message"
+            label="Message"
+            required
+            rows={10}
+          />
+        </div>
+      </div>
 
-      <Button type="submit" fullWidth isLoading={loading}>
-        Send message
-      </Button>
+      <SendMessageWrapper>
+        <Button type="submit" isLoading={loading}>
+          Send message
+        </Button>
+      </SendMessageWrapper>
     </Form>
   );
 };

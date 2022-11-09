@@ -73,6 +73,7 @@ export const CopyrightPar = styled.p`
 export const BottomFooter = styled.div`
   display: flex;
   justify-content: space-between;
+  font-size: 14px;
 
   svg {
     height: 16px;
