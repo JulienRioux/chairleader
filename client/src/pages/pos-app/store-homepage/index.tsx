@@ -197,17 +197,16 @@ export const SocialMediaIcons = () => {
     .filter((socialMedia) => !!socialMedia) as ISocialMedia[];
 
   const handleShare = useCallback(() => {
-    // if (location.protocol !== 'https:' || !navigator?.canShare()) {
-    //   navigator.clipboard.writeText(window.location.origin);
-    //   message.success('Store URL copied copied');
-    //   return;
-    // }
+    if (location.protocol !== 'https:' || !navigator.share) {
+      navigator.clipboard.writeText(window.location.origin);
+      message.success('Store URL copied copied');
+      return;
+    }
     navigator?.share({
       url: window.location.origin,
-      text: store?.description,
       title: store?.storeName,
     });
-  }, [store?.description, store?.storeName]);
+  }, [store?.storeName]);
 
   return (
     <SocialMediaIconsWrapper>
