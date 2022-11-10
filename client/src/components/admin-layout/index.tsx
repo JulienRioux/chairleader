@@ -43,7 +43,7 @@ const SideNav = styled.div`
   border-right: 1px solid ${(p) => p.theme.color.lightGrey};
   position: sticky;
   top: 0;
-  width: 220px;
+  width: 260px;
 
   @media (max-width: 800px) {
     height: auto;
@@ -243,6 +243,11 @@ const SIDE_NAV_ROUTE = [
   { route: routes.admin.payments, icon: 'receipt_long', label: 'Orders' },
   { route: routes.admin.dashboard, icon: 'equalizer', label: 'Dashboard' },
   { route: routes.admin.theme, icon: 'palette', label: 'Theme' },
+  {
+    route: routes.admin.shippingAndDelivery,
+    icon: 'local_shipping',
+    label: 'Shipping and delivery',
+  },
   { route: routes.admin.myStore, icon: 'settings', label: 'Settings' },
   { route: routes.admin.pos, icon: 'shopping_bag', label: 'Open store' },
 ];

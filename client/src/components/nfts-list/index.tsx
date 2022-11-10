@@ -25,17 +25,13 @@ const NftsListWrapper = styled.div`
   display: grid;
   gap: 20px;
 
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 
   @media (max-width: 1200px) {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-  }
-
-  @media (max-width: 800px) {
     grid-template-columns: 1fr 1fr 1fr;
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: 800px) {
     grid-template-columns: 1fr 1fr;
   }
 `;

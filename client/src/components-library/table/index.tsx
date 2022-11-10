@@ -1,13 +1,13 @@
 import React, { ReactNode } from 'react';
 import { TableWrapper, TableWithBorder, TR } from './table.styles';
 
-interface Comlumn {
+interface Row {
   [key: string]: ReactNode;
 }
 
 interface TableProps {
   columns: string[];
-  rows: Comlumn[];
+  rows: Row[];
   handleRowClick?: any;
 }
 

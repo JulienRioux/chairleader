@@ -76,18 +76,6 @@ export const ConfirmationPage = ({ isConfirmation = false }) => {
                 See transaction details on Explorer <Icon name="launch" />
               </a>
             </div>
-
-            <div style={{ marginTop: '20px' }}>
-              <Button to={routes.store.inventory}>Start a new order</Button>
-
-              <Button
-                secondary
-                style={{ marginLeft: '8px' }}
-                to={routes.store.profile}
-              >
-                Go to my profile
-              </Button>
-            </div>
           </FinalizedTransactionWrapper>
         )}
 

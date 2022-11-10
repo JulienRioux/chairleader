@@ -110,7 +110,7 @@ const CartBackdrop = styled.div<{ isClosing: boolean }>`
 `;
 
 const LeftSideWrapper = styled.div`
-  @media (max-width: 1000px) {
+  @media (max-width: 800px) {
     width: 100%;
   }
 `;
@@ -128,7 +128,7 @@ const MobileCartFixedBtn = styled(Button)`
   }
 
   display: none;
-  @media (max-width: 1000px) {
+  @media (max-width: 800px) {
     display: inline-flex;
   }
 `;
@@ -239,7 +239,7 @@ const MobileBottomMenu = styled.div`
   padding: 0 16px;
 
   display: none;
-  @media (max-width: 1000px) {
+  @media (max-width: 800px) {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -367,7 +367,7 @@ const CartPreview = ({
 };
 
 export const InventoryLayout = ({ children }: { children: ReactNode }) => {
-  const hasMobileNavBar = useMediaQuery('(max-width: 1000px)');
+  const hasMobileNavBar = useMediaQuery('(max-width: 800px)');
 
   const { cartItemsNumber } = useCart();
 

@@ -16,6 +16,7 @@ import { message } from 'components-library';
 import { useSearchParams } from 'react-router-dom';
 import { USE_PAYMENT_LINK } from 'configs';
 import { useNft } from 'hooks/nft';
+import { REST_OF_THE_WORLD_TEXT } from 'components/shipping-setup';
 
 export interface IInventoryItem {
   _id: string;
@@ -56,6 +57,8 @@ interface ICartContext {
   getPaymentLink: () => any;
   shippingFee: number;
   discount: number;
+  setUserCountry: any;
+  userCountry: string;
 }
 
 export interface ICartItem {
@@ -94,6 +97,8 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const { inventory, store } = useStore();
 
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const [userCountry, setUserCountry] = useState('');
 
   const inventoryAndCustomItems = useMemo(
     () => [...customItems, ...inventory],
@@ -233,7 +238,20 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
     (totalPrice * SALE_TAX_PERCENT)?.toFixed(decimals)
   );
 
-  const shippingFee = store.shippingFee;
+  // If the store has "Rest of the world" selected, fallback to this rate if the country is not selected otherwise
+  const hasRestOfTheWorldOption = store?.shippingRates?.find(
+    ({ country }: { country: string }) => country === REST_OF_THE_WORLD_TEXT
+  );
+
+  // Get the shipping fees based on the user location.
+  const shippingFee = Number(
+    store?.shippingRates?.find(
+      ({ country }: { country: string }) => country === userCountry
+    )?.rate ??
+      (hasRestOfTheWorldOption && userCountry
+        ? hasRestOfTheWorldOption?.rate
+        : 0)
+  );
 
   const totalWithSaleTax = Number(
     (totalPrice + totalSaleTax + shippingFee)?.toFixed(decimals)
@@ -331,6 +349,8 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
       getPaymentLink,
       shippingFee,
       discount: nftDiscount,
+      setUserCountry,
+      userCountry,
     };
   }, [
     populatedCartItems,
@@ -346,6 +366,8 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
     getPaymentLink,
     shippingFee,
     nftDiscount,
+    setUserCountry,
+    userCountry,
   ]);
 
   return (

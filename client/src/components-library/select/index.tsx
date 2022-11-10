@@ -19,6 +19,7 @@ export const Select: FC<ISelectProps> = ({
   label,
   id,
   required,
+  disabled,
 }) => {
   const selectOptions = [
     { disabled: true, label: placeholder ?? '', value: '' },
@@ -40,6 +41,7 @@ export const Select: FC<ISelectProps> = ({
           value={value}
           name={name}
           required={required}
+          disabled={disabled}
         >
           {selectOptions.map(
             ({

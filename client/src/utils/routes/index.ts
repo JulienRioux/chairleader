@@ -26,6 +26,7 @@ export const routes = {
     tokenGating: '/admin/token-gating',
     theme: '/admin/theme',
     loyalty: '/admin/loyalty',
+    shippingAndDelivery: '/admin/shipping-and-delivery',
   },
 
   store: {

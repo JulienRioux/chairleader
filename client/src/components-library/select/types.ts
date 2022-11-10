@@ -14,4 +14,5 @@ export interface ISelectProps {
   name: string;
   placeholder?: string;
   required?: boolean;
+  disabled?: boolean;
 }

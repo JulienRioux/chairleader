@@ -31,6 +31,11 @@ export const SelectInput = styled.select`
   :invalid {
     color: #757575;
   }
+
+  :disabled {
+    background: ${(p) => p.theme.color.lightGrey};
+    border: ${(p) => p.theme.color.lightText};
+  }
 `;
 
 export const SelectInnerWrapper = styled.div`

@@ -34,6 +34,10 @@ const STORE = gql`
       appleMusicLink
       discordLink
     }
+    shippingRates {
+      country
+      rate
+    }
   }
 `;
 
@@ -75,6 +79,7 @@ export const UPDATE_USER = gql`
     $homepage: Object
     $heroImage: Upload
     $social: Object
+    $shippingRates: Object
   ) {
     updateUser(
       storeName: $storeName
@@ -88,6 +93,7 @@ export const UPDATE_USER = gql`
       homepage: $homepage
       heroImage: $heroImage
       social: $social
+      shippingRates: $shippingRates
     ) ${STORE}
   }
 `;

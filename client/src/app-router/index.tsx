@@ -36,6 +36,7 @@ import { LoyaltyPage } from 'pages/admin-pages/loyalty-page';
 import { MintNftPage } from 'pages/mint-nft-page';
 import { ContactStorePage } from 'pages/pos-app/contact-store-page';
 import { FeaturesPage } from 'pages/features-page';
+import { ShippingSetup } from 'components/shipping-setup';
 
 export const AdminAppRouter = () => {
   return (
@@ -58,6 +59,8 @@ export const AdminAppRouter = () => {
         <Route path={'/token-gating'} element={<TokenGating />} />
 
         <Route path={'/loyalty'} element={<LoyaltyPage />} />
+
+        <Route path={'/shipping-and-delivery'} element={<ShippingSetup />} />
 
         <Route
           path={'/token-gating/:address'}

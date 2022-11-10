@@ -72,7 +72,6 @@ interface IUseModal {
  * This is a simple modal hook to display modals.
  */
 export const useModal = (useModalPropsObj?: IUseModal) => {
-  const onClose = useModalPropsObj?.onClose;
   const [isOpen, setIsOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
 
@@ -81,8 +80,8 @@ export const useModal = (useModalPropsObj?: IUseModal) => {
   }, []);
 
   const closeModal = useCallback(() => {
-    if (onClose) {
-      onClose();
+    if (useModalPropsObj?.onClose) {
+      useModalPropsObj?.onClose();
     }
     setTimeout(() => {
       setIsOpen(false);
@@ -91,7 +90,7 @@ export const useModal = (useModalPropsObj?: IUseModal) => {
       document.body.style.overflow = 'unset';
     }, animationDuration);
     setIsClosing(true);
-  }, [onClose]);
+  }, [useModalPropsObj]);
 
   /**  Modal component */
   const Modal: FC<{
@@ -122,5 +121,6 @@ export const useModal = (useModalPropsObj?: IUseModal) => {
     Modal,
     closeModal,
     openModal,
+    isOpen,
   };
 };

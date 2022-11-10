@@ -1,5 +1,5 @@
 import { useWallet } from '@solana/wallet-adapter-react';
-import { Button, Icon, Input, message } from 'components-library';
+import { Button, Icon, Input, message, Select } from 'components-library';
 import { useCart } from 'hooks/cart';
 import { useSplTokenPayent } from 'hooks/spl-token-payment';
 import { useWalletModal } from 'hooks/wallet-modal';
@@ -8,6 +8,9 @@ import styled from 'styled-components';
 import { Logger } from 'utils';
 import { useBalance } from 'hooks/balance';
 import { useNft } from 'hooks/nft';
+import { useStore } from 'hooks/store';
+import { REST_OF_THE_WORLD_TEXT } from 'components/shipping-setup';
+import countries from 'components/shipping-setup/countries.json';
 
 const PayButton = styled(Button)`
   position: relative;
@@ -35,7 +38,7 @@ const InsufficientFundTitle = styled.div`
   font-size: 16px;
 `;
 
-const USE_DEV_SHIPPING_FORM = true;
+const USE_DEV_SHIPPING_FORM = false;
 
 const shippingFormFilled = {
   email: 'julien.rioux@toptal.com',
@@ -67,10 +70,23 @@ const {
   postalCode: postalCodeInitialState,
 } = USE_DEV_SHIPPING_FORM ? shippingFormFilled : shippingFormEmpty;
 
+const ALL_COUNTRIES_OPTIONS = countries.map(({ name }) => ({
+  value: name,
+  label: name,
+}));
+
 export const ShippingForm = () => {
+  const {
+    totalWithSaleTax,
+    discount,
+    totalPrice,
+    setUserCountry,
+    userCountry,
+  } = useCart();
+
   const [email, setEmail] = useState(emailInitialState);
   const [name, setName] = useState(nameInitialState);
-  const [country, setCountry] = useState(countryInitialState);
+  const [country, setCountry] = useState(userCountry ?? countryInitialState);
   const [address, setAddress] = useState(addressInitialState);
   const [city, setCity] = useState(cityInitialState);
   const [state, setState] = useState(stateInitialState);
@@ -81,48 +97,52 @@ export const ShippingForm = () => {
   const { userBalance, isLoading: userBalanceIsLoading } = useBalance();
   const { storeNftsAreLoading } = useNft();
 
+  const { store } = useStore();
+
   const { openConnectModal } = useWalletModal();
 
   const { publicKey, connecting } = useWallet();
 
   const { makePayment } = useSplTokenPayent();
 
-  const { totalWithSaleTax, discount, totalPrice } = useCart();
-
   const finalPayment = totalWithSaleTax - totalPrice * discount;
 
   const INSUFFICIENT_FUNDS = userBalance && userBalance < totalWithSaleTax;
 
-  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.name === 'email') {
-      setEmail(e.target.value);
-      return;
-    }
-    if (e.target.name === 'name') {
-      setName(e.target.value);
-      return;
-    }
-    if (e.target.name === 'country') {
-      setCountry(e.target.value);
-      return;
-    }
-    if (e.target.name === 'address') {
-      setAddress(e.target.value);
-      return;
-    }
-    if (e.target.name === 'city') {
-      setCity(e.target.value);
-      return;
-    }
-    if (e.target.name === 'state') {
-      setState(e.target.value);
-      return;
-    }
-    if (e.target.name === 'postalCode') {
-      setPostalCode(e.target.value);
-      return;
-    }
-  }, []);
+  const handleChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      if (e.target.name === 'email') {
+        setEmail(e.target.value);
+        return;
+      }
+      if (e.target.name === 'name') {
+        setName(e.target.value);
+        return;
+      }
+      if (e.target.name === 'country') {
+        setCountry(e.target.value);
+        setUserCountry(e.target.value);
+        return;
+      }
+      if (e.target.name === 'address') {
+        setAddress(e.target.value);
+        return;
+      }
+      if (e.target.name === 'city') {
+        setCity(e.target.value);
+        return;
+      }
+      if (e.target.name === 'state') {
+        setState(e.target.value);
+        return;
+      }
+      if (e.target.name === 'postalCode') {
+        setPostalCode(e.target.value);
+        return;
+      }
+    },
+    [setUserCountry]
+  );
 
   const handlePay = useCallback(
     async (e: FormEvent) => {
@@ -168,6 +188,18 @@ export const ShippingForm = () => {
     ]
   );
 
+  // Add all countries if the store has "Rest of the world selected"
+  const hasRestOfTheWorldOption = store?.shippingRates?.find(
+    ({ country }: { country: string }) => country === REST_OF_THE_WORLD_TEXT
+  );
+
+  const COUNTRY_OPTIONS = hasRestOfTheWorldOption
+    ? ALL_COUNTRIES_OPTIONS
+    : store?.shippingRates?.map(({ country }: { country: string }) => ({
+        value: country,
+        label: country,
+      })) ?? [];
+
   return (
     <form onSubmit={handlePay}>
       <Input
@@ -188,13 +220,15 @@ export const ShippingForm = () => {
         onChange={handleChange}
       />
 
-      <Input
+      <Select
         label="Country"
-        required
-        name="country"
         value={country}
-        placeholder="Enter your country"
         onChange={handleChange}
+        options={COUNTRY_OPTIONS}
+        name="country"
+        id="country"
+        placeholder="Select a country"
+        required
       />
 
       <Input
