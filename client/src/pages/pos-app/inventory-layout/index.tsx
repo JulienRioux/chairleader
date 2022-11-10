@@ -434,7 +434,7 @@ export const InventoryLayout = ({ children }: { children: ReactNode }) => {
               )}
             </ChildrenContentWrapper>
 
-            {!isOnSingleProductPage && <Footer />}
+            {!isOnSingleProductPage && !hasMobileNavBar && <Footer isStore />}
           </ChildrenWrapper>
         </LeftSideWrapper>
 
@@ -507,7 +507,6 @@ const VerifiedIconWrapper = styled.span`
 const LinksWrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid ${(p) => p.theme.color.lightGrey};
   margin: 20px 0 0;
   position: sticky;
   top: 0;
@@ -516,6 +515,7 @@ const LinksWrapper = styled.div`
   backdrop-filter: blur(4px);
   overflow-x: scroll;
   overflow-y: hidden;
+  border-bottom: 1px solid ${(p) => p.theme.color.lightGrey};
 
   @media (max-width: 800px) {
     display: none;
@@ -527,7 +527,7 @@ const LeftLinks = styled.div`
 `;
 
 const NavLink = styled(Link)<{ isActive?: boolean; to: any }>`
-  margin: 0 0 -1px;
+  margin: 0;
   min-width: 80px;
   display: flex;
   align-items: center;
@@ -583,26 +583,31 @@ const Description = styled.p`
 const NewStoreBannerUi = () => {
   const { store } = useStore();
 
+  const [storeName, setStoreName] = useState(store?.storeName);
+  const [storeLogo, setStoreLogo] = useState(store?.image);
   const [title, setTitle] = useState(store?.homepage?.heroTitle);
-  const [subTitle, setSubTitle] = useState(store?.homepage?.heroSubTitle);
   const [imgSrc, setImgSrc] = useState(store?.homepage?.heroImage);
 
   const [searchParams] = useSearchParams();
 
-  console.log('imgSrc', imgSrc);
-
   useEffect(() => {
+    const previewStoreName = searchParams.get('preview_store_name');
+    if (previewStoreName) {
+      setStoreName(decodeURIComponent(previewStoreName));
+    }
     const homepageTitle = searchParams.get('homepage_title');
     if (homepageTitle) {
       setTitle(decodeURIComponent(homepageTitle));
     }
-    const homepageSubTitle = searchParams.get('homepage_sub_title');
-    if (homepageSubTitle) {
-      setSubTitle(decodeURIComponent(homepageSubTitle));
-    }
     const homepageHeroImg = searchParams.get('homepage_hero_img');
     if (homepageHeroImg) {
       setImgSrc(decodeURIComponent(homepageHeroImg).replaceAll(' ', '+'));
+    }
+    const previewStoreLogo = searchParams
+      .get('preview_store_logo')
+      ?.replaceAll(' ', '+');
+    if (previewStoreLogo) {
+      setStoreLogo(decodeURIComponent(previewStoreLogo).replaceAll(' ', '+'));
     }
   }, [searchParams]);
 
@@ -625,6 +630,8 @@ const NewStoreBannerUi = () => {
 
   const productsLinkActive = !!(isOnProductsPage || isOnSingleProductPage);
 
+  // http://store.localhost:3000/?homepage_title=Welcome to the Chairleader store!!&homepage_sub_title=Let's find some swag&homepage_hero_img=&override_theme_color=blue&preview_store_name=Chairleader&preview_store_logo=&override-hide-app=true
+
   return (
     <>
       <div>
@@ -632,7 +639,7 @@ const NewStoreBannerUi = () => {
           <BannerImg src={imgSrc} />
 
           <ImgWrapper>
-            <StoreImg src={store?.image} />
+            <StoreImg src={storeLogo} />
           </ImgWrapper>
 
           <SocialMediaIconsWrapper>
@@ -643,7 +650,7 @@ const NewStoreBannerUi = () => {
 
       <StoreInfoWrapper>
         <StoreName>
-          <span>{store?.storeName}</span>
+          <span>{storeName}</span>
           <VerifiedIconWrapper>
             <Icon name="verified" />
           </VerifiedIconWrapper>
@@ -652,7 +659,7 @@ const NewStoreBannerUi = () => {
         <ConnectWalletBtn />
       </StoreInfoWrapper>
 
-      <Description>{store?.homepage?.heroTitle}</Description>
+      <Description>{title}</Description>
 
       <LinksWrapper>
         <LeftLinks>
@@ -681,12 +688,4 @@ const NewStoreBannerUi = () => {
       </LinksWrapper>
     </>
   );
-};
-
-const FooterWrapper = styled.div`
-  border-top: 1px solid ${(p) => p.theme.color.lightGrey};
-`;
-
-const StoreFooter = () => {
-  return <FooterWrapper>footer</FooterWrapper>;
 };

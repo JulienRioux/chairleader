@@ -14,7 +14,6 @@ import { ReactNode, useState } from 'react';
 import { slideInBottom, fadeIn } from 'utils/keyframes';
 import { featuresList } from './features';
 import { OtpForm } from 'pages/auth-page';
-import background1 from './background/background-1.svg';
 import { HIDE_APP } from 'configs';
 
 const FeaturePageTitle = styled.h1`

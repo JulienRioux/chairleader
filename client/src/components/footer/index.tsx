@@ -2,9 +2,8 @@ import { ProductHuntBtnOnly } from 'components/product-hunt-button';
 import { Icon, UnstyledExternalLink } from 'components-library';
 import { SHOW_PRODUCT_HUNT_BTN, APP_NAME } from 'configs';
 import * as React from 'react';
-import { FC, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { routes } from 'utils';
 
 import {
   ColumnTitle,
@@ -16,6 +15,7 @@ import {
   FooterInnerWrapper,
   BottomFooter,
 } from './styled';
+import { defaultFooterData, storeFooterData } from './footer-data';
 
 const SolanaLogo = () => (
   <svg width="31" height="27" viewBox="0 0 31 27" fill="none">
@@ -59,59 +59,13 @@ interface IFooterItem {
   href?: string;
 }
 
-const footerData = [
-  {
-    content: [
-      { title: 'Home', to: routes.base },
-      { title: 'Pricing', to: routes.pricing },
-      { title: 'Features', to: routes.features },
-      { title: 'NFTs', to: routes.mintNft },
-      { title: 'Authenticate', to: routes.auth },
-    ],
-    title: 'Product',
-  },
-  {
-    content: [
-      { href: 'https://twitter.com/chairleader_app', title: 'Twitter' },
-      { href: 'https://discord.gg/sbTcWHkKBN', title: 'Discord' },
-      { href: 'https://medium.com/chairleader-xyz', title: 'Blog' },
-    ],
-    title: 'Social',
-  },
-  {
-    content: [
-      { title: 'Privacy policy', to: routes.static.privacy },
-      { title: 'Terms of service', to: routes.static.termsOfService },
-    ],
-    title: 'Legal',
-  },
-  {
-    content: [
-      {
-        href: 'https://vanilla-death-2ff.notion.site/Job-at-Chairleader-xyz-88f18c99bada46c3b3f98dc571a1f531',
-        title: 'Jobs',
-      },
-      {
-        href: 'mailto:investors@chairleader.xyz',
-        title: 'Investors',
-      },
-      { href: 'mailto:hello@chairleader.xyz', title: 'Contact' },
-      {
-        href: 'https://chairleader.canny.io/',
-        title: 'Send feedback',
-      },
-      { title: 'Changelog', href: 'https://chairleader.canny.io/changelog' },
-    ],
-    title: 'Other',
-  },
-];
-
-export const Footer: FC = () => {
+export const Footer = ({ isStore }: { isStore?: boolean }) => {
+  const displayedFooterData = isStore ? storeFooterData : defaultFooterData;
   return (
     <FooterWrapper>
       <FooterInnerWrapper>
         <InnerFooterWrapper>
-          {footerData.map(({ title, content }) => (
+          {displayedFooterData.map(({ title, content }) => (
             <ColumnWrapper key={title}>
               <ColumnTitle>{title}</ColumnTitle>
               {content.map(({ title: contentTitle, to, href }: IFooterItem) =>
@@ -127,7 +81,9 @@ export const Footer: FC = () => {
                     key={contentTitle}
                   >
                     {contentTitle}
-                    <Icon name="launch" style={{ paddingLeft: '8px' }} />
+                    {!isStore && (
+                      <Icon name="launch" style={{ paddingLeft: '8px' }} />
+                    )}
                   </FooterLink>
                 )
               )}

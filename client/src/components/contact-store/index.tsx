@@ -13,12 +13,21 @@ import { slideInBottom } from 'utils/keyframes';
 const Form = styled.form`
   opacity: 0;
   animation: 0.4s ${slideInBottom} forwards;
+
+  @media (max-width: 1000px) {
+    margin-bottom: 80px;
+  }
 `;
 
 const NameAndEmail = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
+
+  @media (max-width: 800px) {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
 `;
 
 const SendMessageWrapper = styled.div`

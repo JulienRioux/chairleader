@@ -16,6 +16,7 @@ import {
 } from 'components/product-preview';
 import { useCart } from 'hooks/cart';
 import { useCurrency } from 'hooks/currency';
+import { useMediaQuery } from 'hooks/media-query';
 import { useNft } from 'hooks/nft';
 import { useScrollTop } from 'hooks/scroll-top';
 import { useStore } from 'hooks/store';
@@ -42,16 +43,15 @@ const ProductWrapper = styled.div`
   }
 `;
 
-const TitleAndPrice = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-`;
+const TitleAndPrice = styled.div``;
 
 const ProductTitle = styled.h3`
   margin: 12px 0;
-  font-size: 20px;
+  font-size: 32px;
+
+  @media (max-width: 800px) {
+    font-size: 24px;
+  }
 `;
 
 const Price = styled.div`
@@ -237,6 +237,8 @@ export const ProductPage = () => {
   const { inventory } = useStore();
 
   const { currency } = useCurrency();
+
+  const isMobileView = useMediaQuery('(max-width: 800px)');
 
   const [imageSrc, setImageSrc] = useState('');
   const [name, setName] = useState('');
@@ -439,9 +441,7 @@ export const ProductPage = () => {
         ) : (
           !!tokenGatedNftData.length && (
             <>
-              <QualifyingNftsHeader>
-                NFT memberships that unlocks this product:
-              </QualifyingNftsHeader>
+              <QualifyingNftsHeader>NFT membership:</QualifyingNftsHeader>
 
               <NftCardScrollerWrapper>
                 <NftCardScroller>
@@ -500,7 +500,11 @@ export const ProductPage = () => {
           )}
 
           {SHOW_CONNECT_WALLET_BUTTON && (
-            <Button fullWidth icon="lock" onClick={openConnectModal}>
+            <Button
+              fullWidth={isMobileView}
+              icon="lock"
+              onClick={openConnectModal}
+            >
               Connect your wallet to unlock
             </Button>
           )}

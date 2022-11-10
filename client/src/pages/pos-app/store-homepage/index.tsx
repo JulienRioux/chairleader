@@ -181,7 +181,6 @@ interface ISocialMedia {
 
 export const SocialMediaIcons = () => {
   const { store } = useStore();
-  console.log('store', store);
 
   // Formatting data to display social media icons and links
   const socialMedia = Object.keys(store?.social)

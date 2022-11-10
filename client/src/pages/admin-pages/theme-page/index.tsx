@@ -5,6 +5,7 @@ import {
   VisuallyHiddenInput,
   Icon,
   message,
+  Textarea,
 } from 'components-library';
 import { Label } from 'components-library/input/input.styles';
 import { useAuth } from 'hooks/auth';
@@ -60,7 +61,7 @@ const ColorButton = styled(UnstyledButton)<{
 
 const HeroImg = styled.div<{ src?: string }>`
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 3 / 1;
   margin: 12px 0 20px;
   border-radius: ${(p) => p.theme.borderRadius.default};
   background: ${(p) => p.theme.color.text}11;
@@ -358,7 +359,7 @@ export const ThemePage = () => {
     <ThemePageWrapper>
       <Form onSubmit={handleSubmit}>
         <CardsWrapper>
-          <Card title="Logo">
+          <Card title="Store info">
             <Label>Store image</Label>
             <ImageWrapper>
               {currentLogoImageSrc ? (
@@ -395,25 +396,17 @@ export const ThemePage = () => {
               required
               name="storeName"
             />
-          </Card>
 
-          <Card title="Colors">
-            <Label>Primary color</Label>
-            <ColorBtns>
-              {colors.map(({ name, color }) => (
-                <ColorButton
-                  key={name}
-                  $color={color}
-                  onClick={() => setThemeColor(name)}
-                  $isSelected={themeColor === name}
-                  type="button"
-                />
-              ))}
-            </ColorBtns>
-          </Card>
+            <Textarea
+              label="Title"
+              placeholder="100% organic coffee"
+              value={title}
+              onChange={handleChange}
+              // required
+              name="title"
+            />
 
-          <Card title="Homepage">
-            <Label>Image</Label>
+            <Label>Banner image (Aspect ratio 3:1)</Label>
             <HeroImg src={currentHomepageImageSrc}>
               <Button
                 secondary
@@ -432,16 +425,24 @@ export const ThemePage = () => {
                 ref={homepageImageFileInput}
               />
             </HeroImg>
+          </Card>
 
-            <Input
-              label="Title"
-              placeholder="100% organic coffee"
-              value={title}
-              onChange={handleChange}
-              // required
-              name="title"
-            />
+          <Card title="Colors">
+            <Label>Primary color</Label>
+            <ColorBtns>
+              {colors.map(({ name, color }) => (
+                <ColorButton
+                  key={name}
+                  $color={color}
+                  onClick={() => setThemeColor(name)}
+                  $isSelected={themeColor === name}
+                  type="button"
+                />
+              ))}
+            </ColorBtns>
+          </Card>
 
+          {/* <Card title="Homepage">
             <Input
               label="Subtitle"
               placeholder="Let's try it out!"
@@ -450,7 +451,7 @@ export const ThemePage = () => {
               // required
               name="subTitle"
             />
-          </Card>
+          </Card> */}
 
           {SHOW_SOCIAL_LINKS && (
             <Card title="Social icons">
