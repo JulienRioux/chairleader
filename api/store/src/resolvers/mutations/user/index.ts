@@ -74,6 +74,7 @@ export const updateUserMutation = async (
     homepage,
     heroImage,
     social,
+    shippingRates,
   },
   context
 ) => {
@@ -93,6 +94,7 @@ export const updateUserMutation = async (
       homepage,
       heroImage,
       social,
+      shippingRates,
     });
     if (user) {
       return user;

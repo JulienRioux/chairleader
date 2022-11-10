@@ -35,6 +35,12 @@ export interface IUser {
     appleMusicLink: string;
     discordLink: string;
   };
+  shippingRates: [
+    {
+      shippingRate: number;
+      selectedCountry: string;
+    }
+  ];
 }
 
 const UserSchema = new Schema<IUser>({
@@ -70,6 +76,12 @@ const UserSchema = new Schema<IUser>({
     heroSubTitle: String,
     heroImage: String,
   },
+  shippingRates: [
+    {
+      rate: Number,
+      country: String,
+    },
+  ],
 });
 
 export const UserModel = model<IUser>('User', UserSchema);

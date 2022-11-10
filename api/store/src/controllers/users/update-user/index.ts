@@ -19,8 +19,11 @@ export const updateUser = async ({
   homepage,
   heroImage,
   social,
+  shippingRates,
 }: any) => {
   let imgSrc = '';
+
+  console.log('shippingRates => ???', shippingRates);
 
   // First update the image
   if (image) {
@@ -100,6 +103,7 @@ export const updateUser = async ({
       }),
       ...(social && { social }),
       updatedAt: new Date(),
+      ...(shippingRates && { shippingRates }),
     },
     { upsert: true }
   );

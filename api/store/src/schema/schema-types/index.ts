@@ -23,6 +23,11 @@ export const schemaTypes = gql`
     discordLink: String
   }
 
+  type ShippingRates {
+    country: String
+    rate: Float
+  }
+
   type Store {
     email: String!
     _id: ID
@@ -36,6 +41,7 @@ export const schemaTypes = gql`
     theme: Theme
     homepage: Homepage
     social: Social
+    shippingRates: [ShippingRates]
   }
 
   type AuthenticateResponse {
