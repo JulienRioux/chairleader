@@ -64,6 +64,7 @@ export const CartItems = ({
   const [showAllITems, setShowAllITems] = useState(false);
 
   let firstCartITems = cartItems;
+
   let restITems: IInventoryItem[] = [];
 
   if (showMoreButton) {
