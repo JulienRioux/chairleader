@@ -1,6 +1,6 @@
 org: solanastore
 app: solana-transactions-api
-service: solana-store-api
+service: dev-solana-store-api
 frameworkVersion: '3'
 
 provider:
