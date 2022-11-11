@@ -53,8 +53,8 @@ const ChildrenWrapper = styled.div`
   padding: 12px;
 `;
 
-const ChildrenContentWrapper = styled.div`
-  margin: 40px 0;
+const ChildrenContentWrapper = styled.div<{ $addPadding: boolean }>`
+  ${(p) => p.$addPadding && `margin: 40px 0;`}
   min-height: 500px;
 `;
 
@@ -386,18 +386,24 @@ export const InventoryLayout = ({ children }: { children: ReactNode }) => {
     `${routes.store.inventory}/:productId`
   );
 
+  const isOnProductPage = useMatch(`${routes.store.inventory}/:productId`);
+
   return (
     <div>
       <ContentWrapper>
         <LeftSideWrapper>
           <TopNavWrapper>
             <TopNav>
-              <AppLogoWrapper href="https://chairleader.xyz/" target="_blank">
-                <AppLogo />
-                <LaunchWrapper>
-                  <Icon name="launch" />
-                </LaunchWrapper>
-              </AppLogoWrapper>
+              {!isOnProductPage ? (
+                <AppLogoWrapper href="https://chairleader.xyz/" target="_blank">
+                  <AppLogo />
+                  <LaunchWrapper>
+                    <Icon name="launch" />
+                  </LaunchWrapper>
+                </AppLogoWrapper>
+              ) : (
+                <span />
+              )}
 
               {!isOnHomepage && isNotOnInventoryPage && isNotOnNftsPage && (
                 <Button secondary icon="arrow_back" to={-1} />
@@ -408,7 +414,7 @@ export const InventoryLayout = ({ children }: { children: ReactNode }) => {
           <ChildrenWrapper>
             {!isOnSingleProductPage && <NewStoreBannerUi />}
 
-            <ChildrenContentWrapper>
+            <ChildrenContentWrapper $addPadding={!isOnProductPage}>
               {children}
 
               {!hasMobileNavBar && !isNotOnInventoryPage && (
