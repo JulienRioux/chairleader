@@ -19,8 +19,6 @@ const CartHeader = styled.div`
   padding: 0 12px;
 `;
 
-const CartWrapper = styled.div``;
-
 const Par = styled.p`
   color: ${(p) => p.theme.color.lightText};
   padding-top: 20px;
@@ -180,7 +178,7 @@ export const CartItems = ({
 
 export const Cart = ({ onCloseClick }: { onCloseClick: () => void }) => {
   return (
-    <CartWrapper>
+    <>
       <CartItemsAndTotalWrapper>
         <CartHeader>
           <div>Cart items</div>
@@ -195,6 +193,6 @@ export const Cart = ({ onCloseClick }: { onCloseClick: () => void }) => {
 
         <CartTotal />
       </CartItemsAndTotalWrapper>
-    </CartWrapper>
+    </>
   );
 };

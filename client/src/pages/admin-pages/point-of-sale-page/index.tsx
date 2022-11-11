@@ -18,6 +18,7 @@ const Par = styled.p`
 const ImgWrapper = styled.div`
   margin: 40px auto 60px;
   width: 70%;
+  max-width: 300px;
 `;
 
 const Img = styled.img`

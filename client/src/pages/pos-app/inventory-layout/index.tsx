@@ -78,6 +78,7 @@ const CartWrapper = styled.div<{ isClosing: boolean }>`
   border-left: 1px solid ${(p) => p.theme.color.lightGrey};
   width: 480px;
   max-width: 100%;
+  max-height: 100%;
   z-index: 12;
   background: ${(p) => p.theme.color.background};
 
