@@ -76,6 +76,7 @@ const CartWrapper = styled.div<{ isClosing: boolean }>`
   right: 0;
   bottom: 0;
   -webkit-backface-visibility: hidden;
+  -webkit-overflow-scrolling: touch;
   overflow-y: scroll;
   border-left: 1px solid ${(p) => p.theme.color.lightGrey};
   width: 480px;
