@@ -1,7 +1,7 @@
 org: solanastore
 app: solana-transactions-api
 # Change this into dev-solana-store if needed
-service: dev-solana-store-api
+service: solana-store-api
 frameworkVersion: '3'
 
 provider:
