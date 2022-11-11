@@ -50,12 +50,12 @@ export const askNetwork = () => inquirer.prompt([
         message: 'Choose the network you want to work on?',
         choices: [
             {
-                name: '🏭 Production',
-                value: 'production',
-            },
-            {
                 name: '🛠️  Development',
                 value: 'development',
+            },
+            {
+                name: '🏭 Production',
+                value: 'production',
             },
         ],
     },

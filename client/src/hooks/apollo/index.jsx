@@ -7,6 +7,7 @@ import { StorageKeys } from 'utils';
 
 const PROD_URL =
   'https://ke7vg704pg.execute-api.us-east-1.amazonaws.com/prod/graphql';
+
 const DEV_URL =
   'https://6ithbfrif8.execute-api.us-east-1.amazonaws.com/dev/graphql';
 
