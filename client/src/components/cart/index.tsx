@@ -32,6 +32,11 @@ const CartItemsAndTotalWrapper = styled.div`
   flex-direction: column;
   height: 100vh;
   max-height: 100vh;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 `;
 
 const HeaderAndITems = styled.div`
