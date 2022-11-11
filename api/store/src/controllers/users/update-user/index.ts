@@ -23,8 +23,6 @@ export const updateUser = async ({
 }: any) => {
   let imgSrc = '';
 
-  console.log('shippingRates => ???', shippingRates);
-
   // First update the image
   if (image) {
     try {

@@ -13,7 +13,8 @@ import {
   getMint,
 } from '@solana/spl-token';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { USDC_MINT } from 'utils';
+import { Logger, USDC_MINT } from 'utils';
+import { message } from 'components-library';
 
 export interface IBalanceContext {
   isLoading: boolean;
@@ -33,21 +34,32 @@ export const BalanceProvider: React.FC<IBaseProps> = ({ children }) => {
   const { publicKey } = useWallet();
 
   const getTokenBalance = useCallback(async () => {
-    setIsLoading(true);
-    if (!publicKey) {
+    try {
+      setIsLoading(true);
+      if (!publicKey) {
+        setIsLoading(false);
+        return;
+      }
+      const senderATA = await getAssociatedTokenAddress(USDC_MINT, publicKey);
+      const senderAccount = await getAccount(connection, senderATA);
+
+      const tokenMint = await getMint(connection, USDC_MINT);
+
+      const balance = Number(senderAccount.amount) / 10 ** tokenMint.decimals;
+
+      setUserBalance(balance ?? 0);
+
       setIsLoading(false);
-      return;
+    } catch (err: any) {
+      if (err?.name === 'TokenAccountNotFoundError') {
+        setUserBalance(0);
+        setIsLoading(false);
+        return;
+      }
+      message.error('Something went wrong when loading your balance...');
+      setIsLoading(false);
+      Logger.error(err);
     }
-    const senderATA = await getAssociatedTokenAddress(USDC_MINT, publicKey);
-    const senderAccount = await getAccount(connection, senderATA);
-
-    const tokenMint = await getMint(connection, USDC_MINT);
-
-    const balance = Number(senderAccount.amount) / 10 ** tokenMint.decimals;
-
-    setUserBalance(balance);
-
-    setIsLoading(false);
   }, [connection, publicKey]);
 
   useEffect(() => {

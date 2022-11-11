@@ -55,12 +55,7 @@ export const CartPageLayout = ({
       <TopNav>
         <PageTitle>{title}</PageTitle>
 
-        <Button
-          secondary
-          icon="arrow_back"
-          to={-1}
-          style={{ marginRight: '8px' }}
-        />
+        <Button secondary icon="arrow_back" to={-1} />
       </TopNav>
     </TopNavWrapper>
 

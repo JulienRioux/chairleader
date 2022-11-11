@@ -107,7 +107,8 @@ export const ShippingForm = () => {
 
   const finalPayment = totalWithSaleTax - totalPrice * discount;
 
-  const INSUFFICIENT_FUNDS = userBalance && userBalance < totalWithSaleTax;
+  const INSUFFICIENT_FUNDS =
+    userBalance === 0 || (userBalance && userBalance < totalWithSaleTax);
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {

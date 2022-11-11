@@ -39,6 +39,28 @@ export const askPlatform = () =>
     },
   ]);
 
+  /**
+ * Ask what network to use
+ */
+export const askNetwork = () =>
+  inquirer.prompt<{ network: any }>([
+    {
+      name: 'network',
+      type: 'list',
+      message: 'Choose the network you want to work on?',
+      choices: [
+        {
+          name: '🏭 Production',
+          value: 'production',
+        },
+        {
+          name: '🛠️  Development',
+          value: 'development',
+        },
+      ],
+    },
+  ]);
+
 /**
  * Ask what platform to use
  */
@@ -61,9 +83,13 @@ const run = async () => {
   logWelcomeMessage();
   
   // const { platform } = await askPlatform();
+  const { network } = await askNetwork();
+
+  const networkCmd = network === "production" ? "REACT_APP_ENVIRONMENT=production" :  "REACT_APP_ENVIRONMENT=development"
+
   const { isRunningLocalApi } = await askIsRunningLocalApi();
 
-  shell.exec(`cd .. && yarn ${isRunningLocalApi ? CMD.LOCAL_STORE_API : CMD.REMOTE_STORE_API}`)  
+  shell.exec(`cd .. && ${networkCmd} yarn ${isRunningLocalApi ? CMD.LOCAL_STORE_API : CMD.REMOTE_STORE_API}`)  
 }
 
 run()
