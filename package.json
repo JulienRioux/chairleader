@@ -9,7 +9,9 @@
     "dev:local-store-api": "concurrently --kill-others \"cd client && sleep 15 && yarn dev:local-store-api\" \"cd api/store && yarn dev\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "cms": "cd ./cms && sanity start",
-    "deploy:cms": "cd ./cms && sanity deploy"
+    "deploy:cms": "cd ./cms && sanity deploy",
+    "deploy:dev": "git push -u dev main",
+    "deploy:prod": "git push -u prod main"
   },
   "author": "Julien Rioux",
   "license": "ISC",

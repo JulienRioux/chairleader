@@ -1,16 +1,23 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { setContext } from 'apollo-link-context';
 import { createUploadLink } from 'apollo-upload-client';
+import { IS_PROD } from 'configs';
 import * as React from 'react';
 import { StorageKeys } from 'utils';
 
-const STORE_API_URL = 'https://6ithbfrif8.execute-api.us-east-1.amazonaws.com';
+const PROD_URL =
+  'https://ke7vg704pg.execute-api.us-east-1.amazonaws.com/prod/graphql';
+const DEV_URL =
+  'https://6ithbfrif8.execute-api.us-east-1.amazonaws.com/dev/graphql';
 
-const uri = `${
-  process.env.REACT_APP_USE_LOCAL_STORE_API === 'true'
-    ? 'http://localhost:9900'
-    : STORE_API_URL
-}/dev/graphql`;
+const LOCAL_URL = 'http://localhost:9900/dev/graphql';
+
+const STORE_API_URL = IS_PROD ? PROD_URL : DEV_URL;
+
+const USE_LOCAL_STORE_API =
+  process.env.REACT_APP_USE_LOCAL_STORE_API === 'true';
+
+const uri = `${USE_LOCAL_STORE_API ? LOCAL_URL : STORE_API_URL}`;
 
 const httpLink = createUploadLink({ uri });
 
