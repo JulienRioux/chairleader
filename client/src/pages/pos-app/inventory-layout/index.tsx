@@ -55,6 +55,7 @@ const ChildrenWrapper = styled.div`
 
 const ChildrenContentWrapper = styled.div<{ $addPadding: boolean }>`
   ${(p) => p.$addPadding && `margin: 40px 0;`}
+
   min-height: 500px;
 `;
 
