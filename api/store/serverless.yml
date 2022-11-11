@@ -1,0 +1,50 @@
+org: solanastore
+app: solana-transactions-api
+# Change this into dev-solana-store if needed.
+service: solana-store-api
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  apiGateway:
+    binaryMediaTypes:
+      - '*/*'
+  environment: 
+    MONGODB_PASSWORD: ${param:MONGODB_PASSWORD}
+    DB_NAME: ${param:DB_NAME}
+    SENDGRID_API_KEY: ${param:SENDGRID_API_KEY}
+    AUTH_JWT_SECRET: ${param:AUTH_JWT_SECRET}
+    AWS_S3_ACCESS_KEY_ID: ${param:AWS_S3_ACCESS_KEY_ID}
+    AWS_S3_SECRET_ACCESS_KEY: ${param:AWS_S3_SECRET_ACCESS_KEY}
+    AWS_S3_BUCKET_NAME: ${param:AWS_S3_BUCKET_NAME}
+
+functions:
+  graphql:
+    # this is formatted as <FILENAME>.<HANDLER>
+    handler: src/graphql.graphqlHandler
+    events:
+    - http:
+        path: /graphql
+        method: post
+        cors: true
+    - http:
+        path: /graphql
+        method: get
+        cors: true
+
+plugins:
+  - serverless-offline
+  - serverless-plugin-typescript
+
+package:
+  patterns:
+    - node_modules/**
+
+# https://github.com/dherault/serverless-offline/issues/931#issuecomment-602245703
+custom:
+  serverless-offline:
+    useChildProcesses: true
+    httpPort: 9900
+    websocketPort: 9901
+    lambdaPort: 9902
