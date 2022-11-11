@@ -1,6 +1,6 @@
 org: solanastore
 app: solana-transactions-api
-service: ${param:SERVICE_NAME}
+service: solana-store-api
 frameworkVersion: '3'
 
 provider:
