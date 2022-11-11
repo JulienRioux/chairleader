@@ -28,8 +28,8 @@ const CartItemsAndTotalWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  height: 100vh;
-  max-height: 100vh;
+  height: 100%;
+  max-height: 100%;
   position: absolute;
   top: 0;
   bottom: 0;
