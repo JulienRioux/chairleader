@@ -73,16 +73,19 @@ export const askIsRunningLocalApi = () => inquirer.prompt([
 ]);
 var CMD;
 (function (CMD) {
-    CMD["LOCAL_STORE_API"] = "dev:local-store-api";
+    CMD["LOCAL_DEV_STORE_API"] = "dev:local-dev-store-api";
+    CMD["LOCAL_PROD_STORE_API"] = "dev:local-prod-store-api";
     CMD["REMOTE_STORE_API"] = "dev:remote-store-api";
 })(CMD || (CMD = {}));
 const run = () => __awaiter(void 0, void 0, void 0, function* () {
     logWelcomeMessage();
     // const { platform } = await askPlatform();
     const { network } = yield askNetwork();
-    const networkCmd = network === "production" ? "REACT_APP_ENVIRONMENT=production" : "REACT_APP_ENVIRONMENT=development";
+    const IS_PROD = network === "production";
+    const networkCmd = IS_PROD ? "REACT_APP_ENVIRONMENT=production" : "REACT_APP_ENVIRONMENT=development";
     const { isRunningLocalApi } = yield askIsRunningLocalApi();
-    shell.exec(`cd .. && ${networkCmd} yarn ${isRunningLocalApi ? CMD.LOCAL_STORE_API : CMD.REMOTE_STORE_API}`);
+    const LOCAL_CMD = IS_PROD ? CMD.LOCAL_PROD_STORE_API : CMD.LOCAL_DEV_STORE_API;
+    shell.exec(`cd .. && ${networkCmd} yarn ${isRunningLocalApi ? LOCAL_CMD : CMD.REMOTE_STORE_API}`);
 });
 run();
 //# sourceMappingURL=start.js.map

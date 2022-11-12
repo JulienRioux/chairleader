@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "cd scripts && yarn start",
     "dev:remote-store-api": "cd client && yarn dev",
-    "dev:local-store-api": "concurrently --kill-others \"cd client && sleep 15 && yarn dev:local-store-api\" \"cd api/store && yarn dev\"",
+    "dev:local-dev-store-api": "concurrently --kill-others \"cd client && sleep 15 && yarn dev:local-store-api\" \"cd api/store && yarn local:dev\"",
+    "dev:local-prod-store-api": "concurrently --kill-others \"cd client && sleep 15 && yarn dev:local-store-api\" \"cd api/store && yarn local:prod\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "cms": "cd ./cms && sanity start",
     "deploy:cms": "cd ./cms && sanity deploy",
