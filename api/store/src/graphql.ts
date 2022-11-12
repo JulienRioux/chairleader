@@ -35,6 +35,7 @@ const server = new ApolloServer({
       ?.replace('http://', '')
       ?.replace('https://', '')
       ?.replace('chairleader.xyz', '')
+      ?.replace('dev-chairleader.xyz', '')
       ?.replace('localhost:3000', '')
       ?.split('.')[0];
 
