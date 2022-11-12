@@ -75,7 +75,8 @@ export const askIsRunningLocalApi = () =>
   ]);
 
 enum CMD {
-  LOCAL_STORE_API = "dev:local-store-api",
+  LOCAL_DEV_STORE_API = "dev:local-dev-store-api",
+  LOCAL_PROD_STORE_API = "dev:local-prod-store-api",
   REMOTE_STORE_API = "dev:remote-store-api"
 }
 
@@ -85,11 +86,15 @@ const run = async () => {
   // const { platform } = await askPlatform();
   const { network } = await askNetwork();
 
-  const networkCmd = network === "production" ? "REACT_APP_ENVIRONMENT=production" :  "REACT_APP_ENVIRONMENT=development"
+  const IS_PROD = network === "production";
+
+  const networkCmd = IS_PROD ? "REACT_APP_ENVIRONMENT=production" :  "REACT_APP_ENVIRONMENT=development"
 
   const { isRunningLocalApi } = await askIsRunningLocalApi();
 
-  shell.exec(`cd .. && ${networkCmd} yarn ${isRunningLocalApi ? CMD.LOCAL_STORE_API : CMD.REMOTE_STORE_API}`)  
+  const LOCAL_CMD = IS_PROD ? CMD.LOCAL_PROD_STORE_API : CMD.LOCAL_DEV_STORE_API;
+
+  shell.exec(`cd .. && ${networkCmd} yarn ${isRunningLocalApi ? LOCAL_CMD : CMD.REMOTE_STORE_API}`)  
 }
 
 run()
