@@ -20,3 +20,6 @@ Currently, image upload are not working using `serverless-offline` (See https://
 - Push the change to the dev branch ⇒ `git push origin DEVOPS-0-fixing-start-script:dev`
 - Merge the new branch into the `dev` branch.
 - To promote to prod: Pull the latest dev and push to origin `git push origin HEAD`
+
+Note: 
+After promoting dev to prod, pull dev from main.
