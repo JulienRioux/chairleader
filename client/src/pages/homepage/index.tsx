@@ -811,7 +811,7 @@ export const HomepageTopNav = () => {
           text={
             <BannerContent>
               <span style={{ marginRight: '16px' }}>
-                NFT OG giveaway is live! 📢 🚀
+                NFT OG giveaway is live! 📢 🚀🔥
               </span>
               <UnstyledLink to={routes.mintNft}>
                 <BannerBtnText>Check it out</BannerBtnText>

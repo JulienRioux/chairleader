@@ -19,6 +19,8 @@ const subDomain = window.location.hostname.split('.')[0];
 const hasSubdomain =
   window.location.hostname.replace('.xyz', '').split('.').length === 2;
 
+console.log('hasSubdomain', hasSubdomain);
+
 interface IStoreContext {
   store: any;
   inventory: IInventoryItem[];
