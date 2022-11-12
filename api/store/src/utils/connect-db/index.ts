@@ -4,8 +4,10 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+console.log('process.env.DB_NAME', process.env.DB_NAME);
+
 // Setting up the MongoDB connection URI
-const MONGODB_CONNECTION_URI = `mongodb+srv://alt-gate:${process.env.MONGODB_PASSWORD}@cluster-alt-gate.0hfsxse.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+const MONGODB_CONNECTION_URI = `mongodb+srv://main-app:${process.env.MONGODB_PASSWORD}@cluster0.xrrliil.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 
 let cachedDb;
 

@@ -1,8 +1,13 @@
 import {
   Button,
+  UnstyledExternalLink,
+  Icon,
+  UnstyledButton,
+  message,
+} from 'components-library';
+import {
   InstagramIcon,
   TiktokIcon,
-  UnstyledExternalLink,
   TwitterIcon,
   SpotifyIcon,
   FacebookIcon,
@@ -10,10 +15,7 @@ import {
   YoutubeIcon,
   AppleMusicIcon,
   SnapchatIcon,
-  Icon,
-  UnstyledButton,
-  message,
-} from 'components-library';
+} from 'components-library/icon/social-icons';
 import { useStore } from 'hooks/store';
 import { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
