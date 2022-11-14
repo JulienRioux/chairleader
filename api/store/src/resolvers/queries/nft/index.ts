@@ -36,7 +36,7 @@ export const findNftsByStoreIdQuery = async (_source: any, args, context) => {
   const subdomain = context?.subdomain;
 
   // Using the subdomain on the e-commerce app to retrieve the store ID
-  if (subdomain) {
+  if (!storeId && subdomain) {
     const store = await getUserBySubdomain({ subdomain });
     storeId = store?._id;
   }

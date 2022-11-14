@@ -34,6 +34,7 @@ const server = new ApolloServer({
     const subdomain = (event.headers.origin ?? event.headers.Origin ?? '')
       ?.replace('http://', '')
       ?.replace('https://', '')
+      ?.replace('dev-chairleader.xyz', '')
       ?.replace('chairleader.xyz', '')
       ?.replace('localhost:3000', '')
       ?.split('.')[0];
