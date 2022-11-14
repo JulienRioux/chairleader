@@ -15,6 +15,7 @@ import {
   NftOriginalEdition,
 } from '@metaplex-foundation/js';
 import bs58 from 'bs58';
+import { IS_DEV } from 'configs';
 
 export const getNftMetadata = async (
   nftAddress: string,
@@ -118,15 +119,17 @@ export const getAdminMetaplex = () => {
 
   const connection = new Connection(CLUSTER_ENDPOINT);
 
-  const metaplex = Metaplex.make(connection)
-    .use(keypairIdentity(myKeyPair))
-    .use(
-      bundlrStorage({
+  const BUNDLR_STORAGE = IS_DEV
+    ? bundlrStorage({
         address: 'https://devnet.bundlr.network',
         providerUrl: CLUSTER_ENDPOINT,
         timeout: 60000,
       })
-    );
+    : bundlrStorage();
+
+  const metaplex = Metaplex.make(connection)
+    .use(keypairIdentity(myKeyPair))
+    .use(BUNDLR_STORAGE);
 
   return metaplex;
 };

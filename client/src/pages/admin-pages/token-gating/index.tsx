@@ -184,11 +184,6 @@ export const TokenGating = () => {
 
         const newNftAddress = nft.address.toString();
 
-        console.log(
-          'NFT ceated:',
-          `https://solscan.io/account/${newNftAddress}?cluster=${CLUSTER_ENV}`
-        );
-
         // Add the NFT to our DB
         await addNft({
           variables: { nftAddress: newNftAddress, price: Number(price) },
@@ -202,7 +197,6 @@ export const TokenGating = () => {
         closeModal();
         resetForm();
       } catch (err) {
-        console.error(err);
         message.error('Something went wrong...');
         Logger.error(err);
         setUploadingNft(false);
