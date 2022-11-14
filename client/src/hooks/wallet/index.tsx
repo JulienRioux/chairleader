@@ -21,8 +21,6 @@ export const ConnectWalletProvider = ({
 
   const endpoint = useMemo(() => CLUSTER_ENDPOINT, []);
 
-  console.log('=>>>>', network, endpoint);
-
   const wallets = useMemo(
     () => [
       new PhantomWalletAdapter(),
