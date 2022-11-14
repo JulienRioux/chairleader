@@ -13,7 +13,8 @@ const DEV_URL =
 
 const STORE_API_URL = IS_PROD ? PROD_URL : DEV_URL;
 
-const LOCAL_DEV_URL = 'http://localhost:9900/dev/graphql';
+// const LOCAL_DEV_URL = 'http://localhost:9900/dev/graphql';
+const LOCAL_DEV_URL = 'https://fdfd-96-20-253-84.ngrok.io/dev/graphql';
 const LOCAL_PROD_URL = 'http://localhost:9900/prod/graphql';
 
 const LOCAL_STORE_API_URL = IS_PROD ? LOCAL_PROD_URL : LOCAL_DEV_URL;
