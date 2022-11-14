@@ -1,12 +1,7 @@
 import { SAVE_TRANSACTION_INVOICE } from 'queries';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Logger,
-  routes,
-  DEVNET_DUMMY_MINT,
-  createSPLTokenInstruction,
-} from 'utils';
+import { Logger, routes, createSPLTokenInstruction, USDC_MINT } from 'utils';
 import { useMutation } from '@apollo/client';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { PublicKey, Transaction } from '@solana/web3.js';
@@ -67,7 +62,7 @@ export const useSplTokenPayent = () => {
           return;
         }
 
-        const mint = await getMint(connection, DEVNET_DUMMY_MINT);
+        const mint = await getMint(connection, USDC_MINT);
 
         const SERVICE_FEE = isNft
           ? SELLING_NFT_SERVICE_FEE * 100
@@ -82,7 +77,7 @@ export const useSplTokenPayent = () => {
         const paymentInstructions = await createSPLTokenInstruction({
           recipient: new PublicKey(payeePublicKey),
           amount: new BigNumber(recipientPayout),
-          splToken: DEVNET_DUMMY_MINT,
+          splToken: USDC_MINT,
           sender: publicKey,
           connection,
         });
@@ -97,7 +92,7 @@ export const useSplTokenPayent = () => {
         const feesInstructions = await createSPLTokenInstruction({
           recipient: new PublicKey(intermediaryAccount),
           amount: new BigNumber(servicePayout),
-          splToken: DEVNET_DUMMY_MINT,
+          splToken: USDC_MINT,
           sender: publicKey,
           connection,
         });
