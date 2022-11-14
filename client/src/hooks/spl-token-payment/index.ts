@@ -55,8 +55,7 @@ export const useSplTokenPayent = () => {
         // Setting up the differents recipient amount
         const totalAmount = Number(amount);
 
-        const payeePublicKey =
-          process.env.REACT_APP_TRANSACTION_PAYEE_PUBLIC_KEY;
+        const payeePublicKey = store?.walletAddress;
 
         if (!payeePublicKey || !publicKey) {
           return;
