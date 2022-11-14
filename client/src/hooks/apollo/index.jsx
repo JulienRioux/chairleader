@@ -22,7 +22,9 @@ const LOCAL_STORE_API_URL = IS_PROD ? LOCAL_PROD_URL : LOCAL_DEV_URL;
 const USE_LOCAL_STORE_API =
   process.env.REACT_APP_USE_LOCAL_STORE_API === 'true';
 
-const uri = `${USE_LOCAL_STORE_API ? LOCAL_STORE_API_URL : STORE_API_URL}`;
+// const uri = `${USE_LOCAL_STORE_API ? LOCAL_STORE_API_URL : STORE_API_URL}`;
+
+const uri = 'https://fdfd-96-20-253-84.ngrok.io/dev/graphql';
 
 const httpLink = createUploadLink({ uri });
 
