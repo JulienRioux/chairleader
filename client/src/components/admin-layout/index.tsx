@@ -177,8 +177,8 @@ const RightButtonWrapper = styled.div`
 `;
 
 const RightLayoutWrapper = styled.div`
-  /* overflow: scroll; */
   width: 100%;
+  overflow: hidden;
 `;
 
 const SendFeedbackLink = styled(UnstyledExternalLink)`
