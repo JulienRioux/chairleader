@@ -3,13 +3,11 @@ import { PaymentProvider } from 'contexts/payment';
 import { TransactionsProvider } from 'contexts/transactions';
 import { ReactNode } from 'react';
 import { ConnectionProvider } from '@solana/wallet-adapter-react';
-import { useCurrency } from 'hooks/currency';
+import { CLUSTER_ENDPOINT } from 'utils';
 
 export const SolanaPayProviders = ({ children }: { children: ReactNode }) => {
-  const { networkEndpoint } = useCurrency();
-
   return (
-    <ConnectionProvider endpoint={networkEndpoint}>
+    <ConnectionProvider endpoint={CLUSTER_ENDPOINT}>
       <ConfigProvider>
         <TransactionsProvider>
           <PaymentProvider>{children}</PaymentProvider>
