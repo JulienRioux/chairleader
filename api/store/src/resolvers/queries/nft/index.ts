@@ -32,25 +32,19 @@ export const findNftByAddressQuery = async (
 
 export const findNftsByStoreIdQuery = async (_source: any, args, context) => {
   let storeId = context?.user?._id;
-  console.log('INVESTIGATION: storeId 1', storeId);
 
   const subdomain = context?.subdomain;
 
-  console.log('INVESTIGATION: subdomain', subdomain);
-
   // Using the subdomain on the e-commerce app to retrieve the store ID
-  if (subdomain) {
+  if (!storeId && subdomain) {
     const store = await getUserBySubdomain({ subdomain });
     storeId = store?._id;
-    console.log('INVESTIGATION: storeId 2', storeId);
-    console.log('INVESTIGATION: store', store);
   }
 
   try {
     const nfts = await NftModel.find({
       storeId,
     });
-    console.log('INVESTIGATION: nfts', nfts);
 
     return nfts;
   } catch (err) {
