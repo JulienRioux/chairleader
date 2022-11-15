@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { StoreInfoWrapper, StoreName } from '..';
+import { flashingAnimation } from 'utils/keyframes';
+import { StoreInfoWrapper } from '..';
 
 const BannerWrapper = styled.div`
   position: relative;
@@ -20,6 +21,7 @@ const BannerImg = styled.div`
   object-fit: cover;
   image-rendering: pixelated;
   border: 1px solid ${(p) => p.theme.color.lightGrey};
+  animation: 1.6s ${flashingAnimation} infinite linear;
 `;
 
 const StoreImg = styled.div`
@@ -32,6 +34,7 @@ const StoreImg = styled.div`
   object-fit: cover;
   image-rendering: pixelated;
   border: 1px solid ${(p) => p.theme.color.white}00;
+  animation: 1.6s ${flashingAnimation} infinite linear;
 
   @media (max-width: 800px) {
     width: 80px;
@@ -46,6 +49,7 @@ const StoreNameSkeleton = styled.div`
   max-width: 40%;
   height: 28px;
   margin: 14px 0 4px;
+  animation: 1.6s ${flashingAnimation} infinite linear;
 `;
 
 const StoreDescriptionSkeleton = styled.div`
@@ -55,6 +59,7 @@ const StoreDescriptionSkeleton = styled.div`
   max-width: 90%;
   height: 22px;
   margin: 16px 0;
+  animation: 1.6s ${flashingAnimation} infinite linear;
 `;
 
 export const StoreBannerSkeleton = () => (
