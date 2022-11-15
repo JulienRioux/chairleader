@@ -568,7 +568,7 @@ const NavLink = styled.span<{ isActive?: boolean }>`
   ${(p) =>
     !p.isActive &&
     css`
-      background: ${(p) => p.theme.color.background};
+      background: transparent;
     `}
 `;
 
