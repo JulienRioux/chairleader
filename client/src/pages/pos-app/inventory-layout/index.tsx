@@ -28,11 +28,15 @@ import {
   launchIconSlide,
 } from 'utils/keyframes';
 import { SocialMediaIcons } from '../store-homepage';
+import {
+  StoreBannerSkeleton,
+  StoreInfoSkeleton,
+} from './store-banner-skeleton';
 
 const AMINATION_DURATION = 500;
 
 const TopNavWrapper = styled.div`
-  padding: 8px 12px;
+  padding: 8px 12px 0;
   background: ${(p) => p.theme.color.background}66;
   backdrop-filter: blur(4px);
   z-index: 9;
@@ -45,6 +49,7 @@ const TopNav = styled.div`
   align-items: center;
   justify-content: space-between;
   white-space: nowrap;
+  min-height: 40px;
 `;
 
 const ChildrenWrapper = styled.div`
@@ -187,6 +192,15 @@ const AppLogoWrapper = styled(UnstyledExternalLink)`
     ${LaunchWrapper} {
       animation: 0.4s ${launchIconSlide} forwards;
     }
+  }
+`;
+
+const BackButton = styled(Button)`
+  color: ${(p) => p.theme.color.text};
+  border: none;
+
+  :hover {
+    background: ${(p) => p.theme.color.text}11;
   }
 `;
 
@@ -368,6 +382,8 @@ const CartPreview = ({
 };
 
 export const InventoryLayout = ({ children }: { children: ReactNode }) => {
+  const { isLoading } = useStore();
+
   const hasMobileNavBar = useMediaQuery('(max-width: 800px)');
 
   const { cartItemsNumber } = useCart();
@@ -407,7 +423,7 @@ export const InventoryLayout = ({ children }: { children: ReactNode }) => {
               )}
 
               {!isOnHomepage && isNotOnInventoryPage && isNotOnNftsPage && (
-                <Button secondary icon="arrow_back" to={-1} />
+                <BackButton secondary icon="arrow_back" to={-1} />
               )}
             </TopNav>
           </TopNavWrapper>
@@ -418,7 +434,7 @@ export const InventoryLayout = ({ children }: { children: ReactNode }) => {
             <ChildrenContentWrapper $addPadding={!isOnProductPage}>
               {children}
 
-              {!hasMobileNavBar && !isNotOnInventoryPage && (
+              {!isLoading && !hasMobileNavBar && !isNotOnInventoryPage && (
                 <FloatingCartButtonWrapper>
                   <CartButtonWrapper>
                     <Button
@@ -483,7 +499,7 @@ const StoreImg = styled.img`
   }
 `;
 
-const StoreName = styled.h1`
+export const StoreName = styled.h1`
   margin: 0;
   font-size: 32px;
   display: flex;
@@ -494,7 +510,7 @@ const StoreName = styled.h1`
   }
 `;
 
-const StoreInfoWrapper = styled.div`
+export const StoreInfoWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -588,7 +604,7 @@ const Description = styled.p`
 `;
 
 const NewStoreBannerUi = () => {
-  const { store } = useStore();
+  const { store, isLoading } = useStore();
 
   const [storeName, setStoreName] = useState(store?.storeName);
   const [storeLogo, setStoreLogo] = useState(store?.image);
@@ -637,36 +653,44 @@ const NewStoreBannerUi = () => {
 
   const productsLinkActive = !!(isOnProductsPage || isOnSingleProductPage);
 
-  // http://store.localhost:3000/?homepage_title=Welcome to the Chairleader store!!&homepage_sub_title=Let's find some swag&homepage_hero_img=&override_theme_color=blue&preview_store_name=Chairleader&preview_store_logo=&override-hide-app=true
-
   return (
     <>
       <div>
-        <BannerWrapper>
-          <BannerImg src={imgSrc} />
+        {isLoading ? (
+          <StoreBannerSkeleton />
+        ) : (
+          <BannerWrapper>
+            <BannerImg src={imgSrc} />
 
-          <ImgWrapper>
-            <StoreImg src={storeLogo} />
-          </ImgWrapper>
+            <ImgWrapper>
+              <StoreImg src={storeLogo} />
+            </ImgWrapper>
 
-          <SocialMediaIconsWrapper>
-            <SocialMediaIcons />
-          </SocialMediaIconsWrapper>
-        </BannerWrapper>
+            <SocialMediaIconsWrapper>
+              <SocialMediaIcons />
+            </SocialMediaIconsWrapper>
+          </BannerWrapper>
+        )}
       </div>
 
-      <StoreInfoWrapper>
-        <StoreName>
-          <span>{storeName}</span>
-          <VerifiedIconWrapper>
-            <Icon name="verified" />
-          </VerifiedIconWrapper>
-        </StoreName>
+      {isLoading ? (
+        <StoreInfoSkeleton />
+      ) : (
+        <>
+          <StoreInfoWrapper>
+            <StoreName>
+              <span>{storeName}</span>
+              <VerifiedIconWrapper>
+                <Icon name="verified" />
+              </VerifiedIconWrapper>
+            </StoreName>
 
-        <ConnectWalletBtn />
-      </StoreInfoWrapper>
+            <ConnectWalletBtn />
+          </StoreInfoWrapper>
 
-      <Description>{title}</Description>
+          <Description>{title}</Description>
+        </>
+      )}
 
       <LinksWrapper>
         <LeftLinks>

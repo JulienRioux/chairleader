@@ -94,7 +94,7 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   const { decimals } = useCurrency();
 
-  const { inventory, store } = useStore();
+  const { inventory, store, isLoading: storeIsLoading } = useStore();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -104,6 +104,26 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
     () => [...customItems, ...inventory],
     [customItems, inventory]
   );
+
+  useEffect(() => {
+    // TODO: This should be done better...
+    // TODO: Make sure the quantity are always in a good state...
+    if (!storeIsLoading) {
+      // Filter the bad cart items
+      const availableCartItems = cartItems
+        .map(
+          (item) =>
+            inventory
+              .filter(({ status }) => status === 'published')
+              .some(({ _id }) => _id === item._id) && item
+        )
+        .filter((item) => !!item) as ICartItem[];
+      // Filtering and setting the cart items to only the available ones
+      if (availableCartItems.length !== cartItems.length) {
+        setCartItems(availableCartItems);
+      }
+    }
+  }, [cartItems, inventory, storeIsLoading]);
 
   const SALE_TAX_PERCENT = store?.saleTax / 100 ?? 0;
 

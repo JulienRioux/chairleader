@@ -95,7 +95,7 @@ export const CartItems = ({
     if (productType === PRODUCT_TYPE.SIMPLE_PRODUCT) {
       return totalSupply;
     }
-    return allPossibleVariantsObject[productVariants].qty;
+    return allPossibleVariantsObject[productVariants]?.qty;
   };
 
   return (

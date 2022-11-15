@@ -2,7 +2,7 @@ import { cartItemImgSharedStyles } from 'components/cart-item';
 import styled, { css } from 'styled-components';
 import { flashingAnimation } from 'utils/keyframes';
 
-const skeletonSharedStyles = css`
+export const skeletonSharedStyles = css`
   background: ${(p) => p.theme.color.text}22;
   border-radius: ${(p) => p.theme.borderRadius.default};
   border-color: transparent;
