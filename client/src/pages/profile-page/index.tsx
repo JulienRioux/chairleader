@@ -131,8 +131,13 @@ export const ProfilePage = () => {
         </ProfilePageWrapper>
       ) : (
         <div>
-          <p>Connect your wallet in order to see this page.</p>
-          <ConnectWalletBtn />
+          <p>Connect your wallet in order to see your profile.</p>
+
+          <BtnsWrapper>
+            <ConnectWalletBtn />
+
+            <ToggleTheme />
+          </BtnsWrapper>
         </div>
       )}
     </InventoryLayout>

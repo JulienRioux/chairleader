@@ -549,30 +549,33 @@ const LeftLinks = styled.div`
   display: flex;
 `;
 
-const NavLink = styled(Link)<{ isActive?: boolean; to: any }>`
+const NavLink = styled.span<{ isActive?: boolean }>`
   margin: 0;
   min-width: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 16px;
+  padding: 10px 12px;
   transition: 0.4s;
-  border-bottom: 2px solid transparent;
-  white-space: nowrap;
-  text-decoration: none;
   color: ${(p) => p.theme.color.text};
+  margin: 4px;
+  border-radius: ${(p) => p.theme.borderRadius.default};
 
   :active {
     transform: translateY(3px);
   }
 
-  :hover {
-    ${(p) =>
-      !p.isActive &&
-      css`
-        background: ${(p) => p.theme.color.text}11;
-      `}
-  }
+  ${(p) =>
+    !p.isActive &&
+    css`
+      background: ${(p) => p.theme.color.background};
+    `}
+`;
+
+const NavLinkWrapper = styled(Link)<{ isActive?: boolean; to: any }>`
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  text-decoration: none;
 
   ${(p) =>
     p.isActive &&
@@ -580,6 +583,16 @@ const NavLink = styled(Link)<{ isActive?: boolean; to: any }>`
       color: ${p.theme.color.primary};
       border-color: ${p.theme.color.primary};
     `}
+
+  :hover {
+    ${NavLink} {
+      ${(p) =>
+        !p.isActive &&
+        css`
+          background: ${(p) => p.theme.color.text}11;
+        `}
+    }
+  }
 `;
 
 const BannerWrapper = styled.div`
@@ -694,27 +707,38 @@ const NewStoreBannerUi = () => {
 
       <LinksWrapper>
         <LeftLinks>
-          <NavLink to={routes.store.inventory} isActive={productsLinkActive}>
-            Products
-          </NavLink>
+          <NavLinkWrapper
+            isActive={productsLinkActive}
+            to={routes.store.inventory}
+          >
+            <NavLink isActive={productsLinkActive}>Products</NavLink>
+          </NavLinkWrapper>
 
-          <NavLink to={routes.store.nfts} isActive={nftsLinkIsActive}>
-            NFT memberships
-          </NavLink>
+          <NavLinkWrapper isActive={nftsLinkIsActive} to={routes.store.nfts}>
+            <NavLink isActive={nftsLinkIsActive}>NFT memberships</NavLink>
+          </NavLinkWrapper>
 
-          <NavLink to={routes.store.profile} isActive={profileLinkIsActive}>
-            Profile
-          </NavLink>
+          <NavLinkWrapper
+            isActive={profileLinkIsActive}
+            to={routes.store.profile}
+          >
+            <NavLink isActive={profileLinkIsActive}>Profile</NavLink>
+          </NavLinkWrapper>
 
-          <NavLink to={routes.store.contact} isActive={contactLinkIsActive}>
-            Contact
-          </NavLink>
+          <NavLinkWrapper
+            isActive={contactLinkIsActive}
+            to={routes.store.contact}
+          >
+            <NavLink isActive={contactLinkIsActive}>Contact</NavLink>
+          </NavLinkWrapper>
         </LeftLinks>
 
         {(isOnSingleNftPage || isOnConfirmationPage) && (
-          <NavLink to={-1}>
-            <Icon name="arrow_back" />
-          </NavLink>
+          <NavLinkWrapper to={-1}>
+            <NavLink>
+              <Icon name="arrow_back" />
+            </NavLink>
+          </NavLinkWrapper>
         )}
       </LinksWrapper>
     </>
