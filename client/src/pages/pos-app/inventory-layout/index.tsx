@@ -200,7 +200,7 @@ const BackButton = styled(Button)`
   border: none;
 
   :hover {
-    background: #0001;
+    background: ${(p) => p.theme.color.text}11;
   }
 `;
 
