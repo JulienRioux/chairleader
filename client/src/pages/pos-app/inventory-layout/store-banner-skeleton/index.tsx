@@ -57,9 +57,24 @@ const StoreDescriptionSkeleton = styled.div`
   border-radius: ${(p) => p.theme.borderRadius.default};
   width: 400px;
   max-width: 90%;
-  height: 22px;
-  margin: 16px 0;
+  height: 18px;
+  margin: 16px 0 24px;
   animation: 1.6s ${flashingAnimation} infinite linear;
+`;
+
+const StoreDescription2ndRowSkeleton = styled.div`
+  background: ${(p) => p.theme.color.lightGrey};
+  border-radius: ${(p) => p.theme.borderRadius.default};
+  width: 300px;
+  max-width: 40%;
+  height: 18px;
+  margin: -18px 0 16px;
+  animation: 1.6s ${flashingAnimation} infinite linear;
+  display: none;
+
+  @media (max-width: 800px) {
+    display: block;
+  }
 `;
 
 export const StoreBannerSkeleton = () => (
@@ -79,6 +94,7 @@ export const StoreInfoSkeleton = () => {
         <StoreNameSkeleton />
       </StoreInfoWrapper>
       <StoreDescriptionSkeleton />
+      <StoreDescription2ndRowSkeleton />
     </>
   );
 };
