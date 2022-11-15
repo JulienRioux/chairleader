@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import BlockContent from '@sanity/block-content-to-react';
 import { sanityClient } from 'cms';
 import { FC, useCallback, useEffect, useState } from 'react';
-import { Navigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Logger } from 'utils';
 import { Loader } from 'components-library';
 import { ErrorPage } from 'pages/error-page';
@@ -16,7 +16,10 @@ const getSanityQuery = (queryName: string) => `
 }[0]
 `;
 
-const StaticPageWrapper = styled.div``;
+const StaticPageWrapper = styled.div`
+  max-width: 800px;
+  margin: 0 auto;
+`;
 
 const Title = styled.h1`
   @media (max-width: 800px) {
