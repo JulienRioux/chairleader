@@ -167,6 +167,10 @@ const SingleFeatureTitleWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  @media (max-width: 800px) {
+    margin: 20px;
+  }
 `;
 
 const OtpFormWrapper = styled.div`
