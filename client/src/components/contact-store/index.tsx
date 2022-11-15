@@ -13,6 +13,8 @@ import { slideInBottom } from 'utils/keyframes';
 const Form = styled.form`
   opacity: 0;
   animation: 0.4s ${slideInBottom} forwards;
+  max-width: 1000px;
+  margin: 0 auto;
 
   @media (max-width: 1000px) {
     margin-bottom: 80px;
