@@ -28,11 +28,15 @@ import {
   launchIconSlide,
 } from 'utils/keyframes';
 import { SocialMediaIcons } from '../store-homepage';
+import {
+  StoreBannerSkeleton,
+  StoreInfoSkeleton,
+} from './store-banner-skeleton';
 
 const AMINATION_DURATION = 500;
 
 const TopNavWrapper = styled.div`
-  padding: 8px 12px;
+  padding: 8px 12px 0;
   background: ${(p) => p.theme.color.background}66;
   backdrop-filter: blur(4px);
   z-index: 9;
@@ -45,6 +49,7 @@ const TopNav = styled.div`
   align-items: center;
   justify-content: space-between;
   white-space: nowrap;
+  min-height: 40px;
 `;
 
 const ChildrenWrapper = styled.div`
@@ -187,6 +192,15 @@ const AppLogoWrapper = styled(UnstyledExternalLink)`
     ${LaunchWrapper} {
       animation: 0.4s ${launchIconSlide} forwards;
     }
+  }
+`;
+
+const BackButton = styled(Button)`
+  color: ${(p) => p.theme.color.text};
+  border: none;
+
+  :hover {
+    background: ${(p) => p.theme.color.text}11;
   }
 `;
 
@@ -368,6 +382,8 @@ const CartPreview = ({
 };
 
 export const InventoryLayout = ({ children }: { children: ReactNode }) => {
+  const { isLoading } = useStore();
+
   const hasMobileNavBar = useMediaQuery('(max-width: 800px)');
 
   const { cartItemsNumber } = useCart();
@@ -407,7 +423,7 @@ export const InventoryLayout = ({ children }: { children: ReactNode }) => {
               )}
 
               {!isOnHomepage && isNotOnInventoryPage && isNotOnNftsPage && (
-                <Button secondary icon="arrow_back" to={-1} />
+                <BackButton secondary icon="arrow_back" to={-1} />
               )}
             </TopNav>
           </TopNavWrapper>
@@ -418,7 +434,7 @@ export const InventoryLayout = ({ children }: { children: ReactNode }) => {
             <ChildrenContentWrapper $addPadding={!isOnProductPage}>
               {children}
 
-              {!hasMobileNavBar && !isNotOnInventoryPage && (
+              {!isLoading && !hasMobileNavBar && !isNotOnInventoryPage && (
                 <FloatingCartButtonWrapper>
                   <CartButtonWrapper>
                     <Button
@@ -483,7 +499,7 @@ const StoreImg = styled.img`
   }
 `;
 
-const StoreName = styled.h1`
+export const StoreName = styled.h1`
   margin: 0;
   font-size: 32px;
   display: flex;
@@ -494,7 +510,7 @@ const StoreName = styled.h1`
   }
 `;
 
-const StoreInfoWrapper = styled.div`
+export const StoreInfoWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -533,30 +549,33 @@ const LeftLinks = styled.div`
   display: flex;
 `;
 
-const NavLink = styled(Link)<{ isActive?: boolean; to: any }>`
+const NavLink = styled.span<{ isActive?: boolean }>`
   margin: 0;
   min-width: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 16px;
+  padding: 10px 12px;
   transition: 0.4s;
-  border-bottom: 2px solid transparent;
-  white-space: nowrap;
-  text-decoration: none;
   color: ${(p) => p.theme.color.text};
+  margin: 4px;
+  border-radius: ${(p) => p.theme.borderRadius.default};
 
   :active {
     transform: translateY(3px);
   }
 
-  :hover {
-    ${(p) =>
-      !p.isActive &&
-      css`
-        background: ${(p) => p.theme.color.text}11;
-      `}
-  }
+  ${(p) =>
+    !p.isActive &&
+    css`
+      background: ${(p) => p.theme.color.background};
+    `}
+`;
+
+const NavLinkWrapper = styled(Link)<{ isActive?: boolean; to: any }>`
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  text-decoration: none;
 
   ${(p) =>
     p.isActive &&
@@ -564,6 +583,16 @@ const NavLink = styled(Link)<{ isActive?: boolean; to: any }>`
       color: ${p.theme.color.primary};
       border-color: ${p.theme.color.primary};
     `}
+
+  :hover {
+    ${NavLink} {
+      ${(p) =>
+        !p.isActive &&
+        css`
+          background: ${(p) => p.theme.color.text}11;
+        `}
+    }
+  }
 `;
 
 const BannerWrapper = styled.div`
@@ -588,7 +617,7 @@ const Description = styled.p`
 `;
 
 const NewStoreBannerUi = () => {
-  const { store } = useStore();
+  const { store, isLoading } = useStore();
 
   const [storeName, setStoreName] = useState(store?.storeName);
   const [storeLogo, setStoreLogo] = useState(store?.image);
@@ -637,60 +666,79 @@ const NewStoreBannerUi = () => {
 
   const productsLinkActive = !!(isOnProductsPage || isOnSingleProductPage);
 
-  // http://store.localhost:3000/?homepage_title=Welcome to the Chairleader store!!&homepage_sub_title=Let's find some swag&homepage_hero_img=&override_theme_color=blue&preview_store_name=Chairleader&preview_store_logo=&override-hide-app=true
-
   return (
     <>
       <div>
-        <BannerWrapper>
-          <BannerImg src={imgSrc} />
+        {isLoading ? (
+          <StoreBannerSkeleton />
+        ) : (
+          <BannerWrapper>
+            <BannerImg src={imgSrc} />
 
-          <ImgWrapper>
-            <StoreImg src={storeLogo} />
-          </ImgWrapper>
+            <ImgWrapper>
+              <StoreImg src={storeLogo} />
+            </ImgWrapper>
 
-          <SocialMediaIconsWrapper>
-            <SocialMediaIcons />
-          </SocialMediaIconsWrapper>
-        </BannerWrapper>
+            <SocialMediaIconsWrapper>
+              <SocialMediaIcons />
+            </SocialMediaIconsWrapper>
+          </BannerWrapper>
+        )}
       </div>
 
-      <StoreInfoWrapper>
-        <StoreName>
-          <span>{storeName}</span>
-          <VerifiedIconWrapper>
-            <Icon name="verified" />
-          </VerifiedIconWrapper>
-        </StoreName>
+      {isLoading ? (
+        <StoreInfoSkeleton />
+      ) : (
+        <>
+          <StoreInfoWrapper>
+            <StoreName>
+              <span>{storeName}</span>
+              <VerifiedIconWrapper>
+                <Icon name="verified" />
+              </VerifiedIconWrapper>
+            </StoreName>
 
-        <ConnectWalletBtn />
-      </StoreInfoWrapper>
+            <ConnectWalletBtn />
+          </StoreInfoWrapper>
 
-      <Description>{title}</Description>
+          <Description>{title}</Description>
+        </>
+      )}
 
       <LinksWrapper>
         <LeftLinks>
-          <NavLink to={routes.store.inventory} isActive={productsLinkActive}>
-            Products
-          </NavLink>
+          <NavLinkWrapper
+            isActive={productsLinkActive}
+            to={routes.store.inventory}
+          >
+            <NavLink isActive={productsLinkActive}>Products</NavLink>
+          </NavLinkWrapper>
 
-          <NavLink to={routes.store.nfts} isActive={nftsLinkIsActive}>
-            NFT memberships
-          </NavLink>
+          <NavLinkWrapper isActive={nftsLinkIsActive} to={routes.store.nfts}>
+            <NavLink isActive={nftsLinkIsActive}>NFT memberships</NavLink>
+          </NavLinkWrapper>
 
-          <NavLink to={routes.store.profile} isActive={profileLinkIsActive}>
-            Profile
-          </NavLink>
+          <NavLinkWrapper
+            isActive={profileLinkIsActive}
+            to={routes.store.profile}
+          >
+            <NavLink isActive={profileLinkIsActive}>Profile</NavLink>
+          </NavLinkWrapper>
 
-          <NavLink to={routes.store.contact} isActive={contactLinkIsActive}>
-            Contact
-          </NavLink>
+          <NavLinkWrapper
+            isActive={contactLinkIsActive}
+            to={routes.store.contact}
+          >
+            <NavLink isActive={contactLinkIsActive}>Contact</NavLink>
+          </NavLinkWrapper>
         </LeftLinks>
 
         {(isOnSingleNftPage || isOnConfirmationPage) && (
-          <NavLink to={-1}>
-            <Icon name="arrow_back" />
-          </NavLink>
+          <NavLinkWrapper to={-1}>
+            <NavLink>
+              <Icon name="arrow_back" />
+            </NavLink>
+          </NavLinkWrapper>
         )}
       </LinksWrapper>
     </>

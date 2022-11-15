@@ -37,6 +37,7 @@ import { MintNftPage } from 'pages/mint-nft-page';
 import { ContactStorePage } from 'pages/pos-app/contact-store-page';
 import { FeaturesPage } from 'pages/features-page';
 import { ShippingSetup } from 'components/shipping-setup';
+import { InventoryLayout } from 'pages/pos-app/inventory-layout';
 
 export const AdminAppRouter = () => {
   return (
@@ -87,6 +88,16 @@ export const AdminAppRouter = () => {
 };
 
 export const StoreAppRouter = () => {
+  const { isLoading } = useStore();
+
+  if (isLoading) {
+    return (
+      <InventoryLayout>
+        <Loader />
+      </InventoryLayout>
+    );
+  }
+
   return (
     <CurrencyProvider>
       <CartProvider>
@@ -181,15 +192,11 @@ const HideAppRouter = () => (
 export const AppRouter = () => {
   const { store, isLoading } = useStore();
 
-  if (HIDE_APP) {
+  if (HIDE_APP && !store && !isLoading) {
     return <HideAppRouter />;
   }
 
-  if (isLoading) {
-    return <Loader />;
-  }
-
-  if (store) {
+  if (store || isLoading) {
     return <StoreAppRouter />;
   }
 

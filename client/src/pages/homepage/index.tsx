@@ -776,7 +776,7 @@ export const HomepageTopNav = () => {
 
   const SHOW_AUTH_BTN = !HIDE_APP && !isLoading;
 
-  const SHOW_BANNER = true;
+  const SHOW_BANNER = false;
 
   return (
     <motion.div
