@@ -4,12 +4,11 @@ import { Button, Icon, Loader, Table } from 'components-library';
 import { ConnectWalletBtn } from 'components/connect-wallet-btn';
 import { format } from 'date-fns';
 import { useBalance } from 'hooks/balance';
-import { SolScanLink } from 'pages/admin-pages/token-gating-nft/token-gating.nft.styles';
 import { ToggleTheme } from 'pages/homepage';
 import { InventoryLayout } from 'pages/pos-app/inventory-layout';
 import { GET_INVOICES_BY_WALLET_ADDRESS } from 'queries';
 import { useCallback, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { CLUSTER_ENV, formatShortAddress, routes } from 'utils';
 import { slideInBottom } from 'utils/keyframes';
@@ -31,14 +30,13 @@ const ProfileInfoWrapper = styled.div`
   margin: 40px 0;
 `;
 
-const TitleAndDisconnectBtn = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
 const ProfilePageWrapper = styled.div`
   opacity: 0;
   animation: 0.4s ${slideInBottom} forwards;
+
+  @media (max-width: 800px) {
+    margin-bottom: 80px;
+  }
 `;
 
 const BtnsWrapper = styled.div`
