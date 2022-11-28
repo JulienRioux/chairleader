@@ -10,7 +10,7 @@ import { useWalletModal } from 'hooks/wallet-modal';
 const ConnectWalletBtnWrapper = styled.span``;
 
 const LoginDisclaimer = styled.p`
-  background: ${(p) => p.theme.color.text}11;
+  background: ${(p) => p.theme.color.text}08;
   padding: 8px;
   border-radius: ${(p) => p.theme.borderRadius.default};
   border: 1px solid ${(p) => p.theme.color.text}11;
@@ -236,7 +236,7 @@ export const ConnectWalletBtn = ({ fullWidth = false, isAdmin = false }) => {
       )}
 
       {walletAddress && (
-        <Button secondary {...connectedButtonProps}>
+        <Button secondary {...connectedButtonProps} fullWidth={fullWidth}>
           {formatShortAddress(walletAddress)}
         </Button>
       )}

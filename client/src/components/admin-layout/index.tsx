@@ -5,13 +5,14 @@ import {
   UnstyledLink,
   Loader,
 } from 'components-library';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { useLocation, useMatch } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { routes } from 'utils';
 import { ToggleTheme } from 'pages/homepage';
 import { useAuth } from 'hooks/auth';
 import { ConnectWalletBtn } from 'components/connect-wallet-btn';
+import { useMediaQuery } from 'hooks/media-query';
 
 export const AdminLayoutWrapper = styled.div`
   display: grid;
@@ -29,13 +30,6 @@ const InnerSideNav = styled.div`
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-
-  @media (max-width: 800px) {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4px 20px;
-  }
 `;
 
 const SideNav = styled.div`
@@ -44,31 +38,24 @@ const SideNav = styled.div`
   position: sticky;
   top: 0;
   width: 260px;
+  background: ${(p) => p.theme.color.background};
 
   @media (max-width: 800px) {
-    height: auto;
-    border-right: none;
-    border-top: 1px solid ${(p) => p.theme.color.lightGrey};
     position: fixed;
-    top: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: ${(p) => p.theme.color.background};
-    z-index: 9;
+    z-index: 999;
     width: 100%;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 `;
 
 const SideNavLabel = styled.div`
-  margin-left: 10px;
+  margin-left: 8px;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-
-  @media (max-width: 800px) {
-    display: none;
-  }
 `;
 
 const ChildrenWrapper = styled.div`
@@ -94,9 +81,6 @@ const SideNavWrapper = styled(UnstyledLink)<{ $isActive?: boolean }>`
       color: ${(p) => p.theme.color.primary};
       background: ${(p) => p.theme.color.primary}18 !important;
     `}
-  @media (max-width: 800px) {
-    margin: 0;
-  }
 
   :hover {
     background: ${(p) => p.theme.color.black}11;
@@ -109,9 +93,9 @@ const StoreImageWapper = styled.div`
   align-items: center;
   height: 44px;
 
-  @media (max-width: 800px) {
+  /* @media (max-width: 800px) {
     display: none;
-  }
+  } */
 `;
 
 const SideNavIconWrapper = styled.div`
@@ -177,17 +161,34 @@ const RightButtonWrapper = styled.div`
 `;
 
 const RightLayoutWrapper = styled.div`
-  width: 100%;
-  overflow: hidden;
+  width: calc(100vw - 261px);
+
+  @media (max-width: 800px) {
+    width: 100vw;
+  }
 `;
 
 const SendFeedbackLink = styled(UnstyledExternalLink)`
   position: fixed;
   bottom: 8px;
   right: 8px;
+`;
+
+const CloseBtnWrapper = styled.div`
+  display: none;
 
   @media (max-width: 800px) {
-    bottom: 64px;
+    margin: 20px;
+    display: block;
+  }
+`;
+
+const MenuBtnWrapper = styled.div`
+  display: none;
+  margin-left: 8px;
+
+  @media (max-width: 800px) {
+    display: block;
   }
 `;
 
@@ -256,6 +257,10 @@ export const AdminLayout = ({ children }: { children: ReactNode }) => {
   const { pathname } = useLocation();
   const { user, isLoading } = useAuth();
 
+  const isMobileView = useMediaQuery('(max-width: 800px)');
+
+  const [showMenu, setShowMenu] = useState(false);
+
   const isOnProductPage = useMatch(`${routes.admin.inventory}/:productId`);
   const isOnInvoicePage = useMatch(`${routes.admin.payments}/:orderId`);
   const isOnNftPage = useMatch(`${routes.admin.tokenGating}/:address`);
@@ -278,33 +283,57 @@ export const AdminLayout = ({ children }: { children: ReactNode }) => {
     .replaceAll('-', ' ')
     .replaceAll('/', ' / ');
 
+  useEffect(() => {
+    if (!isMobileView && !showMenu) {
+      setShowMenu(true);
+    }
+  }, [isMobileView, showMenu]);
+
   if (isLoading) {
     return <Loader />;
   }
 
   return (
     <AdminLayoutWrapper>
-      <SideNav>
-        <InnerSideNav>
-          <StoreImageWapper>
-            <StoreImgIcon image={user?.image} storeName={user?.storeName} />
-          </StoreImageWapper>
+      {showMenu && (
+        <SideNav>
+          <InnerSideNav>
+            <StoreImageWapper>
+              <StoreImgIcon image={user?.image} storeName={user?.storeName} />
+            </StoreImageWapper>
 
-          {SIDE_NAV_ROUTE.map(({ icon, route, label }) => (
-            <SideNavWrapper
-              key={label}
-              $isActive={pathname === route}
-              to={route}
-            >
-              <SideNavIconWrapper>
-                <Icon name={icon} />
-              </SideNavIconWrapper>
+            {SIDE_NAV_ROUTE.map(({ icon, route, label }) => (
+              <SideNavWrapper
+                key={label}
+                $isActive={pathname === route}
+                to={route}
+                onClick={() => isMobileView && setShowMenu(false)}
+              >
+                <SideNavIconWrapper>
+                  <Icon name={icon} />
+                </SideNavIconWrapper>
 
-              <SideNavLabel>{label}</SideNavLabel>
-            </SideNavWrapper>
-          ))}
-        </InnerSideNav>
-      </SideNav>
+                <SideNavLabel>{label}</SideNavLabel>
+              </SideNavWrapper>
+            ))}
+          </InnerSideNav>
+
+          <CloseBtnWrapper>
+            <div style={{ margin: '12px 0', textAlign: 'end' }}>
+              <ToggleTheme />
+            </div>
+
+            <div style={{ marginBottom: '8px' }}>
+              <ConnectWalletBtn fullWidth isAdmin />
+            </div>
+
+            <Button secondary fullWidth onClick={() => setShowMenu(false)}>
+              Close
+            </Button>
+          </CloseBtnWrapper>
+        </SideNav>
+      )}
+
       <RightLayoutWrapper>
         <TopNav>
           <PageTitle>{pageTitle}</PageTitle>
@@ -319,11 +348,18 @@ export const AdminLayout = ({ children }: { children: ReactNode }) => {
               />
             )}
 
-            <ToggleTheme style={{ marginRight: '8px' }} />
+            {!isMobileView && (
+              <>
+                <ToggleTheme style={{ marginRight: '8px' }} />
+                <span>
+                  <ConnectWalletBtn isAdmin />
+                </span>
+              </>
+            )}
 
-            <span>
-              <ConnectWalletBtn isAdmin />
-            </span>
+            <MenuBtnWrapper>
+              <Button icon="menu" secondary onClick={() => setShowMenu(true)} />
+            </MenuBtnWrapper>
           </RightButtonWrapper>
         </TopNav>
         <ChildrenWrapper>{children}</ChildrenWrapper>
