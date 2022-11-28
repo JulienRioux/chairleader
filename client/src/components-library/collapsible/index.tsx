@@ -9,12 +9,10 @@ const CollapsibleWrapper = styled.div`
 `;
 
 const ToggleBtn = styled(UnstyledButton)<{ isCollapse: boolean }>`
-  padding: 8px;
+  padding: 12px;
   display: flex;
   justify-content: space-between;
   width: 100%;
-  font-size: 20px;
-  font-weight: bold;
 
   ${(p) => !p.isCollapse && `border-bottom: 1px solid ${p.theme.color.text}22;`}
 `;

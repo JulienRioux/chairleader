@@ -329,12 +329,18 @@ const Chart = () => {
 
             <DetailItem label="Average total sale per order:">
               <CurrencyWrapper>$</CurrencyWrapper>
-              {fixUsdcDecimal(totalWithSaleTax / totalTransactions)}
+              {fixUsdcDecimal(
+                totalWithSaleTax /
+                  (totalTransactions === 0 ? 1 : totalTransactions) // Fix NaN
+              )}
             </DetailItem>
 
             <DetailItem label="Average total sale per item:">
               <CurrencyWrapper>$</CurrencyWrapper>
-              {fixUsdcDecimal(numOfItemsSold / totalTransactions)}
+              {fixUsdcDecimal(
+                numOfItemsSold /
+                  (totalTransactions === 0 ? 1 : totalTransactions) // Fix NaN
+              )}
             </DetailItem>
           </div>
         </DetailsWrapper>
