@@ -4,6 +4,7 @@ import {
   Icon,
   UnstyledButton,
   message,
+  useModal,
 } from 'components-library';
 import {
   InstagramIcon,
@@ -23,6 +24,7 @@ import styled, { css } from 'styled-components';
 import { routes } from 'utils';
 import { InventoryLayout } from '../inventory-layout';
 import { slideInBottom } from 'utils/keyframes';
+import { useMediaQuery } from 'hooks/media-query';
 
 const HomepageWrapper = styled.div`
   margin: 0 0 60px;
@@ -132,7 +134,7 @@ const sharedSocialStyles = css`
 
   button,
   svg {
-    width: 20px;
+    width: 16px;
     fill: ${(p) => p.theme.color.black};
   }
 
@@ -151,6 +153,24 @@ const SocialMediaLink = styled(UnstyledExternalLink)`
 const ShareButton = styled(UnstyledButton)`
   color: ${(p) => p.theme.color.black};
   ${sharedSocialStyles}
+`;
+
+const SocialMediaModalLink = styled(UnstyledExternalLink)`
+  border: 1px solid ${(p) => p.theme.color.lightGrey};
+  border-radius: ${(p) => p.theme.borderRadius.default};
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  text-transform: capitalize;
+  color: ${(p) => p.theme.color.primary};
+  font-weight: bold;
+
+  svg {
+    width: 20px;
+    fill: ${(p) => p.theme.color.black};
+  }
 `;
 
 type SocialMediaNames =
@@ -183,6 +203,8 @@ interface ISocialMedia {
 
 export const SocialMediaIcons = () => {
   const { store } = useStore();
+  const isMobileView = useMediaQuery('(max-width: 800px)');
+  const { openModal, Modal } = useModal();
 
   // Formatting data to display social media icons and links
   const socialMedia = Object.keys(store?.social)
@@ -209,17 +231,37 @@ export const SocialMediaIcons = () => {
     });
   }, [store?.storeName]);
 
+  const SHOW_MORE_BTN = isMobileView && socialMedia.length > 3;
+
   return (
-    <SocialMediaIconsWrapper>
-      {socialMedia?.map(({ name, link }: { name: string; link: string }) => (
-        <SocialMediaLink key={name} href={link} target="_blank">
-          {SocialIconsMap[name as SocialMediaNames]}
-        </SocialMediaLink>
-      ))}
-      <ShareButton onClick={handleShare}>
-        <Icon name="share" />
-      </ShareButton>
-    </SocialMediaIconsWrapper>
+    <>
+      <SocialMediaIconsWrapper>
+        {!SHOW_MORE_BTN &&
+          socialMedia?.map(({ name, link }: { name: string; link: string }) => (
+            <SocialMediaLink key={name} href={link} target="_blank">
+              {SocialIconsMap[name as SocialMediaNames]}
+            </SocialMediaLink>
+          ))}
+        <ShareButton onClick={handleShare}>
+          <Icon name="share" />
+        </ShareButton>
+
+        {SHOW_MORE_BTN && (
+          <ShareButton onClick={openModal}>
+            <Icon name="more_horiz" />
+          </ShareButton>
+        )}
+      </SocialMediaIconsWrapper>
+
+      <Modal title={store?.storeName}>
+        {socialMedia?.map(({ name, link }: { name: string; link: string }) => (
+          <SocialMediaModalLink key={name} href={link} target="_blank">
+            <span>{name}</span>
+            <span>{SocialIconsMap[name as SocialMediaNames]}</span>
+          </SocialMediaModalLink>
+        ))}
+      </Modal>
+    </>
   );
 };
 
