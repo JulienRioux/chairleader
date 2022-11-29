@@ -102,7 +102,6 @@ interface ILoggerOption {
 /** Logger funstion that sent user and app info to the admin tool. */
 export class Logger {
   static async error(log: any, options?: ILoggerOption) {
-    console.log('Sending error...');
     const description = options?.description ?? '';
     const id = options?.id ?? '';
     getCurrentLog({ description, log, logId: id, type: LOG_TYPE.ERROR });
