@@ -14,6 +14,7 @@ import { FIND_NFT_BY_ADDRESS } from 'queries';
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { getProductVariantsLowestPrice } from 'utils';
 
 const ProductGrid = styled.div`
   display: grid;
@@ -130,29 +131,50 @@ export const ExclusivitiesSelection = ({
   return (
     <div>
       <ProductGrid>
-        {inventory?.map(({ image, title, price, _id }) => {
-          const isSelected = exclusivities.includes(_id);
-          return (
-            <SelectExclusivityBtn
-              key={_id}
-              onClick={() => handleProductClick(_id)}
-              isSelected={isSelected}
-            >
-              <ProductPreviewItem
-                image={image}
-                title={title}
-                priceDisplay={Number(price?.toFixed(currencyDecimals))}
-                currency={user?.currency}
-              />
+        {inventory?.map(
+          ({
+            image,
+            title,
+            price,
+            _id,
+            allPossibleVariantsObject,
+            productType,
+          }) => {
+            const isSelected = exclusivities.includes(_id);
 
-              <SelectBadgeWrapper isSelected={isSelected}>
-                <Icon
-                  name={isSelected ? 'check_box' : 'check_box_outline_blank'}
+            const { productPrice, hasMultiplePrice } =
+              getProductVariantsLowestPrice({
+                allPossibleVariantsObject,
+                price: price?.toString(),
+                productType,
+              });
+
+            const priceDisplay = Number(Number(productPrice)?.toFixed(6));
+
+            return (
+              <SelectExclusivityBtn
+                key={_id}
+                onClick={() => handleProductClick(_id)}
+                isSelected={isSelected}
+              >
+                <ProductPreviewItem
+                  image={image}
+                  title={title}
+                  priceDisplay={`${
+                    hasMultiplePrice ? 'From ' : ''
+                  } ${priceDisplay}`}
+                  currency={user?.currency}
                 />
-              </SelectBadgeWrapper>
-            </SelectExclusivityBtn>
-          );
-        })}
+
+                <SelectBadgeWrapper isSelected={isSelected}>
+                  <Icon
+                    name={isSelected ? 'check_box' : 'check_box_outline_blank'}
+                  />
+                </SelectBadgeWrapper>
+              </SelectExclusivityBtn>
+            );
+          }
+        )}
       </ProductGrid>
 
       <SaveBtn

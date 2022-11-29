@@ -58,7 +58,7 @@ import {
   VariationName,
 } from './product-form.styles';
 
-const Alert = ({ children }: { children: ReactNode }) => (
+export const Alert = ({ children }: { children: ReactNode }) => (
   <AlertWrapper>
     <Icon style={{ marginRight: '8px' }} name="warning_amber" />
     <span>{children}</span>

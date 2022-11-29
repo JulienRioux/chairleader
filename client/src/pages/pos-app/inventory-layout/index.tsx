@@ -694,7 +694,8 @@ const NewStoreBannerUi = () => {
             <StoreName>
               <span>{storeName}</span>
               <VerifiedIconWrapper>
-                <Icon name="verified" />
+                {/* Simple hack for now... */}
+                {store.subDomain === 'store' && <Icon name="verified" />}
               </VerifiedIconWrapper>
             </StoreName>
 

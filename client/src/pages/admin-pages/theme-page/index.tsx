@@ -398,7 +398,7 @@ export const ThemePage = () => {
             />
 
             <Textarea
-              label="Title"
+              label="Description"
               placeholder="100% organic coffee"
               value={title}
               onChange={handleChange}
