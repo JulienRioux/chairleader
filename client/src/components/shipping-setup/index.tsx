@@ -166,7 +166,7 @@ const ShippingRates = () => {
 
       {!!hasRestOfTheWorld && (
         <RestOfTheWorldExplaination>
-          Rest of the world *: This rate apply for all other countries that are
+          * Rest of the world: This rate apply for all other countries that are
           not selected.
         </RestOfTheWorldExplaination>
       )}
@@ -187,7 +187,7 @@ const ShippingRates = () => {
 
           {!!restOfTheWorldIsSelected && (
             <RestOfTheWorldExplaination>
-              Rest of the world *: This rate apply for all other countries that
+              * Rest of the world: This rate apply for all other countries that
               are not selected.
             </RestOfTheWorldExplaination>
           )}

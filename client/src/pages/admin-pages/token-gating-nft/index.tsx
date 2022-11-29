@@ -229,6 +229,8 @@ export const TokenGatingNft = ({
   const { metaplex } = useMetaplex();
   const { address } = useParams();
 
+  const { refetchStoreNfts } = useNft();
+
   const [showAll, setShowAll] = useState(false);
 
   const { publicKey } = useWallet();
@@ -376,12 +378,14 @@ export const TokenGatingNft = ({
       isArchived: !currentNft?.findNftByAddress?.isArchived,
     });
     await refetchNftByAddress();
+    await refetchStoreNfts();
     message.success('Archive status changed.');
   }, [
     currentNft?.findNftByAddress?._id,
     currentNft?.findNftByAddress?.isArchived,
     refetchNftByAddress,
     updateNft,
+    refetchStoreNfts,
   ]);
 
   useEffect(() => {
@@ -533,7 +537,7 @@ export const TokenGatingNft = ({
                   onClick={handleIsArchiveChange}
                   isLoading={updateNftIsLoading}
                 >
-                  {nftIsArchived ? 'Unarchive NFT' : 'Archive NFT'}
+                  {nftIsArchived ? 'Unarchive NFT' : 'Archive NFT membership'}
                 </Button>
               </div>
             </NftInfoWrapper>

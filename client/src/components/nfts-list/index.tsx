@@ -1,6 +1,5 @@
 import { Collapsible, Loader, UnstyledLink } from 'components-library';
 import { useCallback, useEffect, useState } from 'react';
-import { useMetaplex } from 'hooks/metaplex';
 import styled from 'styled-components';
 import { getNftDataFromAddressArr, routes } from 'utils';
 import { useAuth } from 'hooks/auth';
@@ -115,8 +114,6 @@ const NftDisplay = ({
 };
 
 export const NftsList = ({ isStoreApp = false }: { isStoreApp?: boolean }) => {
-  const { metaplex } = useMetaplex();
-
   const { isLoading: isLoadingUser } = useAuth();
 
   const [storeNfts, setStoreNfts] = useState<any[]>([]);

@@ -17,7 +17,7 @@ import {
 import { useMetaplex } from 'hooks/metaplex';
 import styled, { css } from 'styled-components';
 import { Label, RequiredWrapper } from 'components-library/input/input.styles';
-import { ADMIN_PAYER_ADDRESS, CLUSTER_ENV, Logger, resizeFileImg } from 'utils';
+import { ADMIN_PAYER_ADDRESS, Logger, resizeFileImg } from 'utils';
 import { NftsList } from 'components/nfts-list';
 import { PublicKey } from '@solana/web3.js';
 import { useMutation } from '@apollo/client';
@@ -25,6 +25,7 @@ import { ADD_NFT } from 'queries';
 import { useNft } from 'hooks/nft';
 import { NFT_ROYALTY, SELLING_NFT_SERVICE_FEE } from 'configs';
 import { useWalletModal } from 'hooks/wallet-modal';
+import { Alert } from '../product-form';
 
 const ImageWrapper = styled.div`
   margin: 8px 0 24px;
@@ -74,7 +75,7 @@ export const TokenGating = () => {
   const { metaplex } = useMetaplex();
   const wallet = useWallet();
   const { openModal, Modal, closeModal } = useModal();
-  const { refetchStoreNfts } = useNft();
+  const { refetchStoreNfts, storeNfts } = useNft();
   const { openConnectModal } = useWalletModal();
 
   const [addNft, { loading: addNftIsLoading }] = useMutation(ADD_NFT);
@@ -223,6 +224,20 @@ export const TokenGating = () => {
     }
   }, []);
 
+  const activeNfts = storeNfts?.findNftsByStoreId?.filter(
+    ({ isArchived }: { isArchived: boolean }) => !isArchived
+  );
+
+  const [showMaxNftReachMsg, setShowMaxNftReachMsg] = useState(false);
+
+  const handleCreateNftModal = useCallback(() => {
+    if (activeNfts.length) {
+      setShowMaxNftReachMsg(true);
+      return;
+    }
+    openModal();
+  }, [openModal, activeNfts]);
+
   if (wallet.connecting) {
     return <Loader />;
   }
@@ -237,8 +252,16 @@ export const TokenGating = () => {
 
   return (
     <TokenGatingWrapper>
+      {showMaxNftReachMsg && (
+        <Alert>
+          You cannot have more than one NFT membership at the time for the
+          moment. To create a new one, you need to archive your current one
+          first.
+        </Alert>
+      )}
+
       {wallet.connected ? (
-        <Button onClick={openModal}>Create new NFT</Button>
+        <Button onClick={handleCreateNftModal}>Create NFT membership</Button>
       ) : (
         <Button icon="lock" onClick={openConnectModal}>
           Connect wallet to create NFTs
@@ -249,7 +272,7 @@ export const TokenGating = () => {
         <NftsList />
       </div>
 
-      <Modal title="Create new NFT">
+      <Modal title="Create NFT membership">
         <form onSubmit={uploadNFT}>
           <Input
             label="Name"
