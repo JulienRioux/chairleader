@@ -23,10 +23,10 @@ const SelectButton = styled(Button)<{ $isActive: boolean }>`
   ${(p) =>
     p.$isActive &&
     css`
-      /* border-color: ${p.theme.color.primary} !important;
-      background-color: ${p.theme.color.primary}11; */
-      border-color: transparent;
-      background-color: ${p.theme.color.primary}22;
+      border-color: ${p.theme.color.primary} !important;
+      background-color: ${p.theme.color.primary}11;
+      /* border-color: transparent; */
+      /* background-color: ${p.theme.color.primary}22; */
       /* color: ${p.theme.color.buttonText}; */
     `}
 
