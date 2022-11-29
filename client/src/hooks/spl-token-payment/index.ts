@@ -1,7 +1,13 @@
 import { SAVE_TRANSACTION_INVOICE } from 'queries';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Logger, routes, createSPLTokenInstruction, USDC_MINT } from 'utils';
+import {
+  Logger,
+  routes,
+  createSPLTokenInstruction,
+  USDC_MINT,
+  ADMIN_PAYER_ADDRESS,
+} from 'utils';
 import { useMutation } from '@apollo/client';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { PublicKey, Transaction } from '@solana/web3.js';
@@ -107,11 +113,12 @@ export const useSplTokenPayent = () => {
 
         transaction.recentBlockhash = blockhash;
 
-        // Setting up the feePayer
-        transaction.feePayer = publicKey;
+        // Using admin wallet to pay transaction fees
+        transaction.feePayer = ADMIN_PAYER_ADDRESS.publicKey;
 
         const signature = await sendTransaction(transaction, connection, {
           minContextSlot,
+          signers: [ADMIN_PAYER_ADDRESS],
         });
 
         await connection.confirmTransaction({
@@ -176,6 +183,7 @@ export const useSplTokenPayent = () => {
       saveTransactionInvoice,
       sendTransaction,
       store?._id,
+      store?.walletAddress,
       storeNfts?.findNftsByStoreId,
     ]
   );

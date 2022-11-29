@@ -58,6 +58,7 @@ export const CartSummary = ({
 }) => {
   const { store } = useStore();
   const { user } = useAuth();
+  const { userCountry } = useCart();
 
   const saleTax = isAdminApp ? user?.saleTax : store?.saleTax;
 
@@ -93,7 +94,7 @@ export const CartSummary = ({
         </SubTotalItem>
       )}
 
-      {!!shippingFee && (
+      {userCountry && (
         <SubTotalItem>
           <span>Shipping fee:</span>
           {shippingFee ? `${shippingFee} ${currency}` : 'Free'}
