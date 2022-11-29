@@ -87,7 +87,7 @@ const getCurrentLog = async ({ description, log, type, logId }: any) => {
     message: getMessage(log),
     sessionId: 'TODO',
     sourceLocation: 'Server',
-    stage: process.env.REACT_APP_ENVIRONMENT,
+    stage: process.env.ENVIRONMENT,
     type,
     userId: 'TODO',
   });
