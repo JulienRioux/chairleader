@@ -6,6 +6,7 @@ const Options = styled.div`
   margin-top: 4px;
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 `;
 
 const SelectButtonLabel = styled.label`
