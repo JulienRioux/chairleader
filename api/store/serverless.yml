@@ -11,6 +11,7 @@ provider:
     binaryMediaTypes:
       - '*/*'
   environment: 
+    ENVIRONMENT: ${param:ENVIRONMENT}
     MONGODB_PASSWORD: ${param:MONGODB_PASSWORD}
     DB_NAME: ${sls:stage}-${param:DB_NAME}
     SENDGRID_API_KEY: ${param:SENDGRID_API_KEY}
