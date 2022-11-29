@@ -44,6 +44,7 @@ const server = new ApolloServer({
 
     try {
       decodedToken = jwt.verify(token, JWT_SECRET) as IDecodedToken;
+      Logger.error(new Error('Test from the server...'));
     } catch (err) {
       // Return null as user if there is an error
       return { ...NO_USER, subdomain };
