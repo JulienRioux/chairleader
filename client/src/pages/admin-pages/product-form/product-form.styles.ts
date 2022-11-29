@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Button, UnstyledButton, UnstyledLink } from 'components-library';
+import { fadeIn } from 'utils/keyframes';
 
 export const FormWrapper = styled.form`
   max-width: 800px;
@@ -144,4 +145,6 @@ export const AlertWrapper = styled.div`
   margin: 8px 0;
   display: flex;
   align-items: center;
+  opacity: 0;
+  animation: 0.5s ${fadeIn} forwards;
 `;
