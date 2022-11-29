@@ -6,7 +6,9 @@ import {
   getMint,
   getAccount,
   createTransferCheckedInstruction,
+  getOrCreateAssociatedTokenAccount,
 } from '@solana/spl-token';
+import { ADMIN_PAYER_ADDRESS } from 'utils/nfts';
 
 export class CreateTransferError extends Error {
   name = 'CreateTransferError';
@@ -45,6 +47,14 @@ export async function createSPLTokenInstruction({
   if (!senderAccount.isInitialized)
     throw new CreateTransferError('sender not initialized');
   if (senderAccount.isFrozen) throw new CreateTransferError('sender frozen');
+
+  // This fixes when a new wallet doesn't have any USDC
+  await getOrCreateAssociatedTokenAccount(
+    connection,
+    ADMIN_PAYER_ADDRESS,
+    splToken,
+    recipient
+  );
 
   // Get the recipient's ATA and check that the account exists and can receive tokens
   const recipientATA = await getAssociatedTokenAddress(splToken, recipient);

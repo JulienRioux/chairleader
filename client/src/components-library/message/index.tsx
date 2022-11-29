@@ -60,7 +60,7 @@ const sendMessage = (
   switch (type) {
     case 'success':
       messageIcon = 'check';
-      iconColor = Styles.color.primary;
+      iconColor = '#52c41a';
       break;
     case 'error':
       messageIcon = 'report';
