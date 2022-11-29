@@ -287,7 +287,6 @@ export const AdminLayout = ({ children }: { children: ReactNode }) => {
     if (!isMobileView && !showMenu) {
       setShowMenu(true);
     }
-    Logger.error(new Error('Testing 123'));
   }, [isMobileView, showMenu]);
 
   if (isLoading) {
