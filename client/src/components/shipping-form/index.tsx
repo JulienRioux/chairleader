@@ -194,12 +194,17 @@ export const ShippingForm = () => {
     ({ country }: { country: string }) => country === REST_OF_THE_WORLD_TEXT
   );
 
-  const COUNTRY_OPTIONS = hasRestOfTheWorldOption
+  let COUNTRY_OPTIONS = hasRestOfTheWorldOption
     ? ALL_COUNTRIES_OPTIONS
     : store?.shippingRates?.map(({ country }: { country: string }) => ({
         value: country,
         label: country,
       })) ?? [];
+
+  // Quick fix for now... When the user has not setup custom shipping rates, consider it free worldwide
+  if (!store?.shippingRates?.length) {
+    COUNTRY_OPTIONS = ALL_COUNTRIES_OPTIONS;
+  }
 
   return (
     <form onSubmit={handlePay}>

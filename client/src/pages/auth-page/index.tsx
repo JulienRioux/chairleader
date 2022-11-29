@@ -63,7 +63,7 @@ const BackButtonWrapper = styled.div`
 
 const AuthPageWrapper = styled.div`
   margin: 100px auto;
-  width: ${(p) => p.theme.layout.mediumWidth};
+  width: ${(p) => p.theme.layout.smallWidth};
 `;
 
 export const HalfImagePageLayout = ({
