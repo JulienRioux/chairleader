@@ -78,12 +78,12 @@ const Img = styled.img`
 `;
 
 const NoImageProduct = styled.div`
-  font-size: 60px;
+  font-size: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: ${(p) => p.theme.color.text}44;
-  background: ${(p) => p.theme.color.lightGrey};
+  background: ${(p) => p.theme.color.text}11;
   ${sharedStyles}
 `;
 

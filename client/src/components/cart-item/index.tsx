@@ -69,12 +69,12 @@ const Img = styled.img`
 `;
 
 const NoImageProduct = styled.div<{ isCustomProduct: boolean }>`
-  font-size: 60px;
+  font-size: 40px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   color: ${(p) => p.theme.color.text}44;
-  background: ${(p) => p.theme.color.lightGrey};
+  background: ${(p) => p.theme.color.text}11;
   ${cartItemImgSharedStyles}
   min-width: 80px;
   ${(p) => p.isCustomProduct && `background: transparent;`}
