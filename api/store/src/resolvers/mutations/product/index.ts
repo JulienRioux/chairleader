@@ -38,7 +38,7 @@ export const deleteProductByIdMutation = async (
   { id },
   { user }
 ) => {
-  return await deleteProductById(id);
+  return await deleteProductById(id, user?._id);
 };
 
 export const editProductMutation = async (

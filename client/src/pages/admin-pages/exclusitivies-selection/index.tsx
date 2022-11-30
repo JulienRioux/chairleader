@@ -76,7 +76,7 @@ export const ExclusivitiesSelection = ({
     notifyOnNetworkStatusChange: true,
   });
 
-  const { updateNft, updateNftIsLoading } = useNft();
+  const { updateNft, updateNftIsLoading, refetchStoreNfts } = useNft();
 
   const { inventory, isLoading } = useInventory();
 
@@ -106,6 +106,7 @@ export const ExclusivitiesSelection = ({
     });
 
     refetchNftByAddress();
+    refetchStoreNfts();
     message.success('Exclusivities saved');
     closeModal();
   }, [
@@ -114,6 +115,7 @@ export const ExclusivitiesSelection = ({
     currentNft?.findNftByAddress?._id,
     refetchNftByAddress,
     closeModal,
+    refetchStoreNfts,
   ]);
 
   useEffect(() => {
