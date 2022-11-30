@@ -1021,7 +1021,7 @@ export const Homepage = () => {
               <Banner>
                 <MotionDiv>
                   <BannerHeader>
-                    Bringing business to new heights with web3
+                    Bringing businesses to new heights with web3
                   </BannerHeader>
                 </MotionDiv>
 
