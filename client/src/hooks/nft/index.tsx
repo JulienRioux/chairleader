@@ -157,6 +157,7 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
 
     // Do not run this if there is no data to fetch
     if (!unarchivedNfts?.length) {
+      setGetProductLockedMapIsLoading(false);
       return;
     }
 

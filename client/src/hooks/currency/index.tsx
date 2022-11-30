@@ -20,6 +20,7 @@ import {
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { PublicKey } from '@solana/web3.js';
 import { useStore } from 'hooks/store';
+import { IS_PROD } from 'configs';
 
 export enum CURRENCY_AND_NETWORK {
   USDC_DEVNET = 'USDC_DEVNET',
@@ -100,7 +101,7 @@ export const CurrencyProvider: FC<{ children: ReactNode }> = ({ children }) => {
     (store?.currency as CURRENCY) ?? CURRENCY.USDC
   );
 
-  const [network, setNetwork] = useState(NETWORK.DEVNET);
+  const network = IS_PROD ? NETWORK.MAINNET : NETWORK.DEVNET;
 
   useEffect(() => {
     if (store?.currency) {

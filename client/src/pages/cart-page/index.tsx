@@ -14,7 +14,9 @@ import { slideInBottom } from 'utils/keyframes';
 import { Button } from 'components-library';
 
 export const getTxExplorerUrl = ({ signature = '', isDev = false }) =>
-  `https://explorer.solana.com/tx/${signature}${isDev && '?cluster=devnet'}`;
+  `https://explorer.solana.com/tx/${signature}${
+    isDev ? '?cluster=devnet' : ''
+  }`;
 
 const PageTitle = styled.div`
   font-weight: bold;
