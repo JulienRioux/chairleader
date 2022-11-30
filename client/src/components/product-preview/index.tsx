@@ -59,7 +59,7 @@ const NoImageProduct = styled.div`
   align-items: center;
   justify-content: center;
   color: ${(p) => p.theme.color.text}44;
-  background: ${(p) => p.theme.color.lightGrey};
+  background: ${(p) => p.theme.color.text}11;
   ${sharedStyles};
 `;
 

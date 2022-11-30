@@ -37,6 +37,7 @@ import {
   DealTitle,
   DealsWrapper,
   Scoller,
+  NoImageProduct,
   ProductImg,
   TitleWrapper,
   StyledButton,
@@ -55,12 +56,14 @@ import {
   RewardBanner,
   RewardTitle,
   RewardDescription,
+  IconWrapper,
 } from './token-gating.nft.styles';
 import { NftOwnerBadge } from 'pages/pos-app/product-page';
 import styled from 'styled-components';
 import { useSplTokenPayent } from 'hooks/spl-token-payment';
 import { useWalletModal } from 'hooks/wallet-modal';
 import { RewardsSelection } from '../rewards-selection';
+import { useBalance } from 'hooks/balance';
 
 export const NftImgWrapper = styled.div`
   position: relative;
@@ -108,7 +111,13 @@ const DealItem = ({
 
   return (
     <DealItemButton to={`${linkPath}/${productId}`}>
-      <ProductImg src={currentProduct?.image} />
+      {currentProduct?.image ? (
+        <ProductImg src={currentProduct?.image} />
+      ) : (
+        <NoImageProduct>
+          <Icon name="image" />
+        </NoImageProduct>
+      )}
       <DealTitle>{currentProduct?.title}</DealTitle>
 
       <DealPrice>
@@ -230,6 +239,7 @@ export const TokenGatingNft = ({
   const { address } = useParams();
 
   const { refetchStoreNfts } = useNft();
+  const { userBalance, isLoading: userBalanceIsLoading } = useBalance();
 
   const [showAll, setShowAll] = useState(false);
 
@@ -301,6 +311,15 @@ export const TokenGatingNft = ({
   const handlePrintNewEdition = useCallback(async () => {
     if (!address) {
       message.error();
+      return;
+    }
+
+    // Send msg if the user balance is less than the price
+    if (Number(price) > (userBalance ?? 0)) {
+      message.error(
+        `Insufficient funds. You have ${userBalance} USDC in your wallet. Please add funds in order to continue the transaction.`,
+        6
+      );
       return;
     }
 
@@ -471,9 +490,18 @@ export const TokenGatingNft = ({
                   style={{ margin: '20px 0' }}
                   onClick={handlePrintNewEdition}
                   isLoading={printNftIsLoading || getProductLockedMapIsLoading}
-                  disabled={hasNftPrintedVersion}
+                  disabled={hasNftPrintedVersion || userBalanceIsLoading}
                 >
-                  {hasNftPrintedVersion ? "You're already member" : 'Buy now'}
+                  {hasNftPrintedVersion ? (
+                    "You're already member"
+                  ) : (
+                    <>
+                      <span>Buy now {price} USDC</span>
+                      <IconWrapper>
+                        <Icon name="lock" />
+                      </IconWrapper>
+                    </>
+                  )}
                 </Button>
               ) : (
                 <div>
