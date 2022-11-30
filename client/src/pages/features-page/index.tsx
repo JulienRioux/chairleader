@@ -36,8 +36,8 @@ const FeatureGroupMainWrapper = styled(motion.div)`
 
 const FeatureGroupWrapper = styled.div<{ $isRightImg: boolean }>`
   display: grid;
-  grid-template-columns: ${(p) => (p.$isRightImg ? '4fr 6fr' : '6fr 4fr')};
-  gap: 20px;
+  grid-template-columns: ${(p) => (p.$isRightImg ? '4fr 5fr' : '5fr 4fr')};
+  gap: 80px;
   position: relative;
 
   @media (max-width: 800px) {
@@ -125,7 +125,7 @@ const FeatureButtonWrapper = styled.div``;
 const FeatureButtonInnerWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 28px;
 `;
 
 const SingleFeatureTitle = styled.h5`
@@ -137,7 +137,7 @@ const SingleFeatureTitle = styled.h5`
 const SingleFeatureDescription = styled.p`
   margin: 0;
   color: ${(p) => p.theme.color.lightText};
-  margin: 0 28px 28px;
+  margin: 0 20px 20px;
   line-height: 1.6;
 
   opacity: 0;
@@ -163,7 +163,7 @@ const FeatureGroupDescription = styled.p`
 `;
 
 const SingleFeatureTitleWrapper = styled.div`
-  margin: 28px;
+  margin: 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -223,8 +223,8 @@ export const OtpWidget = () => {
         <OtpTitle>Open your web3 store today!</OtpTitle>
 
         <p style={{ lineHeight: 1.6 }}>
-          Try the platform before everyone else. Subscribe to get early access
-          to Chairleader.
+          Stop wasting your time and bring your business to new heights with
+          Chairleader. Take it anywhere.
         </p>
 
         {HIDE_APP ? (
