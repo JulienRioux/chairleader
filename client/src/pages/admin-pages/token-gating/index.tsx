@@ -26,6 +26,7 @@ import { useNft } from 'hooks/nft';
 import { NFT_ROYALTY, SELLING_NFT_SERVICE_FEE } from 'configs';
 import { useWalletModal } from 'hooks/wallet-modal';
 import { Alert } from '../product-form';
+import { useBalance } from 'hooks/balance';
 
 const ImageWrapper = styled.div`
   margin: 8px 0 24px;
@@ -40,7 +41,7 @@ const ImageWrapper = styled.div`
 const ShareStyles = css`
   height: 200px;
   width: 200px;
-  border: ${(p) => p.theme.borderWidth} solid ${(p) => p.theme.color.text};
+  border: ${(p) => p.theme.borderWidth} solid ${(p) => p.theme.color.text}66;
   border-radius: ${(p) => p.theme.borderRadius.default};
   cursor: pointer;
 `;
@@ -77,6 +78,7 @@ export const TokenGating = () => {
   const { openModal, Modal, closeModal } = useModal();
   const { refetchStoreNfts, storeNfts } = useNft();
   const { openConnectModal } = useWalletModal();
+  const { userSolBalance } = useBalance();
 
   const [addNft, { loading: addNftIsLoading }] = useMutation(ADD_NFT);
 
@@ -142,6 +144,14 @@ export const TokenGating = () => {
         return;
       }
       if (!metaplex) {
+        return;
+      }
+
+      if (!userSolBalance) {
+        message.error(
+          'Please add $SOL in order to pay for the transaction fees of NFT membership creation.',
+          6
+        );
         return;
       }
 

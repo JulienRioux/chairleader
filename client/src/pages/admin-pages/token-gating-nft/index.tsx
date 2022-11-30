@@ -17,7 +17,7 @@ import { usePrintedNftsEditions } from 'hooks/printed-nfts-editions';
 import { useStore } from 'hooks/store';
 import { FIND_NFT_BY_ADDRESS, SAVE_TRANSACTION_INVOICE } from 'queries';
 import { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   CLUSTER_ENV,
   formatShortAddress,
@@ -237,6 +237,7 @@ export const TokenGatingNft = ({
   const { openConnectModal } = useWalletModal();
   const { metaplex } = useMetaplex();
   const { address } = useParams();
+  const navigate = useNavigate();
 
   const { refetchStoreNfts } = useNft();
   const { userBalance, isLoading: userBalanceIsLoading } = useBalance();
@@ -400,12 +401,14 @@ export const TokenGatingNft = ({
     await refetchNftByAddress();
     await refetchStoreNfts();
     message.success('Archive status changed.');
+    navigate(-1);
   }, [
+    updateNft,
     currentNft?.findNftByAddress?._id,
     currentNft?.findNftByAddress?.isArchived,
     refetchNftByAddress,
-    updateNft,
     refetchStoreNfts,
+    navigate,
   ]);
 
   useEffect(() => {
