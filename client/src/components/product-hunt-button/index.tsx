@@ -7,8 +7,7 @@ const ProductHuntBtnLink = styled.a`
 const ProductHuntFooterBtn = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin: 40px 0 20px;
+  margin: 28px 0 0;
 `;
 
 export const ProductHuntBtnOnly = () => (

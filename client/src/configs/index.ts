@@ -6,7 +6,7 @@ export const overrideHideAppFromUrlParams = () => {
   return searchParams.get(SEARCH_PARAM) === 'true';
 };
 
-export const SHOW_PRODUCT_HUNT_BTN = false;
+export const PH_IS_LIVE = process.env.REACT_APP_PH_IS_LIVE === 'true';
 export const APP_NAME = 'Chairleader';
 export const USE_CATEGORY = false;
 export const IS_POINT_OF_SALE = false;
