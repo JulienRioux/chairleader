@@ -12,7 +12,9 @@ import { InventoryLayout } from 'pages/pos-app/inventory-layout';
 import { slideInBottom } from 'utils/keyframes';
 
 export const getTxExplorerUrl = ({ signature = '', isDev = false }) =>
-  `https://explorer.solana.com/tx/${signature}${isDev && '?cluster=devnet'}`;
+  `https://explorer.solana.com/tx/${signature}${
+    isDev ? '?cluster=devnet' : ''
+  }`;
 
 const ConfirmationPageWrapper = styled.div`
   margin: 40px auto 80px;
@@ -162,7 +164,7 @@ export const ConfirmationPage = ({ isConfirmation = false }) => {
                   <a
                     href={`https://explorer.solana.com/address/${
                       invoiceData?.customerWalletAddress
-                    }${isDevNetwork && '?cluster=devnet'}`}
+                    }${isDevNetwork ? '?cluster=devnet' : ''}`}
                     target="_blank"
                     rel="noreferrer"
                   >

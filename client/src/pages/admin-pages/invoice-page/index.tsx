@@ -216,7 +216,7 @@ export const InvoicePage = () => {
           <a
             href={`https://explorer.solana.com/address/${
               invoiceData?.customerWalletAddress
-            }${isDevNetwork && '?cluster=devnet'}`}
+            }${isDevNetwork ? '?cluster=devnet' : ''}`}
             target="_blank"
             rel="noreferrer"
           >
@@ -229,7 +229,7 @@ export const InvoicePage = () => {
           <a
             href={getTxExplorerUrl({
               signature: invoiceData?.signature,
-              isDev: isDevNetwork, // Needs to be changed to work with production
+              isDev: isDevNetwork,
             })}
             target="_blank"
             rel="noreferrer"

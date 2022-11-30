@@ -160,11 +160,6 @@ export const NftsList = ({ isStoreApp = false }: { isStoreApp?: boolean }) => {
 
   return (
     <div>
-      {/* {isStoreApp && (
-        <div style={{ marginBottom: '28px' }}>
-          <p>Collect NFTs to unlock exclusive products, deals and more 🎉</p>
-        </div>
-      )} */}
       <NftsListWrapper>
         {activeNfts.map((nft, index) => (
           <NftDisplay
@@ -178,7 +173,7 @@ export const NftsList = ({ isStoreApp = false }: { isStoreApp?: boolean }) => {
           />
         ))}
 
-        {!storeNfts.length &&
+        {!activeNfts.length &&
           !storeNftsAreLoading &&
           !isLoading &&
           !isLoadingUser && <p>No NFT yet.</p>}
