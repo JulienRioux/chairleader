@@ -9,7 +9,7 @@ import {
 import styled, { css, keyframes } from 'styled-components';
 import { routes } from 'utils';
 import { Footer } from 'components';
-import { APP_NAME, HIDE_APP } from 'configs';
+import { APP_NAME, HIDE_APP, PH_IS_LIVE } from 'configs';
 import { useTheme } from 'hooks/theme';
 import { useAuth } from 'hooks/auth';
 import { useMediaQuery } from 'hooks/media-query';
@@ -733,6 +733,37 @@ const BannerContent = styled.div`
   }
 `;
 
+const InfiniteBannerTextAnimation = keyframes`
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-100%, 0);
+  }
+`;
+
+const InfiniteTextBanner = styled.div`
+  display: flex;
+  animation: 28s ${InfiniteBannerTextAnimation} infinite linear;
+
+  div {
+    margin: 0 20px;
+    flex-wrap: nowrap;
+  }
+`;
+
+const RollingBannerContent = styled(UnstyledExternalLink)`
+  overflow: hidden;
+  display: flex;
+  width: 100%;
+  background: yellow;
+  color: #000;
+  white-space: nowrap;
+  overflow: hidden;
+  padding: 8px 0;
+  font-size: 14px;
+`;
+
 const LeftNav = styled.div`
   display: flex;
 `;
@@ -771,6 +802,19 @@ export const AppLogoLink = () => (
   </Logo>
 );
 
+const TextBanner = () => (
+  <InfiniteTextBanner>
+    <div>We're live on Product Hunt! 🚀</div>
+    <div>We're live on Product Hunt! 🚀</div>
+    <div>We're live on Product Hunt! 🚀</div>
+    <div>We're live on Product Hunt! 🚀</div>
+    <div>We're live on Product Hunt! 🚀</div>
+    <div>We're live on Product Hunt! 🚀</div>
+    <div>We're live on Product Hunt! 🚀</div>
+    <div>We're live on Product Hunt! 🚀</div>
+  </InfiniteTextBanner>
+);
+
 export const HomepageTopNav = () => {
   const { isAuthenticated, isLoading } = useAuth();
 
@@ -785,12 +829,24 @@ export const HomepageTopNav = () => {
       viewport={{ once: true }}
       transition={{ type: 'spring', stiffness: 100 }}
     >
+      {PH_IS_LIVE && (
+        <RollingBannerContent
+          href="https://www.producthunt.com/"
+          target="_blank"
+        >
+          <TextBanner />
+          <TextBanner />
+        </RollingBannerContent>
+      )}
+
       {/* Product hunt banner */}
       {/* {SHOW_BANNER && (
         <TopBanner
           text={
             <BannerContent>
-              <span>We're live on Product Hunt! 🚀</span>
+              <span style={{ marginRight: '16px' }}>
+                We're live on Product Hunt! 🚀
+              </span>
               <a
                 href="https://www.producthunt.com"
                 target="_blank"
@@ -806,7 +862,7 @@ export const HomepageTopNav = () => {
         />
       )} */}
 
-      {SHOW_BANNER && (
+      {/* {SHOW_BANNER && (
         <TopBanner
           text={
             <BannerContent>
@@ -823,7 +879,7 @@ export const HomepageTopNav = () => {
           color="#000000"
           backgroundColor="#FFFF00"
         />
-      )}
+      )} */}
 
       <TopNavWrapper>
         <TopNav>
@@ -872,14 +928,16 @@ export const Homepage = () => {
         <HeroWrapper>
           <LeftHero>
             <MotionDiv delay={0.3}>
-              <Header>No-code web3 ecommerce platform</Header>
+              <Header>
+                The most advanced no-code web3 ecommerce platform.
+              </Header>
             </MotionDiv>
 
             <MotionDiv delay={0.4}>
               <HeroPar>
-                We're building the next-generation eCommerce platform that
+                We're building the next-generation e-commerce platform that
                 offers a variety of web3 services including crypto payments, NFT
-                gating, loyalty programs, and much more.
+                memberships, token gating, loyalty programs, and much more.
               </HeroPar>
             </MotionDiv>
 

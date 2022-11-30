@@ -1,6 +1,6 @@
 import { ProductHuntBtnOnly } from 'components/product-hunt-button';
 import { Icon, UnstyledExternalLink } from 'components-library';
-import { SHOW_PRODUCT_HUNT_BTN, APP_NAME } from 'configs';
+import { PH_IS_LIVE, APP_NAME } from 'configs';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -91,7 +91,7 @@ export const Footer = ({ isStore }: { isStore?: boolean }) => {
           ))}
         </InnerFooterWrapper>
 
-        {SHOW_PRODUCT_HUNT_BTN && <ProductHuntBtnOnly />}
+        {PH_IS_LIVE && <ProductHuntBtnOnly />}
 
         <BottomFooter>
           <CopyrightPar>
