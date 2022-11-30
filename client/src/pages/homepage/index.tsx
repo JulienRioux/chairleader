@@ -1021,8 +1021,7 @@ export const Homepage = () => {
               <Banner>
                 <MotionDiv>
                   <BannerHeader>
-                    The most advanced no-code web3 ecommerce platform ever
-                    built.
+                    Bringing business to new heights with web3
                   </BannerHeader>
                 </MotionDiv>
 
