@@ -243,6 +243,7 @@ export const TokenGatingNft = ({
   } = useQuery(FIND_NFT_BY_ADDRESS, {
     variables: { nftAddress: address },
     notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'cache-and-network',
   });
 
   const {
