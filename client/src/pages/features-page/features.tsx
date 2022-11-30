@@ -1,4 +1,4 @@
-import { Icon } from 'components-library';
+import { Button, Icon, UnstyledExternalLink } from 'components-library';
 
 import otp from 'assets/features/otp.png';
 import multiWallet from 'assets/features/multi-wallet.png';
@@ -15,6 +15,9 @@ import productVariants from 'assets/features/product-variants.png';
 import dashboard from 'assets/features/dashboard.png';
 import commingSoon from 'assets/features/comming-soon.png';
 import inAppNft from 'assets/features/in-app-nft.png';
+import shippingSetup from 'assets/features/shipping-setup.png';
+import ressources from 'assets/features/ressources.png';
+
 import background1 from './background/background-1.png';
 import background2 from './background/background-2.png';
 import background3 from './background/background-3.png';
@@ -94,6 +97,29 @@ const uiFeatures = [
       'Start your online store has never been more easy. Customize your theme with ease, from colors & images to social icons.',
     imgSrc: themeCustom,
   },
+  {
+    title: 'Ressources helping you to succeed',
+    description: (
+      <div>
+        <div style={{ marginBottom: '20px' }}>
+          At Chairleader, we thrive to see you succeeding. That's why we're
+          developping constantly building tools that will help you build your
+          business.
+        </div>
+
+        <UnstyledExternalLink
+          href="https://vanilla-death-2ff.notion.site/Platform-onboarding-390b6774ff7146d5a758aacb196ac3c8"
+          target="_blank"
+        >
+          <Button>
+            Explore ressources{' '}
+            <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
+          </Button>
+        </UnstyledExternalLink>
+      </div>
+    ),
+    imgSrc: ressources,
+  },
 ];
 
 const storeFeatures = [
@@ -114,17 +140,17 @@ const storeFeatures = [
       'Get email notifications on new orders and send order confirmation automagically.',
     imgSrc: emailNotification,
   },
-  // {
-  //   title: 'Add sale tax and shipping fees',
-  //   description:
-  //     'Create customized sale tax and use multiple shipping fees for customers accross the globe.',
-  //   imgSrc: otp,
-  // },
   {
     title: 'Products with variants',
     description:
       'Creates products with variants with ease. Add multiple sizes, colors, and more.',
     imgSrc: productVariants,
+  },
+  {
+    title: 'Shipping made easy',
+    description:
+      'Setting up shipping regions has never been easier with Chairleader.',
+    imgSrc: shippingSetup,
   },
   {
     title: 'Seller dashboard',

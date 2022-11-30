@@ -27,6 +27,7 @@ import shopSrc from 'assets/homepage/shop.png';
 import robotSrc from 'assets/homepage/robot.png';
 import graphSrc from 'assets/homepage/graph.png';
 import cupSrc from 'assets/homepage/cup.png';
+import merchStoreSrc from 'assets/homepage/store-img.png';
 import videoPosterSrc from 'assets/homepage/video-poster.png';
 import { useLocation } from 'react-router-dom';
 import { FeatureGroup, OtpWidget } from 'pages/features-page';
@@ -217,8 +218,8 @@ const Banner = styled.div`
   align-items: center;
   height: 100%;
   display: grid;
-  grid-template-columns: 4fr 6fr;
-  gap: 20px;
+  grid-template-columns: 4fr 5fr;
+  gap: 40px;
 
   @media (max-width: 800px) {
     grid-template-columns: 1fr;
@@ -418,11 +419,12 @@ const PresentationItem = ({
 
 const featuredStore = [
   {
-    name: 'Official store',
+    name: 'Official merch store',
     subdomain: 'store',
     subText:
-      'Visit our official store to get some Chairleader swag and merch 🤙',
-    img: 'https://dev-alt-gate-products.s3.amazonaws.com/products/63503ffd1dc49f88ee9b08f3-cc986c65-7004-444b-9812-81675ac912e9.png',
+      'Visit our official store built on Chairleader.xyz to get some swag and merch. Collect NFT membership to unlock exclusive products and rewards 🚀',
+    // img: 'https://dev-alt-gate-products.s3.amazonaws.com/products/63503ffd1dc49f88ee9b08f3-cc986c65-7004-444b-9812-81675ac912e9.png',
+    img: merchStoreSrc,
   },
   // {
   //   name: 'Cafe Calypso',
@@ -437,16 +439,17 @@ const featuredStore = [
 ];
 
 const FeaturedStoreImg = styled.img`
-  width: 70%;
-  aspect-ratio: 1;
+  width: 100%;
+  /* aspect-ratio: 1; */
   object-position: center;
   object-fit: cover;
   margin: 0 auto;
   border-radius: ${(p) => p.theme.borderRadius.default};
   image-rendering: pixelated;
+  border: 1px solid ${(p) => p.theme.color.lightGrey};
 
   @media (max-width: 800px) {
-    width: 40%;
+    width: 80%;
   }
 `;
 
@@ -458,10 +461,10 @@ const FeatureGroupWrapper = styled(motion.div)`
 
 const FeaturedStoresWrapper = styled.div`
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 5fr 4fr;
   max-width: ${(p) => p.theme.layout.maxWidth};
   margin: 160px auto;
-  gap: 20px;
+  gap: 40px;
 
   @media (max-width: 800px) {
     display: flex;
@@ -481,7 +484,7 @@ const FeaturedStoresWrapper = styled.div`
 `;
 
 const FeaturedStoreSubtitle = styled.h4`
-  font-size: 20px;
+  font-size: 18px;
   margin: 0 0 20px;
   font-weight: normal;
   color: ${(p) => p.theme.color.lightText};
@@ -490,6 +493,11 @@ const FeaturedStoreSubtitle = styled.h4`
 const FeaturedStoreTitle = styled.h3`
   font-size: 60px;
   margin: 0 0 8px;
+`;
+
+const FeaturedStoreSubText = styled.p`
+  color: ${(p) => p.theme.color.lightText};
+  line-height: 1.6;
 `;
 
 const ArrowBtnsWrapper = styled.div`
@@ -624,7 +632,7 @@ const FeaturedStores = () => {
             </FeaturedStoreSubtitle>
             <FeaturedStoreTitle>{currentStore.name}</FeaturedStoreTitle>
 
-            <p>{currentStore.subText}</p>
+            <FeaturedStoreSubText>{currentStore.subText}</FeaturedStoreSubText>
 
             <UnstyledExternalLink href={storeLink} target="_blank">
               <Button>
@@ -762,6 +770,12 @@ const RollingBannerContent = styled(UnstyledExternalLink)`
   overflow: hidden;
   padding: 8px 0;
   font-size: 14px;
+
+  &:hover {
+    ${InfiniteTextBanner} {
+      animation-play-state: paused;
+    }
+  }
 `;
 
 const LeftNav = styled.div`
@@ -805,13 +819,13 @@ export const AppLogoLink = () => (
 const TextBanner = () => (
   <InfiniteTextBanner>
     <div>We're live on Product Hunt! 🚀</div>
+    <div>We're live on Product Hunt! 🎉</div>
     <div>We're live on Product Hunt! 🚀</div>
+    <div>We're live on Product Hunt! 🤘</div>
     <div>We're live on Product Hunt! 🚀</div>
+    <div>We're live on Product Hunt! 🥳</div>
     <div>We're live on Product Hunt! 🚀</div>
-    <div>We're live on Product Hunt! 🚀</div>
-    <div>We're live on Product Hunt! 🚀</div>
-    <div>We're live on Product Hunt! 🚀</div>
-    <div>We're live on Product Hunt! 🚀</div>
+    <div>We're live on Product Hunt! 🙌</div>
   </InfiniteTextBanner>
 );
 
@@ -918,7 +932,7 @@ export const Homepage = () => {
   const isMobileView = useMediaQuery('(max-width: 800px)');
 
   const SHOW_BANNER = true;
-  const SHOW_MERCHANTS = false;
+  const SHOW_MERCHANTS = true;
   const OLD_UI = false;
 
   return (
@@ -1007,7 +1021,8 @@ export const Homepage = () => {
               <Banner>
                 <MotionDiv>
                   <BannerHeader>
-                    The most advanced no-code web3 ecommerce platform ever built
+                    The most advanced no-code web3 ecommerce platform ever
+                    built.
                   </BannerHeader>
                 </MotionDiv>
 
@@ -1131,8 +1146,6 @@ export const Homepage = () => {
               />
             </>
           )}
-
-          {SHOW_MERCHANTS && <FeaturedStores />}
         </>
 
         <FeatureGroupWrapper>
@@ -1151,6 +1164,8 @@ export const Homepage = () => {
         </FeatureGroupWrapper>
 
         <StepsExplained />
+
+        {SHOW_MERCHANTS && <FeaturedStores />}
 
         <OtpWidget />
 
