@@ -11,10 +11,11 @@ import { useScrollTop } from 'hooks/scroll-top';
 import { motion } from 'framer-motion';
 import { useMediaQuery } from 'hooks/media-query';
 import { ReactNode, useState } from 'react';
-import { slideInBottom, fadeIn } from 'utils/keyframes';
+import { slideInBottom, fadeIn, fadeOut } from 'utils/keyframes';
 import { featuresList } from './features';
 import { OtpForm } from 'pages/auth-page';
 import { HIDE_APP } from 'configs';
+import AnimateHeight from 'components/animated-height';
 
 const FeaturePageTitle = styled.h1`
   font-size: 56px;
@@ -134,14 +135,24 @@ const SingleFeatureTitle = styled.h5`
   line-height: 1.4;
 `;
 
-const SingleFeatureDescription = styled.p`
+const SingleFeatureDescription = styled.p<{ $isActive: boolean }>`
   margin: 0;
   color: ${(p) => p.theme.color.lightText};
   margin: 0 20px 20px;
   line-height: 1.6;
+  transition: 0.3s;
 
-  opacity: 0;
-  animation: 0.4s ${fadeIn} forwards;
+  /* opacity: 0; */
+
+  ${(p) =>
+    p.$isActive
+      ? css`
+          opacity: 0;
+          animation: 0.3s 0.35s ${fadeIn} forwards;
+        `
+      : css`
+          animation: 0.3s ${fadeOut} forwards;
+        `};
 `;
 
 const FeatureGroupTitle = styled.h3`
@@ -207,6 +218,11 @@ const OtpFormBakcground = styled(motion.div)`
     background-color: ${(p) => p.theme.color.white};
     border-color: #767676;
   } */
+`;
+
+const IconWrapper = styled.span<{ $isActive: boolean }>`
+  transition: 0.6s;
+  transform: rotate(${(p) => (p.$isActive ? '-180deg' : '0deg')});
 `;
 
 export const OtpWidget = () => {
@@ -294,13 +310,16 @@ export const FeatureGroup = ({
                   <SingleFeatureTitleWrapper>
                     <SingleFeatureTitle>{title}</SingleFeatureTitle>
 
-                    <Icon name={isActive ? 'arrow_upward' : 'arrow_downward'} />
+                    <IconWrapper $isActive={isActive}>
+                      <Icon name="arrow_downward" />
+                    </IconWrapper>
                   </SingleFeatureTitleWrapper>
-                  {isActive && (
-                    <SingleFeatureDescription>
+
+                  <AnimateHeight duration={300} height={isActive ? 'auto' : 0}>
+                    <SingleFeatureDescription $isActive={isActive}>
                       {description}
                     </SingleFeatureDescription>
-                  )}
+                  </AnimateHeight>
 
                   {isMobileView && (
                     <FeatureImgWrapper

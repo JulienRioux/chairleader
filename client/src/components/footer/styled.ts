@@ -1,6 +1,5 @@
 import { UnstyledLink } from 'components-library';
 import styled from 'styled-components';
-import { Styles } from 'styles';
 
 export const FooterWrapper = styled.div`
   padding: 40px 0 20px;
@@ -44,7 +43,7 @@ export const ColumnTitle = styled.div`
 `;
 
 export const FooterLink = styled(UnstyledLink)`
-  text-decoration: none;
+  text-decoration: underline transparent;
   display: block;
   padding-bottom: 12px;
   cursor: pointer;
@@ -52,7 +51,7 @@ export const FooterLink = styled(UnstyledLink)`
   white-space: nowrap;
 
   :hover {
-    text-decoration: underline;
+    text-decoration-color: ${(p) => p.theme.color.text};
   }
 
   @media (max-width: 600px) {
