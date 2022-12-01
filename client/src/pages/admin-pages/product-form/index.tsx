@@ -135,7 +135,7 @@ export const ProductForm = () => {
   const [variantPriceAndInventoryError, setVariantPriceAndInventoryError] =
     useState(false);
 
-  const { mapProductLockedToMaster } = useNft();
+  const { mapProductLockedToMaster, refetchStoreNfts } = useNft();
 
   const [deleteProductById, { loading: deleteProductIsLoading }] =
     useMutation(DELETE_PRODUCT_BY_ID);
@@ -473,6 +473,8 @@ export const ProductForm = () => {
     const product = await deleteProductById({ variables: { id: productId } });
 
     refetch();
+    // This is fixing when the products was token gating
+    refetchStoreNfts();
     message.success(
       `${product?.data?.deleteProductById?.title} has been deleted.`
     );
@@ -732,7 +734,7 @@ export const ProductForm = () => {
 
       {isTokenGatedProduct && (
         <ProductFormCard
-          title="Exclusivities (NFTs gating)"
+          title="Exclusivities (NFT membership gating)"
           text="NFT gating is used to create value for your community members."
         >
           <>

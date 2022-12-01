@@ -2,13 +2,20 @@ import styled from 'styled-components';
 
 const ProductHuntBtnLink = styled.a`
   display: flex;
+
+  :active {
+    transform: translateY(3px);
+  }
 `;
 
 const ProductHuntFooterBtn = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin: 40px 0 20px;
+  margin: 28px 0 0;
+
+  @media (max-width: 800px) {
+    justify-content: center;
+  }
 `;
 
 export const ProductHuntBtnOnly = () => (

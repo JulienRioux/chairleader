@@ -19,6 +19,7 @@ import { message } from 'components-library';
 export interface IBalanceContext {
   isLoading: boolean;
   userBalance: null | number;
+  userSolBalance: null | number;
 }
 
 export const BalanceContext = createContext<IBalanceContext>(
@@ -29,9 +30,18 @@ export const BalanceProvider: React.FC<IBaseProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userBalance, setUserBalance] = useState<null | number>(null);
 
+  const [userSolBalance, setUserSolBalance] = useState<null | number>(null);
+
   const { connection } = useConnection();
 
   const { publicKey } = useWallet();
+
+  const getSolBalance = useCallback(async () => {
+    if (publicKey) {
+      const solanaBalance = await connection.getBalance(publicKey);
+      setUserSolBalance(solanaBalance);
+    }
+  }, [connection, publicKey]);
 
   const getTokenBalance = useCallback(async () => {
     try {
@@ -66,12 +76,17 @@ export const BalanceProvider: React.FC<IBaseProps> = ({ children }) => {
     getTokenBalance();
   }, [getTokenBalance]);
 
+  useEffect(() => {
+    getSolBalance();
+  }, [getSolBalance]);
+
   const getCtx = useCallback(() => {
     return {
       isLoading,
       userBalance,
+      userSolBalance,
     };
-  }, [isLoading, userBalance]);
+  }, [isLoading, userBalance, userSolBalance]);
 
   return (
     <BalanceContext.Provider value={getCtx()}>

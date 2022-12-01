@@ -84,6 +84,19 @@ export const ProductImg = styled.img`
   object-fit: cover;
 `;
 
+export const NoImageProduct = styled.div`
+  font-size: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${(p) => p.theme.color.text}44;
+  background: ${(p) => p.theme.color.text}11;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: ${(p) => p.theme.borderRadius.default};
+  border: 1px solid ${(p) => p.theme.color.text}22;
+`;
+
 export const Scoller = styled.div`
   display: flex;
   gap: 20px;
@@ -160,4 +173,9 @@ export const RewardTitle = styled.h4`
 export const RewardDescription = styled.div`
   margin: 8px 0 0;
   color: ${(p) => p.theme.color.primary};
+`;
+
+export const IconWrapper = styled.div`
+  position: absolute;
+  right: 8px;
 `;

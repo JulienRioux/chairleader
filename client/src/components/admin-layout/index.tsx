@@ -8,7 +8,7 @@ import {
 import { ReactNode, useEffect, useState } from 'react';
 import { useLocation, useMatch } from 'react-router-dom';
 import styled, { css } from 'styled-components';
-import { routes } from 'utils';
+import { Logger, routes } from 'utils';
 import { ToggleTheme } from 'pages/homepage';
 import { useAuth } from 'hooks/auth';
 import { ConnectWalletBtn } from 'components/connect-wallet-btn';

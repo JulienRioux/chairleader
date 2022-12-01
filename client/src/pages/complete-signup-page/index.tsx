@@ -69,7 +69,7 @@ const NoImageWrapper = styled.div`
 
 const AuthPageWrapper = styled.div`
   margin: 100px auto;
-  width: ${(p) => p.theme.layout.smallWidth};
+  width: ${(p) => p.theme.layout.mediumWidth};
 `;
 
 const CURRENCY_OPTIONS = [
@@ -233,42 +233,48 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
   return (
     <form onSubmit={handleSubmit}>
       <Card title="Store settings">
-        <Label>Store image</Label>
-        <ImageWrapper>
-          {currentImageSrc ? (
-            <Img src={currentImageSrc} />
-          ) : (
-            <NoImageWrapper>
-              <Icon name="image" />
-            </NoImageWrapper>
-          )}
+        {!user?.image && (
+          <>
+            <Label>Store image</Label>
+            <ImageWrapper>
+              {currentImageSrc ? (
+                <Img src={currentImageSrc} />
+              ) : (
+                <NoImageWrapper>
+                  <Icon name="image" />
+                </NoImageWrapper>
+              )}
 
-          <Button
-            type="button"
-            secondary
-            onClick={handleUploadFileClick}
-            isLoading={resizeImgIsLoading}
-          >
-            {currentImageSrc ? 'Update image' : 'Add image'}
-          </Button>
+              <Button
+                type="button"
+                secondary
+                onClick={handleUploadFileClick}
+                isLoading={resizeImgIsLoading}
+              >
+                {currentImageSrc ? 'Update image' : 'Add image'}
+              </Button>
 
-          <VisuallyHiddenInput
-            type="file"
+              <VisuallyHiddenInput
+                type="file"
+                onChange={handleChange}
+                name="image"
+                accept="image/png, image/jpg, image/jpeg, image/webp"
+                ref={fileInput}
+              />
+            </ImageWrapper>
+          </>
+        )}
+
+        {!user?.storeName && (
+          <Input
+            label="Store Name"
+            value={storeName}
             onChange={handleChange}
-            name="image"
-            accept="image/png, image/jpg, image/jpeg, image/webp"
-            ref={fileInput}
+            placeholder="Enter your store name"
+            required
+            name="storeName"
           />
-        </ImageWrapper>
-
-        <Input
-          label="Store Name"
-          value={storeName}
-          onChange={handleChange}
-          placeholder="Enter your store name"
-          required
-          name="storeName"
-        />
+        )}
 
         <Input
           label="Subdomain name"

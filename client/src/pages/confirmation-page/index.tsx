@@ -1,7 +1,7 @@
-import { Button, Icon, Loader } from 'components-library';
+import { Button, Icon, Loader, message } from 'components-library';
 import { formatShortAddress, routes } from 'utils';
 import styled from 'styled-components';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { GET_INVOICE_BY_ID } from 'queries';
 import { useQuery } from '@apollo/client';
 import { CartItem, CartSummary } from 'components';
@@ -12,7 +12,9 @@ import { InventoryLayout } from 'pages/pos-app/inventory-layout';
 import { slideInBottom } from 'utils/keyframes';
 
 export const getTxExplorerUrl = ({ signature = '', isDev = false }) =>
-  `https://explorer.solana.com/tx/${signature}${isDev && '?cluster=devnet'}`;
+  `https://explorer.solana.com/tx/${signature}${
+    isDev ? '?cluster=devnet' : ''
+  }`;
 
 const ConfirmationPageWrapper = styled.div`
   margin: 40px auto 80px;
@@ -42,6 +44,7 @@ const contactUsBody = (orderId = 'ORDER_ID') =>
   `Issue with order ID: ${orderId}. Please tell us what's the issue on your order.`;
 
 export const ConfirmationPage = ({ isConfirmation = false }) => {
+  const navigate = useNavigate();
   const { orderId, signatureId } = useParams();
 
   const { data, loading } = useQuery(GET_INVOICE_BY_ID, {
@@ -54,6 +57,12 @@ export const ConfirmationPage = ({ isConfirmation = false }) => {
   const invoiceData = data?.getInvoiceById;
 
   const isDevNetwork = invoiceData?.network === NETWORK.DEVNET;
+
+  if (!data?.getInvoiceById && !loading) {
+    navigate(routes.store.inventory);
+    message.error();
+    return null;
+  }
 
   return (
     <InventoryLayout>
@@ -162,7 +171,7 @@ export const ConfirmationPage = ({ isConfirmation = false }) => {
                   <a
                     href={`https://explorer.solana.com/address/${
                       invoiceData?.customerWalletAddress
-                    }${isDevNetwork && '?cluster=devnet'}`}
+                    }${isDevNetwork ? '?cluster=devnet' : ''}`}
                     target="_blank"
                     rel="noreferrer"
                   >

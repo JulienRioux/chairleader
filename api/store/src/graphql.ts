@@ -2,7 +2,7 @@ const { ApolloServer } = require('apollo-server-lambda');
 const express = require('express');
 import jwt from 'jsonwebtoken';
 const graphqlUploadExpress = require('graphql-upload/graphqlUploadExpress.js');
-import { connectDB } from './utils';
+import { connectDB, Logger } from './utils';
 import dotenv from 'dotenv';
 import { getUserById } from './controllers/users/get-user-by-id';
 import { resolvers } from './resolvers';

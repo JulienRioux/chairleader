@@ -6,6 +6,7 @@ const Options = styled.div`
   margin-top: 4px;
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 `;
 
 const SelectButtonLabel = styled.label`
@@ -22,10 +23,10 @@ const SelectButton = styled(Button)<{ $isActive: boolean }>`
   ${(p) =>
     p.$isActive &&
     css`
-      /* border-color: ${p.theme.color.primary} !important;
-      background-color: ${p.theme.color.primary}11; */
-      border-color: transparent;
-      background-color: ${p.theme.color.primary}22;
+      border-color: ${p.theme.color.primary} !important;
+      background-color: ${p.theme.color.primary}11;
+      /* border-color: transparent; */
+      /* background-color: ${p.theme.color.primary}22; */
       /* color: ${p.theme.color.buttonText}; */
     `}
 

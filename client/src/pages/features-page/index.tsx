@@ -11,10 +11,11 @@ import { useScrollTop } from 'hooks/scroll-top';
 import { motion } from 'framer-motion';
 import { useMediaQuery } from 'hooks/media-query';
 import { ReactNode, useState } from 'react';
-import { slideInBottom, fadeIn } from 'utils/keyframes';
+import { slideInBottom, fadeIn, fadeOut } from 'utils/keyframes';
 import { featuresList } from './features';
 import { OtpForm } from 'pages/auth-page';
 import { HIDE_APP } from 'configs';
+import AnimateHeight from 'components/animated-height';
 
 const FeaturePageTitle = styled.h1`
   font-size: 56px;
@@ -36,8 +37,8 @@ const FeatureGroupMainWrapper = styled(motion.div)`
 
 const FeatureGroupWrapper = styled.div<{ $isRightImg: boolean }>`
   display: grid;
-  grid-template-columns: ${(p) => (p.$isRightImg ? '4fr 6fr' : '6fr 4fr')};
-  gap: 20px;
+  grid-template-columns: ${(p) => (p.$isRightImg ? '4fr 5fr' : '5fr 4fr')};
+  gap: 80px;
   position: relative;
 
   @media (max-width: 800px) {
@@ -83,6 +84,8 @@ const FeatureImgWrapper = styled.div<{
       @media (max-width: 800px) {
         display: block;
         position: relative;
+        opacity: 0;
+        animation: 0.3s 0.3s ${fadeIn} forwards;
       }
     `}
 `;
@@ -125,7 +128,7 @@ const FeatureButtonWrapper = styled.div``;
 const FeatureButtonInnerWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 28px;
 `;
 
 const SingleFeatureTitle = styled.h5`
@@ -134,14 +137,28 @@ const SingleFeatureTitle = styled.h5`
   line-height: 1.4;
 `;
 
-const SingleFeatureDescription = styled.p`
+const SingleFeatureDescription = styled.p<{ $isActive: boolean }>`
   margin: 0;
   color: ${(p) => p.theme.color.lightText};
-  margin: 0 28px 28px;
+  margin: 0 20px 20px;
   line-height: 1.6;
+  transition: 0.3s;
 
-  opacity: 0;
-  animation: 0.4s ${fadeIn} forwards;
+  /* opacity: 0; */
+
+  ${(p) =>
+    p.$isActive
+      ? css`
+          opacity: 0;
+          animation: 0.3s 0.35s ${fadeIn} forwards;
+
+          @media (max-width: 800px) {
+            animation-delay: 0.2s;
+          }
+        `
+      : css`
+          animation: 0.3s ${fadeOut} forwards;
+        `};
 `;
 
 const FeatureGroupTitle = styled.h3`
@@ -163,7 +180,7 @@ const FeatureGroupDescription = styled.p`
 `;
 
 const SingleFeatureTitleWrapper = styled.div`
-  margin: 28px;
+  margin: 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -209,6 +226,11 @@ const OtpFormBakcground = styled(motion.div)`
   } */
 `;
 
+const IconWrapper = styled.span<{ $isActive: boolean }>`
+  transition: 0.6s;
+  transform: rotate(${(p) => (p.$isActive ? '-180deg' : '0deg')});
+`;
+
 export const OtpWidget = () => {
   const isMobileView = useMediaQuery('(max-width: 800px)');
 
@@ -223,8 +245,8 @@ export const OtpWidget = () => {
         <OtpTitle>Open your web3 store today!</OtpTitle>
 
         <p style={{ lineHeight: 1.6 }}>
-          Try the platform before everyone else. Subscribe to get early access
-          to Chairleader.
+          Stop wasting your time and bring your business to new heights with
+          Chairleader. Take it anywhere.
         </p>
 
         {HIDE_APP ? (
@@ -294,13 +316,16 @@ export const FeatureGroup = ({
                   <SingleFeatureTitleWrapper>
                     <SingleFeatureTitle>{title}</SingleFeatureTitle>
 
-                    <Icon name={isActive ? 'arrow_upward' : 'arrow_downward'} />
+                    <IconWrapper $isActive={isActive}>
+                      <Icon name="arrow_downward" />
+                    </IconWrapper>
                   </SingleFeatureTitleWrapper>
-                  {isActive && (
-                    <SingleFeatureDescription>
+
+                  <AnimateHeight duration={300} height={isActive ? 'auto' : 0}>
+                    <SingleFeatureDescription $isActive={isActive}>
                       {description}
                     </SingleFeatureDescription>
-                  )}
+                  </AnimateHeight>
 
                   {isMobileView && (
                     <FeatureImgWrapper

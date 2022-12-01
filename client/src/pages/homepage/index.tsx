@@ -9,7 +9,7 @@ import {
 import styled, { css, keyframes } from 'styled-components';
 import { routes } from 'utils';
 import { Footer } from 'components';
-import { APP_NAME, HIDE_APP } from 'configs';
+import { APP_NAME, HIDE_APP, PH_IS_LIVE } from 'configs';
 import { useTheme } from 'hooks/theme';
 import { useAuth } from 'hooks/auth';
 import { useMediaQuery } from 'hooks/media-query';
@@ -27,6 +27,7 @@ import shopSrc from 'assets/homepage/shop.png';
 import robotSrc from 'assets/homepage/robot.png';
 import graphSrc from 'assets/homepage/graph.png';
 import cupSrc from 'assets/homepage/cup.png';
+import merchStoreSrc from 'assets/homepage/store-img.png';
 import videoPosterSrc from 'assets/homepage/video-poster.png';
 import { useLocation } from 'react-router-dom';
 import { FeatureGroup, OtpWidget } from 'pages/features-page';
@@ -59,14 +60,9 @@ const Header = styled.h1`
   font-size: 70px;
   margin-bottom: 40px;
   margin-top: 0;
-  /* background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  mix-blend-mode: exclusion;
-  animation: 3s ${backgroundTextAnim} linear infinite; */
 
   @media (max-width: 800px) {
-    font-size: 48px;
+    font-size: 36px;
   }
 `;
 
@@ -217,8 +213,8 @@ const Banner = styled.div`
   align-items: center;
   height: 100%;
   display: grid;
-  grid-template-columns: 4fr 6fr;
-  gap: 20px;
+  grid-template-columns: 4fr 5fr;
+  gap: 40px;
 
   @media (max-width: 800px) {
     grid-template-columns: 1fr;
@@ -418,11 +414,12 @@ const PresentationItem = ({
 
 const featuredStore = [
   {
-    name: 'Official store',
+    name: 'Official merch store',
     subdomain: 'store',
     subText:
-      'Visit our official store to get some Chairleader swag and merch 🤙',
-    img: 'https://dev-alt-gate-products.s3.amazonaws.com/products/63503ffd1dc49f88ee9b08f3-cc986c65-7004-444b-9812-81675ac912e9.png',
+      'Visit our official store built on Chairleader.xyz to get some swag and merch. Collect NFT membership to unlock exclusive products and rewards 🚀',
+    // img: 'https://dev-alt-gate-products.s3.amazonaws.com/products/63503ffd1dc49f88ee9b08f3-cc986c65-7004-444b-9812-81675ac912e9.png',
+    img: merchStoreSrc,
   },
   // {
   //   name: 'Cafe Calypso',
@@ -437,16 +434,17 @@ const featuredStore = [
 ];
 
 const FeaturedStoreImg = styled.img`
-  width: 70%;
-  aspect-ratio: 1;
+  width: 100%;
+  /* aspect-ratio: 1; */
   object-position: center;
   object-fit: cover;
   margin: 0 auto;
   border-radius: ${(p) => p.theme.borderRadius.default};
   image-rendering: pixelated;
+  border: 1px solid ${(p) => p.theme.color.lightGrey};
 
   @media (max-width: 800px) {
-    width: 40%;
+    width: 80%;
   }
 `;
 
@@ -458,10 +456,10 @@ const FeatureGroupWrapper = styled(motion.div)`
 
 const FeaturedStoresWrapper = styled.div`
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 5fr 4fr;
   max-width: ${(p) => p.theme.layout.maxWidth};
   margin: 160px auto;
-  gap: 20px;
+  gap: 40px;
 
   @media (max-width: 800px) {
     display: flex;
@@ -481,7 +479,7 @@ const FeaturedStoresWrapper = styled.div`
 `;
 
 const FeaturedStoreSubtitle = styled.h4`
-  font-size: 20px;
+  font-size: 18px;
   margin: 0 0 20px;
   font-weight: normal;
   color: ${(p) => p.theme.color.lightText};
@@ -490,6 +488,11 @@ const FeaturedStoreSubtitle = styled.h4`
 const FeaturedStoreTitle = styled.h3`
   font-size: 60px;
   margin: 0 0 8px;
+`;
+
+const FeaturedStoreSubText = styled.p`
+  color: ${(p) => p.theme.color.lightText};
+  line-height: 1.6;
 `;
 
 const ArrowBtnsWrapper = styled.div`
@@ -568,6 +571,18 @@ const StepText = styled.p`
   margin-bottom: 0;
 `;
 
+const VisitStoreIcon = styled.span`
+  transition: 0.2s;
+`;
+
+const VisitStoreBtn = styled(Button)`
+  :hover {
+    ${VisitStoreIcon} {
+      transform: translateX(2px);
+    }
+  }
+`;
+
 const StepsExplained = () => {
   const { isDarkTheme } = useTheme();
 
@@ -624,13 +639,15 @@ const FeaturedStores = () => {
             </FeaturedStoreSubtitle>
             <FeaturedStoreTitle>{currentStore.name}</FeaturedStoreTitle>
 
-            <p>{currentStore.subText}</p>
+            <FeaturedStoreSubText>{currentStore.subText}</FeaturedStoreSubText>
 
             <UnstyledExternalLink href={storeLink} target="_blank">
-              <Button>
+              <VisitStoreBtn>
                 Visit store{' '}
-                <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
-              </Button>
+                <VisitStoreIcon>
+                  <Icon style={{ marginLeft: '6px' }} name="arrow_forward" />
+                </VisitStoreIcon>
+              </VisitStoreBtn>
             </UnstyledExternalLink>
           </div>
 
@@ -733,6 +750,43 @@ const BannerContent = styled.div`
   }
 `;
 
+const InfiniteBannerTextAnimation = keyframes`
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-100%, 0);
+  }
+`;
+
+const InfiniteTextBanner = styled.div`
+  display: flex;
+  animation: 28s ${InfiniteBannerTextAnimation} infinite linear;
+
+  div {
+    margin: 0 20px;
+    flex-wrap: nowrap;
+  }
+`;
+
+const RollingBannerContent = styled(UnstyledExternalLink)`
+  overflow: hidden;
+  display: flex;
+  width: 100%;
+  background: yellow;
+  color: #000;
+  white-space: nowrap;
+  overflow: hidden;
+  padding: 8px 0;
+  font-size: 14px;
+
+  &:hover {
+    ${InfiniteTextBanner} {
+      animation-play-state: paused;
+    }
+  }
+`;
+
 const LeftNav = styled.div`
   display: flex;
 `;
@@ -771,6 +825,19 @@ export const AppLogoLink = () => (
   </Logo>
 );
 
+const TextBanner = () => (
+  <InfiniteTextBanner>
+    <div>We're live on Product Hunt! 🚀</div>
+    <div>We're live on Product Hunt! 🎉</div>
+    <div>We're live on Product Hunt! 🚀</div>
+    <div>We're live on Product Hunt! 🤘</div>
+    <div>We're live on Product Hunt! 🚀</div>
+    <div>We're live on Product Hunt! 🥳</div>
+    <div>We're live on Product Hunt! 🚀</div>
+    <div>We're live on Product Hunt! 🙌</div>
+  </InfiniteTextBanner>
+);
+
 export const HomepageTopNav = () => {
   const { isAuthenticated, isLoading } = useAuth();
 
@@ -785,12 +852,24 @@ export const HomepageTopNav = () => {
       viewport={{ once: true }}
       transition={{ type: 'spring', stiffness: 100 }}
     >
+      {PH_IS_LIVE && (
+        <RollingBannerContent
+          href="https://www.producthunt.com/"
+          target="_blank"
+        >
+          <TextBanner />
+          <TextBanner />
+        </RollingBannerContent>
+      )}
+
       {/* Product hunt banner */}
       {/* {SHOW_BANNER && (
         <TopBanner
           text={
             <BannerContent>
-              <span>We're live on Product Hunt! 🚀</span>
+              <span style={{ marginRight: '16px' }}>
+                We're live on Product Hunt! 🚀
+              </span>
               <a
                 href="https://www.producthunt.com"
                 target="_blank"
@@ -806,7 +885,7 @@ export const HomepageTopNav = () => {
         />
       )} */}
 
-      {SHOW_BANNER && (
+      {/* {SHOW_BANNER && (
         <TopBanner
           text={
             <BannerContent>
@@ -823,7 +902,7 @@ export const HomepageTopNav = () => {
           color="#000000"
           backgroundColor="#FFFF00"
         />
-      )}
+      )} */}
 
       <TopNavWrapper>
         <TopNav>
@@ -862,7 +941,7 @@ export const Homepage = () => {
   const isMobileView = useMediaQuery('(max-width: 800px)');
 
   const SHOW_BANNER = true;
-  const SHOW_MERCHANTS = false;
+  const SHOW_MERCHANTS = true;
   const OLD_UI = false;
 
   return (
@@ -872,14 +951,16 @@ export const Homepage = () => {
         <HeroWrapper>
           <LeftHero>
             <MotionDiv delay={0.3}>
-              <Header>No-code web3 ecommerce platform</Header>
+              <Header>
+                The most advanced no-code web3 ecommerce platform.
+              </Header>
             </MotionDiv>
 
             <MotionDiv delay={0.4}>
               <HeroPar>
-                We're building the next-generation eCommerce platform that
+                We're building the next-generation e-commerce platform that
                 offers a variety of web3 services including crypto payments, NFT
-                gating, loyalty programs, and much more.
+                memberships, token gating, loyalty programs, and much more.
               </HeroPar>
             </MotionDiv>
 
@@ -949,7 +1030,7 @@ export const Homepage = () => {
               <Banner>
                 <MotionDiv>
                   <BannerHeader>
-                    The most advanced no-code web3 ecommerce platform ever built
+                    Bringing businesses to new heights with web3
                   </BannerHeader>
                 </MotionDiv>
 
@@ -1073,8 +1154,6 @@ export const Homepage = () => {
               />
             </>
           )}
-
-          {SHOW_MERCHANTS && <FeaturedStores />}
         </>
 
         <FeatureGroupWrapper>
@@ -1093,6 +1172,8 @@ export const Homepage = () => {
         </FeatureGroupWrapper>
 
         <StepsExplained />
+
+        {SHOW_MERCHANTS && <FeaturedStores />}
 
         <OtpWidget />
 
