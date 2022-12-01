@@ -60,11 +60,6 @@ const Header = styled.h1`
   font-size: 70px;
   margin-bottom: 40px;
   margin-top: 0;
-  /* background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  mix-blend-mode: exclusion;
-  animation: 3s ${backgroundTextAnim} linear infinite; */
 
   @media (max-width: 800px) {
     font-size: 36px;

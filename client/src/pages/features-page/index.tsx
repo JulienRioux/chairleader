@@ -151,6 +151,10 @@ const SingleFeatureDescription = styled.p<{ $isActive: boolean }>`
       ? css`
           opacity: 0;
           animation: 0.3s 0.35s ${fadeIn} forwards;
+
+          @media (max-width: 800px) {
+            animation-delay: 0.2s;
+          }
         `
       : css`
           animation: 0.3s ${fadeOut} forwards;
