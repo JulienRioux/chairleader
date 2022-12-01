@@ -67,7 +67,7 @@ const Header = styled.h1`
   animation: 3s ${backgroundTextAnim} linear infinite; */
 
   @media (max-width: 800px) {
-    font-size: 48px;
+    font-size: 36px;
   }
 `;
 
