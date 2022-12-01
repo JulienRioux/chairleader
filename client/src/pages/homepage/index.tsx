@@ -576,6 +576,18 @@ const StepText = styled.p`
   margin-bottom: 0;
 `;
 
+const VisitStoreIcon = styled.span`
+  transition: 0.2s;
+`;
+
+const VisitStoreBtn = styled(Button)`
+  :hover {
+    ${VisitStoreIcon} {
+      transform: translateX(2px);
+    }
+  }
+`;
+
 const StepsExplained = () => {
   const { isDarkTheme } = useTheme();
 
@@ -635,10 +647,12 @@ const FeaturedStores = () => {
             <FeaturedStoreSubText>{currentStore.subText}</FeaturedStoreSubText>
 
             <UnstyledExternalLink href={storeLink} target="_blank">
-              <Button>
+              <VisitStoreBtn>
                 Visit store{' '}
-                <Icon style={{ marginLeft: '4px' }} name="arrow_forward" />
-              </Button>
+                <VisitStoreIcon>
+                  <Icon style={{ marginLeft: '6px' }} name="arrow_forward" />
+                </VisitStoreIcon>
+              </VisitStoreBtn>
             </UnstyledExternalLink>
           </div>
 
