@@ -84,6 +84,8 @@ const FeatureImgWrapper = styled.div<{
       @media (max-width: 800px) {
         display: block;
         position: relative;
+        opacity: 0;
+        animation: 0.3s 0.3s ${fadeIn} forwards;
       }
     `}
 `;
