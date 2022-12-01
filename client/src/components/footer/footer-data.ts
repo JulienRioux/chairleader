@@ -38,6 +38,10 @@ export const defaultFooterData = [
       },
       { href: 'mailto:hello@chairleader.xyz', title: 'Contact' },
       {
+        href: 'https://vanilla-death-2ff.notion.site/Platform-onboarding-390b6774ff7146d5a758aacb196ac3c8',
+        title: 'Ressources',
+      },
+      {
         href: 'https://chairleader.canny.io/',
         title: 'Send feedback',
       },
