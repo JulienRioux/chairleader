@@ -8,6 +8,7 @@ import {
   Loader,
   message,
   SelectButtons,
+  UnstyledButton,
 } from 'components-library';
 import {
   BadgeWrapper,
@@ -31,7 +32,14 @@ import {
   getNftDataFromAddressArr,
   routes,
 } from 'utils';
-import { slideInBottom } from 'utils/keyframes';
+import {
+  fadeIn,
+  fadeOut,
+  slideIn,
+  slideInBottom,
+  slideOut,
+  slideOutBottom,
+} from 'utils/keyframes';
 
 const ProductWrapper = styled.div`
   display: grid;
@@ -75,6 +83,7 @@ const Img = styled.img`
   ${sharedStyles}
   object-position: center;
   object-fit: cover;
+  cursor: zoom-in;
 `;
 
 const NoImageProduct = styled.div`
@@ -186,6 +195,67 @@ const QualifyingNftsHeader = styled.h3`
   margin: 40px 0 8px;
 `;
 
+const CloseBtn = styled(UnstyledButton)`
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  height: 32px;
+  width: 32px;
+  font-weight: bold;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: ${(p) => p.theme.borderRadius.default};
+  z-index: 9;
+  transition: 0.2s;
+  background: #fff;
+  color: #000;
+  border: 1px solid #000;
+
+  :hover {
+    background: #fffa;
+  }
+`;
+
+const FullSizeImgWrapper = styled.div<{ isClosing: boolean }>`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  background: ${(p) => p.theme.color.backdrop};
+  z-index: 99999;
+  cursor: zoom-out;
+  /* backdrop-filter: blur(4px); */
+  opacity: 0;
+  animation: 0.4s ${fadeIn} forwards;
+  ${(p) =>
+    p.isClosing &&
+    css`
+      animation: 0.4s ${fadeOut} forwards;
+    `}
+`;
+
+const FullSizeImg = styled.img<{ isClosing: boolean }>`
+  max-width: 100%;
+  max-height: 100%;
+  opacity: 0;
+  /* pointer-events: none; */
+  cursor: default;
+
+  animation: 0.4s ${slideInBottom} forwards;
+  ${(p) =>
+    p.isClosing &&
+    css`
+      animation: 0.4s ${slideOutBottom} forwards;
+    `}
+`;
+
 export const NftOwnerBadge = () => (
   <HasNftPrintedVersionBadge>
     <Icon style={{ marginRight: '4px' }} name="lock_open" />
@@ -258,6 +328,21 @@ export const ProductPage = () => {
   const [tokenGatedNftData, setTokenGatedNftData] = useState<any>([]);
   const [tokenGatedNftDataIsLoading, setTokenGatedNftDataIsLoading] =
     useState(false);
+
+  // Full size img
+  const [fullSizeImgSrc, setFullSizeImgSrc] = useState('');
+  const [fullSizeImgSrcIsClosing, setFullSizeImgSrcIsClosing] = useState(false);
+
+  const handleToggleFullSizeImg = useCallback((newSrc: string) => {
+    setFullSizeImgSrcIsClosing(true);
+    setTimeout(
+      () => {
+        setFullSizeImgSrcIsClosing(false);
+        setFullSizeImgSrc(newSrc);
+      },
+      newSrc === '' ? 400 : 0
+    );
+  }, []);
 
   const { productId } = useParams();
 
@@ -396,7 +481,10 @@ export const ProductPage = () => {
     <ProductWrapper>
       <ImgWrapper>
         {imageSrc ? (
-          <Img src={imageSrc} />
+          <Img
+            src={imageSrc}
+            onClick={() => handleToggleFullSizeImg(imageSrc)}
+          />
         ) : (
           <NoImageProduct>
             <Icon name="image" />
@@ -527,6 +615,18 @@ export const ProductPage = () => {
           )}
         </InnerAddToCartWrapper>
       </AddToCartWrapper>
+
+      {fullSizeImgSrc && (
+        <FullSizeImgWrapper
+          onClick={() => handleToggleFullSizeImg('')}
+          isClosing={fullSizeImgSrcIsClosing}
+        >
+          <CloseBtn onClick={() => handleToggleFullSizeImg('')}>
+            <Icon name="close" />
+          </CloseBtn>
+          <FullSizeImg src={imageSrc} isClosing={fullSizeImgSrcIsClosing} />
+        </FullSizeImgWrapper>
+      )}
     </ProductWrapper>
   );
 };
