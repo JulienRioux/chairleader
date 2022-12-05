@@ -29,7 +29,7 @@ export const defaultFooterData = [
   {
     content: [
       {
-        href: 'https://www.notion.so/How-can-we-help-you-cb6fd3f0dcd947f68a0edf7c5ce9a98a',
+        href: 'https://vanilla-death-2ff.notion.site/How-can-we-help-you-cb6fd3f0dcd947f68a0edf7c5ce9a98a',
         title: 'FAQ',
       },
       {
