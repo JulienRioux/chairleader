@@ -854,7 +854,7 @@ export const HomepageTopNav = () => {
     >
       {PH_IS_LIVE && (
         <RollingBannerContent
-          href="https://www.producthunt.com/"
+          href="https://www.producthunt.com/posts/chairleader"
           target="_blank"
         >
           <TextBanner />
