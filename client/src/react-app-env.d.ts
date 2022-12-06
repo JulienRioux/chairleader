@@ -3,6 +3,8 @@
 interface Window {
   solana: any;
   solflare: any;
+  Intercom: any;
+  intercomSettings: any;
 }
 
 declare module '*.mp4' {

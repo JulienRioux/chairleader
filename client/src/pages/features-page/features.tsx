@@ -175,7 +175,7 @@ export const featuresList = [
     backgroundImage: background2,
   },
   {
-    title: 'Easy store management',
+    title: 'Everything you need to succeed',
     description: 'Manage and customize your store easily with Chairleader.',
     features: storeFeatures,
     backgroundImage: background3,

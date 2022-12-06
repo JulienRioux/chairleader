@@ -7,7 +7,7 @@ import {
 } from 'components-library';
 import { ReactNode, useEffect, useState } from 'react';
 import { useLocation, useMatch } from 'react-router-dom';
-import styled, { css } from 'styled-components';
+import styled, { css, useTheme } from 'styled-components';
 import { Logger, routes } from 'utils';
 import { ToggleTheme } from 'pages/homepage';
 import { useAuth } from 'hooks/auth';
@@ -42,7 +42,7 @@ const SideNav = styled.div`
 
   @media (max-width: 800px) {
     position: fixed;
-    z-index: 999;
+    z-index: 9999999999;
     width: 100%;
     border: none;
     display: flex;
@@ -65,7 +65,7 @@ const ChildrenWrapper = styled.div`
 
   @media (max-width: 800px) {
     /* Taking into account the bottom navigation + send feedback button */
-    margin-bottom: 140px;
+    margin-bottom: 100px;
   }
 `;
 
@@ -172,6 +172,9 @@ const SendFeedbackLink = styled(UnstyledExternalLink)`
   position: fixed;
   bottom: 8px;
   right: 8px;
+
+  bottom: 20px;
+  right: 80px;
 `;
 
 const CloseBtnWrapper = styled.div`
@@ -256,6 +259,7 @@ const SIDE_NAV_ROUTE = [
 export const AdminLayout = ({ children }: { children: ReactNode }) => {
   const { pathname } = useLocation();
   const { user, isLoading } = useAuth();
+  const theme = useTheme();
 
   const isMobileView = useMediaQuery('(max-width: 800px)');
 
@@ -288,6 +292,22 @@ export const AdminLayout = ({ children }: { children: ReactNode }) => {
       setShowMenu(true);
     }
   }, [isMobileView, showMenu]);
+
+  useEffect(() => {
+    // Setting up intercom
+    window.intercomSettings = {
+      api_base: 'https://api-iam.intercom.io',
+      app_id: process.env.REACT_APP_INTERCOM_APP_ID,
+      name: user?.storeName,
+      email: user?.email,
+      store_id: user?._id,
+      store_name: user?.storeName,
+      store_subdomain: user?.subDomain,
+      action_color: theme?.color?.primary ?? '#0185fe',
+      background_color: theme?.color?.primary ?? '#0185fe',
+    };
+    window.Intercom('update');
+  }, [user, theme]);
 
   if (isLoading) {
     return <Loader />;
