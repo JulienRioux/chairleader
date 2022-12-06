@@ -3,6 +3,7 @@ import { gql } from 'apollo-server-lambda';
 export const schemaTypes = gql`
   type Theme {
     primaryColor: String
+    borderRadius: String
   }
 
   type Homepage {

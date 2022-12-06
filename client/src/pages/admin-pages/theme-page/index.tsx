@@ -83,6 +83,49 @@ const HeroImg = styled.div<{ src?: string }>`
   }
 `;
 
+const BorderRadiusWrapper = styled.div`
+  display: flex;
+  align-items: center;
+
+  input {
+    max-width: 200px;
+  }
+`;
+
+const RangeInput = styled.input`
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 12px;
+  background: ${(p) => p.theme.color.text}22;
+  outline: none;
+  border-radius: 2rem;
+
+  ::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: ${(p) => p.theme.color.primary};
+    cursor: pointer;
+    border-radius: 50%;
+    transition: 0.2s;
+
+    :hover {
+      box-shadow: 0 0 0 4px ${(p) => p.theme.color.primary}44;
+    }
+  }
+`;
+
+const BorderRadiusValue = styled.div`
+  padding: 4px;
+  margin: 0 8px;
+  background: ${(p) => p.theme.color.text}11;
+  border-radius: ${(p) => p.theme.borderRadius.input};
+  min-width: 40px;
+  text-align: center;
+`;
+
 const CardsWrapper = styled.div`
   gap: 20px;
   display: grid;
@@ -151,6 +194,10 @@ export const ThemePage = () => {
     user?.theme?.primaryColor ?? colors[0].name
   );
 
+  const [borderRadius, setBorderRadius] = useState(
+    user?.theme?.borderRadius ?? '12'
+  );
+
   const [title, setTitle] = useState(user?.homepage?.heroTitle ?? '');
   const [subTitle, setSubTitle] = useState(user?.homepage?.heroSubTitle ?? '');
 
@@ -177,6 +224,9 @@ export const ThemePage = () => {
       }
       if (e.target.name === 'subTitle') {
         setSubTitle(e.target.value);
+      }
+      if (e.target.name === 'borderRadius') {
+        setBorderRadius(e.target.value);
       }
       if (e.target.name === 'logoImage') {
         const files = (e.target as HTMLInputElement)?.files as FileList;
@@ -275,7 +325,7 @@ export const ThemePage = () => {
         await updateUser({
           storeName,
           image: logoImageFile,
-          theme: { primaryColor: themeColor },
+          theme: { primaryColor: themeColor, borderRadius },
           homepage: {
             heroTitle: title,
             heroSubTitle: subTitle,
@@ -316,6 +366,7 @@ export const ThemePage = () => {
       spotifyLink,
       appleMusicLink,
       discordLink,
+      borderRadius,
     ]
   );
 
@@ -414,7 +465,7 @@ export const ThemePage = () => {
               name="title"
             />
 
-            <Label>Banner image (Aspect ratio 3:1)</Label>
+            <Label>Banner image (Aspect ratio 3:1 recommended)</Label>
             <HeroImg src={currentHomepageImageSrc}>
               <Button
                 secondary
@@ -450,10 +501,17 @@ export const ThemePage = () => {
             </ColorBtns>
 
             <Label>Border radius</Label>
-            <div>
-              <button>0px</button>
-              <button>4px</button>
-            </div>
+            <BorderRadiusWrapper>
+              <RangeInput
+                onChange={handleChange}
+                type="range"
+                name="borderRadius"
+                min="0"
+                max="24"
+                value={borderRadius}
+              />
+              <BorderRadiusValue>{borderRadius}px</BorderRadiusValue>
+            </BorderRadiusWrapper>
           </Card>
 
           {/* <Card title="Homepage">
@@ -558,6 +616,7 @@ export const ThemePage = () => {
         homepageImgSrc={base64HomepageImg}
         logoImgSrc={base64LogoImg}
         themeColor={themeColor}
+        borderRadius={borderRadius}
       />
     </ThemePageWrapper>
   );

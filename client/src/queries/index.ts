@@ -17,6 +17,7 @@ const STORE = gql`
     shippingFee
     theme {
       primaryColor
+      borderRadius
     }
     homepage {
       heroTitle
