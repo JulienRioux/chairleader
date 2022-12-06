@@ -28,7 +28,14 @@ interface IThemeContext {
 
 export const ThemeContext = createContext<IThemeContext>({} as IThemeContext);
 
-type ThemeColors = 'blue' | 'green' | 'purple' | 'pink';
+type ThemeColors =
+  | 'blue'
+  | 'green'
+  | 'purple'
+  | 'pink'
+  | 'red'
+  | 'orange'
+  | 'yellow';
 
 const getUserPreferedMode = () =>
   window?.matchMedia('(prefers-color-scheme: dark)').matches
@@ -40,6 +47,7 @@ export const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const { user } = useAuth();
 
   const [themeColor, setThemeColor] = useState<ThemeColors>('blue');
+  const [themeBorderRadius, setThemeBorderRadius] = useState<string>('12');
   const [theme, setTheme] = useState(
     (localStorage.getItem(StorageKeys.THEME) ?? getUserPreferedMode()) as THEME
   );
@@ -47,9 +55,9 @@ export const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    const previewTheme = searchParams.get('override_theme_color');
-    if (previewTheme) {
-      setThemeColor(previewTheme as ThemeColors);
+    const previewColorTheme = searchParams.get('override_theme_color');
+    if (previewColorTheme) {
+      setThemeColor(previewColorTheme as ThemeColors);
       return;
     }
 
@@ -57,6 +65,18 @@ export const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
       store?.theme?.primaryColor ?? user?.theme?.primaryColor ?? 'blue';
     setThemeColor(storeColor);
   }, [searchParams, store?.theme?.primaryColor, user?.theme?.primaryColor]);
+
+  useEffect(() => {
+    const previewBorderRadius = searchParams.get('override_border_radius');
+    if (previewBorderRadius) {
+      setThemeBorderRadius(previewBorderRadius ?? '12');
+      return;
+    }
+
+    const storeBorderRadius =
+      store?.theme?.borderRadius ?? user?.theme?.borderRadius ?? '12';
+    setThemeBorderRadius(storeBorderRadius);
+  }, [searchParams, store?.theme?.borderRadius, user?.theme?.borderRadius]);
 
   const isDarkTheme = theme === THEME.DARK;
 
@@ -75,6 +95,16 @@ export const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
   }, [isDarkTheme, theme, toggleTheme]);
 
   const currentTheme = themes[themeColor];
+
+  // Setting up the border-radius preview values
+  currentTheme.lightTheme.borderRadius.default = `${themeBorderRadius}px`;
+  currentTheme.darkTheme.borderRadius.default = `${themeBorderRadius}px`;
+
+  // Small hack for the input
+  const INPUT_BORDER_RADIUS =
+    Number(themeBorderRadius) > 4 ? '4' : `${themeBorderRadius}`;
+  currentTheme.lightTheme.borderRadius.input = `${INPUT_BORDER_RADIUS}px`;
+  currentTheme.lightTheme.borderRadius.input = `${INPUT_BORDER_RADIUS}px`;
 
   return (
     <ThemeContext.Provider value={getCtx()}>

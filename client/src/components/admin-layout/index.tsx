@@ -69,11 +69,11 @@ const ChildrenWrapper = styled.div`
   }
 `;
 
-const SideNavWrapper = styled(UnstyledLink)<{ $isActive?: boolean }>`
-  margin-bottom: 12px;
+const SideNavInner = styled.div<{ $isActive?: boolean }>`
   display: flex;
   align-items: center;
   border-radius: ${(p) => p.theme.borderRadius.default};
+  transition: 0.12s;
 
   ${(p) =>
     p.$isActive &&
@@ -81,9 +81,15 @@ const SideNavWrapper = styled(UnstyledLink)<{ $isActive?: boolean }>`
       color: ${(p) => p.theme.color.primary};
       background: ${(p) => p.theme.color.primary}18 !important;
     `}
+`;
+
+const SideNavWrapper = styled(UnstyledLink)`
+  padding: 6px 0;
 
   :hover {
-    background: ${(p) => p.theme.color.black}11;
+    ${SideNavInner} {
+      background: ${(p) => p.theme.color.black}11;
+    }
   }
 `;
 
@@ -325,15 +331,16 @@ export const AdminLayout = ({ children }: { children: ReactNode }) => {
             {SIDE_NAV_ROUTE.map(({ icon, route, label }) => (
               <SideNavWrapper
                 key={label}
-                $isActive={pathname === route}
                 to={route}
                 onClick={() => isMobileView && setShowMenu(false)}
               >
-                <SideNavIconWrapper>
-                  <Icon name={icon} />
-                </SideNavIconWrapper>
+                <SideNavInner $isActive={pathname === route}>
+                  <SideNavIconWrapper>
+                    <Icon name={icon} />
+                  </SideNavIconWrapper>
 
-                <SideNavLabel>{label}</SideNavLabel>
+                  <SideNavLabel>{label}</SideNavLabel>
+                </SideNavInner>
               </SideNavWrapper>
             ))}
           </InnerSideNav>

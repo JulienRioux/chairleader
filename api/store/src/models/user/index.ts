@@ -18,6 +18,7 @@ export interface IUser {
   shippingFee: number;
   theme: {
     primaryColor: string;
+    borderRadius: string;
   };
   homepage: {
     heroTitle: string;
@@ -59,6 +60,7 @@ const UserSchema = new Schema<IUser>({
   shippingFee: { type: Number, default: 0 },
   theme: {
     primaryColor: { type: String, default: 'blue' },
+    borderRadius: { type: String, default: '12' },
   },
   social: {
     instagramLink: String,

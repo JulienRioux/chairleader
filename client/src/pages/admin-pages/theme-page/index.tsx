@@ -44,18 +44,23 @@ const ColorButton = styled(UnstyledButton)<{
   $color: string;
   $isSelected: boolean;
 }>`
-  height: 40px;
-  width: 40px;
-  margin: 12px 0 20px;
-  border-radius: ${(p) => p.theme.borderRadius.default};
+  height: 24px;
+  width: 24px;
+  margin: 12px 2px 20px;
+  border-radius: 50%;
   background: ${(p) => p.$color};
   transition: 0.2s;
+
+  :hover {
+    box-shadow: 0 0 0 2px ${(p) => p.theme.color.background},
+      0 0 0 4px ${(p) => p.theme.color.text}44;
+  }
 
   ${(p) =>
     p.$isSelected &&
     css`
       box-shadow: 0 0 0 2px ${p.theme.color.background},
-        0 0 0 4px ${p.theme.color.primary};
+        0 0 0 4px ${p.theme.color.primary} !important;
     `}
 `;
 
@@ -76,6 +81,49 @@ const HeroImg = styled.div<{ src?: string }>`
     bottom: 8px;
     right: 8px;
   }
+`;
+
+const BorderRadiusWrapper = styled.div`
+  display: flex;
+  align-items: center;
+
+  input {
+    max-width: 200px;
+  }
+`;
+
+const RangeInput = styled.input`
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 12px;
+  background: ${(p) => p.theme.color.text}22;
+  outline: none;
+  border-radius: 2rem;
+
+  ::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: ${(p) => p.theme.color.primary};
+    cursor: pointer;
+    border-radius: 50%;
+    transition: 0.2s;
+
+    :hover {
+      box-shadow: 0 0 0 4px ${(p) => p.theme.color.primary}44;
+    }
+  }
+`;
+
+const BorderRadiusValue = styled.div`
+  padding: 4px;
+  margin: 0 8px;
+  background: ${(p) => p.theme.color.text}11;
+  border-radius: ${(p) => p.theme.borderRadius.input};
+  min-width: 40px;
+  text-align: center;
 `;
 
 const CardsWrapper = styled.div`
@@ -120,6 +168,9 @@ const colors = [
   { name: 'green', color: '#00a481' },
   { name: 'purple', color: '#6F00FF' },
   { name: 'pink', color: '#ff55d3' },
+  { name: 'red', color: '#E0282E' },
+  { name: 'orange', color: '#F4801A' },
+  { name: 'yellow', color: '#F2BD27' },
 ];
 
 export const ThemePage = () => {
@@ -141,6 +192,10 @@ export const ThemePage = () => {
 
   const [themeColor, setThemeColor] = useState(
     user?.theme?.primaryColor ?? colors[0].name
+  );
+
+  const [borderRadius, setBorderRadius] = useState(
+    user?.theme?.borderRadius ?? '12'
   );
 
   const [title, setTitle] = useState(user?.homepage?.heroTitle ?? '');
@@ -169,6 +224,9 @@ export const ThemePage = () => {
       }
       if (e.target.name === 'subTitle') {
         setSubTitle(e.target.value);
+      }
+      if (e.target.name === 'borderRadius') {
+        setBorderRadius(e.target.value);
       }
       if (e.target.name === 'logoImage') {
         const files = (e.target as HTMLInputElement)?.files as FileList;
@@ -267,7 +325,7 @@ export const ThemePage = () => {
         await updateUser({
           storeName,
           image: logoImageFile,
-          theme: { primaryColor: themeColor },
+          theme: { primaryColor: themeColor, borderRadius },
           homepage: {
             heroTitle: title,
             heroSubTitle: subTitle,
@@ -308,6 +366,7 @@ export const ThemePage = () => {
       spotifyLink,
       appleMusicLink,
       discordLink,
+      borderRadius,
     ]
   );
 
@@ -341,8 +400,8 @@ export const ThemePage = () => {
   }, [handleSetBase64Img]);
 
   const currentLogoImageSrc = useMemo(
-    () => (logoImageFile ? URL.createObjectURL(logoImageFile) : user.image),
-    [logoImageFile, user.image]
+    () => (logoImageFile ? URL.createObjectURL(logoImageFile) : user?.image),
+    [logoImageFile, user?.image]
   );
 
   const currentHomepageImageSrc = useMemo(
@@ -406,7 +465,7 @@ export const ThemePage = () => {
               name="title"
             />
 
-            <Label>Banner image (Aspect ratio 3:1)</Label>
+            <Label>Banner image (Aspect ratio 3:1 recommended)</Label>
             <HeroImg src={currentHomepageImageSrc}>
               <Button
                 secondary
@@ -427,7 +486,7 @@ export const ThemePage = () => {
             </HeroImg>
           </Card>
 
-          <Card title="Colors">
+          <Card title="Styles">
             <Label>Primary color</Label>
             <ColorBtns>
               {colors.map(({ name, color }) => (
@@ -440,6 +499,19 @@ export const ThemePage = () => {
                 />
               ))}
             </ColorBtns>
+
+            <Label>Border radius</Label>
+            <BorderRadiusWrapper>
+              <RangeInput
+                onChange={handleChange}
+                type="range"
+                name="borderRadius"
+                min="0"
+                max="24"
+                value={borderRadius}
+              />
+              <BorderRadiusValue>{borderRadius}px</BorderRadiusValue>
+            </BorderRadiusWrapper>
           </Card>
 
           {/* <Card title="Homepage">
@@ -544,6 +616,7 @@ export const ThemePage = () => {
         homepageImgSrc={base64HomepageImg}
         logoImgSrc={base64LogoImg}
         themeColor={themeColor}
+        borderRadius={borderRadius}
       />
     </ThemePageWrapper>
   );

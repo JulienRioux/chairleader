@@ -48,6 +48,7 @@ export const updateUser = async ({
   }
 
   const primaryColor = theme?.primaryColor;
+  const borderRadius = theme?.borderRadius;
   const heroTitle = homepage?.heroTitle;
   const heroSubTitle = homepage?.heroSubTitle;
 
@@ -97,6 +98,7 @@ export const updateUser = async ({
       ...(theme && {
         theme: {
           ...(primaryColor && { primaryColor }),
+          ...(borderRadius && { borderRadius }),
         },
       }),
       ...(social && { social }),

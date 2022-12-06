@@ -1,4 +1,5 @@
 import { DefaultTheme } from 'styled-components';
+import { lightThemeSharedColors } from './themes/constants';
 
 const primitives = {
   white: '#ffffff',
@@ -19,15 +20,8 @@ export const LightTheme: DefaultTheme = {
   borderWidth: '1px',
   color: {
     primary: '#6F00FF',
-    white: primitives.white,
-    black: primitives.black,
-    lightGrey: '#dddddd',
-    text: primitives.black,
-    background: primitives.white,
-    danger: '#ff2626',
-    lightText: `${primitives.black}cc`,
-    backdrop: `${primitives.black}66`,
     buttonText: primitives.white,
+    ...lightThemeSharedColors,
   },
   layout: {
     maxWidth: '1200px',
