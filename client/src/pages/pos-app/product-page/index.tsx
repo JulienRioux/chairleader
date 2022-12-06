@@ -195,30 +195,35 @@ const QualifyingNftsHeader = styled.h3`
   margin: 40px 0 8px;
 `;
 
-const CloseBtn = styled(UnstyledButton)`
+const CloseBtn = styled(Button)<{ isClosing: boolean }>`
   position: fixed;
-  top: 12px;
-  left: 12px;
-  height: 32px;
-  width: 32px;
-  font-weight: bold;
-  font-size: 20px;
+  top: 8px;
+  right: 12px;
+  z-index: 9;
+  color: ${(p) => p.theme.color.text};
+
+  animation: 0.4s ${fadeIn} forwards;
+  ${(p) =>
+    p.isClosing &&
+    css`
+      animation: 0.4s ${fadeOut} forwards;
+    `}
+`;
+
+const FullSizeImgWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: ${(p) => p.theme.borderRadius.default};
-  z-index: 9;
-  transition: 0.2s;
-  background: #fff;
-  color: #000;
-  border: 1px solid #000;
-
-  :hover {
-    background: #fffa;
-  }
+  padding: 12px;
+  z-index: 99999;
 `;
 
-const FullSizeImgWrapper = styled.div<{ isClosing: boolean }>`
+const Backdrop = styled.div<{ isClosing: boolean }>`
   position: fixed;
   top: 0;
   bottom: 0;
@@ -228,23 +233,29 @@ const FullSizeImgWrapper = styled.div<{ isClosing: boolean }>`
   align-items: center;
   justify-content: center;
   padding: 8px;
-  background: ${(p) => p.theme.color.backdrop};
-  z-index: 99999;
+  background: ${(p) => p.theme.color.black}bb;
+  z-index: 2;
   cursor: zoom-out;
-  /* backdrop-filter: blur(4px); */
   opacity: 0;
   animation: 0.4s ${fadeIn} forwards;
+
   ${(p) =>
     p.isClosing &&
     css`
       animation: 0.4s ${fadeOut} forwards;
     `}
+
+  @media (max-width: 800px) {
+    backdrop-filter: blur(4px);
+    background: ${(p) => p.theme.color.black}77;
+  }
 `;
 
 const FullSizeImg = styled.img<{ isClosing: boolean }>`
   max-width: 100%;
   max-height: 100%;
   opacity: 0;
+  z-index: 9;
   /* pointer-events: none; */
   cursor: default;
 
@@ -617,14 +628,20 @@ export const ProductPage = () => {
       </AddToCartWrapper>
 
       {fullSizeImgSrc && (
-        <FullSizeImgWrapper
-          onClick={() => handleToggleFullSizeImg('')}
-          isClosing={fullSizeImgSrcIsClosing}
-        >
-          <CloseBtn onClick={() => handleToggleFullSizeImg('')}>
-            <Icon name="close" />
-          </CloseBtn>
+        <FullSizeImgWrapper>
+          <CloseBtn
+            secondary
+            icon="close"
+            onClick={() => handleToggleFullSizeImg('')}
+            isClosing={fullSizeImgSrcIsClosing}
+          />
+
           <FullSizeImg src={imageSrc} isClosing={fullSizeImgSrcIsClosing} />
+
+          <Backdrop
+            onClick={() => handleToggleFullSizeImg('')}
+            isClosing={fullSizeImgSrcIsClosing}
+          />
         </FullSizeImgWrapper>
       )}
     </ProductWrapper>
