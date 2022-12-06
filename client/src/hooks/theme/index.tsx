@@ -28,7 +28,14 @@ interface IThemeContext {
 
 export const ThemeContext = createContext<IThemeContext>({} as IThemeContext);
 
-type ThemeColors = 'blue' | 'green' | 'purple' | 'pink';
+type ThemeColors =
+  | 'blue'
+  | 'green'
+  | 'purple'
+  | 'pink'
+  | 'red'
+  | 'orange'
+  | 'yellow';
 
 const getUserPreferedMode = () =>
   window?.matchMedia('(prefers-color-scheme: dark)').matches

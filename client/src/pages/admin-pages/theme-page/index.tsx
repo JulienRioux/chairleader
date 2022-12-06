@@ -44,18 +44,23 @@ const ColorButton = styled(UnstyledButton)<{
   $color: string;
   $isSelected: boolean;
 }>`
-  height: 40px;
-  width: 40px;
-  margin: 12px 0 20px;
-  border-radius: ${(p) => p.theme.borderRadius.default};
+  height: 24px;
+  width: 24px;
+  margin: 12px 2px 20px;
+  border-radius: 50%;
   background: ${(p) => p.$color};
   transition: 0.2s;
+
+  :hover {
+    box-shadow: 0 0 0 2px ${(p) => p.theme.color.background},
+      0 0 0 4px ${(p) => p.theme.color.text}44;
+  }
 
   ${(p) =>
     p.$isSelected &&
     css`
       box-shadow: 0 0 0 2px ${p.theme.color.background},
-        0 0 0 4px ${p.theme.color.primary};
+        0 0 0 4px ${p.theme.color.primary} !important;
     `}
 `;
 
@@ -120,6 +125,9 @@ const colors = [
   { name: 'green', color: '#00a481' },
   { name: 'purple', color: '#6F00FF' },
   { name: 'pink', color: '#ff55d3' },
+  { name: 'red', color: '#E0282E' },
+  { name: 'orange', color: '#F4801A' },
+  { name: 'yellow', color: '#F2BD27' },
 ];
 
 export const ThemePage = () => {
@@ -341,8 +349,8 @@ export const ThemePage = () => {
   }, [handleSetBase64Img]);
 
   const currentLogoImageSrc = useMemo(
-    () => (logoImageFile ? URL.createObjectURL(logoImageFile) : user.image),
-    [logoImageFile, user.image]
+    () => (logoImageFile ? URL.createObjectURL(logoImageFile) : user?.image),
+    [logoImageFile, user?.image]
   );
 
   const currentHomepageImageSrc = useMemo(
@@ -427,7 +435,7 @@ export const ThemePage = () => {
             </HeroImg>
           </Card>
 
-          <Card title="Colors">
+          <Card title="Styles">
             <Label>Primary color</Label>
             <ColorBtns>
               {colors.map(({ name, color }) => (
@@ -440,6 +448,12 @@ export const ThemePage = () => {
                 />
               ))}
             </ColorBtns>
+
+            <Label>Border radius</Label>
+            <div>
+              <button>0px</button>
+              <button>4px</button>
+            </div>
           </Card>
 
           {/* <Card title="Homepage">

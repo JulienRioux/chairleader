@@ -8,7 +8,7 @@ import {
 
 export const lightTheme: DefaultTheme = {
   color: {
-    primary: '#00a481',
+    primary: '#F2BD27',
     buttonText: primitives.white,
     ...lightThemeSharedColors,
   },
@@ -17,9 +17,9 @@ export const lightTheme: DefaultTheme = {
 
 export const darkTheme: DefaultTheme = {
   color: {
-    primary: '#14f195',
-    background: '#1b1f25',
-    buttonText: primitives.black,
+    primary: '#F2BD27',
+    background: '#1a1a1a',
+    buttonText: primitives.white,
     ...darkThemeSharedColors,
   },
   ...sharedStyles,
