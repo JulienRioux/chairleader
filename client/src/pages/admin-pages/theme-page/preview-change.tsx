@@ -86,6 +86,7 @@ export const PreviewChange = ({
   logoImgSrc = '',
   homepageImgSrc = '',
   themeColor = '',
+  borderRadius = '',
 }) => {
   const storeLink = useStoreLink();
 
@@ -93,7 +94,7 @@ export const PreviewChange = ({
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      const newUrl = `${storeLink}/inventory/?homepage_title=${title}&homepage_sub_title=${subTitle}&homepage_hero_img=${homepageImgSrc}&override_theme_color=${themeColor}&preview_store_name=${storeName}&preview_store_logo=${logoImgSrc}&override-hide-app=true`;
+      const newUrl = `${storeLink}/inventory/?homepage_title=${title}&homepage_sub_title=${subTitle}&homepage_hero_img=${homepageImgSrc}&override_theme_color=${themeColor}&preview_store_name=${storeName}&preview_store_logo=${logoImgSrc}&override_border_radius=${borderRadius}&override-hide-app=true`;
 
       if (newUrl !== iframeUrl) {
         setIframeUrl(newUrl);
@@ -110,6 +111,7 @@ export const PreviewChange = ({
     subTitle,
     themeColor,
     title,
+    borderRadius,
   ]);
 
   return (
