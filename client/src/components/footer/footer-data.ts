@@ -29,6 +29,10 @@ export const defaultFooterData = [
   {
     content: [
       {
+        href: 'https://vanilla-death-2ff.notion.site/How-can-we-help-you-cb6fd3f0dcd947f68a0edf7c5ce9a98a',
+        title: 'FAQ',
+      },
+      {
         href: 'https://vanilla-death-2ff.notion.site/Job-at-Chairleader-xyz-88f18c99bada46c3b3f98dc571a1f531',
         title: 'Jobs',
       },
@@ -37,10 +41,6 @@ export const defaultFooterData = [
         title: 'Investors',
       },
       { href: 'mailto:hello@chairleader.xyz', title: 'Contact' },
-      {
-        href: 'https://vanilla-death-2ff.notion.site/Platform-onboarding-390b6774ff7146d5a758aacb196ac3c8',
-        title: 'Ressources',
-      },
       {
         href: 'https://chairleader.canny.io/',
         title: 'Send feedback',

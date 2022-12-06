@@ -181,8 +181,9 @@ const fixUsdcDecimal = (amount: any) =>
   typeof amount === 'number' ? Number(amount?.toFixed(6)) : 0;
 
 const DATE_RANGE_OPTIONS = [
-  { value: '7', label: 'Last 7 days' },
   { value: '30', label: 'Last 30 days' },
+  { value: '14', label: 'Last 14 days' },
+  { value: '7', label: 'Last 7 days' },
 ];
 
 const DATASET_OPTIONS = [
@@ -207,7 +208,7 @@ const SHOW_DOLLAR_SIGN_DATASET = [
 ];
 
 const Chart = () => {
-  const [numOfDays, setNumOfDays] = useState('7');
+  const [numOfDays, setNumOfDays] = useState('30');
   const [dataset, setDataset] = useState('totalWithSaleTax');
   const { data, loading } = useQuery(GET_INVOICES_BY_STORE_ID, {
     notifyOnNetworkStatusChange: true,

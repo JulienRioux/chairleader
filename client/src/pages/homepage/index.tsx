@@ -163,6 +163,7 @@ const VideoWrapper = styled.div`
 const BannerVideoWrapper = styled.div`
   max-width: 800px;
   margin: 0 auto;
+  width: 100%;
 `;
 
 const HeroImg = styled.img`
@@ -350,6 +351,13 @@ const ItemWrapper = styled.div`
 const PresentationTitle = styled.h3`
   font-size: 36px;
   margin-bottom: 16px;
+`;
+
+const VideoIframe = styled.iframe`
+  border-radius: ${(p) => p.theme.borderRadius.default};
+  background: ${(p) => p.theme.color.text};
+  width: 100%;
+  aspect-ratio: 16 / 9;
 `;
 
 const PresentationItem = ({
@@ -1036,7 +1044,16 @@ export const Homepage = () => {
 
                 <BannerVideoWrapper>
                   <MotionDiv delay={0.2}>
-                    <Video src={videoSrc} poster={videoPosterSrc} />
+                    <VideoIframe
+                      // width="560"
+                      // height="315"
+                      src="https://www.youtube.com/embed/J1KipsDXC8w"
+                      title="YouTube video player"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></VideoIframe>
+                    {/* <Video src={videoSrc} poster={videoPosterSrc} /> */}
                   </MotionDiv>
                 </BannerVideoWrapper>
               </Banner>
