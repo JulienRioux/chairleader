@@ -616,6 +616,13 @@ const Description = styled.p`
   color: ${(p) => p.theme.color.lightText};
 `;
 
+const decodeURIComponentSafe = (s: string) => {
+  if (!s) {
+    return s;
+  }
+  return decodeURIComponent(s.replace(/%(?![0-9][0-9a-fA-F]+)/g, '%25'));
+};
+
 const NewStoreBannerUi = () => {
   const { store, isLoading } = useStore();
 
@@ -629,21 +636,24 @@ const NewStoreBannerUi = () => {
   useEffect(() => {
     const previewStoreName = searchParams.get('preview_store_name');
     if (previewStoreName) {
-      setStoreName(decodeURIComponent(previewStoreName));
+      setStoreName(decodeURIComponentSafe(previewStoreName));
     }
     const homepageTitle = searchParams.get('homepage_title');
     if (homepageTitle) {
-      setTitle(decodeURIComponent(homepageTitle));
+      // ??? 👟 Multiverse next gen sneakers ☁️ Bubble air comfort 💚 100% Vegan
+      setTitle(decodeURIComponentSafe(homepageTitle));
     }
     const homepageHeroImg = searchParams.get('homepage_hero_img');
     if (homepageHeroImg) {
-      setImgSrc(decodeURIComponent(homepageHeroImg).replaceAll(' ', '+'));
+      setImgSrc(decodeURIComponentSafe(homepageHeroImg).replaceAll(' ', '+'));
     }
     const previewStoreLogo = searchParams
       .get('preview_store_logo')
       ?.replaceAll(' ', '+');
     if (previewStoreLogo) {
-      setStoreLogo(decodeURIComponent(previewStoreLogo).replaceAll(' ', '+'));
+      setStoreLogo(
+        decodeURIComponentSafe(previewStoreLogo).replaceAll(' ', '+')
+      );
     }
   }, [searchParams]);
 
