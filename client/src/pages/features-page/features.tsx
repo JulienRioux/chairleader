@@ -17,6 +17,7 @@ import commingSoon from 'assets/features/comming-soon.png';
 import inAppNft from 'assets/features/in-app-nft.png';
 import shippingSetup from 'assets/features/shipping-setup.png';
 import ressources from 'assets/features/ressources.png';
+import support from 'assets/features/support.png';
 
 import background1 from './background/background-1.png';
 import background2 from './background/background-2.png';
@@ -44,7 +45,7 @@ const web3Features = [
   {
     title: "Pay only when you're selling",
     description:
-      'Access a complete ecommerce platform with simple, pay-as-you-go pricing. 1% fee per transaction.',
+      'Access a complete e-commerce platform with simple, pay-as-you-go pricing. 1% fee per transaction.',
     imgSrc: fees,
   },
   {
@@ -66,7 +67,8 @@ const web3Features = [
           Metaplex
           <Icon style={{ margin: '0 0 4px 4px' }} name="launch" />
         </a>
-        . From accept cryptocurrency payments, NFTs token gating, and many more!
+        . From accepting cryptocurrency payments, NFTs token gating, and many
+        more!
       </>
     ),
     imgSrc: solanaMetaplex,
@@ -77,7 +79,7 @@ const uiFeatures = [
   {
     title: 'One-Time-Password',
     description:
-      'Sign up & log in with one click. Authenticate to our platform on an ongoing basis via one-click, passwordless login. With Email Magic Links.',
+      'Sign up & log in with one click. Authenticate to our platform on an ongoing basis via one-click, passwordless login. With email magic links.',
     imgSrc: otp,
   },
   {
@@ -88,13 +90,13 @@ const uiFeatures = [
   {
     title: 'Multi-wallet connection',
     description:
-      'Let your user connects with their favorites wallets.including Phantom, Solflare, Torus, Glow and Slope.',
+      'Let your user connects with their favorite wallets, including Phantom, Solflare, Torus, Glow, and Slope.',
     imgSrc: multiWallet,
   },
   {
     title: 'Theme customization',
     description:
-      'Start your online store has never been more easy. Customize your theme with ease, from colors & images to social icons.',
+      'Starting your online store has never been easier. Customize your theme with ease, from colors & images to social icons.',
     imgSrc: themeCustom,
   },
   {
@@ -102,13 +104,13 @@ const uiFeatures = [
     description: (
       <div>
         <div style={{ marginBottom: '20px' }}>
-          At Chairleader, we thrive to see you succeeding. That's why we're
-          developping constantly building tools that will help you build your
+          At Chairleader, we thrive to see you succeed. That's why we're
+          developing constantly building tools that will help you build your
           business.
         </div>
 
         <UnstyledExternalLink
-          href="https://vanilla-death-2ff.notion.site/Platform-onboarding-390b6774ff7146d5a758aacb196ac3c8"
+          href="https://vanilla-death-2ff.notion.site/How-can-we-help-you-cb6fd3f0dcd947f68a0edf7c5ce9a98a"
           target="_blank"
         >
           <Button>
@@ -120,13 +122,19 @@ const uiFeatures = [
     ),
     imgSrc: ressources,
   },
+  {
+    title: 'Live support when you need it',
+    description:
+      'Our support team will help you whenever you need us to help you grow your business.',
+    imgSrc: support,
+  },
 ];
 
 const storeFeatures = [
   {
     title: 'Manage inventory',
     description:
-      'Save time and money with tools that help you manage, monitor and move your inventory.',
+      'Save time and money with tools that help you manage, monitor, and move your inventory.',
     imgSrc: manageInventory,
   },
   {
@@ -163,7 +171,7 @@ export const featuresList = [
   {
     title: 'Improve customers engagement with web3',
     description:
-      'Use token gating, loyalties programs, and NFTs membership to grow your business and brand by unlocking superior customer experience.',
+      'Use token gating, loyalty programs, and NFTs membership to grow your business and brand by unlocking superior customer experience.',
     features: web3Features,
     backgroundImage: background1,
   },
