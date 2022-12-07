@@ -13,7 +13,7 @@ export const defaultFooterData = [
   {
     content: [
       { href: 'https://twitter.com/chairleader_app', title: 'Twitter' },
-      { href: 'https://discord.gg/sbTcWHkKBN', title: 'Discord' },
+      // { href: 'https://discord.gg/sbTcWHkKBN', title: 'Discord' },
       { href: 'https://medium.com/chairleader-xyz', title: 'Blog' },
     ],
     title: 'Social',
@@ -63,7 +63,7 @@ export const storeFooterData = [
   {
     content: [
       { href: 'https://twitter.com/chairleader_app', title: 'Twitter' },
-      { href: 'https://discord.gg/sbTcWHkKBN', title: 'Discord' },
+      // { href: 'https://discord.gg/sbTcWHkKBN', title: 'Discord' },
       { href: 'https://medium.com/chairleader-xyz', title: 'Blog' },
     ],
     title: 'Social',
