@@ -425,7 +425,7 @@ const featuredStore = [
     name: 'Official merch store',
     subdomain: 'store',
     subText:
-      'Visit our official store built on Chairleader.xyz to get some swag and merch. Collect NFT membership to unlock exclusive products and rewards 🚀',
+      'Visit our official store built on Chairleader.xyz to get some swag and merch. Collect NFT memberships to unlock exclusive products and rewards 🚀',
     // img: 'https://dev-alt-gate-products.s3.amazonaws.com/products/63503ffd1dc49f88ee9b08f3-cc986c65-7004-444b-9812-81675ac912e9.png',
     img: merchStoreSrc,
   },
@@ -598,10 +598,10 @@ const StepsExplained = () => {
     <StepsExplainedWrapper>
       <SingleStep>
         <StepTitle $isDarkTheme={isDarkTheme}>
-          <span>1</span> Customise a theme
+          <span>1</span> Customize a theme
         </StepTitle>
         <StepText>
-          Customize your store. No design experience or programming skills
+          Customize your store. No design experience or programming skills are
           required.
         </StepText>
       </SingleStep>
@@ -612,7 +612,7 @@ const StepsExplained = () => {
         </StepTitle>
         <StepText>
           Add your products to the shop. List your eye-catching products with
-          the best photos, price and descriptions.
+          the best photos, prices, and descriptions.
         </StepText>
       </SingleStep>
 
