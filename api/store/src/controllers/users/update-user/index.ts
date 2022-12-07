@@ -54,12 +54,13 @@ export const updateUser = async ({
 
   let homepageHeroImgSrc = '';
 
+  // TODO: Clean this up...
   // Upload the hero image
-  if (heroImage) {
-    try {
-      // Make sure to remove the image
-      const notUpdatedUser = await UserModel.findById(id);
+  try {
+    // Make sure to remove the image
+    const notUpdatedUser = await UserModel.findById(id);
 
+    if (heroImage) {
       //  Save the image to S3 cloud storage
       const uploadedImage = await uploadImageToCloud({
         bucketFolderName: BUCKET_FOLDER_NAME.STORE_HOMEPAGE,
@@ -70,12 +71,14 @@ export const updateUser = async ({
       homepageHeroImgSrc = uploadedImage.location;
 
       // Delete the previous image
-      if (notUpdatedUser?.image) {
-        deleteImagesFromCloud([notUpdatedUser.image]);
+      if (notUpdatedUser?.homepage?.heroImage) {
+        deleteImagesFromCloud([notUpdatedUser?.homepage?.heroImage]);
       }
-    } catch (err) {
-      Logger.error(err);
+    } else {
+      homepageHeroImgSrc = notUpdatedUser?.homepage?.heroImage ?? '';
     }
+  } catch (err) {
+    Logger.error(err);
   }
 
   const user = await UserModel.findByIdAndUpdate(
