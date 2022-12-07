@@ -835,14 +835,14 @@ export const AppLogoLink = () => (
 
 const TextBanner = () => (
   <InfiniteTextBanner>
-    <div>We're live on Product Hunt! 🚀</div>
     <div>We're live on Product Hunt! 🎉</div>
-    <div>We're live on Product Hunt! 🚀</div>
+    <div>We look forward to your feedback and reviews 🚀</div>
     <div>We're live on Product Hunt! 🤘</div>
-    <div>We're live on Product Hunt! 🚀</div>
+    <div>We look forward to your feedback and reviews 🚀</div>
     <div>We're live on Product Hunt! 🥳</div>
-    <div>We're live on Product Hunt! 🚀</div>
+    <div>We look forward to your feedback and reviews 🚀</div>
     <div>We're live on Product Hunt! 🙌</div>
+    <div>We look forward to your feedback and reviews 🚀</div>
   </InfiniteTextBanner>
 );
 
