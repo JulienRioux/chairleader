@@ -1038,7 +1038,7 @@ export const Homepage = () => {
               <Banner>
                 <MotionDiv>
                   <BannerHeader>
-                    Bringing businesses to new heights with web3
+                    Setting NFT memberships in less than 2 minutes 🤯
                   </BannerHeader>
                 </MotionDiv>
 
@@ -1047,7 +1047,7 @@ export const Homepage = () => {
                     <VideoIframe
                       // width="560"
                       // height="315"
-                      src="https://www.youtube.com/embed/J1KipsDXC8w"
+                      src="https://www.youtube.com/embed/1DSMKghws4Q"
                       title="YouTube video player"
                       frameBorder="0"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
