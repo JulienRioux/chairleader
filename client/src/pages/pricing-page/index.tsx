@@ -90,7 +90,7 @@ export const PricingPage = () => {
           <h1>Pricing</h1>
 
           <Par>
-            Access a complete payments platform with simple, pay-as-you-go
+            Access a complete e-commerce platform with simple, pay-as-you-go
             pricing.
           </Par>
         </div>
