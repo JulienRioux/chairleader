@@ -118,7 +118,7 @@ export const TokenGating = () => {
         if (files[0]) {
           // Resize the image and store the image
           setResizeImgIsLoading(true);
-          const resizedFile = await resizeFileImg(files[0], 400);
+          const resizedFile = await resizeFileImg(files[0], 800);
           if (resizedFile) {
             setImageFile(resizedFile);
           }

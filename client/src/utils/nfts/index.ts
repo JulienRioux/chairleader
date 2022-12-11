@@ -11,11 +11,13 @@ import {
   keypairIdentity,
   Metadata,
   Metaplex,
+  MetaplexPlugin,
   Nft,
   NftOriginalEdition,
 } from '@metaplex-foundation/js';
 import bs58 from 'bs58';
-import { IS_DEV } from 'configs';
+import { NFT_FILE_UPLOADER, IFILE_UPLOADER, IS_DEV } from 'configs';
+import { nftStorage } from '@metaplex-foundation/js-plugin-nft-storage';
 
 export const getNftMetadata = async (
   nftAddress: string,
@@ -119,19 +121,30 @@ export const getAdminMetaplex = () => {
 
   const connection = new Connection(CLUSTER_ENDPOINT);
 
-  const BUNDLR_STORAGE = IS_DEV
-    ? bundlrStorage({
-        address: 'https://devnet.bundlr.network',
-        providerUrl: CLUSTER_ENDPOINT,
-        timeout: 60000,
-      })
-    : bundlrStorage();
+  if (NFT_FILE_UPLOADER === IFILE_UPLOADER.NFT_STORAGE) {
+    const metaplex = Metaplex.make(connection)
+      .use(keypairIdentity(myKeyPair))
+      .use(
+        nftStorage({
+          token: process.env.REACT_APP_NFT_STORAGE_API_KEY,
+        }) as unknown as MetaplexPlugin
+      );
+    return metaplex;
+  } else {
+    const BUNDLR_STORAGE = IS_DEV
+      ? bundlrStorage({
+          address: 'https://devnet.bundlr.network',
+          providerUrl: CLUSTER_ENDPOINT,
+          timeout: 60000,
+        })
+      : bundlrStorage();
 
-  const metaplex = Metaplex.make(connection)
-    .use(keypairIdentity(myKeyPair))
-    .use(BUNDLR_STORAGE);
+    const metaplex = Metaplex.make(connection)
+      .use(keypairIdentity(myKeyPair))
+      .use(BUNDLR_STORAGE);
 
-  return metaplex;
+    return metaplex;
+  }
 };
 
 export const printNewNftEditionWithoutFees = async ({

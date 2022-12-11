@@ -110,148 +110,148 @@ export const TransactionsProvider: FC<TransactionsProviderProps> = ({
     };
   }, [connection, associatedToken, recipient]);
 
-  // When the signatures change, poll and update the transactions
-  useEffect(() => {
-    if (!signatures.length) return;
-    let changed = false;
+  // // When the signatures change, poll and update the transactions
+  // useEffect(() => {
+  //   if (!signatures.length) return;
+  //   let changed = false;
 
-    const run = async () => {
-      let parsedTransactions: (ParsedTransactionWithMeta | null)[],
-        signatureStatuses: RpcResponseAndContext<(SignatureStatus | null)[]>;
-      try {
-        setLoading(true);
+  //   const run = async () => {
+  //     let parsedTransactions: (ParsedTransactionWithMeta | null)[],
+  //       signatureStatuses: RpcResponseAndContext<(SignatureStatus | null)[]>;
+  //     try {
+  //       setLoading(true);
 
-        [parsedTransactions, signatureStatuses] = await Promise.all([
-          connection.getParsedTransactions(signatures),
-          connection.getSignatureStatuses(signatures, {
-            searchTransactionHistory: true,
-          }),
-        ]);
-      } catch (error) {
-        if (changed) return;
-        console.error(error);
-        return;
-      } finally {
-        setLoading(false);
-      }
-      if (changed) return;
+  //       [parsedTransactions, signatureStatuses] = await Promise.all([
+  //         connection.getParsedTransactions(signatures),
+  //         connection.getSignatureStatuses(signatures, {
+  //           searchTransactionHistory: true,
+  //         }),
+  //       ]);
+  //     } catch (error) {
+  //       if (changed) return;
+  //       console.error(error);
+  //       return;
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //     if (changed) return;
 
-      setTransactions(
-        signatures
-          .map((signature, signatureIndex): Transaction | undefined => {
-            const parsedTransaction = parsedTransactions[signatureIndex];
-            const signatureStatus = signatureStatuses.value[signatureIndex];
-            if (!parsedTransaction?.meta || !signatureStatus) return;
+  //     setTransactions(
+  //       signatures
+  //         .map((signature, signatureIndex): Transaction | undefined => {
+  //           const parsedTransaction = parsedTransactions[signatureIndex];
+  //           const signatureStatus = signatureStatuses.value[signatureIndex];
+  //           if (!parsedTransaction?.meta || !signatureStatus) return;
 
-            const timestamp = parsedTransaction.blockTime;
-            const error = parsedTransaction.meta.err;
-            const status = signatureStatus.confirmationStatus;
-            if (!timestamp || !status) return;
+  //           const timestamp = parsedTransaction.blockTime;
+  //           const error = parsedTransaction.meta.err;
+  //           const status = signatureStatus.confirmationStatus;
+  //           if (!timestamp || !status) return;
 
-            if (parsedTransaction.transaction.message.instructions.length !== 1)
-              return;
-            const instruction =
-              parsedTransaction.transaction.message.instructions[0];
-            if (!('program' in instruction)) return;
-            const program = instruction.program;
-            const type = instruction.parsed?.type;
-            const info = instruction.parsed.info;
+  //           if (parsedTransaction.transaction.message.instructions.length !== 1)
+  //             return;
+  //           const instruction =
+  //             parsedTransaction.transaction.message.instructions[0];
+  //           if (!('program' in instruction)) return;
+  //           const program = instruction.program;
+  //           const type = instruction.parsed?.type;
+  //           const info = instruction.parsed.info;
 
-            let preAmount: BigNumber, postAmount: BigNumber;
-            if (!associatedToken) {
-              // Include only SystemProgram.transfer instructions
-              if (!(program === 'system' && type === 'transfer')) return;
+  //           let preAmount: BigNumber, postAmount: BigNumber;
+  //           if (!associatedToken) {
+  //             // Include only SystemProgram.transfer instructions
+  //             if (!(program === 'system' && type === 'transfer')) return;
 
-              // Include only transfers to the recipient
-              if (info?.destination !== recipient.toBase58()) return;
+  //             // Include only transfers to the recipient
+  //             if (info?.destination !== recipient.toBase58()) return;
 
-              // Exclude self-transfers
-              if (info.source === recipient.toBase58()) return;
+  //             // Exclude self-transfers
+  //             if (info.source === recipient.toBase58()) return;
 
-              const accountIndex =
-                parsedTransaction.transaction.message.accountKeys.findIndex(
-                  ({ pubkey }) => pubkey.equals(recipient)
-                );
-              if (accountIndex === -1) return;
+  //             const accountIndex =
+  //               parsedTransaction.transaction.message.accountKeys.findIndex(
+  //                 ({ pubkey }) => pubkey.equals(recipient)
+  //               );
+  //             if (accountIndex === -1) return;
 
-              const preBalance =
-                parsedTransaction.meta.preBalances[accountIndex];
-              const postBalance =
-                parsedTransaction.meta.postBalances[accountIndex];
+  //             const preBalance =
+  //               parsedTransaction.meta.preBalances[accountIndex];
+  //             const postBalance =
+  //               parsedTransaction.meta.postBalances[accountIndex];
 
-              preAmount = new BigNumber(preBalance).div(LAMPORTS_PER_SOL);
-              postAmount = new BigNumber(postBalance).div(LAMPORTS_PER_SOL);
-            } else {
-              // Include only TokenProgram.transfer / TokenProgram.transferChecked instructions
-              if (
-                !(
-                  program === 'spl-token' &&
-                  (type === 'transfer' || type === 'transferChecked')
-                )
-              )
-                return;
+  //             preAmount = new BigNumber(preBalance).div(LAMPORTS_PER_SOL);
+  //             postAmount = new BigNumber(postBalance).div(LAMPORTS_PER_SOL);
+  //           } else {
+  //             // Include only TokenProgram.transfer / TokenProgram.transferChecked instructions
+  //             if (
+  //               !(
+  //                 program === 'spl-token' &&
+  //                 (type === 'transfer' || type === 'transferChecked')
+  //               )
+  //             )
+  //               return;
 
-              // Include only transfers to the recipient ATA
-              if (info?.destination !== associatedToken.toBase58()) return;
+  //             // Include only transfers to the recipient ATA
+  //             if (info?.destination !== associatedToken.toBase58()) return;
 
-              // Exclude self-transfers
-              if (info.source === associatedToken.toBase58()) return;
+  //             // Exclude self-transfers
+  //             if (info.source === associatedToken.toBase58()) return;
 
-              const accountIndex =
-                parsedTransaction.transaction.message.accountKeys.findIndex(
-                  ({ pubkey }) => pubkey.equals(associatedToken)
-                );
-              if (accountIndex === -1) return;
+  //             const accountIndex =
+  //               parsedTransaction.transaction.message.accountKeys.findIndex(
+  //                 ({ pubkey }) => pubkey.equals(associatedToken)
+  //               );
+  //             if (accountIndex === -1) return;
 
-              const preBalance = parsedTransaction.meta.preTokenBalances?.find(
-                (x) => x.accountIndex === accountIndex
-              );
-              if (!preBalance?.uiTokenAmount.uiAmountString) return;
+  //             const preBalance = parsedTransaction.meta.preTokenBalances?.find(
+  //               (x) => x.accountIndex === accountIndex
+  //             );
+  //             if (!preBalance?.uiTokenAmount.uiAmountString) return;
 
-              const postBalance =
-                parsedTransaction.meta.postTokenBalances?.find(
-                  (x) => x.accountIndex === accountIndex
-                );
-              if (!postBalance?.uiTokenAmount.uiAmountString) return;
+  //             const postBalance =
+  //               parsedTransaction.meta.postTokenBalances?.find(
+  //                 (x) => x.accountIndex === accountIndex
+  //               );
+  //             if (!postBalance?.uiTokenAmount.uiAmountString) return;
 
-              preAmount = new BigNumber(
-                preBalance.uiTokenAmount.uiAmountString
-              );
-              postAmount = new BigNumber(
-                postBalance.uiTokenAmount.uiAmountString
-              );
-            }
+  //             preAmount = new BigNumber(
+  //               preBalance.uiTokenAmount.uiAmountString
+  //             );
+  //             postAmount = new BigNumber(
+  //               postBalance.uiTokenAmount.uiAmountString
+  //             );
+  //           }
 
-            // Exclude negative amounts
-            if (postAmount.lt(preAmount)) return;
+  //           // Exclude negative amounts
+  //           if (postAmount.lt(preAmount)) return;
 
-            const amount = postAmount.minus(preAmount).toString();
-            const confirmations =
-              status === 'finalized'
-                ? MAX_CONFIRMATIONS
-                : ((signatureStatus.confirmations || 0) as Confirmations);
+  //           const amount = postAmount.minus(preAmount).toString();
+  //           const confirmations =
+  //             status === 'finalized'
+  //               ? MAX_CONFIRMATIONS
+  //               : ((signatureStatus.confirmations || 0) as Confirmations);
 
-            return {
-              signature,
-              amount,
-              timestamp,
-              error,
-              status,
-              confirmations,
-            };
-          })
-          .filter((transaction): transaction is Transaction => !!transaction)
-      );
-    };
+  //           return {
+  //             signature,
+  //             amount,
+  //             timestamp,
+  //             error,
+  //             status,
+  //             confirmations,
+  //           };
+  //         })
+  //         .filter((transaction): transaction is Transaction => !!transaction)
+  //     );
+  //   };
 
-    const interval = setInterval(run, pollInterval);
-    void run();
+  //   const interval = setInterval(run, pollInterval);
+  //   void run();
 
-    return () => {
-      changed = true;
-      clearInterval(interval);
-    };
-  }, [signatures, connection, associatedToken, recipient, pollInterval]);
+  //   return () => {
+  //     changed = true;
+  //     clearInterval(interval);
+  //   };
+  // }, [signatures, connection, associatedToken, recipient, pollInterval]);
 
   return (
     <TransactionsContext.Provider value={{ transactions, loading }}>
