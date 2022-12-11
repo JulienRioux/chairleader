@@ -27,6 +27,12 @@ const SaleTaxWrapper = styled.div`
   position: relative;
 `;
 
+const CreateWalletLink = styled.a`
+  padding-bottom: 20px;
+  display: block;
+  font-size: 14px;
+`;
+
 const PercentIconWrapper = styled.div`
   position: absolute;
   right: 12px;
@@ -294,14 +300,21 @@ export const UpdateUserForm = ({ isCompletingSignup = false }) => {
         />
 
         <Input
-          label="Wallet address"
+          label="Solana wallet address"
           value={walletAddress}
           onChange={handleChange}
-          placeholder="Enter your wallet address"
+          placeholder="Enter your Solana wallet address"
           required
           name="walletAddress"
           error={walletAddressError}
         />
+        <CreateWalletLink
+          href="https://phantom.app"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Don't have a Solana wallet? Click to create one <Icon name="launch" />
+        </CreateWalletLink>
 
         {SHOW_MULTIPLE_CURRENCY && (
           <Select

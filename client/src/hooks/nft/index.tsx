@@ -172,11 +172,14 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
         productsUnlocked: string[];
         nftAddress: string;
       }) => {
-        await asyncForEach(productsUnlocked, async (productId) => {
-          const printedVersions = await getPrintedVersionsFromMasterAddress(
-            nftAddress
-          );
+        const printedVersions = await getPrintedVersionsFromMasterAddress(
+          nftAddress
+        );
+        // Creating the master mapping to the printed versions
+        masterToPrintedEditionsMap[nftAddress] = printedVersions;
 
+        // Checking token gating
+        await asyncForEach(productsUnlocked, async (productId) => {
           if (!productsLockedMap[productId]) {
             productsLockedMap[productId] = [...printedVersions];
           } else {
@@ -185,9 +188,6 @@ export const NftProvider: React.FC<IBaseProps> = ({ children }) => {
               ...printedVersions,
             ];
           }
-
-          // Creating the master mapping to the printed versions
-          masterToPrintedEditionsMap[nftAddress] = printedVersions;
 
           //   Creating the nft products unlocked mapping
           nftLockMap[nftAddress] = productsUnlocked;

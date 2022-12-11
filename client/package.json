@@ -5,6 +5,7 @@
   "dependencies": {
     "@apollo/client": "^3.6.6",
     "@metaplex-foundation/js": "^0.15.0",
+    "@metaplex-foundation/js-plugin-nft-storage": "^0.17.9",
     "@sanity/block-content-to-react": "^3.0.0",
     "@sanity/client": "^3.4.1",
     "@sanity/image-url": "^1.0.1",

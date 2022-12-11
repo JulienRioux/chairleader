@@ -380,12 +380,14 @@ export const TokenGatingNft = ({
     } catch (err) {
       Logger.error(err);
       setPrintNftIsLoading(false);
+      message.error();
     }
   }, [
     address,
+    price,
+    userBalance,
     metaplex,
     makePayment,
-    price,
     saveTransactionInvoice,
     loadNftData,
     refreshEditionsPrintedList,

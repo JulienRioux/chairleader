@@ -22,3 +22,11 @@ export const IS_DEV = !IS_PROD;
 export const SHOW_MULTIPLE_CURRENCY = false;
 export const USE_PAYMENT_LINK = false;
 export const MAX_PRODUCTS = 50;
+
+export enum IFILE_UPLOADER {
+  BUNDLR = 'BUNDLR',
+  NFT_STORAGE = 'NFT_STORAGE',
+  AWS = 'AWS',
+}
+
+export const NFT_FILE_UPLOADER = process.env.REACT_APP_NFT_FILE_UPLOADER;
