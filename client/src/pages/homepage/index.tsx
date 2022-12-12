@@ -781,8 +781,8 @@ const RollingBannerContent = styled(UnstyledExternalLink)`
   overflow: hidden;
   display: flex;
   width: 100%;
-  background: yellow;
-  color: #000;
+  background: #8a10d4;
+  color: #fff;
   white-space: nowrap;
   overflow: hidden;
   padding: 8px 0;
@@ -835,13 +835,13 @@ export const AppLogoLink = () => (
 
 const TextBanner = () => (
   <InfiniteTextBanner>
-    <div>We're live on Product Hunt! 🎉</div>
+    <div>We're live on Smoothie! 🎉</div>
     <div>We look forward to your feedback and reviews 🚀</div>
-    <div>We're live on Product Hunt! 🤘</div>
+    <div>We're live on Smoothie! 🤘</div>
     <div>We look forward to your feedback and reviews 🚀</div>
-    <div>We're live on Product Hunt! 🥳</div>
+    <div>We're live on Smoothie! 🥳</div>
     <div>We look forward to your feedback and reviews 🚀</div>
-    <div>We're live on Product Hunt! 🙌</div>
+    <div>We're live on Smoothie! 🙌</div>
     <div>We look forward to your feedback and reviews 🚀</div>
   </InfiniteTextBanner>
 );
@@ -862,7 +862,7 @@ export const HomepageTopNav = () => {
     >
       {PH_IS_LIVE && (
         <RollingBannerContent
-          href="https://www.producthunt.com/posts/chairleader"
+          href="https://smoothie.so/project/kgy5qzy0"
           target="_blank"
         >
           <TextBanner />
