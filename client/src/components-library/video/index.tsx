@@ -1,21 +1,30 @@
 import { UnstyledButton } from 'components-library/button';
 import { Icon } from 'components-library/icon';
-import { useCallback, useRef, useState } from 'react';
-import styled from 'styled-components';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import styled, { css } from 'styled-components';
+import { fadeIn, fadeOut, slideInBottom } from 'utils/keyframes';
 
-const ControlsBtn = styled(UnstyledButton)<{ $playing: boolean }>`
-  color: ${(p) => p.theme.color.buttonText};
+export const ControlsBtn = styled(UnstyledButton)`
   display: flex;
   justify-content: center;
   align-items: center;
   background: transparent;
   font-size: 60px;
-  opacity: ${(p) => (p.$playing ? 0 : 1)};
   transition: 0.2s;
   background: ${(p) => p.theme.color.primary};
   border-radius: 50%;
   box-shadow: 0 8px 10px 4px ${(p) => p.theme.color.black}11;
   padding: 8px;
+  box-shadow: 0 0 0 12px ${(p) => p.theme.color.primary}33;
+  color: ${(p) => p.theme.color.buttonText};
+
+  opacity: 0;
+  animation: 0.4s 1s ${slideInBottom} forwards;
+
+  @media (max-width: 800px) {
+    font-size: 40px;
+    box-shadow: 0 0 0 8px ${(p) => p.theme.color.primary}33;
+  }
 `;
 
 const FullscreensBtn = styled(UnstyledButton)<{ $playing: boolean }>`
@@ -105,7 +114,7 @@ export const Video = ({ src, poster }: { src: string; poster?: string }) => {
         <source src={src} type="video/mp4" />
       </VideoComponent>
       <ControlsBtnWrapper>
-        <ControlsBtn $playing={playing}>
+        <ControlsBtn>
           <Icon name={playing ? 'pause' : 'play_arrow'} />
         </ControlsBtn>
 
@@ -114,5 +123,142 @@ export const Video = ({ src, poster }: { src: string; poster?: string }) => {
         </FullscreensBtn>
       </ControlsBtnWrapper>
     </VideoWrapper>
+  );
+};
+
+const VideoIframe = styled.iframe`
+  border-radius: ${(p) => p.theme.borderRadius.default};
+  background: ${(p) => p.theme.color.text};
+  width: 100%;
+  max-width: 1200px;
+  aspect-ratio: 16 / 9;
+  z-index: 99;
+  margin: 8px;
+`;
+
+const YoutubeModalWrapper = styled.div``;
+
+const CloseButton = styled(UnstyledButton)`
+  font-size: 32px;
+  transition: 0.2s;
+  background: ${(p) => p.theme.color.buttonText}22;
+  color: ${(p) => p.theme.color.buttonText};
+  border-radius: 50%;
+  padding: 8px;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 99999;
+
+  @media (max-width: 800px) {
+    font-size: 28px;
+    padding: 4px;
+  }
+`;
+
+const VideoIframeWrapper = styled.div<{ isClosing: boolean }>`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  animation: 0.4s ${fadeIn} forwards;
+
+  ${(p) =>
+    p.isClosing &&
+    css`
+      animation: 0.4s ${fadeOut} forwards;
+    `}
+
+  @media (max-width: 800px) {
+    backdrop-filter: blur(4px);
+    background: ${(p) => p.theme.color.black}77;
+  }
+`;
+
+const Backdrop = styled.div`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: ${(p) => p.theme.color.black}bb;
+
+  @media (max-width: 800px) {
+    backdrop-filter: blur(4px);
+    background: ${(p) => p.theme.color.black}77;
+  }
+`;
+
+export const YoutubeModal = () => {
+  const [isFullScreen, setIsFullScreen] = useState(false);
+  const [fullScreenClosing, setFullScreenIsClosing] = useState(false);
+
+  const handleClose = useCallback(() => {
+    setTimeout(() => {
+      setIsFullScreen(false);
+      setFullScreenIsClosing(false);
+    }, 400);
+    setFullScreenIsClosing(true);
+  }, []);
+
+  return (
+    <>
+      <ControlsBtnWrapper onClick={() => setIsFullScreen(true)}>
+        <ControlsBtn>
+          <Icon name="play_arrow" />
+        </ControlsBtn>
+      </ControlsBtnWrapper>
+
+      {isFullScreen && (
+        <YoutubeModalWrapper>
+          <YoutubeModalVideo
+            onClose={handleClose}
+            fullScreenIsClosing={fullScreenClosing}
+          />
+        </YoutubeModalWrapper>
+      )}
+    </>
+  );
+};
+
+const YoutubeModalVideo = ({
+  onClose,
+  fullScreenIsClosing,
+}: {
+  onClose: () => void;
+  fullScreenIsClosing: boolean;
+}) => {
+  useEffect(() => {
+    // Stop scrolling when the modal open
+    document.body.style.overflow = 'hidden';
+
+    // Cleanup the body overflow style on unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
+
+  return (
+    <VideoIframeWrapper isClosing={fullScreenIsClosing}>
+      <Backdrop onClick={onClose} />
+
+      <VideoIframe
+        src="https://www.youtube.com/embed/1DSMKghws4Q"
+        title="YouTube video player"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      />
+
+      <CloseButton onClick={onClose}>
+        <Icon name="close" />
+      </CloseButton>
+    </VideoIframeWrapper>
   );
 };

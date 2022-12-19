@@ -33,7 +33,7 @@ const web3Features = [
   {
     title: 'Token gating and NFT membership',
     description:
-      'Create product Token Gating and NFT membership to create value for your community members.',
+      'Create product Token Gating and NFT membership to create value for your community members within a few minutes.',
     imgSrc: tokenGating,
   },
   {
