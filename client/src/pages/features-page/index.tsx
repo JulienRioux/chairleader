@@ -51,13 +51,14 @@ const FeatureImgWrapper = styled.div<{
   $isMobileImg?: boolean;
   $isActive?: boolean;
 }>`
-  background-image: url(${(p) => p.$backgroundImage});
+  /* background-image: url(${(p) => p.$backgroundImage}); */
+  background: ${(p) => p.theme.color.primary}11;
   background-size: cover;
   background-position: 50% 50%;
   border-radius: ${(p) => p.theme.borderRadius.default};
   aspect-ratio: 3 / 2;
   overflow: hidden;
-  border: 1px solid ${(p) => p.theme.color.lightGrey};
+  /* border: 1px solid ${(p) => p.theme.color.lightGrey}; */
 
   @media (max-width: 800px) {
     margin: 0 20px 20px;

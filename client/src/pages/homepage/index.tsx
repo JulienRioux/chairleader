@@ -1,15 +1,17 @@
 import {
   Button,
+  ControlsBtn,
   Icon,
   UnstyledButton,
   UnstyledExternalLink,
   UnstyledLink,
   Video,
+  YoutubeModal,
 } from 'components-library';
 import styled, { css, keyframes } from 'styled-components';
 import { routes } from 'utils';
 import { Footer } from 'components';
-import { APP_NAME, HIDE_APP, PH_IS_LIVE } from 'configs';
+import { APP_NAME, PH_IS_LIVE } from 'configs';
 import { useTheme } from 'hooks/theme';
 import { useAuth } from 'hooks/auth';
 import { useMediaQuery } from 'hooks/media-query';
@@ -17,6 +19,7 @@ import { ReactNode, useCallback, useState } from 'react';
 import { motion } from 'framer-motion';
 
 import videoSrc from 'assets/homepage/homepage-video.mp4';
+import videoImg from 'assets/homepage/video-img.png';
 import appLogoSrc from 'assets/app-logo.png';
 import appLogoSrcGif from 'assets/app-logo.gif';
 import appLogoSrcQuickGif from 'assets/app-logo-quick.gif';
@@ -32,21 +35,24 @@ import videoPosterSrc from 'assets/homepage/video-poster.png';
 import { useLocation } from 'react-router-dom';
 import { FeatureGroup, OtpWidget } from 'pages/features-page';
 import { featuresList } from 'pages/features-page/features';
+import { fadeIn, slideInBottom } from 'utils/keyframes';
 
 const HeroWrapper = styled.div`
   max-width: ${(p) => p.theme.layout.maxWidth};
-  margin: 0px auto 0;
+  margin: 100px auto;
   min-height: calc(100vh - 101px);
   gap: 20px;
-  display: flex;
-  align-items: center;
+  text-align: center;
+  /* display: flex;
+  align-items: center; */
 
   @media (max-width: 800px) {
-    width: 100%;
+    display: flex;
     flex-direction: column-reverse;
     align-items: center;
     justify-content: center;
     text-align: center;
+    margin: 0 auto;
   }
 `;
 
@@ -57,7 +63,7 @@ export const backgroundTextAnim = keyframes`
 `;
 
 const Header = styled.h1`
-  font-size: 70px;
+  font-size: 56px;
   margin-bottom: 40px;
   margin-top: 0;
 
@@ -67,7 +73,7 @@ const Header = styled.h1`
 `;
 
 const HeroPar = styled.p`
-  color: ${(p) => p.theme.color.lightText};
+  color: ${(p) => p.theme.color.text}66;
   font-size: 18px;
   margin: 0 0 24px;
   line-height: 1.6;
@@ -139,24 +145,21 @@ const LeftHero = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 60%;
+  max-width: 800px;
+  margin: 0 auto;
 
-  @media (max-width: 800px) {
-    width: 100%;
+  button {
+    min-width: 160px;
   }
 `;
 
-const VideoWrapper = styled.div`
+const VideoWrapper = styled(UnstyledButton)`
   position: relative;
-  padding-bottom: 50%;
-  height: 0;
-  width: 100%;
-  border-radius: ${(p) => p.theme.borderRadius.default};
-  overflow: hidden;
 
-  @media (max-width: 800px) {
-    width: 100%;
-    padding-bottom: 70%;
+  :hover {
+    ${ControlsBtn} {
+      transform: scale(1.1);
+    }
   }
 `;
 
@@ -168,17 +171,25 @@ const BannerVideoWrapper = styled.div`
 
 const HeroImg = styled.img`
   width: 90%;
-  margin-left: 10%;
   object-position: center;
   object-fit: cover;
   image-rendering: pixelated;
-  /* aspect-ratio: 1; */
+  -webkit-mask-image: -webkit-gradient(
+    linear,
+    100% 0,
+    100% 90%,
+    from(rgba(0, 0, 0, 1)),
+    to(rgba(0, 0, 0, 0))
+  );
 
   @media (max-width: 800px) {
-    width: 70%;
-    margin-bottom: 20px;
+    width: 100%;
+    margin: 20px 0;
     padding: 0;
   }
+
+  opacity: 0;
+  animation: 0.4s 0.8s ${slideInBottom} forwards;
 `;
 
 const HeroVideo = styled.video`
@@ -393,7 +404,7 @@ const PresentationItem = ({
           <Par>{content}</Par>
 
           <div>
-            {HIDE_APP && !showBtnText ? (
+            {!showBtnText ? (
               <UnstyledExternalLink
                 href="https://www.producthunt.com/upcoming/chairleader"
                 target="_blank"
@@ -849,7 +860,7 @@ const TextBanner = () => (
 export const HomepageTopNav = () => {
   const { isAuthenticated, isLoading } = useAuth();
 
-  const SHOW_AUTH_BTN = !HIDE_APP && !isLoading;
+  const SHOW_AUTH_BTN = !isLoading;
 
   const SHOW_BANNER = false;
 
@@ -966,74 +977,59 @@ export const Homepage = () => {
 
             <MotionDiv delay={0.4}>
               <HeroPar>
-                We're building the next-generation e-commerce platform that
-                offers a variety of web3 services including crypto payments, NFT
-                memberships, token gating, loyalty programs, and much more.
+                Shaping the e-commerce revolution by creating the
+                next-generation e-commerce platform built for the futur.
               </HeroPar>
             </MotionDiv>
 
             <MotionDiv delay={0.5}>
-              {HIDE_APP && (
-                <div>
-                  <UnstyledExternalLink
-                    href="https://www.producthunt.com/upcoming/chairleader"
-                    target="_blank"
-                  >
-                    <Button icon="launch" fullWidth={isMobileView}>
-                      Get early access
+              <div>
+                {!isLoading &&
+                  (isAuthenticated() ? (
+                    <Button
+                      to={routes.admin.inventory}
+                      fullWidth={isMobileView}
+                    >
+                      Go to my store
                     </Button>
-                  </UnstyledExternalLink>
-                </div>
-              )}
+                  ) : (
+                    <>
+                      <Button to={routes.auth} fullWidth={isMobileView}>
+                        Register now
+                      </Button>
 
-              {!HIDE_APP && (
-                <div>
-                  {!isLoading &&
-                    (isAuthenticated() ? (
-                      <Button
-                        to={routes.admin.inventory}
+                      <SecondHeroBtn
+                        to={routes.auth}
+                        secondary
                         fullWidth={isMobileView}
                       >
-                        Go to my store
-                      </Button>
-                    ) : (
-                      <>
-                        <Button to={routes.auth} fullWidth={isMobileView}>
-                          Register now
-                        </Button>
+                        Log in
+                      </SecondHeroBtn>
+                    </>
+                  ))}
 
-                        <SecondHeroBtn
-                          to={routes.auth}
-                          secondary
-                          fullWidth={isMobileView}
-                        >
-                          Log in
-                        </SecondHeroBtn>
-                      </>
-                    ))}
-
-                  {isLoading && (
-                    <div>
-                      <Button fullWidth={isMobileView} isLoading={isLoading}>
-                        Go to my store
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              )}
+                {isLoading && (
+                  <div>
+                    <Button fullWidth={isMobileView} isLoading={isLoading}>
+                      Go to my store
+                    </Button>
+                  </div>
+                )}
+              </div>
             </MotionDiv>
           </LeftHero>
 
-          <MotionDiv
-            style={{ width: isMobileView ? '70%' : '40%' }}
-            delay={0.6}
-          >
-            <HeroImg src={isMobileView ? appLogoSrcGif : appLogoSrcGif} />
-          </MotionDiv>
+          <div>
+            <VideoWrapper>
+              <HeroImg src={videoImg} />
+
+              <YoutubeModal />
+            </VideoWrapper>
+          </div>
         </HeroWrapper>
 
         <>
-          {SHOW_BANNER && (
+          {!SHOW_BANNER && (
             <BannerWrapper>
               <Banner>
                 <MotionDiv>
